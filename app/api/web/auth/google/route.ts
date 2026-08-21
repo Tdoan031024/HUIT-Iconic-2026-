@@ -1,0 +1,12 @@
+import { NextResponse } from 'next/server';
+import { googleLogin } from '@/lib/service';
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const result = await googleLogin(body);
+    return NextResponse.json(result);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Lỗi đăng nhập Google' }, { status: 400 });
+  }
+}

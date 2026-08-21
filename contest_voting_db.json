@@ -1,0 +1,251 @@
+{
+  "candidates": [
+    {
+      "id": "001",
+      "sbd": "001",
+      "name": "Dương Trần Linh Chi",
+      "votes": 2500,
+      "imageUrl": "/duan/anhmauduan.png",
+      "description": "Thí sinh Bảng Nữ - Khoa Quản trị Kinh doanh. Tinh thần cầu tiến, năng động và khát vọng lan tỏa hình ảnh tích cực của sinh viên HUIT.",
+      "biography": "{\"__projectMeta\":true,\"teamName\":\"Dương Trần Linh Chi\",\"representativeSchool\":\"Khoa Quản trị Kinh doanh - Trường Đại học Công Thương TP.HCM\",\"leaderName\":\"Dương Trần Linh Chi\",\"leaderPhone\":\"0708765157\",\"leaderEmail\":\"linhchi@gmail.com\",\"advisorName\":\"ThS. Nguyễn Thị Huệ\",\"members\":\"Cá nhân\",\"implementationLocation\":\"TP. Hồ Chí Minh\",\"intellectualPropertyCommitment\":true,\"supportNeeds\":\"Cơ hội tham gia các dự án truyền thông và dự án cộng đồng cấp Thành phố.\",\"expectations\":\"Trở thành Đại sứ Truyền thông HUIT, cầu nối giữa nhà trường và sinh viên.\",\"longDescription\":\"Dương Trần Linh Chi là sinh viên Khoa Quản trị Kinh doanh, nổi bật với vẻ đẹp thanh lịch, sự tự tin và tư duy ứng xử nhạy bén. Tích cực tham gia các hoạt động Đoàn - Hội và các chương trình thiện nguyện cộng đồng.\",\"contestTable\":\"STUDENT\",\"contestTableLabel\":\"Bảng Nữ\",\"currentRound\":\"Vòng Chung kết\",\"status\":\"Đủ hồ sơ\"}"
+    },
+    {
+      "id": "002",
+      "sbd": "002",
+      "name": "Nguyễn Việt Hoàng Vỹ",
+      "votes": 2400,
+      "imageUrl": "/duan/anhmauduan.png",
+      "description": "Thí sinh Bảng Nam - Khoa Quản trị Kinh doanh. Bản lĩnh, phong thái tự tin và tinh thần kết nối cộng đồng sinh viên HUIT.",
+      "biography": "{\"__projectMeta\":true,\"teamName\":\"Nguyễn Việt Hoàng Vỹ\",\"representativeSchool\":\"Khoa Quản trị Kinh doanh - Trường Đại học Công Thương TP.HCM\",\"leaderName\":\"Nguyễn Việt Hoàng Vỹ\",\"leaderPhone\":\"0987654321\",\"leaderEmail\":\"hoangvy@gmail.com\",\"advisorName\":\"TS. Lê Anh Tuấn\",\"members\":\"Cá nhân\",\"implementationLocation\":\"TP. Hồ Chí Minh\",\"intellectualPropertyCommitment\":true,\"supportNeeds\":\"Rèn luyện chuyên sâu về kỹ năng MC và diễn xuất trước công chúng.\",\"expectations\":\"Lan tỏa tinh thần học tập chủ động và trách nhiệm xã hội đến sinh viên HUIT.\",\"longDescription\":\"Nguyễn Việt Hoàng Vỹ là gương mặt nam sinh viên nổi bật với chiều cao ấn tượng, khả năng giao tiếp ngoại giao tốt và luôn năng nổ trong các hoạt động phong trào của nhà trường.\",\"contestTable\":\"STUDENT\",\"contestTableLabel\":\"Bảng Nam\",\"currentRound\":\"Vòng Chung kết\",\"status\":\"Đủ hồ sơ\"}"
+    },
+    {
+      "id": "003",
+      "sbd": "003",
+      "name": "Lê Ngọc Yến Vy",
+      "votes": 1980,
+      "imageUrl": "/duan/anhmauduan.png",
+      "description": "Thí sinh Bảng Nữ - Khoa Ngoại ngữ. Nét đẹp dịu dàng, ngoại ngữ lưu khoát và khả năng catwalk sân khấu cuốn hút.",
+      "biography": "{\"__projectMeta\":true,\"teamName\":\"Lê Ngọc Yến Vy\",\"representativeSchool\":\"Khoa Ngoại ngữ - Trường Đại học Công Thương TP.HCM\",\"leaderName\":\"Lê Ngọc Yến Vy\",\"leaderPhone\":\"0909123456\",\"leaderEmail\":\"yenvy@gmail.com\",\"advisorName\":\"ThS. Phạm Thị Loan\",\"members\":\"Cá nhân\",\"implementationLocation\":\"TP. Hồ Chí Minh\",\"intellectualPropertyCommitment\":true,\"supportNeeds\":\"Phát triển thêm kỹ năng truyền thông số và sáng tạo nội dung mạng xã hội.\",\"expectations\":\"Đồng hành cùng các chương trình hướng nghiệp tuyển sinh của HUIT.\",\"longDescription\":\"Lê Ngọc Yến Vy gây ấn tượng nhờ nụ cười rạng rỡ, khả năng giao tiếp tiếng Anh tự tin và phong thái biểu diễn trang phục áo dài truyền thống vô cùng duyên dáng.\",\"contestTable\":\"STUDENT\",\"contestTableLabel\":\"Bảng Nữ\",\"currentRound\":\"Vòng Chung kết\",\"status\":\"Đủ hồ sơ\"}"
+    },
+    {
+      "id": "004",
+      "sbd": "004",
+      "name": "Nguyễn Đình Tú",
+      "votes": 1850,
+      "imageUrl": "/duan/anhmauduan.png",
+      "description": "Thí sinh Bảng Nam - Khoa Quản trị Kinh doanh. Phong cách thời trang thanh lịch, ứng xử tự tin và nhiệt huyết tuổi trẻ.",
+      "biography": "{\"__projectMeta\":true,\"teamName\":\"Nguyễn Đình Tú\",\"representativeSchool\":\"Khoa Quản trị Kinh doanh - Trường Đại học Công Thương TP.HCM\",\"leaderName\":\"Nguyễn Đình Tú\",\"leaderPhone\":\"0977889900\",\"leaderEmail\":\"dinhtu@gmail.com\",\"advisorName\":\"TS. Bùi Minh Quân\",\"members\":\"Cá nhân\",\"implementationLocation\":\"TP. Hồ Chí Minh\",\"intellectualPropertyCommitment\":true,\"supportNeeds\":\"Hỗ trợ đào tạo chuyên sâu về kỹ năng thuyết trình và quản trị hình ảnh.\",\"expectations\":\"Trở thành gương mặt truyền cảm hứng cho thế hệ trẻ HUIT dám đuổi ước mơ.\",\"longDescription\":\"Nguyễn Đình Tú sở hữu gương mặt sáng, tác phong lịch thiệp và sự điềm tĩnh trong phần thi thuyết trình ứng xử trước Ban giám khảo.\",\"contestTable\":\"STUDENT\",\"contestTableLabel\":\"Bảng Nam\",\"currentRound\":\"Vòng Chung kết\",\"status\":\"Đủ hồ sơ\"}"
+    }
+  ],
+  "sponsors": [
+    {
+      "id": "s1",
+      "name": "Trường Đại học Công Thương TP.HCM (HUIT)",
+      "logoUrl": "/images/site-logo.png",
+      "tier": "PLATINUM"
+    },
+    {
+      "id": "s2",
+      "name": "Trung tâm Tuyển sinh & Truyền thông HUIT",
+      "logoUrl": "/images/ieclogo.png",
+      "tier": "GOLD"
+    },
+    {
+      "id": "s3",
+      "name": "HUIT's ICONIC 2026",
+      "logoUrl": "/images/startuplogo.png",
+      "tier": "SILVER"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "t1",
+      "date": "05/09/2026 - 30/09/2026",
+      "title": "PHÁT ĐỘNG & NHẬN HỒ SƠ",
+      "description": "Mở cổng nhận hồ sơ đăng ký tham gia Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT's ICONIC 2026.",
+      "isActive": false
+    },
+    {
+      "id": "t2",
+      "date": "06/10/2026",
+      "title": "VÒNG SƠ KHẢO (CHỌN TOP 60)",
+      "description": "Thi trình diễn, phỏng vấn ứng xử và thể hiện năng khiếu cá nhân để chọn ra Top 60 (30 Nam + 30 Nữ).",
+      "isActive": false
+    },
+    {
+      "id": "t3",
+      "date": "10/10/2026 - 15/11/2026",
+      "title": "VÒNG BÁN KẾT & BÌNH CHỌN ONLINE",
+      "description": "Photoshoot hình ảnh, Thi Tài năng, Trình diễn Fashion Show & Mở cổng bình chọn trực tuyến HUIT's ICONIC.",
+      "isActive": true
+    },
+    {
+      "id": "t4",
+      "date": "24/11/2026",
+      "title": "ĐÊM CHUNG KẾT & TRAO GIẢI",
+      "description": "Trình diễn Áo dài, Trang phục Dạ hội, Thuyết trình Hashtag chủ đề & Ứng xử vinh danh Đại sứ Truyền thông HUIT.",
+      "isActive": false
+    }
+  ],
+  "banners": [
+    {
+      "id": "b1",
+      "title": "HUIT's ICONIC - Tìm kiếm Đại sứ Truyền thông HUIT",
+      "imageUrl": "/original_assets/image974c.jpg",
+      "link": "#",
+      "isActive": true
+    }
+  ],
+  "settings": {
+    "isGateOpen": true,
+    "startDate": "2026-06-01T00:00",
+    "endDate": "2026-12-31T23:59",
+    "maxVotesPerPhone": 5,
+    "eventTitle": "HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT",
+    "organizer": "Trường Đại học Công Thương TP.HCM (HUIT)",
+    "contactEmail": "media@huit.edu.vn",
+    "isMaintenanceMode": false,
+    "sponsorBannerUrl": "/uploads/nhataitro.png",
+    "hideSponsorBanner": false,
+    "hidePublicVoteHistory": false,
+    "aboutTitle": "HUIT'S ICONIC - ĐẠI SỨ TRUYỀN THÔNG HUIT",
+    "aboutDescription": "Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM (HUIT's ICONIC) là hoạt động thường niên do Trường Đại học Công Thương TP. Hồ Chí Minh tổ chức. Cuộc thi hướng đến việc tìm kiếm những sinh viên hội tụ vẻ đẹp tâm hồn, nét đẹp trí tuệ, sự thanh lịch, cá tính, khả năng giao tiếp và bản lĩnh truyền tải thông điệp trước công chúng.\n\nĐại sứ Truyền thông HUIT sẽ là những gương mặt đại diện cho hình ảnh năng động, sáng tạo, tự tin và trách nhiệm của sinh viên HUIT trong các hoạt động truyền thông, tuyển sinh, hướng nghiệp, sự kiện văn hóa và dự án cộng đồng.",
+    "aboutImageUrl": "/uploads/poster-khoi-nghiep.jpg",
+    "statsYear": "2024",
+    "statsCandidates": "110+",
+    "statsVotes": "500K+",
+    "statsParticipants": "110",
+    "statsViews": "5 triệu",
+    "statsMedia": "25+",
+    "statsSchools": "16+ Khoa",
+    "aboutSubtitle": "Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM",
+    "aboutTheme": "Nét đẹp tâm hồn - Trí tuệ - Thanh lịch - Cá tính - Bản lĩnh - Truyền cảm hứng",
+    "aboutOrganizerDetail": "Đơn vị tổ chức: Trường Đại học Công Thương TP. HCM (HUIT).\nĐơn vị đầu mối truyền thông: Trung tâm Tuyển sinh và Truyền thông HUIT.\nFanpage chính thức: https://www.facebook.com/Daisutruyenthonghuit",
+    "aboutSectors": "Vẻ đẹp tâm hồn & Nét đẹp trí tuệ\nSự thanh lịch & Phong cách trình diễn\nKỹ năng thuyết trình & Ứng xử bản lĩnh\nTruyền thông & Hoạt động cộng đồng",
+    "aboutBenefits": "Đào tạo kỹ năng catwalk & phong thái sân khấu\nCố vấn kỹ năng thuyết trình, ứng xử & giao tiếp\nPhotoshoot & Xây dựng hình ảnh thương hiệu cá nhân\nHọc bổng ngoại ngữ & Học bổng Thạc sĩ toàn phần 20.000 USD",
+    "aboutPrize": "Vương miện Đại sứ, Cúp, Sash, Tiền mặt, Học bổng Tiếng Anh (10 triệu), Học bổng Tiếng Hàn/Nhật (10 triệu), và Học bổng Thạc sĩ toàn phần 20.000 USD tại Đại học Shinawatra (Thái Lan).",
+    "aboutParticipants": "Sinh viên đang theo học tại Trường Đại học Công Thương TP.HCM (HUIT).\nNữ: Chiều cao từ 1m58 trở lên.\nNam: Chiều cao từ 1m65 trở lên.\nĐạo đức tốt, năng động, có nguyện vọng trở thành đại sứ hình ảnh HUIT.",
+    "aboutContactName": "Khánh Linh",
+    "aboutContactRole": "Trung tâm Tuyển sinh và Truyền thông HUIT",
+    "aboutContactPhone": "0708765157",
+    "aboutContactWebsite": "https://huit.edu.vn",
+    "aboutContactQrUrl": "/images/qrdangky.png",
+    "isRegistrationOpen": false,
+    "registrationDeadline": "2026-09-30T23:59",
+    "registrationUrl": "https://huit.edu.vn",
+    "detailUrl": "https://huit.edu.vn",
+    "supportZaloUrl": "https://zalo.me/4418938306145458374",
+    "freeVotesPerAccountPerDay": 2,
+    "sepayBankName": "KienLongBank",
+    "sepayAccountNo": "101499100004001667",
+    "sepayAccountName": "DANG XUAN DUONG",
+    "sepayPrefix": "MD",
+    "sepayApiKey": "1dcd4e6cd52fde1e4bf0510a9b406476322d811f3bbae785",
+    "isTestMode": true,
+    "guideSections": [
+      {
+        "title": "Bình chọn miễn phí mỗi ngày",
+        "steps": [
+          {
+            "number": "01",
+            "description": "Đăng ký hoặc đăng nhập tài khoản để bắt đầu bình chọn cho thí sinh yêu thích.",
+            "image": "/uploads/73d6ebfa-f291-4d60-ac0f-d19caece673e.png"
+          },
+          {
+            "number": "02",
+            "description": "Mỗi tài khoản được cấp 2 lượt bình chọn miễn phí mỗi ngày."
+          },
+          {
+            "number": "03",
+            "description": "Mỗi lượt bình chọn giúp tăng điểm cho thí sinh Đại sứ Truyền thông bạn chọn."
+          },
+          {
+            "number": "04",
+            "description": "Dùng hết 2 lượt miễn phí trong ngày, hệ thống sẽ tự động cấp lại 2 lượt mới vào 00:00 ngày tiếp theo."
+          }
+        ]
+      }
+    ],
+    "exchangeRates": [
+      {
+        "points": "1",
+        "price": "0"
+      }
+    ],
+    "votingPromotions": [],
+    "votePackages": [
+      {
+        "id": "free-daily-vote",
+        "code": "FREE_DAILY_VOTE",
+        "name": "1 lượt bình chọn",
+        "points": 1,
+        "price": 0,
+        "currency": "VND",
+        "vatRate": 0,
+        "packageType": "FREE",
+        "isActive": true
+      }
+    ],
+    "faq": [
+      {
+        "question": "Bình chọn Đại sứ HUIT's ICONIC có mất phí không?",
+        "answer": "Không. Mỗi tài khoản người dùng được bình chọn hoàn toàn miễn phí 2 lượt mỗi ngày cho các thí sinh tham gia HUIT's ICONIC."
+      },
+      {
+        "question": "Ai có thể đăng ký tham gia HUIT's ICONIC?",
+        "answer": "Sinh viên đang theo học tại Trường Đại học Công Thương TP.HCM (HUIT), nữ cao từ 1m58, nam cao từ 1m65, có đạo đức tốt và tinh thần truyền thông năng động."
+      },
+      {
+        "question": "Tôi quên mật khẩu tài khoản thì làm thế nào?",
+        "answer": "Bạn có thể đăng nhập nhanh bằng tài khoản Google hoặc liên hệ Trung tâm Tuyển sinh & Truyền thông HUIT qua email media@huit.edu.vn để được hỗ trợ."
+      }
+    ],
+    "activeVotingPromotion": null
+  },
+  "webUsers": [
+    {
+      "id": "user-1780428154250",
+      "fullName": "Người dùng HUIT",
+      "email": "abcxyz@mail.com",
+      "phone": "",
+      "provider": "google",
+      "role": "USER",
+      "status": "ACTIVE",
+      "schoolOrCompany": "Trường Đại học Công Thương TP.HCM",
+      "contestTable": "Thí sinh Đại sứ",
+      "registeredAt": "2026-06-02T19:22:34.250Z",
+      "lastLoginAt": "2026-06-02T19:22:34.250Z"
+    }
+  ],
+  "voteHistory": [
+    {
+      "id": "vote-1784569387975",
+      "candidateId": "001",
+      "candidateSbd": "001",
+      "eventId": "dai-su-duoc-yeu-thich-nhat",
+      "packageId": "free-daily-vote",
+      "packageType": "FREE",
+      "points": 1,
+      "basePoints": 1,
+      "multiplierApplied": 1,
+      "amount": 0,
+      "userId": "tuyenvan24212",
+      "voterPhone": "tuyenvan24212@gmail.com",
+      "createdAt": "2026-07-20T17:43:07.975Z"
+    }
+  ],
+  "votePackages": [
+    {
+      "id": "free-5",
+      "code": "FREE_5",
+      "name": "5 điểm miễn phí",
+      "points": 5,
+      "price": 0,
+      "currency": "VND",
+      "vatRate": 10,
+      "packageType": "FREE",
+      "isActive": true
+    }
+  ],
+  "transactions": []
+}

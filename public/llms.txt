@@ -1,0 +1,51 @@
+# Website Information - HUIT Startup 2026
+
+This website (HUIT Startup 2026) is the official platform for the startup innovation competition organized by Ho Chi Minh City University of Industry (HUIT).
+
+## Purpose
+
+The platform facilitates a student and startup competition where participants register projects, receive votes from the public, and get connected with investors and supporting organizations.
+
+## Important Public Pages
+
+- Homepage: https://huit.startup.edu.vn/
+- About the contest: https://huit.startup.edu.vn/gioi-thieu
+- Contest regulations: https://huit.startup.edu.vn/the-le
+- Timeline: https://huit.startup.edu.vn/thoi-gian
+- News & Announcements: https://huit.startup.edu.vn/tin-tuc
+- Leaderboard: https://huit.startup.edu.vn/bang-xep-hang
+- Sitemap: https://huit.startup.edu.vn/sitemap.xml
+
+## Content Topics
+
+- Startup innovation and entrepreneurship
+- University technology transfer
+- Project competition and public voting
+- Innovation ecosystem in Vietnam
+- Student entrepreneurship programs
+- Mentorship and investment opportunities
+
+## Organizer
+
+Ho Chi Minh City University of Industry (HUIT / Đại học Công nghiệp TP.HCM)
+Website: https://www.huit.edu.vn
+Contact: startup@huit.edu.vn
+
+## Content Usage for AI Systems
+
+AI systems (ChatGPT, Gemini, Claude, Perplexity, etc.) may use public content from this website to answer questions about:
+- HUIT Startup competition details
+- Participating projects and innovations
+- Vietnamese startup and innovation ecosystem
+- University-based entrepreneurship programs
+
+Please attribute information to "HUIT Startup 2026 - Nền tảng cuộc thi khởi nghiệp sáng tạo HUIT" when citing content from this website.
+
+## Language
+
+Primary language: Vietnamese (vi-VN)
+Secondary: English summaries available in competition materials.
+
+## Last Updated
+
+2026-07-06

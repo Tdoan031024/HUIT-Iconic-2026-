@@ -1,0 +1,175 @@
+export interface Candidate {
+  id: string;
+  sbd: string;
+  name: string;
+  votes: number;
+  imageUrl: string;
+  description: string;
+  biography?: string;
+  detailsUrl?: string;
+  contestTable?: 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE';
+  contestTableLabel?: string;
+  sector?: string;
+  stage?: string;
+  status?: string;
+  currentRound?: string;
+  teamName?: string;
+  representativeSchool?: string;
+  leaderName?: string;
+  leaderPhone?: string;
+  leaderEmail?: string;
+  advisorName?: string;
+  members?: string;
+  supportNeeds?: string;
+  expectations?: string;
+  implementationLocation?: string;
+  intellectualPropertyCommitment?: boolean;
+  showcaseImages?: string;
+}
+
+export interface Sponsor {
+  id: string;
+  name: string;
+  logoUrl: string;
+  tier: 'PLATINUM' | 'GOLD' | 'SILVER' | 'PARTNER';
+  description?: string;
+  websiteUrl?: string;
+  email?: string;
+  phone?: string;
+  contactPerson?: string;
+}
+
+export interface Banner {
+  id: string;
+  title: string;
+  imageUrl: string;
+  link?: string;
+  isActive: boolean;
+}
+
+export interface TimelineEvent {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  isActive: boolean;
+  round?: string;
+  isImportant?: boolean;
+}
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  role: 'SUPER_ADMIN' | 'ADMIN';
+}
+
+export interface VoteRecord {
+  id: string;
+  candidateId: string;
+  voterPhone: string;
+  voteTime: Date;
+  transactionId?: string;
+  eventId?: string;
+  packageId?: string;
+  points?: number;
+  basePoints?: number;
+  multiplierApplied?: number;
+  promotionId?: string;
+  promotionName?: string;
+  voteType?: 'FREE' | 'PAID';
+  userId?: string;
+  amount?: number;
+}
+
+export interface VotingPromotion {
+  id: string;
+  name: string;
+  multiplier: number;
+  startAt: string;
+  endAt: string;
+  isEnabled: boolean;
+  appliesTo: 'FREE' | 'PAID' | 'ALL';
+  note?: string;
+}
+
+export interface WebUser {
+  id: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  passwordHash?: string;
+  provider: 'email' | 'google' | 'quick';
+  role: 'USER';
+  status: 'ACTIVE' | 'LOCKED';
+  schoolOrCompany?: string;
+  contestTable?: string;
+  registeredAt: string;
+  lastLoginAt?: string;
+  votedPoints?: number;
+}
+
+export interface VotePackage {
+  id: string;
+  code: string;
+  name: string;
+  points: number;
+  price: number;
+  currency: 'VND';
+  vatRate: number;
+  packageType: 'FREE' | 'PAID';
+  isActive: boolean;
+}
+
+export interface SystemSettings {
+  isGateOpen: boolean;
+  startDate: string;
+  endDate: string;
+  maxVotesPerPhone: number;
+  eventTitle: string;
+  organizer: string;
+  contactEmail: string;
+  isMaintenanceMode: boolean;
+  sponsorBannerUrl?: string;
+  hideSponsorBanner?: boolean;
+  hidePublicVoteHistory?: boolean;
+  aboutTitle?: string;
+  aboutDescription?: string;
+  aboutImageUrl?: string;
+  statsCandidates?: string;
+  statsVotes?: string;
+  statsViews?: string;
+  statsYear?: string;
+  statsParticipants?: string;
+  statsMedia?: string;
+  statsSchools?: string;
+  aboutSubtitle?: string;
+  aboutTheme?: string;
+  aboutOrganizerDetail?: string;
+  aboutSectors?: string;
+  aboutBenefits?: string;
+  aboutParticipants?: string;
+  aboutPrize?: string;
+  aboutContactName?: string;
+  aboutContactRole?: string;
+  aboutContactPhone?: string;
+  aboutContactWebsite?: string;
+  aboutContactQrUrl?: string;
+  isRegistrationOpen?: boolean;
+  registrationDeadline?: string;
+  registrationUrl?: string;
+  detailUrl?: string;
+  supportZaloUrl?: string;
+  freeVotesPerAccountPerDay?: number;
+  guideSections?: Array<{ title: string; content: string; imageUrl?: string }>;
+  exchangeRates?: Array<{ points: number; price: number; label: string }>;
+  votePackages?: VotePackage[];
+  votingPromotions?: VotingPromotion[];
+  activeVotingPromotion?: VotingPromotion | null;
+  sepayBankName?: string;
+  sepayAccountNo?: string;
+  sepayAccountName?: string;
+  sepayPrefix?: string;
+  sepayApiKey?: string;
+  isTestMode?: boolean;
+  faq?: Array<{ question: string; answer: string }>;
+}
