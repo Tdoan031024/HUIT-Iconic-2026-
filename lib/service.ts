@@ -104,9 +104,12 @@ export async function validateAdminCredentials(username: string, password: strin
   });
 
   if (!admin) {
-    // Check fallback default admin admin / admin123
-    if (username === 'admin' && password === 'admin123') {
-      return { id: 'admin-default', username: 'admin', role: 'SUPER_ADMIN' };
+    // Check fallback default admin accounts
+    if (
+      (username === 'Iconic2026.Huitmedia' && password === 'Huit@media2019') ||
+      (username === 'admin' && password === 'admin123')
+    ) {
+      return { id: 'admin-iconic', username: username, role: 'SUPER_ADMIN' };
     }
     return null;
   }
