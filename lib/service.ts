@@ -6,7 +6,7 @@ import * as crypto from 'crypto';
 import { Candidate, Sponsor, TimelineEvent, Banner, VotePackage, WebUser, SystemSettings } from './types';
 import { hashPasswordMd5, isMd5Hash, normalizeEmail, generateWebToken, extractWebUserFromToken } from './auth';
 
-const DB_FILE_PATH = path.resolve(process.cwd(), 'contest_voting_db.json');
+const DB_FILE_PATH = path.resolve(process.cwd(), 'huit_iconic_2026_db.json');
 
 const DEFAULT_SETTINGS: SystemSettings = {
   isGateOpen: true,
