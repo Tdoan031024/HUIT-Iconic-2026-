@@ -119,7 +119,7 @@ select option {
 :root[data-theme='dark'] .sticky-inner-wrapper p, :root[data-theme='dark'] .sticky-inner-wrapper a { color: #e9f2ff !important; }
 :root[data-theme='dark'] .site-theme-toggle { background: var(--site-card); border-color: var(--site-line); color: var(--site-text); }
 
-.site-floating-actions { position: fixed; z-index: 1000; right: 18px; bottom: 22px; display: flex; flex-direction: column; gap: 9px; }
+.site-floating-actions { position: fixed; z-index: 1000; right: 18px; bottom: 88px; display: flex; flex-direction: column; gap: 9px; }
 .float-action { position: relative; width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--site-line); border-radius: 50%; color: var(--site-text); background: var(--site-card); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease; }
 .float-action::before { content: attr(data-label); position: absolute; right: 58px; width: max-content; padding: 6px 9px; border-radius: 8px; background: var(--site-text); color: var(--site-bg); font-size: 11px; opacity: 0; transform: translateX(8px); pointer-events: none; transition: .2s; }
 .float-action:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12); }
@@ -1282,7 +1282,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .vote-stepper li::after { display: none; }
   .site-floating-actions .zalo,
   .site-floating-actions .phone { display: none; }
-  .site-floating-actions { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .site-floating-actions { right: 12px; bottom: calc(82px + env(safe-area-inset-bottom)) !important; }
   .footer-contact-column p { max-width: 100%; }
 }
 
@@ -3487,7 +3487,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: fixed !important;
   z-index: 1000 !important;
   right: 18px !important;
-  bottom: 22px !important;
+  bottom: 88px !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 9px !important;

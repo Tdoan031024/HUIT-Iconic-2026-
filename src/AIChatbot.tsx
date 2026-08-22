@@ -19,45 +19,45 @@ interface Message {
 
 const FAQ_DATABASE = [
   {
-    keywords: ['khoi nghiep', 'huit startup', 'la gi', 'gioi thieu', 'cuoc thi'],
-    answer: 'HUIT Startup 2026 là cuộc thi Khởi nghiệp Sáng tạo lần thứ VII do Trường Đại học Công Thương TP.HCM (HUIT) tổ chức. Chủ đề năm nay là "Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững" nhằm tìm kiếm, ươm tạo các ý tưởng khởi nghiệp sáng tạo giải quyết vấn đề thực tế.',
+    keywords: ['iconic', 'dai su', 'la gi', 'gioi thieu', 'cuoc thi', 'huit iconic'],
+    answer: 'HUIT\'s ICONIC 2026 là cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM (HUIT). Cuộc thi tôn vinh nét đẹp tâm hồn, trí tuệ, thanh lịch, cá tính, bản lĩnh và khả năng truyền cảm hứng của sinh viên HUIT.',
     links: [{ label: 'Xem chi tiết giới thiệu', url: '/gioi-thieu' }]
   },
   {
     keywords: ['binh chon', 'vote', 'diem', 'luot vote', 'cach vote', 'mien phi'],
-    answer: 'Mỗi tài khoản đăng nhập được cấp 2 lượt bình chọn MIỄN PHÍ mỗi ngày. Để thực hiện bình chọn, bạn cần: 1. Đăng nhập tài khoản. 2. Truy cập trang chi tiết dự án từ Bảng xếp hạng. 3. Nhấn "Bình chọn miễn phí".',
+    answer: 'Mỗi tài khoản đăng nhập được cấp 2 lượt bình chọn MIỄN PHÍ mỗi ngày. Để bình chọn cho thí sinh: 1. Đăng nhập tài khoản. 2. Chọn thí sinh từ Bảng xếp hạng hoặc Trang chi tiết thí sinh. 3. Nhấn "Bình chọn miễn phí".',
     links: [
-      { label: 'Bảng xếp hạng dự án', url: '/bang-xep-hang' },
+      { label: 'Bảng xếp hạng thí sinh', url: '/bang-xep-hang' },
       { label: 'Đăng nhập ngay', url: '/dang-nhap' }
     ]
   },
   {
     keywords: ['lich trinh', 'thoi gian', 'han chot', 'cac vong', 'khi nao'],
-    answer: 'Lịch trình cuộc thi gồm các mốc chính: \n- Nhận hồ sơ: 15/05 - 15/06/2026.\n- Định hướng & Tập huấn: 17/06/2026.\n- Vòng loại & Bình chọn: tháng 07/2026.\n- Chung kết & Trao giải: tháng 08/2026.',
+    answer: 'Lịch trình HUIT\'s ICONIC 2026 bao gồm: \n- Vòng Sơ khảo & Chụp ảnh sơ kết.\n- Vòng Bán kết & Hoạt động tập huấn truyền thông.\n- Vòng Chung kết & Đêm Gala Trao giải Đại sứ Truyền thông HUIT.',
     links: [{ label: 'Xem lịch trình chi tiết', url: '/thoi-gian' }]
   },
   {
-    keywords: ['dang ky', 'tham gia', 'doi tuong', 'ai duoc tham gia'],
-    answer: 'Đối tượng dự thi gồm: Bảng A (Học sinh THPT, GDTX); Bảng B (Sinh viên, học viên Đại học/Cao đẳng); Bảng C (Doanh nghiệp, HTX, hộ kinh doanh vừa và nhỏ). Bạn đăng ký tham gia trực tuyến qua link đăng ký chính thức của Ban tổ chức.',
+    keywords: ['the le', 'dieu kien', 'doi tuong', 'ai duoc tham gia', 'tieu chi'],
+    answer: 'Đối tượng dự thi: Toàn thể sinh viên đang theo học tại Trường Đại học Công Thương TP.HCM (HUIT) đáp ứng tiêu chuẩn đạo đức, học tập và ngoại hình thanh lịch.',
     links: [{ label: 'Đọc thể lệ chi tiết', url: '/the-le' }]
   },
   {
     keywords: ['lien he', 'ban to chuc', 'ho tro', 'hotline', 'email', 'zalo'],
-    answer: 'Bạn có thể liên hệ Ban Tổ chức qua:\n- TT Đổi mới sáng tạo và Khởi nghiệp HUIT.\n- Địa chỉ: 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM.\n- Email: startup@huit.edu.vn\n- Zalo Hỗ trợ kỹ thuật.',
+    answer: 'Bạn có thể liên hệ Ban Tổ chức qua:\n- Trung tâm Tuyển sinh và Truyền thông HUIT.\n- Địa chỉ: 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM.\n- Email: media@huit.edu.vn\n- Hotline/Zalo: 0708 765 157',
     links: [
       { label: 'Zalo Hỗ trợ', url: 'https://zalo.me/4418938306145458374' },
-      { label: 'Gửi Email', url: 'mailto:startup@huit.edu.vn' }
+      { label: 'Gửi Email', url: 'mailto:media@huit.edu.vn' }
     ]
   },
   {
-    keywords: ['giai thuong', 'co cau giai', 'bao nhieu tien'],
-    answer: 'Tổng giá trị giải thưởng cuộc thi HUIT Startup 2026 lên đến 05 TỶ ĐỒNG, bao gồm tiền mặt, các gói mentor/cố vấn chuyên sâu, gói hỗ trợ sở hữu trí tuệ, nền tảng ERP Platform và cơ hội ươm tạo kết nối đầu tư thực tế.',
-    links: [{ label: 'Xem cơ cấu giải thưởng', url: '/gioi-thieu#giai-thuong' }]
+    keywords: ['quan quan', 'giai thuong', 'danh hieu', 'bao nhieu tien'],
+    answer: 'Hệ thống danh hiệu HUIT\'s ICONIC 2026 bao gồm: Quán quân Nam & Quán quân Nữ, Á quân Nam & Á quân Nữ, cùng các giải phụ như Đại sứ Truyền thông được yêu thích nhất, Đại sứ Tài năng, Đại sứ Thanh lịch...',
+    links: [{ label: 'Xem thông tin giới thiệu', url: '/gioi-thieu' }]
   }
 ];
 
 const SUGGESTIONS = [
-  'HUIT Startup 2026 là gì?',
+  'HUIT\'s ICONIC 2026 là gì?',
   'Cách bình chọn miễn phí?',
   'Lịch trình cuộc thi?',
   'Liên hệ Ban Tổ chức?'
@@ -70,14 +70,13 @@ export function AIChatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with a welcome message
   useEffect(() => {
     if (messages.length === 0) {
       setMessages([
         {
           id: 'welcome',
           sender: 'ai',
-          text: 'Xin chào! Tôi là Trợ lý AI của HUIT Startup 2026. Tôi có thể giúp bạn giải đáp các thông tin về thể lệ cuộc thi, lịch trình, cách thức bình chọn dự án hoặc thông tin liên hệ. Hãy hỏi tôi bất cứ điều gì nhé! 👇',
+          text: 'Xin chào! Tôi là Trợ lý AI của HUIT\'s ICONIC 2026. Tôi có thể giải đáp thông tin về tiêu chí, lịch trình, thể lệ bình chọn thí sinh hoặc thông tin liên hệ. Bạn cần trợ giúp gì nào? 👇',
           timestamp: new Date()
         }
       ]);
@@ -105,7 +104,6 @@ export function AIChatbot() {
   const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
 
-    // 1. Add user message
     const userMsg: Message = {
       id: `user-${Date.now()}`,
       sender: 'user',
@@ -116,15 +114,12 @@ export function AIChatbot() {
     setInputValue('');
     setIsTyping(true);
 
-    // Track analytics event if GA is active
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'ai_chat_query', { query: text });
     }
 
-    // 2. Simulate AI response delay
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // 3. Find matching response
     const queryNorm = normalizeText(text);
     let matchedAnswer = null;
 
@@ -143,7 +138,7 @@ export function AIChatbot() {
       replyText = matchedAnswer.answer;
       replyLinks = matchedAnswer.links;
     } else {
-      replyText = 'Tôi xin lỗi, câu hỏi này nằm ngoài phạm vi hiểu biết hiện tại của tôi về cuộc thi. Bạn có thể xem thêm ở phần Thể lệ & Hướng dẫn hoặc liên hệ trực tiếp đội ngũ Ban Tổ chức qua Zalo/Email để được hỗ trợ trực tiếp nhé!';
+      replyText = 'Tôi xin lỗi, câu hỏi này nằm ngoài phạm vi hiểu biết hiện tại của tôi về cuộc thi. Bạn có thể xem thêm ở phần Thể lệ & Hướng dẫn hoặc liên hệ trực tiếp Ban Tổ chức qua Zalo/Email nhé!';
       replyLinks = [
         { label: 'Xem Thể lệ', url: '/the-le' },
         { label: 'Hỗ trợ Zalo', url: 'https://zalo.me/4418938306145458374' }
@@ -168,8 +163,8 @@ export function AIChatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#0f766e] to-[#0ea5e9] text-white shadow-[0_4px_20px_rgba(15,118,110,0.4)] transition hover:scale-105 active:scale-95 duration-200 animate-pulse cursor-pointer"
-          title="Trợ lý AI"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] text-white shadow-[0_4px_20px_rgba(10,47,255,0.4)] transition hover:scale-105 active:scale-95 duration-200 animate-pulse cursor-pointer"
+          title="Trợ lý AI HUIT ICONIC"
           aria-label="Mở Trợ lý AI"
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
@@ -183,7 +178,7 @@ export function AIChatbot() {
       {isOpen && (
         <div className="flex h-[520px] w-[360px] flex-col rounded-2xl border border-[var(--site-line)] bg-[var(--site-card)] text-[var(--site-text)] shadow-[0_12px_40px_rgba(0,0,0,0.25)] animate-in fade-in slide-in-from-bottom-5 duration-200">
           {/* Chat Header */}
-          <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-[#0f766e] to-[#0ea5e9] p-4 text-white">
+          <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] p-4 text-white">
             <div className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
                 <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -191,8 +186,8 @@ export function AIChatbot() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-sm font-bold leading-tight">Trợ lý AI HUIT</h3>
-                <span className="text-[10px] text-white/70 font-semibold flex items-center gap-1">
+                <h3 className="text-sm font-bold leading-tight">Trợ lý AI HUIT's ICONIC</h3>
+                <span className="text-[10px] text-white/80 font-semibold flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block animate-ping" />
                   Sẵn sàng phản hồi
                 </span>
@@ -222,7 +217,7 @@ export function AIChatbot() {
                 <div
                   className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
                     msg.sender === 'user'
-                      ? 'bg-gradient-to-br from-[#0f766e] to-[#115e59] text-white rounded-tr-none'
+                      ? 'bg-gradient-to-br from-[#0A2FFF] to-[#001ecb] text-white rounded-tr-none'
                       : 'bg-white border border-[var(--site-line)] text-[var(--site-text)] rounded-tl-none shadow-sm'
                   }`}
                 >
@@ -234,7 +229,7 @@ export function AIChatbot() {
                       <Link
                         key={idx}
                         href={link.url}
-                        className="rounded-full bg-[#0f766e]/10 border border-[#0f766e]/20 px-3 py-1 text-[10px] font-bold text-[#0f766e] hover:bg-[#0f766e]/20 transition"
+                        className="rounded-full bg-[#0A2FFF]/10 border border-[#0A2FFF]/20 px-3 py-1 text-[10px] font-bold text-[#0A2FFF] hover:bg-[#0A2FFF]/20 transition"
                       >
                         {link.label}
                       </Link>
@@ -266,7 +261,7 @@ export function AIChatbot() {
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(sug)}
-                    className="rounded-lg bg-white border border-slate-200 px-2.5 py-1 text-[10px] text-slate-600 hover:border-[#0f766e] hover:text-[#0f766e] transition font-semibold text-left"
+                    className="rounded-lg bg-white border border-slate-200 px-2.5 py-1 text-[10px] text-slate-600 hover:border-[#0A2FFF] hover:text-[#0A2FFF] transition font-semibold text-left"
                   >
                     {sug}
                   </button>
@@ -288,14 +283,14 @@ export function AIChatbot() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Hỏi trợ lý AI về cuộc thi..."
+                placeholder="Hỏi trợ lý AI về cuộc thi ICONIC..."
                 className="min-w-0 flex-1 bg-transparent text-xs text-[var(--site-text)] placeholder-[var(--site-muted)] outline-none"
                 aria-label="Nội dung câu hỏi"
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isTyping}
-                className="shrink-0 rounded-lg p-1.5 bg-[#0f766e] text-white hover:bg-[#115e59] transition disabled:opacity-30 disabled:hover:bg-[#0f766e]"
+                className="shrink-0 rounded-lg p-1.5 bg-[#0A2FFF] text-white hover:bg-[#001ecb] transition disabled:opacity-30 disabled:hover:bg-[#0A2FFF]"
                 aria-label="Gửi câu hỏi"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
