@@ -67,9 +67,7 @@ export default function AdminLoginPage() {
 
             <div className="relative z-10 flex h-full flex-col">
               <div className="inline-flex items-center gap-3.5 rounded-2xl bg-white/10 p-2.5 backdrop-blur-xl border border-white/15 shadow-xl max-w-fit">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-lg">
-                  <img src="/images/logo_iconic.png" alt="HUIT's ICONIC Logo" className="h-full w-full object-contain" />
-                </div>
+                <img src="/images/logo_iconic.png" alt="HUIT's ICONIC Logo" className="h-12 w-12 shrink-0 object-contain rounded-xl drop-shadow-md" />
                 <div className="flex flex-col pr-2">
                   <h3 className="text-sm font-black tracking-tight text-white uppercase leading-tight">HUIT's ICONIC 2026</h3>
                   <span className="text-[11px] font-bold text-blue-200 uppercase tracking-wider mt-0.5">Cổng Quản Trị Hệ Thống</span>
