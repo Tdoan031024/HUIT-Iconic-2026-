@@ -10,7 +10,6 @@ import { apiUrl } from './api';
 import { initDevToolsProtection } from '../src/utils/devtoolsProtection';
 import { AISearch } from '../src/components/AISearch';
 import { usePageViewTracker } from '../src/hooks/usePageViewTracker';
-import { AIChatbot } from '../src/components/AIChatbot';
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese'],
@@ -624,9 +623,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </span>
               </div>
             </footer>
-
-            {/* AI Assistant Chatbot */}
-            <AIChatbot />
           </main>
         </AlertProvider>
       </body>
