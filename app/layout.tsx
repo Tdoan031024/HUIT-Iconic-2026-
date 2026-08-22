@@ -362,7 +362,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <div className="flex shrink-0 items-center h-full mobile-logo-wrap">
                       <div className="h-full flex items-center gap-2 md:gap-5 mobile-logo-row header-brand-shell">
                         <Link className="focus:outline-none flex items-center" href="/">
-                          <img alt="IEC" width="120" height="26" className="header-logo header-logo-iec object-contain" src="/images/ieclogo.png" />
+                          <img alt="HUIT" width="120" height="32" className="header-logo header-logo-iec object-contain" src="/images/huit_logo.png" />
                         </Link>
                         <span className="header-logo-divider" aria-hidden="true" />
                         <Link className="focus:outline-none flex items-center" href="/">
@@ -458,7 +458,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {/* ── MOBILE SLIDE-IN DRAWER ── */}
                 <nav className={`mobile-drawer sm-desktop:hidden ${mobileMenuOpen ? 'open' : ''}`} aria-label="Mobile navigation">
                   <div className="mobile-drawer-header">
-                    <img alt="IEC" width="90" height="22" className="object-contain" src="/images/ieclogo.png" />
+                    <img alt="HUIT" width="100" height="28" className="object-contain" src="/images/huit_logo.png" />
                     <button
                       className="mobile-drawer-close"
                       onClick={() => setMobileMenuOpen(false)}
@@ -548,7 +548,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="footer-brand-column">
                   <div className="footer-logos">
                     <img alt="HUIT ICONIC" src="/images/logo_iconic.png" />
-                    <img alt="IEC" src="/images/ieclogo.png" />
+                    <img alt="HUIT" src="/images/huit_logo.png" />
                   </div>
                   <p className="footer-justify">
                     HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM, nơi tôn vinh nét đẹp tâm hồn, trí tuệ, thanh lịch và bản lĩnh sinh viên HUIT.
