@@ -366,7 +366,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                         <span className="header-logo-divider" aria-hidden="true" />
                         <Link className="focus:outline-none flex items-center" href="/">
-                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src="/images/logo_iconic.png" />
+                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src="/images/image.webp" />
                         </Link>
                       </div>
                     </div>
