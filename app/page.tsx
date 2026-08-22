@@ -200,7 +200,7 @@ function VoteToastContainer() {
 }
 
 function getSponsorLogoUrl(url?: string | null) {
-  if (!url) return '/images/startuplogo.png';
+  if (!url) return '/images/logo_iconic.png';
   if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
   if (url.startsWith('/uploads/') || url.startsWith('/original_assets/')) return apiUrl(url);
   return url;
@@ -910,7 +910,7 @@ export default function HomePage() {
                             alt={sp.name}
                             className="sponsor-marquee-logo animate-fade-in cursor-pointer"
                             onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = '/images/startuplogo.png';
+                              (e.currentTarget as HTMLImageElement).src = '/images/logo_iconic.png';
                             }}
                           />
                         </div>

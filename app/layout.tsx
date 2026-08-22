@@ -366,7 +366,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                         <span className="header-logo-divider" aria-hidden="true" />
                         <Link className="focus:outline-none flex items-center" href="/">
-                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src="/images/startuplogo.png" />
+                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src="/images/logo_iconic.png" />
                         </Link>
                       </div>
                     </div>
@@ -547,7 +547,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="site-footer-grid">
                 <div className="footer-brand-column">
                   <div className="footer-logos">
-                    <img alt="HUIT ICONIC" src="/images/startuplogo.png" />
+                    <img alt="HUIT ICONIC" src="/images/logo_iconic.png" />
                     <img alt="IEC" src="/images/ieclogo.png" />
                   </div>
                   <p className="footer-justify">
