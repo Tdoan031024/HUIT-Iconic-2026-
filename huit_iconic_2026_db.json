@@ -57,21 +57,69 @@
   ],
   "sponsors": [
     {
-      "id": "s1",
-      "name": "Trường Đại học Công Thương TP.HCM (HUIT)",
-      "logoUrl": "/images/site-logo.png",
+      "id": "sp-mb",
+      "name": "Ngân hàng MB Bank",
+      "logoUrl": "/images/logo nha tai tro/logo-mb-scaled.webp",
       "tier": "PLATINUM"
     },
     {
-      "id": "s2",
-      "name": "Trung tâm Tuyển sinh & Truyền thông HUIT",
-      "logoUrl": "/images/ieclogo.png",
+      "id": "sp-vib",
+      "name": "Ngân hàng Quốc tế VIB",
+      "logoUrl": "/images/logo nha tai tro/LOGO-VIB.webp",
+      "tier": "PLATINUM"
+    },
+    {
+      "id": "sp-cp",
+      "name": "Tập đoàn C.P. Group",
+      "logoUrl": "/images/logo nha tai tro/C.P.f5c91071.webp",
+      "tier": "PLATINUM"
+    },
+    {
+      "id": "sp-esuhai",
+      "name": "Công ty TNHH Esuhai",
+      "logoUrl": "/images/logo nha tai tro/Esuhai.png",
       "tier": "GOLD"
     },
     {
-      "id": "s3",
-      "name": "HUIT's ICONIC 2026",
-      "logoUrl": "/images/startuplogo.png",
+      "id": "sp-greenfood",
+      "name": "GreenFood Việt Nam",
+      "logoUrl": "/images/logo nha tai tro/greenfood.webp",
+      "tier": "GOLD"
+    },
+    {
+      "id": "sp-amangon",
+      "name": "Amangon Việt Nam",
+      "logoUrl": "/images/logo nha tai tro/logo-amangon.webp",
+      "tier": "GOLD"
+    },
+    {
+      "id": "sp-partner1",
+      "name": "Đối tác Đồng hành HUIT",
+      "logoUrl": "/images/logo nha tai tro/image-Photoroom.png",
+      "tier": "SILVER"
+    },
+    {
+      "id": "sp-partner2",
+      "name": "Đối tác Đồng hành",
+      "logoUrl": "/images/logo nha tai tro/image-Photoroom (1).png",
+      "tier": "SILVER"
+    },
+    {
+      "id": "sp-partner3",
+      "name": "Đối tác Đồng hành",
+      "logoUrl": "/images/logo nha tai tro/image-Photoroom (2).png",
+      "tier": "SILVER"
+    },
+    {
+      "id": "sp-partner4",
+      "name": "Đơn vị Bảo trợ Truyền thông",
+      "logoUrl": "/images/logo nha tai tro/image-removebg-preview.png",
+      "tier": "SILVER"
+    },
+    {
+      "id": "sp-partner5",
+      "name": "Đơn vị Hỗ trợ Sinh viên",
+      "logoUrl": "/images/logo nha tai tro/logo-1.png",
       "tier": "SILVER"
     }
   ],

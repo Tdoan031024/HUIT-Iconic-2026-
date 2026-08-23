@@ -279,13 +279,17 @@ export default function HomePage() {
   const ABOUT_REGISTER_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdlRmaBRgPAl_rbLjDOY__ROcyZsCOnoxec2izDhRVJTcHBfA/viewform';
 
   const MOCK_ONLINE_SPONSORS = [
-    { id: 'sp1', name: 'HUIT', logoUrl: 'https://huit.edu.vn/menu/images/logo.png' },
-    { id: 'sp2', name: 'Google', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },
-    { id: 'sp3', name: 'React', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg' },
-    { id: 'sp4', name: 'NextJS', logoUrl: 'https://cdn.worldvectorlogo.com/logos/next-js.svg' },
-    { id: 'sp5', name: 'Tailwind', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg' },
-    { id: 'sp6', name: 'Prisma', logoUrl: 'https://cdn.worldvectorlogo.com/logos/prisma-3.svg' },
-    { id: 'sp7', name: 'NodeJS', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg' }
+    { id: 'sp-mb', name: 'MB Bank', logoUrl: '/images/logo nha tai tro/logo-mb-scaled.webp' },
+    { id: 'sp-vib', name: 'VIB Bank', logoUrl: '/images/logo nha tai tro/LOGO-VIB.webp' },
+    { id: 'sp-cp', name: 'C.P. Group', logoUrl: '/images/logo nha tai tro/C.P.f5c91071.webp' },
+    { id: 'sp-esuhai', name: 'Esuhai', logoUrl: '/images/logo nha tai tro/Esuhai.png' },
+    { id: 'sp-greenfood', name: 'GreenFood', logoUrl: '/images/logo nha tai tro/greenfood.webp' },
+    { id: 'sp-amangon', name: 'Amangon', logoUrl: '/images/logo nha tai tro/logo-amangon.webp' },
+    { id: 'sp-partner1', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom.png' },
+    { id: 'sp-partner2', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom (1).png' },
+    { id: 'sp-partner3', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom (2).png' },
+    { id: 'sp-partner4', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-removebg-preview.png' },
+    { id: 'sp-partner5', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/logo-1.png' }
   ];
 
   const [candidates, setCandidates] = useState<Candidate[]>(LOCAL_MOCK_CANDIDATES);
@@ -890,7 +894,7 @@ export default function HomePage() {
                 <div className="w-full max-w-[1280px] mx-auto px-4 flex flex-col items-center justify-center text-center space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                   <span className="inline-flex items-center gap-2 text-[11px] sm:text-[13px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50/90 dark:bg-blue-950/70 px-4 py-1.5 rounded-full border border-blue-200/80 dark:border-blue-800/80 shadow-sm">
                     <span className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-                    ĐỒNG HÀNH CÙNG HUIT STARTUP
+                    ĐỒNG HÀNH CÙNG HUIT'S ICONIC 2026
                   </span>
                   <h2 className="text-[22px] sm:text-[34px] font-black uppercase tracking-tight text-slate-900 dark:text-white leading-tight">
                     Nhà tài trợ &amp; Đối tác
