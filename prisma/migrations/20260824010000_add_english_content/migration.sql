@@ -1,0 +1,9 @@
+ALTER TABLE `banner` ADD COLUMN `titleEn` VARCHAR(191) NULL;
+ALTER TABLE `candidate` ADD COLUMN `descriptionEn` TEXT NULL;
+ALTER TABLE `candidate` ADD COLUMN `biographyEn` TEXT NULL;
+ALTER TABLE `post` ADD COLUMN `titleEn` VARCHAR(191) NULL;
+ALTER TABLE `post` ADD COLUMN `summaryEn` TEXT NULL;
+ALTER TABLE `post` ADD COLUMN `contentEn` TEXT NULL;
+ALTER TABLE `sponsor` ADD COLUMN `descriptionEn` TEXT NULL;
+ALTER TABLE `timelineevent` ADD COLUMN `titleEn` VARCHAR(191) NULL;
+ALTER TABLE `timelineevent` ADD COLUMN `descriptionEn` TEXT NULL;

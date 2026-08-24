@@ -83,8 +83,9 @@ function extractTextLines(value?: string | null) {
   return blocks.length ? blocks : [wrapper.textContent?.trim() || ''].filter(Boolean);
 }
 
-function RichContent({ value, fallback, className }: { value?: string | null; fallback: string; className: string }) {
+function RichContent({ value, fallback = '', className }: { value?: string | null; fallback?: string; className: string }) {
   const content = value || fallback;
+  if (!content) return null;
   if (hasHtml(content)) {
     return <div className={className} dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(content) }} />;
   }
@@ -109,7 +110,7 @@ function formatDateTime(dStr: string | undefined | null) {
 }
 
 export default function GioiThieuPage() {
-  const registerUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdlRmaBRgPAl_rbLjDOY__ROcyZsCOnoxec2izDhRVJTcHBfA/viewform';
+  const registerUrl = '';
 
   const [settings, setSettings] = useState<any>(null);
   const [timelineEvents, setTimelineEvents] = useState<any[]>([]);
@@ -193,39 +194,6 @@ export default function GioiThieuPage() {
     );
   };
 
-  const defaultTimelineEvents = [
-    {
-      phase: "Nhận hồ sơ đăng ký",
-      date: "15/5 - 15/6/2026",
-      desc: "Các đội thi hoàn thiện hồ sơ, thông tin ý tưởng hoặc dự án khởi nghiệp sáng tạo để đăng ký tham gia cuộc thi.",
-      icon: getTimelineIcon(0)
-    },
-    {
-      phase: "Định hướng & tập huấn",
-      date: "17/6/2026",
-      desc: "Các đội thi được định hướng, tập huấn kỹ năng khởi nghiệp và chuẩn bị cho quá trình phát triển dự án.",
-      icon: getTimelineIcon(1)
-    },
-    {
-      phase: "Vòng loại",
-      date: "27-28/6/2026",
-      desc: "Hội đồng chuyên môn đánh giá, chọn lọc các ý tưởng và dự án phù hợp để tiếp tục bước vào vòng tiếp theo.",
-      icon: getTimelineIcon(2)
-    },
-    {
-      phase: "Vòng bán kết",
-      date: "25/7/2026",
-      desc: "Các đội thi trình bày, phản biện và hoàn thiện mô hình dự án dưới sự đánh giá của hội đồng chuyên môn.",
-      icon: getTimelineIcon(1)
-    },
-    {
-      phase: "Vòng chung kết",
-      date: "03/10/2026",
-      desc: "Các dự án xuất sắc nhất tranh tài, kết nối chuyên gia, nhà đầu tư và cơ hội ươm tạo sau cuộc thi.",
-      icon: getTimelineIcon(2)
-    }
-  ];
-
   const displayTimeline = timelineEvents && timelineEvents.length > 0
     ? timelineEvents.filter((e: any) => e.isActive && e.isImportant).map((event: any, idx: number) => ({
         phase: event.title,
@@ -233,37 +201,21 @@ export default function GioiThieuPage() {
         desc: event.description,
         icon: getTimelineIcon(idx % 3)
       }))
-    : defaultTimelineEvents;
+    : [];
 
   const organizers = settings?.aboutOrganizerDetail
     ? extractTextLines(settings.aboutOrganizerDetail)
-    : [
-        'Đơn vị tổ chức: Trường Đại học Công Thương TP. HCM (HUIT) và IEC.',
-        'Tài trợ kim cương: Sài Gòn Thăng Long; Quỹ đầu tư VinaTech.',
-        'Đơn vị phối hợp: Diễn đàn Doanh nghiệp; Khởi nghiệp Quốc gia phía Nam; VNEI.',
-        'Đơn vị bảo trợ: Các đơn vị/biểu trưng bảo trợ theo poster cuộc thi.'
-      ];
+    : [];
 
   const sectors = settings?.aboutSectors
     ? extractTextLines(settings.aboutSectors)
-    : [
-        'Công nghiệp, AI, chuyển đổi số và an ninh mạng',
-        'Công nghệ thực phẩm, nông nghiệp, môi trường và năng lượng',
-        'Giáo dục, văn hóa, du lịch, logistics, tài chính, thương mại điện tử và luật',
-        'Y tế, sức khỏe và đời sống',
-        'Phát triển bền vững và kinh doanh tạo tác động xã hội'
-      ];
+    : [];
 
   const benefits = settings?.aboutBenefits
     ? extractTextLines(settings.aboutBenefits)
-    : [
-        'Đào tạo kỹ năng khởi nghiệp',
-        'Mentor/cố vấn chuyên sâu',
-        'Startup Tour & kiểm chứng thị trường',
-        'Kết nối quỹ đầu tư, nhà đầu tư và cơ hội ươm tạo'
-      ];
+    : [];
 
-  const prize = settings?.aboutPrize || "Tổng giá trị giải thưởng 05 TỶ ĐỒNG và các gói hỗ trợ hấp dẫn, gồm tiền mặt, gói mentor/cố vấn chuyên sâu, gói sở hữu trí tuệ, nền tảng ERP Platform và nhiều cơ hội nhận các gói ươm tạo, kết nối đầu tư, phát triển dự án sau cuộc thi.";
+  const prize = settings?.aboutPrize || "";
 
   const parsedParticipants = settings?.aboutParticipants
     ? extractTextLines(settings.aboutParticipants).map((line: string) => {
@@ -273,22 +225,17 @@ export default function GioiThieuPage() {
         }
         return ['Đối tượng', line.trim()];
       })
-    : [
-        ['Học sinh', 'THPT, GDTX, trung cấp có ý tưởng khởi nghiệp sáng tạo.'],
-        ['Sinh viên, học viên', 'Đang học tại các trường đại học, cao đẳng và cơ sở giáo dục.'],
-        ['Cá nhân, tổ chức', 'Yêu thích hoạt động khởi nghiệp, có ý tưởng hoặc dự án sáng tạo.'],
-        ['Doanh nghiệp', 'HTX, hộ kinh doanh, doanh nghiệp vừa và nhỏ tại TP. Hồ Chí Minh và các tỉnh lân cận.']
-      ];
+    : [];
 
-  const statsYear = settings?.statsYear || '2025';
+  const statsYear = settings?.statsYear || '';
   const stats = [
-    [settings?.statsCandidates || 'Đang cập nhật', 'Dự án đăng ký'],
-    [settings?.statsVotes || 'Đang cập nhật', 'Lượt bình chọn'],
-    [settings?.statsParticipants || 'Đang cập nhật', 'Sinh viên tham gia'],
-    [settings?.statsViews || 'Đang cập nhật', 'Lượt tiếp cận trên mạng xã hội'],
-    [settings?.statsMedia || 'Đang cập nhật', 'Đơn vị truyền thông, đưa tin'],
-    [settings?.statsSchools || 'Đang cập nhật', 'Trường đại học, cao đẳng, THPT, TT GDTX tham gia'],
-  ];
+    [settings?.statsCandidates, 'Dự án đăng ký'],
+    [settings?.statsVotes, 'Lượt bình chọn'],
+    [settings?.statsParticipants, 'Sinh viên tham gia'],
+    [settings?.statsViews, 'Lượt tiếp cận trên mạng xã hội'],
+    [settings?.statsMedia, 'Đơn vị truyền thông, đưa tin'],
+    [settings?.statsSchools, 'Trường đại học, cao đẳng, THPT, TT GDTX tham gia'],
+  ].filter(([number]) => !!number);
 
   const registrationDeadline = settings?.registrationDeadline
     ? parseVN(settings.registrationDeadline)
@@ -298,7 +245,7 @@ export default function GioiThieuPage() {
       && (!registrationDeadline || registrationDeadline.getTime() >= Date.now())
     : null;
   const registrationHref = registrationOpen === true
-    ? (settings?.registrationUrl || registerUrl)
+    ? (settings?.registrationUrl || registerUrl || '#timeline-section')
     : '#timeline-section';
   const quickLinks = [
     { href: '#tong-quan', label: 'Tổng quan', icon: '01' },
@@ -841,7 +788,6 @@ export default function GioiThieuPage() {
                   <div className="w-full">
                     <RichContent
                       value={settings?.aboutDescription}
-                      fallback={`Cuộc thi HUIT Startup lần thứ VII năm 2026 cấp Thành phố với chủ đề “Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững” là hoạt động thường niên do Trường Đại học Công Thương TP. Hồ Chí Minh tổ chức. Sân chơi là bệ phóng giúp ươm mầm, kết nối nguồn lực và hiện thực hóa các dự án khởi nghiệp tiềm năng.\n\nNăm nay, cuộc thi mở rộng quy mô chào đón 3 bảng thi dành cho Học sinh, Sinh viên và Doanh nghiệp trên địa bàn TP.HCM và các tỉnh lân cận. Mục tiêu hướng tới việc tạo tác động xã hội tích cực, phát triển kinh tế bền vững và nâng cao năng lực thích ứng của nguồn nhân lực trẻ.`}
                       className="rich-content text-[16px] sm:text-[18px] text-[color:var(--about-text-primary)] leading-[1.8] font-normal text-justify"
                     />
                   </div>
@@ -957,7 +903,7 @@ export default function GioiThieuPage() {
                       <h4 className="about-prize-value text-[30px] sm:text-[36px] font-black mt-1.5 leading-normal py-1.5">
                         {(() => {
                           const match = prize.match(/\d+\s*[T|t]ỷ\s*[Đ|đ]ồng/i);
-                          return match ? match[0].toUpperCase() : "05 TỶ ĐỒNG";
+                          return match ? match[0].toUpperCase() : "";
                         })()}
                       </h4>
                     </div>
@@ -1074,12 +1020,12 @@ export default function GioiThieuPage() {
                       Thông tin liên hệ
                     </h3>
                     <div className="space-y-3.5 text-[15px] sm:text-[16px] leading-[1.6] text-[color:var(--about-text-secondary)] font-normal text-left pl-2 sm:pl-4">
-                      <p><b>Người liên hệ:</b> <span className="text-[color:var(--about-text-primary)]">{settings?.aboutContactName || 'Nguyễn Thị Bích Nguyên'}</span></p>
-                      <p><b>Chức vụ:</b> {settings?.aboutContactRole || 'Chuyên viên - TT Đổi mới sáng tạo và Khởi nghiệp'}</p>
+                      {settings?.aboutContactName && <p><b>Người liên hệ:</b> <span className="text-[color:var(--about-text-primary)]">{settings.aboutContactName}</span></p>}
+                      {settings?.aboutContactRole && <p><b>Chức vụ:</b> {settings.aboutContactRole}</p>}
                       <p><b>Đơn vị:</b> Trường Đại học Công Thương TP. HCM</p>
-                      <p><b>Điện thoại:</b> <a href={`tel:${settings?.aboutContactPhone || '0975702463'}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings?.aboutContactPhone || '0975702463'}</a></p>
-                      <p><b>Email:</b> <a href={`mailto:${settings?.aboutContactEmail || 'nguyenntb@huit.edu.vn'}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings?.aboutContactEmail || 'nguyenntb@huit.edu.vn'}</a></p>
-                      <p><b>Website:</b> <a href={settings?.aboutContactWebsite || "https://khoinghiep.huit.edu.vn"} target="_blank" rel="noopener noreferrer" className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings?.aboutContactWebsite || 'https://khoinghiep.huit.edu.vn'}</a></p>
+                      {settings?.aboutContactPhone && <p><b>Điện thoại:</b> <a href={`tel:${settings.aboutContactPhone}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactPhone}</a></p>}
+                      {settings?.aboutContactEmail && <p><b>Email:</b> <a href={`mailto:${settings.aboutContactEmail}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactEmail}</a></p>}
+                      {settings?.aboutContactWebsite && <p><b>Website:</b> <a href={settings.aboutContactWebsite} target="_blank" rel="noopener noreferrer" className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactWebsite}</a></p>}
                     </div>
                   </div>
 
@@ -1089,12 +1035,12 @@ export default function GioiThieuPage() {
                         <div className="mx-auto h-10 w-10 rounded-full border-2 border-[color:var(--about-border)] border-t-[color:var(--about-primary)] animate-spin" />
                         <p className="mt-3 text-[13px] text-[color:var(--about-text-secondary)]">Đang cập nhật thông tin đăng ký...</p>
                       </div>
-                    ) : registrationOpen === true ? (
+                    ) : registrationOpen === true && settings?.aboutContactQrUrl ? (
                       <>
                         <p className="mb-3 text-[12px] font-bold uppercase tracking-wider text-[color:var(--about-accent)]">Quét mã để đăng ký nhanh</p>
                         <img
                           alt="QR đăng ký HUIT Startup 2026"
-                          src={formatImgUrl(settings?.aboutContactQrUrl || '/images/qrdangky.png')}
+                          src={formatImgUrl(settings.aboutContactQrUrl)}
                           className="mx-auto h-auto w-full max-w-[150px] rounded-lg bg-white p-2 shadow-md object-contain"
                         />
                       </>

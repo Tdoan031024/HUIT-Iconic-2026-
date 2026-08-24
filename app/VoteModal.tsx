@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Candidate, WebUser } from '@/lib/types';
 import { apiUrl } from './api';
+import { fireConfetti } from '@/lib/confetti';
 
 interface VoteModalProps {
   candidate: Candidate;
@@ -27,10 +28,12 @@ function getContestTableLabel(candidate: Candidate) {
     return label.startsWith('Bảng ') ? label : `Bảng ${label}`;
   }
   switch (candidate.contestTable) {
+    case 'MALE':
+      return 'Bảng Nam (King)';
+    case 'FEMALE':
+      return 'Bảng Nữ (Queen)';
     case 'HIGH_SCHOOL':
       return 'Bảng học sinh';
-    case 'ENTERPRISE':
-      return 'Bảng doanh nghiệp';
     default:
       return 'Bảng sinh viên';
   }
@@ -123,6 +126,7 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
       }
 
       setStep('success');
+      fireConfetti(3500);
     } catch (err: any) {
       setErrorMessage(err.message || 'Có lỗi xảy ra khi gửi bình chọn.');
     } finally {

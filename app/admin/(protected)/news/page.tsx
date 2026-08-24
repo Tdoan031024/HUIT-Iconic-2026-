@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { apiUrl, formatAssetUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
+import ImageDropzone from '../../components/ImageDropzone';
 
 function parseMarkdownToHtml(markdown: string): string {
   if (!markdown) return '';
@@ -76,9 +78,12 @@ function parseMarkdownToHtml(markdown: string): string {
 interface Post {
   id: string;
   title: string;
+  titleEn?: string | null;
   slug: string;
   summary: string | null;
+  summaryEn?: string | null;
   content: string;
+  contentEn?: string | null;
   thumbnailUrl: string | null;
   category: string;
   views: number;
@@ -104,6 +109,7 @@ function slugify(text: string): string {
 }
 
 export default function NewsAdminPage() {
+  const { showAlert, showConfirm, showPrompt } = useAlert();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -114,11 +120,14 @@ export default function NewsAdminPage() {
   
   // Form fields
   const [formTitle, setFormTitle] = useState('');
+  const [formTitleEn, setFormTitleEn] = useState('');
   const [formSlug, setFormSlug] = useState('');
   const [formCategory, setFormCategory] = useState('Tin tức');
   const [formThumbnailUrl, setFormThumbnailUrl] = useState('');
   const [formSummary, setFormSummary] = useState('');
+  const [formSummaryEn, setFormSummaryEn] = useState('');
   const [formContent, setFormContent] = useState('');
+  const [formContentEn, setFormContentEn] = useState('');
   const [formIsActive, setFormIsActive] = useState(true);
   const [activeEditorTab, setActiveEditorTab] = useState<'edit' | 'preview' | 'seo'>('edit');
   const [isSlugCustomized, setIsSlugCustomized] = useState(false);
@@ -181,11 +190,14 @@ export default function NewsAdminPage() {
 
   const openAddModal = () => {
     setFormTitle('');
+    setFormTitleEn('');
     setFormSlug('');
     setFormCategory('Tin tức');
     setFormThumbnailUrl('');
     setFormSummary('');
+    setFormSummaryEn('');
     setFormContent('');
+    setFormContentEn('');
     setFormIsActive(true);
     setActiveEditorTab('edit');
     setIsSlugCustomized(false);
@@ -197,11 +209,14 @@ export default function NewsAdminPage() {
   const openEditModal = (p: Post) => {
     setSelectedPost(p);
     setFormTitle(p.title);
+    setFormTitleEn(p.titleEn || '');
     setFormSlug(p.slug);
     setFormCategory(p.category);
     setFormThumbnailUrl(p.thumbnailUrl || '');
     setFormSummary(p.summary || '');
+    setFormSummaryEn(p.summaryEn || '');
     setFormContent(p.content);
+    setFormContentEn(p.contentEn || '');
     setFormIsActive(p.isActive);
     setActiveEditorTab('edit');
     setIsSlugCustomized(true);
@@ -214,11 +229,14 @@ export default function NewsAdminPage() {
     e.preventDefault();
     const newPost = {
       title: formTitle,
+      titleEn: formTitleEn || undefined,
       slug: formSlug || undefined,
       category: formCategory,
       thumbnailUrl: formThumbnailUrl || undefined,
       summary: formSummary || undefined,
+      summaryEn: formSummaryEn || undefined,
       content: editorMode === 'wysiwyg' ? formContent : parseMarkdownToHtml(formContent),
+      contentEn: formContentEn || undefined,
       isActive: formIsActive,
     };
 
@@ -246,11 +264,14 @@ export default function NewsAdminPage() {
 
     const fieldsToUpdate = {
       title: formTitle,
+      titleEn: formTitleEn || undefined,
       slug: formSlug || undefined,
       category: formCategory,
       thumbnailUrl: formThumbnailUrl,
       summary: formSummary,
+      summaryEn: formSummaryEn,
       content: editorMode === 'wysiwyg' ? formContent : parseMarkdownToHtml(formContent),
+      contentEn: formContentEn,
       isActive: formIsActive,
     };
 
@@ -262,32 +283,33 @@ export default function NewsAdminPage() {
       });
       if (res.ok) {
         setModalMode(null);
-        alert('Cập nhật bài viết thành công!');
+        showAlert('Cập nhật bài viết thành công!', 'success');
         loadPosts();
         return;
       }
     } catch (err) {
       console.error(err);
     }
-    alert('Không thể kết nối đến server để cập nhật bài viết.');
+    showAlert('Không thể kết nối đến server để cập nhật bài viết.', 'error');
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này không? Thao tác này không thể khôi phục.')) return;
+    const ok = await showConfirm('Bạn có chắc chắn muốn xóa bài viết này không? Thao tác này không thể khôi phục.', 'Xác nhận xóa bài viết', 'error', 'Xóa ngay');
+    if (!ok) return;
 
     try {
       const res = await fetch(apiUrl(`/api/admin/posts/${id}`), {
         method: 'DELETE',
       });
       if (res.ok) {
-        alert('Xóa bài viết thành công!');
+        showAlert('Xóa bài viết thành công!', 'success');
         loadPosts();
         return;
       }
     } catch (err) {
       console.error(err);
     }
-    alert('Không thể kết nối đến server để xóa bài viết.');
+    showAlert('Không thể kết nối đến server để xóa bài viết.', 'error');
   };
 
   const insertTag = (startTag: string, endTag: string) => {
@@ -434,7 +456,7 @@ export default function NewsAdminPage() {
                 <tr key={p.id} className="hover:bg-[#edf4f1]/20 transition-colors">
                   <td className="px-5 py-2.5">
                     <div className="bg-slate-100 rounded border border-[#dce5e1] w-14 h-9 overflow-hidden flex items-center justify-center shadow-sm">
-                      <img src={formatAssetUrl(p.thumbnailUrl) || '/uploads/baner.jpg'} className="w-full h-full object-cover" alt="Thumb" />
+                      <img src={formatAssetUrl(p.thumbnailUrl || undefined) || '/uploads/baner.jpg'} className="w-full h-full object-cover" alt="Thumb" />
                     </div>
                   </td>
                   <td className="px-5 py-2.5 font-bold text-[#123c34] max-w-sm truncate" title={p.title}>{p.title}</td>
@@ -541,6 +563,11 @@ export default function NewsAdminPage() {
                 </div>
 
                 <div className="flex flex-col space-y-1.5">
+                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề tiếng Anh</label>
+                  <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formTitleEn} onChange={e => setFormTitleEn(e.target.value)} placeholder="English title (optional)" />
+                </div>
+
+                <div className="flex flex-col space-y-1.5">
                   <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Slug (Đường dẫn URL)</label>
                   <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formSlug} onChange={e => { setFormSlug(slugify(e.target.value)); setIsSlugCustomized(true); }} placeholder="Tự sinh nếu để trống..." />
                 </div>
@@ -557,47 +584,12 @@ export default function NewsAdminPage() {
                   </select>
                 </div>
 
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Ảnh đại diện (URL)</label>
-                  <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formThumbnailUrl} onChange={e => setFormThumbnailUrl(e.target.value)} placeholder="Nhập URL ảnh đại diện..." />
-                </div>
-
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Hoặc tải ảnh từ máy tính</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="w-full text-[11px] text-[#52605b] file:mr-3 file:py-1.5 file:px-2.5 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-[#123c34] file:text-white hover:file:bg-[#0f766e] cursor-pointer"
-                    onChange={async (event) => {
-                      const file = event.target.files?.[0];
-                      if (!file) return;
-                      const formData = new FormData();
-                      formData.append('file', file);
-                      try {
-                        const res = await fetch(apiUrl('/api/admin/upload'), {
-                          method: 'POST',
-                          body: formData,
-                        });
-                        if (res.ok) {
-                          const data = await res.json();
-                          setFormThumbnailUrl(data.url);
-                        } else {
-                          alert('Tải ảnh đại diện thất bại.');
-                        }
-                      } catch (err) {
-                        console.error(err);
-                        alert('Có lỗi xảy ra khi tải ảnh.');
-                      }
-                    }}
-                  />
-                </div>
-
-                {formThumbnailUrl && (
-                  <div className="w-full h-24 rounded-lg overflow-hidden border border-slate-200 bg-slate-50 relative mt-1 flex items-center justify-center">
-                    <img src={formatAssetUrl(formThumbnailUrl)} className="max-w-full max-h-full object-contain" alt="Preview Thumbnail" />
-                    <button type="button" onClick={() => setFormThumbnailUrl('')} className="absolute top-1 right-1 h-5 w-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center font-bold" title="Xóa ảnh">X</button>
-                  </div>
-                )}
+                <ImageDropzone
+                  label="Ảnh đại diện (Thumbnail)"
+                  value={formThumbnailUrl}
+                  onChange={setFormThumbnailUrl}
+                  aspectRatioHint="Khuyên dùng 16:9 hoặc 4:3"
+                />
 
                 <div className="flex items-center justify-between p-2.5 bg-[#fbfdfc] rounded-xl border border-[#dce5e1] mt-2">
                   <div className="flex flex-col">
@@ -669,9 +661,12 @@ export default function NewsAdminPage() {
                         </div>
                       </div>
                       <textarea rows={2} className="px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold resize-none" value={formSummary} onChange={e => setFormSummary(e.target.value)} required placeholder="Giới thiệu tóm tắt khoảng 2-3 câu..." />
+                      <textarea rows={2} className="px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold resize-none" value={formSummaryEn} onChange={e => setFormSummaryEn(e.target.value)} placeholder="English summary (optional)" />
                     </div>
 
                     <div className="flex flex-col flex-1 min-h-[350px]">
+                      <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider mb-1">Nội dung tiếng Anh (tuỳ chọn)</label>
+                      <textarea rows={4} className="mb-3 px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs resize-y" value={formContentEn} onChange={e => setFormContentEn(e.target.value)} placeholder="English HTML/Markdown content. Nếu bỏ trống, hệ thống dùng nội dung tiếng Việt." />
                       {editorMode === 'wysiwyg' ? (
                         /* ─── Visual WYSIWYG Editor Toolbar ─── */
                         <div className="flex justify-between items-center bg-[#f8fafc] border border-[#dce5e1] border-b-0 rounded-t-lg px-3 py-1.5 flex-wrap gap-2">
@@ -765,8 +760,8 @@ export default function NewsAdminPage() {
                             <div className="flex items-center gap-0.5">
                               <button
                                 type="button"
-                                onClick={() => {
-                                  const url = prompt('Nhập địa chỉ liên kết (URL):', 'https://');
+                                onClick={async () => {
+                                  const url = await showPrompt('Nhập địa chỉ liên kết (URL):', 'https://', 'Chèn liên kết');
                                   if (url) document.execCommand('createLink', false, url);
                                 }}
                                 className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-blue-600 font-bold"
@@ -776,8 +771,8 @@ export default function NewsAdminPage() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() => {
-                                  const url = prompt('Nhập URL hình ảnh:');
+                                onClick={async () => {
+                                  const url = await showPrompt('Nhập URL hình ảnh:', '', 'Chèn hình ảnh', 'https://... hoặc /images/...');
                                   if (url) document.execCommand('insertImage', false, url);
                                 }}
                                 className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-emerald-600 font-bold"

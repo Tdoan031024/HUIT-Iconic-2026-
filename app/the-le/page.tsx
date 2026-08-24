@@ -20,53 +20,6 @@ interface ExchangeRate {
   price: string;
 }
 
-const defaultSections: SectionConfig[] = [
-  {
-    title: 'Bình chọn miễn phí mỗi ngày',
-    steps: [
-      {
-        number: '01',
-        description: 'Tạo tài khoản mới hoặc đăng nhập để bắt đầu bình chọn.',
-        image: '/original_assets/imagefca6.png',
-      },
-      {
-        number: '02',
-        description: 'Mỗi tài khoản có 2 lượt bình chọn miễn phí mỗi ngày cho toàn bộ hệ thống.',
-        image: '/original_assets/imagef1be.png',
-      },
-      {
-        number: '03',
-        description: 'Chọn dự án bạn muốn ủng hộ từ trang chủ, bảng xếp hạng hoặc trang chi tiết dự án.',
-        image: '/original_assets/image81d3.png',
-      },
-      {
-        number: '04',
-        description: 'Mỗi lần xác nhận sẽ cộng 1 lượt bình chọn cho dự án. Khi dùng hết 2 lượt, bạn cần chờ đến ngày hôm sau.',
-        image: '/original_assets/image20da.png',
-      },
-    ],
-  },
-];
-
-const defaultExchangeRates: ExchangeRate[] = [
-  { points: '1 lượt', price: 'Miễn phí (2 lượt / ngày)' },
-];
-
-const faqItems = [
-  {
-    question: 'Bình chọn miễn phí có giới hạn không?',
-    answer: 'Có. Mỗi tài khoản được 2 lượt bình chọn miễn phí mỗi ngày cho toàn bộ dự án trong hệ thống. Dùng hết 2 lượt thì cần chờ sang ngày hôm sau.',
-  },
-  {
-    question: 'Tôi có thể bình chọn cho nhiều dự án không?',
-    answer: 'Có, nhưng tổng số lượt miễn phí mỗi ngày vẫn chỉ là 2. Bạn có thể dùng cả 2 lượt cho một dự án hoặc chia ra cho các dự án khác nhau.',
-  },
-  {
-    question: 'Tôi quên mật khẩu thì phải làm gì?',
-    answer: 'Bạn có thể đăng nhập bằng Google hoặc liên hệ ban tổ chức qua email iec@huit.edu.vn để được hỗ trợ khôi phục tài khoản.',
-  },
-];
-
 function hasEncodingArtifacts(value: any): boolean {
   if (typeof value !== 'string') return false;
   return /Ã|Â|Ä|Å|Æ|â|ð|�/.test(value);
@@ -79,21 +32,21 @@ function normalizeSections(rawSections: any[]): SectionConfig[] {
     return !title.includes('thanh toán') && !title.includes('sepay');
   });
 
-  if (filtered.length === 0) return defaultSections;
+  if (filtered.length === 0) return [];
   if (
     filtered.some((section: any) =>
       hasEncodingArtifacts(section.title) ||
       section.steps.some((step: any) => hasEncodingArtifacts(step.description)),
     )
   ) {
-    return defaultSections;
+    return [];
   }
 
   return filtered.map((section, index) => ({
     title: section.title || `Mục ${index + 1}`,
     steps: section.steps.map((step: any, stepIndex: number) => ({
       ...step,
-      image: step.image || defaultSections[index]?.steps?.[stepIndex]?.image || defaultSections[0]?.steps?.[stepIndex]?.image || '',
+      image: step.image || '',
     })),
   }));
 }
@@ -117,7 +70,7 @@ function normalizeRates(rawRates: any[]): ExchangeRate[] {
       hasEncodingArtifacts(rate.priceLabel),
     )
   ) {
-    return defaultExchangeRates;
+    return [];
   }
 
   const rates = rawRates
@@ -137,7 +90,7 @@ function normalizeRates(rawRates: any[]): ExchangeRate[] {
     .filter((rate) => rate.points && rate.price);
 
   const freeRates = rates.filter((rate) => rate.price.toLowerCase().includes('miễn phí') || rate.price === '0 VND');
-  return freeRates.length > 0 ? freeRates : defaultExchangeRates;
+  return freeRates;
 }
 
 function useInView(threshold = 0.15) {
@@ -167,9 +120,9 @@ const sectionColors = [
 ];
 
 export default function TheLePage() {
-  const [sections, setSections] = useState<SectionConfig[]>(defaultSections);
-  const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>(defaultExchangeRates);
-  const [faqList, setFaqList] = useState<any[]>(faqItems);
+  const [sections, setSections] = useState<SectionConfig[]>([]);
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
+  const [faqList, setFaqList] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const heroSection = useInView(0.2);

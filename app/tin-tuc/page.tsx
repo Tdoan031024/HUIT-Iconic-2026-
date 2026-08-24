@@ -3,13 +3,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '../api';
-import { SAMPLE_NEWS_POSTS } from './samplePosts';
+import { useLanguage } from '../../src/i18n/use-language';
+import { localizedText } from '../../src/i18n/content';
 
 interface Post {
   id: string;
   title: string;
+  titleEn?: string | null;
   slug: string;
   summary: string | null;
+  summaryEn?: string | null;
   thumbnailUrl: string | null;
   category: string;
   views: number;
@@ -41,6 +44,8 @@ export default function TinTucPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Tất cả');
   const [searchQuery, setSearchQuery] = useState('');
+  const language = useLanguage();
+  const text = (vi?: string | null, en?: string | null) => localizedText(language, vi, en);
   
   const heroSection = useInView(0.2);
   const contentSection = useInView(0.1);
@@ -54,13 +59,13 @@ export default function TinTucPage() {
         const res = await fetch(apiUrl('/api/posts'));
         if (res.ok) {
           const data = await res.json();
-          setPosts(Array.isArray(data) && data.length > 0 ? data : SAMPLE_NEWS_POSTS);
+          setPosts(Array.isArray(data) ? data : []);
         } else {
-          setPosts(SAMPLE_NEWS_POSTS);
+          setPosts([]);
         }
       } catch (err) {
-        console.error('Failed to fetch posts:', err);
-        setPosts(SAMPLE_NEWS_POSTS);
+        console.error('Failed to fetch posts from MySQL:', err);
+        setPosts([]);
       } finally {
         setLoading(false);
       }
@@ -72,8 +77,8 @@ export default function TinTucPage() {
     const matchesCategory = activeTab === 'Tất cả' || post.category === activeTab;
     const matchesSearch =
       searchQuery === '' ||
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (post.summary && post.summary.toLowerCase().includes(searchQuery.toLowerCase()));
+      text(post.title, post.titleEn).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (text(post.summary, post.summaryEn) && text(post.summary, post.summaryEn).toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
@@ -277,7 +282,7 @@ export default function TinTucPage() {
                       </Link>
                     </h3>
                     <p className="text-xs sm:text-sm text-[var(--site-muted)] leading-relaxed line-clamp-3">
-                      {featuredPost.summary || 'Không có mô tả tóm tắt.'}
+                      {text(featuredPost.summary, featuredPost.summaryEn) || (language === 'en' ? 'No summary available.' : 'Không có mô tả tóm tắt.')}
                     </p>
                     <Link href={`/tin-tuc/${featuredPost.slug}`} className="news-link items-center mt-4">
                       Đọc chi tiết bài viết →
@@ -294,7 +299,7 @@ export default function TinTucPage() {
                     <div className="relative overflow-hidden aspect-video">
                       <img
                         src={post.thumbnailUrl || '/uploads/baner.jpg'}
-                        alt={post.title}
+                        alt={text(post.title, post.titleEn)}
                         loading="lazy"
                         className="w-full h-full object-cover transition duration-500 hover:scale-105"
                       />
@@ -308,11 +313,11 @@ export default function TinTucPage() {
                         </div>
                         <h3 className="text-[15px] sm:text-[17px] font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2">
                           <Link href={`/tin-tuc/${post.slug}`} className="hover:text-[var(--site-primary)] transition">
-                            {post.title}
+                            {text(post.title, post.titleEn)}
                           </Link>
                         </h3>
                         <p className="text-[12px] text-[var(--site-muted)] leading-relaxed line-clamp-2 mt-2">
-                          {post.summary || 'Không có mô tả tóm tắt.'}
+                          {text(post.summary, post.summaryEn) || (language === 'en' ? 'No summary available.' : 'Không có mô tả tóm tắt.')}
                         </p>
                       </div>
                       <div className="flex items-center justify-between border-t border-[var(--site-line)] mt-4 pt-3">

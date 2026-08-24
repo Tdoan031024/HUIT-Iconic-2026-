@@ -6,16 +6,8 @@ import Link from 'next/link';
 import { useAlert } from './AlertProvider';
 import { apiUrl } from './api';
 import VoteModal from './VoteModal';
-import { SAMPLE_NEWS_POSTS } from './tin-tuc/samplePosts';
-
-const LOCAL_MOCK_CANDIDATES: Candidate[] = [
-  { id: '1', sbd: '085', name: 'Nguyễn Thanh Tân', votes: 106100, imageUrl: '/original_assets/image389b.png', description: 'Thí sinh tài năng của HUIT\'s Iconic 2024.' },
-  { id: '2', sbd: '089', name: 'Nguyễn Đình Tú', votes: 62215, imageUrl: '/original_assets/image725f.png', description: 'Chiến binh bản lĩnh mang màu sắc nhiệt huyết.' },
-  { id: '3', sbd: '024', name: 'Lê Ngọc Yến Vy', votes: 22800, imageUrl: '/original_assets/image940e.jpg', description: 'Đại diện cho vẻ đẹp tri thức và sự duyên dáng.' },
-  { id: '4', sbd: '096', name: 'Võ Bá Thiện', votes: 20590, imageUrl: '/original_assets/image8681.png', description: 'Nụ cười tỏa nắng cùng trái tim ấm áp.' },
-  { id: '5', sbd: '018', name: 'Trần Tuyết Ngân', votes: 16070, imageUrl: '/original_assets/imageada2.png', description: 'Gương mặt cá tính đầy bứt phá.' },
-  { id: '6', sbd: '095', name: 'Nguyễn Thị Cẩm Thanh', votes: 8410, imageUrl: '/original_assets/image4706.png', description: 'Sự kết hợp hoàn hảo giữa năng động và dịu dàng.' },
-];
+import { useLanguage } from '../src/i18n/use-language';
+import { localizedText } from '../src/i18n/content';
 
 interface Sponsor {
   id: string;
@@ -27,6 +19,7 @@ interface Sponsor {
 interface Banner {
   id: string;
   title: string;
+  titleEn?: string;
   imageUrl: string;
   link: string;
   isActive?: boolean;
@@ -56,8 +49,9 @@ function sanitizeRichHtml(value: string) {
   return wrapper.innerHTML;
 }
 
-function RichContent({ value, fallback, className }: { value?: string | null; fallback: string; className: string }) {
+function RichContent({ value, fallback = '', className }: { value?: string | null; fallback?: string; className: string }) {
   const content = value || fallback;
+  if (!content) return null;
   if (hasHtml(content)) {
     return <div className={className} dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(content) }} />;
   }
@@ -65,7 +59,7 @@ function RichContent({ value, fallback, className }: { value?: string | null; fa
 }
 
 function formatSponsorBannerUrl(url: string | undefined | null, currentTheme?: 'light' | 'dark'): string {
-  if (!url) return '/original_assets/image4b12.png';
+  if (!url) return '';
   
   let resolvedUrl = url;
   if (currentTheme === 'light') {
@@ -244,10 +238,13 @@ function formatDateTime(dStr: string | undefined | null) {
 }
 
 export default function HomePage() {
+  const language = useLanguage();
+  const text = (vi?: string | null, en?: string | null) => localizedText(language, vi, en);
   const { showAlert } = useAlert();
-  const ABOUT_FALLBACK_TITLE = 'HUIT STARTUP LẦN THỨ VII 2026';
   
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [tableFilter, setTableFilter] = useState<'ALL' | 'MALE' | 'FEMALE'>('ALL');
+  const [gateCountdown, setGateCountdown] = useState<{ days: number; hours: number; mins: number; secs: number; isEnded: boolean } | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -275,24 +272,9 @@ export default function HomePage() {
       observer.disconnect();
     };
   }, []);
-  const ABOUT_FALLBACK_DESCRIPTION = `Cuộc thi HUIT Startup lần 07 năm 2026 với chủ đề “Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững" cấp thành phố (HUIT STARTUP LẦN THỨ VII) là hoạt động thường niên do Trường Đại học Công Thương TP. Hồ Chí Minh tổ chức, nhằm tìm kiếm và ươm tạo các ý tưởng, dự án sáng tạo của học sinh, sinh viên, học viên và doanh nghiệp góp phần giải quyết các vấn đề xã hội và thúc đẩy phát triển bền vững. Đây không chỉ là sân chơi học thuật mà còn là bệ phóng cho những ý tưởng sáng tạo, những giải pháp thiết thực được hình thành, phát triển và hiện thực hóa, mang lại giá trị thiết thực cho bản thân, gia đình, cộng đồng và toàn xã hội. Năm 2026, cuộc thi trở lại với quy mô mở rộng và chủ đề đầy cảm hứng: "Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững". Cuộc thi chào đón sự tham gia của Học sinh, sinh viên, học viên ở các trường đại học, cao đắng, trung cấp, THPT, GDTX và Các cá nhân, tổ chức, doanh nghiệp (HTX, hộ kinh doanh, doanh nghiệp vừa và nhỏ trên địa bàn Thành phố Hồ Chí Minh và các tỉnh lân cận yêu thích hoạt động khởi nghiệp, có ý tưởng, dự án khởi nghiệp sáng. Mục tiêu là tìm kiếm và ươm mầm những ý tưởng, giải pháp đổi mới sáng tạo, góp phần giải quyết các vấn đề cấp thiết của cộng đồng, xã hội và thúc đẩy phát triển kinh tế – xã hội một cách bền vững. Thông qua cuộc thi, ban tổ chức mong muốn lan tỏa mạnh mẽ tinh thần khởi nghiệp, đổi mới sáng tạo trong giới trẻ; đồng thời kết nối và mở rộng hệ sinh thái khởi nghiệp đổi mới sáng tạo trong khối các cơ sở giáo dục, các startup tạo tiền đề cho sự phát triển nguồn nhân lực sáng tạo, thích ứng và bản lĩnh trong thời đại mới.`;
   const ABOUT_REGISTER_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdlRmaBRgPAl_rbLjDOY__ROcyZsCOnoxec2izDhRVJTcHBfA/viewform';
 
-  const MOCK_ONLINE_SPONSORS = [
-    { id: 'sp-mb', name: 'MB Bank', logoUrl: '/images/logo nha tai tro/logo-mb-scaled.webp' },
-    { id: 'sp-vib', name: 'VIB Bank', logoUrl: '/images/logo nha tai tro/LOGO-VIB.webp' },
-    { id: 'sp-cp', name: 'C.P. Group', logoUrl: '/images/logo nha tai tro/C.P.f5c91071.webp' },
-    { id: 'sp-esuhai', name: 'Esuhai', logoUrl: '/images/logo nha tai tro/Esuhai.png' },
-    { id: 'sp-greenfood', name: 'GreenFood', logoUrl: '/images/logo nha tai tro/greenfood.webp' },
-    { id: 'sp-amangon', name: 'Amangon', logoUrl: '/images/logo nha tai tro/logo-amangon.webp' },
-    { id: 'sp-partner1', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom.png' },
-    { id: 'sp-partner2', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom (1).png' },
-    { id: 'sp-partner3', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-Photoroom (2).png' },
-    { id: 'sp-partner4', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/image-removebg-preview.png' },
-    { id: 'sp-partner5', name: 'Đối tác Đồng hành', logoUrl: '/images/logo nha tai tro/logo-1.png' }
-  ];
-
-  const [candidates, setCandidates] = useState<Candidate[]>(LOCAL_MOCK_CANDIDATES);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [activeVoteCandidate, setActiveVoteCandidate] = useState<Candidate | null>(null);
   const [search, setSearch] = useState('');
   const [showAllCandidates, setShowAllCandidates] = useState(false);
@@ -302,37 +284,37 @@ export default function HomePage() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [settings, setSettings] = useState<any>(null);
-  const [homepageNewsPosts, setHomepageNewsPosts] = useState<any[]>(SAMPLE_NEWS_POSTS.slice(0, 3));
+  const [homepageNewsPosts, setHomepageNewsPosts] = useState<any[]>([]);
   const totalVotes = useMemo(() => candidates.reduce((sum, c) => sum + c.votes, 0), [candidates]);
-  const aboutTitleText = (settings?.aboutTitle || ABOUT_FALLBACK_TITLE).replace(/\s+NĂM\s+/i, ' ');
+  const aboutTitleText = text(settings?.aboutTitle, settings?.aboutTitleEn).replace(/\s+(NĂM|YEAR)\s+/i, ' ');
+  const hasAboutContent = !!(settings?.aboutTitle || settings?.aboutDescription || settings?.aboutImageUrl);
 
   const [promoTimeLeft, setPromoTimeLeft] = useState<string>('');
 
   useEffect(() => {
-    if (!settings?.activeVotingPromotion?.endAt) return;
-    
-    const updateTimer = () => {
-      const end = new Date(settings.activeVotingPromotion.endAt).getTime();
+    if (!settings?.endDate) return;
+
+    const updateGateTimer = () => {
+      const end = new Date(settings.endDate).getTime();
       const now = new Date().getTime();
       const diff = end - now;
-      
+
       if (diff <= 0) {
-        setPromoTimeLeft('Đã kết thúc');
+        setGateCountdown({ days: 0, hours: 0, mins: 0, secs: 0, isEnded: true });
         return;
       }
-      
-      const hrs = Math.floor(diff / (1000 * 60 * 60));
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const secs = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      const pad = (n: number) => String(n).padStart(2, '0');
-      setPromoTimeLeft(`${pad(hrs)} giờ ${pad(mins)} phút ${pad(secs)} giây`);
+      setGateCountdown({ days, hours, mins, secs, isEnded: false });
     };
-    
-    updateTimer();
-    const t = setInterval(updateTimer, 1000);
-    return () => clearInterval(t);
-  }, [settings?.activeVotingPromotion?.endAt]);
+
+    updateGateTimer();
+    const interval = setInterval(updateGateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [settings?.endDate]);
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -349,17 +331,7 @@ export default function HomePage() {
     return true;
   }, [settings]);
 
-  // Default banner when DB has no active banner
-  const defaultSlides = [
-    {
-      type: 'image',
-      url: '/uploads/baner.jpg',
-      title: 'HUIT STARTUP',
-      link: '#about-section'
-    }
-  ];
-
-  const [slides, setSlides] = useState<any[]>(defaultSlides);
+  const [slides, setSlides] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadData() {
@@ -374,11 +346,14 @@ export default function HomePage() {
 
         if (candRes.ok) {
           const candData = await candRes.json();
-          setCandidates(candData);
+          setCandidates(Array.isArray(candData) ? candData : []);
+        } else {
+          setCandidates([]);
         }
+
         if (banRes.ok) {
           const banData = await banRes.json();
-          const activeBanners = banData.filter((banner: Banner) => banner.isActive !== false);
+          const activeBanners = Array.isArray(banData) ? banData.filter((banner: Banner) => banner.isActive !== false) : [];
           if (activeBanners.length > 0) {
             const apiSlides = activeBanners.map((b: Banner) => {
               const isVideo = b.imageUrl.toLowerCase().endsWith('.mp4');
@@ -391,58 +366,61 @@ export default function HomePage() {
             });
             setSlides(apiSlides);
           } else {
-            setSlides(defaultSlides);
+            setSlides([]);
           }
           setBanners(activeBanners);
           setHasLoadedBanners(true);
           setCurrentBannerIndex(0);
         } else {
-          setSlides(defaultSlides);
+          setSlides([]);
           setBanners([]);
           setHasLoadedBanners(true);
-          setCurrentBannerIndex(0);
         }
+
         if (sponRes.ok) {
           const sponData = await sponRes.json();
-          setSponsors(sponData);
+          setSponsors(Array.isArray(sponData) ? sponData : []);
+        } else {
+          setSponsors([]);
         }
+
         if (postRes.ok) {
           const postData = await postRes.json();
           const activePosts = Array.isArray(postData) 
             ? postData.filter((p: any) => p.isActive !== false) 
             : [];
-          if (activePosts.length > 0) {
-            setHomepageNewsPosts(activePosts.slice(0, 3));
-          } else {
-            setHomepageNewsPosts(SAMPLE_NEWS_POSTS.slice(0, 3));
-          }
+          setHomepageNewsPosts(activePosts.slice(0, 3));
         } else {
-          setHomepageNewsPosts(SAMPLE_NEWS_POSTS.slice(0, 3));
+          setHomepageNewsPosts([]);
         }
       } catch (err) {
-        console.log('NestJS Backend API offline, using local mock/default data.', err);
-        setSlides(defaultSlides);
+        console.error('Lỗi nạp dữ liệu từ MySQL Database:', err);
+        setCandidates([]);
+        setSlides([]);
         setBanners([]);
+        setSponsors([]);
+        setHomepageNewsPosts([]);
         setHasLoadedBanners(true);
-        setCurrentBannerIndex(0);
-        setHomepageNewsPosts(SAMPLE_NEWS_POSTS.slice(0, 3));
       } finally {
         setIsLoading(false);
       }
     }
     loadData();
 
+    // Polling realtime từ DB mỗi 3s
     const interval = setInterval(async () => {
       try {
         const res = await fetch(apiUrl('/api/candidates'));
         if (res.ok) {
           const candData = await res.json();
-          setCandidates(candData);
+          if (Array.isArray(candData)) {
+            setCandidates(candData);
+          }
         }
-      } catch (err) {
-        console.log('Poll candidates failed');
+      } catch {
+        // DB offline
       }
-    }, 10000);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -625,13 +603,22 @@ export default function HomePage() {
   // Sort candidates by votes descending
   const sortedCandidates = [...candidates].sort((a, b) => b.votes - a.votes);
 
-  const filteredCandidates = sortedCandidates.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) || c.sbd.includes(search)
-  );
+  const filteredCandidates = sortedCandidates.filter(c => {
+    const matchesSearch = !search || 
+      c.name.toLowerCase().includes(search.toLowerCase()) || 
+      c.sbd.toLowerCase().includes(search.toLowerCase()) ||
+      (c.faculty && c.faculty.toLowerCase().includes(search.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (tableFilter === 'ALL') return true;
+    if (tableFilter === 'MALE') return c.contestTable === 'MALE';
+    if (tableFilter === 'FEMALE') return c.contestTable === 'FEMALE';
+    return true;
+  });
 
   const visibleCandidates = showAllCandidates
     ? filteredCandidates
-    : filteredCandidates.slice(0, 3);
+    : filteredCandidates.slice(0, 6);
 
   return (
     <>
@@ -660,7 +647,7 @@ export default function HomePage() {
               onTouchEnd={handleDragEnd}
             >
               <h1 className="text-transparent absolute -z-[1] text-transparent-transparent">
-                {slides[currentBannerIndex]?.title || "HUIT's Iconic"}
+                {slides[currentBannerIndex]?.title || ''}
               </h1>
 
               {/* Slider track */}
@@ -723,6 +710,7 @@ export default function HomePage() {
         )}
 
         {/* About Section */}
+        {hasAboutContent && (
         <div id="about-section" ref={aboutRef} className="sc-1a037b37-0 ekqPrV relative mt-6 sm:mt-12 overflow-hidden">
           {/* Ambient Glowing Orbs */}
           <div className={`absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[350px] h-[350px] rounded-full bg-gradient-to-tr from-[#0A2FFF]/10 to-[#79BCC2]/10 blur-[90px] pointer-events-none transition-opacity duration-[2800ms] ${aboutVisible ? 'opacity-100' : 'opacity-0'}`} />
@@ -733,7 +721,7 @@ export default function HomePage() {
             {/* Section Main Header Căn Giữa */}
             <div className={`flex flex-col space-y-2 text-center mb-6 sm:mb-10 transform transition-all duration-700 ease-out ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
               <h2 className="text-[26px] sm:text-[42px] tracking-[-0.7px] leading-[32px] sm:leading-[50px] font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-black to-black/70 dark:from-white dark:to-white/70">
-                Giới thiệu cuộc thi
+                  {language === 'en' ? 'About the competition' : 'Giới thiệu cuộc thi'}
               </h2>
               <div
                 className="h-[3.5px] bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] mx-auto rounded-full mt-2 transition-all duration-[3200ms] ease-out"
@@ -753,6 +741,7 @@ export default function HomePage() {
                 className={`w-full flex flex-col space-y-4 sm:space-y-5 text-left transform transition-all duration-700 ${aboutVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
               >
                 <h3
+                  suppressHydrationWarning
                   className="w-full text-center uppercase leading-tight"
                   style={{
                     fontSize: 'clamp(18px, 2.2vw, 24px)',
@@ -767,8 +756,7 @@ export default function HomePage() {
                 </h3>
 
                 <RichContent
-                  value={settings?.aboutDescription}
-                  fallback={ABOUT_FALLBACK_DESCRIPTION}
+                  value={text(settings?.aboutDescription, settings?.aboutDescriptionEn)}
                   className="rich-content about-description-copy text-[15px] sm:text-[18px] text-black dark:text-white leading-[1.95] font-normal text-justify"
                 />
 
@@ -862,7 +850,7 @@ export default function HomePage() {
                   <img
                     alt="Poster HUIT STARTUP"
                     className="w-full h-full object-contain object-center p-1 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                    src={settings?.aboutImageUrl || "/uploads/poster-khoi-nghiep.jpg"}
+                    src={settings.aboutImageUrl}
                   />
                 </div>
               </div>
@@ -870,6 +858,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Voting & Candidates Container */}
         <div className="relative" id="candidates-section" ref={candidatesRef}>
@@ -934,10 +923,10 @@ export default function HomePage() {
               <div className="flex flex-col space-y-4 text-center opacity-100 translate-y-0">
                 <div className="flex flex-col space-y-1.5">
                   <h2 className="text-[22px] sm:text-[42px] tracking-[-1px] leading-[27px] sm:leading-[52px] font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-black to-black/70 dark:from-white dark:to-white/70">
-                    Danh sách dự án
+                    Danh sách Thí sinh
                   </h2>
-                  <h3 className="candidate-section-subtitle hidden text-[16px] sm:text-[28px] py-1 leading-[24px] uppercase font-bold text-blue-600 dark:text-blue-400">
-                    HUIT STARTUP LẦN THỨ VII 2026
+                  <h3 className="candidate-section-subtitle text-[14px] sm:text-[20px] py-1 leading-[24px] uppercase font-bold text-blue-600 dark:text-[#79BCC2]">
+                    HUIT'S ICONIC 2026
                   </h3>
                 </div>
                 <div
@@ -945,10 +934,57 @@ export default function HomePage() {
                   style={{ width: candidatesVisible ? '80px' : '0px' }}
                 />
                 <p className="mx-auto max-w-[760px] text-[14px] sm:text-[16px] leading-relaxed text-neutral-600 dark:text-white/68">
-                  Khám phá các ý tưởng khởi nghiệp sáng tạo, theo dõi lượt bình chọn và ủng hộ dự án bạn yêu thích.
+                  Khám phá các gương mặt tài năng &amp; nét đẹp sinh viên HUIT, theo dõi bảng xếp hạng và bình chọn cho thí sinh bạn yêu thích.
                 </p>
               </div>
 
+              {/* Live Countdown Timer Widget */}
+              {gateCountdown && !gateCountdown.isEnded && (
+                <div className="mt-6 mb-2 flex flex-col items-center">
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
+                    ⏳ Thời gian còn lại của Cổng bình chọn
+                  </span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {[
+                      { val: gateCountdown.days, label: 'Ngày' },
+                      { val: gateCountdown.hours, label: 'Giờ' },
+                      { val: gateCountdown.mins, label: 'Phút' },
+                      { val: gateCountdown.secs, label: 'Giây' }
+                    ].map((item, i) => (
+                      <div key={i} className="flex flex-col items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 sm:px-4 py-2 min-w-[58px] sm:min-w-[68px] shadow-sm">
+                        <span className="text-lg sm:text-2xl font-black text-[#0A2FFF] dark:text-[#79BCC2] font-mono leading-none">
+                          {String(item.val).padStart(2, '0')}
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase mt-1">
+                          {item.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Table Filter Tabs */}
+              <div className="flex items-center gap-2 mt-5">
+                {[
+                  { key: 'ALL', label: '🌟 Tất cả thí sinh' },
+                  { key: 'FEMALE', label: '👑 Bảng Nữ (Queen)' },
+                  { key: 'MALE', label: '🤴 Bảng Nam (King)' },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setTableFilter(tab.key as any)}
+                    className={`px-4 py-2 rounded-full text-xs font-black transition-all duration-200 ${
+                      tableFilter === tab.key
+                        ? 'bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] text-white shadow-md scale-105'
+                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-blue-400'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
               {/* Search Bar matching sample web */}
               <div
@@ -956,7 +992,7 @@ export default function HomePage() {
                   transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                   transitionDelay: '400ms'
                 }}
-                className="max-w-[615px] w-full mt-3 sm:mt-10 opacity-100 translate-y-0"
+                className="max-w-[615px] w-full mt-4 sm:mt-6 opacity-100 translate-y-0"
               >
                 <div className="flex items-center space-x-[8px] rounded-[20px] px-[8px] py-[7px] border border-grey-lightGrey1 dark:border-grey-darkGrey bg-grey-lightGrey2 dark:bg-grey-dimGrey h-[36px] sm:h-[60px] !px-2 rounded-[40px] w-full shadow-lg focus-within:border-[#79BCC2]/50 transition-all duration-300">
                   <div className="fill-neutral-neutral1 dark:fill-neutral-white pl-2">
@@ -966,7 +1002,7 @@ export default function HomePage() {
                   </div>
                   <input
                     className="w-full bg-transparent focus:outline-none text-neutral-neutral1 dark:text-neutral-white placeholder:text-neutral-neutral1 dark:placeholder:text-neutral-white pl-2 text-[14px]"
-                    placeholder="Tìm kiếm dự án..."
+                    placeholder="Tìm kiếm thí sinh theo Tên, SBD, Khoa..."
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
@@ -1064,7 +1100,7 @@ export default function HomePage() {
                           {/* Project details */}
                           <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
                             <div className="project-card-meta">
-                              <span className="project-card-code-badge">Mã dự án: {c.sbd}</span>
+                              <span className="project-card-code-badge">SBD: {c.sbd}</span>
                               <span className={`project-rank-badge ${rankTone}`}>Top {rank}</span>
                             </div>
 
@@ -1074,6 +1110,11 @@ export default function HomePage() {
                                   {c.name}
                                 </Link>
                               </h4>
+                              {c.faculty && (
+                                <p className="text-[11px] font-bold text-[#79BCC2] mt-0.5 truncate">
+                                  {c.faculty}
+                                </p>
+                              )}
                             </div>
 
                             <div className="project-vote-stat flex items-center justify-between">
@@ -1151,17 +1192,18 @@ export default function HomePage() {
         </div>
 
 
+        {settings?.themeVideoEmbedUrl && (
         <section className="modern-section alt" aria-labelledby="video-title">
           <div className="modern-container video-feature">
             <div className="modern-section-head">
-              <span className="modern-kicker">Video chủ đề</span>
-              <h2 id="video-title">Khởi nghiệp không chỉ là một ước mơ.</h2>
-              <p>Đó là hành trình nhìn thấy vấn đề, dám bắt đầu và kiên trì xây dựng một giải pháp tốt hơn cho cộng đồng.</p>
-              <Link href="/gioi-thieu" className="news-link">Khám phá câu chuyện HUIT Startup →</Link>
+              <span className="modern-kicker">{language === 'en' ? 'Theme video' : 'Video chủ đề'}</span>
+              {text(settings?.themeVideoTitle, settings?.themeVideoTitleEn) && <h2 id="video-title">{text(settings?.themeVideoTitle, settings?.themeVideoTitleEn)}</h2>}
+              {text(settings?.themeVideoDescription, settings?.themeVideoDescriptionEn) && <p>{text(settings?.themeVideoDescription, settings?.themeVideoDescriptionEn)}</p>}
+              <Link href="/gioi-thieu" className="news-link">{language === 'en' ? 'Discover the ICONIC story →' : 'Khám phá câu chuyện HUIT Startup →'}</Link>
             </div>
             <div className="video-shell" style={{ aspectRatio: '267/476', maxWidth: '340px', margin: '0 auto' }}>
               <iframe 
-                src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F846436581869565%2F&show_text=false&width=267&t=0" 
+                src={settings.themeVideoEmbedUrl} 
                 width="267" 
                 height="476" 
                 style={{ border: 'none', overflow: 'hidden', width: '100%', height: '100%' }} 
@@ -1173,50 +1215,51 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
         <section className="modern-section news-section-compact" aria-labelledby="news-title">
           <div className="modern-container">
             <div className="modern-section-head">
-              <span className="modern-kicker">Tin tức &amp; Thông báo</span>
-              <h2 id="news-title">Cập nhật mới nhất từ HUIT Startup</h2>
-              <p>Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.</p>
+              <span className="modern-kicker">{language === 'en' ? 'News & announcements' : 'Tin tức & Thông báo'}</span>
+              <h2 id="news-title">{language === 'en' ? 'Latest ICONIC updates' : 'Cập nhật mới nhất từ HUIT Startup'}</h2>
+              <p>{language === 'en' ? 'Follow milestones, activities and important announcements throughout the competition.' : 'Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.'}</p>
             </div>
             <div className="news-grid-modern">
               {homepageNewsPosts.map((post, index) => (
                 <article key={post.id} className={`news-card-modern ${index === 0 ? 'featured' : ''}`}>
-                  <img src={post.thumbnailUrl || '/uploads/baner.jpg'} loading="lazy" alt={post.title} />
+                  <img src={post.thumbnailUrl || '/uploads/baner.jpg'} loading="lazy" alt={text(post.title, post.titleEn)} />
                   <div className="news-card-body">
                     <div className="news-meta">
                       <strong>{post.category}</strong>
                       <time>{formatDateTime(post.createdAt)}</time>
                     </div>
-                    <h3>{post.title}</h3>
-                    <p>{post.summary}</p>
-                    <Link className="news-link" href={`/tin-tuc/${post.slug}`}>Xem chi tiết →</Link>
+                    <h3>{text(post.title, post.titleEn)}</h3>
+                    <p>{text(post.summary, post.summaryEn)}</p>
+                    <Link className="news-link" href={`/tin-tuc/${post.slug}`}>{language === 'en' ? 'Read more →' : 'Xem chi tiết →'}</Link>
                   </div>
                 </article>
               ))}
             </div>
             <div className="mt-8 flex justify-center">
               <Link href="/tin-tuc" className="project-list-action active inline-flex items-center justify-center rounded-full px-6 py-3 text-[11px] sm:text-[13px] font-extrabold uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 active:scale-95">
-                Xem thêm tin tức
+                {language === 'en' ? 'View more news' : 'Xem thêm tin tức'}
               </Link>
             </div>
           </div>
         </section>
 
         {/* Sponsor Section matching sample web */}
-        {!settings?.hideSponsorBanner && (
+        {settings?.sponsorBannerUrl && !settings?.hideSponsorBanner && (
           <div className="relative w-full max-w-[1180px] mx-auto pb-8 sm:pb-12" id="sponsor-section" ref={sponsorsRef}>
 
             <div className="pt-8 sm:pt-12 flex flex-col space-y-5 items-center relative z-10">
               <div className={`flex flex-col space-y-1.5 text-center transform transition-all duration-700 ease-out ${sponsorsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <div className="flex flex-col space-y-1.5">
                   <h2 className="text-[19px] sm:text-[31px] tracking-[-0.5px] leading-[25px] sm:leading-[38px] font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-black to-black/70 dark:from-white dark:to-white/70">
-                    NHÀ TÀI TRỢ &amp; ĐỐI TÁC
+                    {language === 'en' ? 'SPONSORS &amp; PARTNERS' : 'NHÀ TÀI TRỢ &amp; ĐỐI TÁC'}
                   </h2>
                   <h3 className="text-[13px] sm:text-[18px] py-0.5 leading-[22px] uppercase font-bold text-blue-600 dark:text-blue-400">
-                    {settings?.eventTitle || "HUIT's Iconic"}
+                    {settings?.eventTitle || ''}
                   </h3>
                 </div>
                 <div
@@ -1234,7 +1277,7 @@ export default function HomePage() {
                   }`}
               >
                 <div className="relative group hover-shine-effect rounded-2xl overflow-hidden">
-                  <img alt="Sponsors Logo" className="w-full h-auto object-contain rounded-xl relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.01]" src={formatSponsorBannerUrl(settings?.sponsorBannerUrl, theme)} />
+                  <img alt="Sponsors Logo" className="w-full h-auto object-contain rounded-xl relative z-10 transition-transform duration-700 ease-out group-hover:scale-[1.01]" src={formatSponsorBannerUrl(settings.sponsorBannerUrl, theme)} />
                 </div>
               </div>
             </div>

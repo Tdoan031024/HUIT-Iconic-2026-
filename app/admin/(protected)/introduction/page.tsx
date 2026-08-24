@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { apiUrl, formatAssetUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
+import ImageDropzone from '../../components/ImageDropzone';
 
 function escapeHtml(value: string) {
   return value
@@ -29,6 +31,7 @@ function RichTextModal({
   onClose: () => void;
   onApply: (value: string) => void;
 }) {
+  const { showPrompt } = useAlert();
   const editorRef = useRef<HTMLDivElement>(null);
 
   const focusEditor = () => {
@@ -40,8 +43,8 @@ function RichTextModal({
     document.execCommand(command, false, value);
   };
 
-  const createLink = () => {
-    const url = window.prompt('Nhập đường dẫn liên kết');
+  const createLink = async () => {
+    const url = await showPrompt('Nhập đường dẫn liên kết (URL):', 'https://', 'Chèn liên kết');
     if (!url) return;
     runCommand('createLink', url);
   };
@@ -184,6 +187,7 @@ function RichTextModal({
 }
 
 export default function IntroductionAdminPage() {
+  const { showAlert } = useAlert();
   const [aboutTitle, setAboutTitle] = useState('HUIT STARTUP LẦN THỨ VII 2026');
   const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi HUIT Startup lần VII - Cấp Thành phố năm 2026');
   const [aboutDescription, setAboutDescription] = useState('');
@@ -285,13 +289,13 @@ export default function IntroductionAdminPage() {
         }),
       });
       if (res.ok) {
-        alert('Cập nhật thông tin cuộc thi thành công!');
+        showAlert('Cập nhật thông tin cuộc thi thành công!', 'success');
       } else {
-        alert('Cập nhật thất bại.');
+        showAlert('Cập nhật thất bại.', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('Lỗi kết nối máy chủ.');
+      showAlert('Lỗi kết nối máy chủ.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -369,38 +373,14 @@ export default function IntroductionAdminPage() {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Cột trái: Poster & Tải ảnh */}
+            {/* Cột trái: Poster kéo thả */}
             <div className="lg:col-span-1 space-y-4">
-              <div className="overflow-hidden rounded-lg border border-[#dce5e1] bg-[#f4f7f6] aspect-[4/3] flex items-center justify-center relative group">
-                <img 
-                  src={formatAssetUrl(aboutImageUrl || '/uploads/poster-khoi-nghiep.jpg')} 
-                  alt="About Poster Preview" 
-                  className="w-full h-full object-cover" 
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider block mb-1">Đường dẫn hình ảnh</span>
-                  <input 
-                    type="text" 
-                    value={aboutImageUrl} 
-                    onChange={(e) => setAboutImageUrl(e.target.value)} 
-                    className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                    required 
-                  />
-                </label>
-                
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider block">Tải ảnh mới lên</span>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleFileUpload} 
-                    className="w-full text-xs text-[#52605b] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-[#123c34] file:text-white hover:file:bg-[#0f766e] cursor-pointer" 
-                  />
-                </div>
-              </div>
+              <ImageDropzone
+                label="Poster hình ảnh cuộc thi"
+                value={aboutImageUrl}
+                onChange={setAboutImageUrl}
+                aspectRatioHint="Khuyên dùng 4:3 hoặc 16:9"
+              />
             </div>
 
             {/* Cột phải: Tiêu đề & Mô tả */}
@@ -766,16 +746,12 @@ export default function IntroductionAdminPage() {
                 <input type="text" className="h-8 w-full rounded-md border border-[#dce5e1] bg-[#fbfdfc] px-2.5 text-xs font-semibold text-[#18211f] outline-none focus:border-[#0f766e]" value={aboutContactWebsite} onChange={e => setAboutContactWebsite(e.target.value)} required />
               </label>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center rounded-lg border border-slate-100 bg-[#fbfdfc] p-2.5">
-                <div className="flex flex-col space-y-1">
-                  <span className="text-[9px] font-bold text-[#52605b] uppercase tracking-wider block">Mã QR Đăng ký</span>
-                  <input type="text" className="h-7 w-full rounded border border-slate-200 bg-white px-2 text-[10.5px] font-semibold outline-none" value={aboutContactQrUrl} onChange={e => setAboutContactQrUrl(e.target.value)} required />
-                  <input type="file" accept="image/*" onChange={handleQrUpload} className="w-full text-[10px] text-[#52605b] file:mr-1.5 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:font-bold file:bg-[#123c34] file:text-white hover:file:bg-[#0f766e] cursor-pointer" />
-                </div>
-                <div className="flex justify-center">
-                  <img src={formatAssetUrl(aboutContactQrUrl)} className="h-20 w-20 object-contain rounded border bg-white p-1 shadow-sm" alt="QR Code Preview" />
-                </div>
-              </div>
+              <ImageDropzone
+                label="Mã QR Đăng ký / Liên hệ"
+                value={aboutContactQrUrl}
+                onChange={setAboutContactQrUrl}
+                aspectRatioHint="Hình vuông 1:1"
+              />
             </div>
           </div>
         </div>

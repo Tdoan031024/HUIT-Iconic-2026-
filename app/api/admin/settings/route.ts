@@ -3,7 +3,7 @@ import { getSettings, updateSettings } from '@/lib/service';
 
 export async function GET() {
   try {
-    const settings = getSettings();
+    const settings = await getSettings();
     return NextResponse.json(settings);
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Lỗi server' }, { status: 500 });
@@ -13,7 +13,7 @@ export async function GET() {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const updated = updateSettings(body);
+    const updated = await updateSettings(body);
     return NextResponse.json(updated);
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Lỗi server' }, { status: 500 });

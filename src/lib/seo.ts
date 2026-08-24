@@ -4,9 +4,9 @@
  */
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-const SITE_NAME = 'HUIT Startup 2026';
-const DEFAULT_TITLE = 'HUIT STARTUP 2026 - Đổi mới sáng tạo hướng tới phát triển bền vững';
-const DEFAULT_DESC = 'Nền tảng cuộc thi khởi nghiệp sáng tạo HUIT Startup 2026, nơi các dự án tiềm năng được bình chọn và kết nối với nhà đầu tư, doanh nghiệp đồng hành.';
+const SITE_NAME = "HUIT's ICONIC 2026";
+const DEFAULT_TITLE = "HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT";
+const DEFAULT_DESC = "Nền tảng bình chọn chính thức cuộc thi HUIT's ICONIC 2026, nơi tôn vinh nét đẹp, trí tuệ và bản lĩnh sinh viên HUIT.";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og-default.png`;
 const ORGANIZER = 'Trường Đại học Công nghiệp TP.HCM (HUIT)';
 const ORGANIZER_URL = 'https://www.huit.edu.vn';
@@ -49,6 +49,7 @@ export function buildMetadata(seo: PageSEO = {}) {
       siteName: SITE_NAME,
       type,
       locale: 'vi_VN',
+      alternateLocale: ['en_US'],
       images: [
         {
           url: image,

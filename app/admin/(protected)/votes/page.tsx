@@ -37,6 +37,7 @@ function escapeCSVValue(val: any): string {
 }
 
 export default function VoteLogsAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [logs, setLogs] = useState<VoteLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -46,7 +47,6 @@ export default function VoteLogsAdminPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [hidePublicVoteHistory, setHidePublicVoteHistory] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
-  const { showConfirm } = useAlert();
 
   const loadLogs = async () => {
     try {
@@ -99,31 +99,46 @@ export default function VoteLogsAdminPage() {
       setHidePublicVoteHistory(next);
     } catch (err: any) {
       console.error('Lỗi lưu cấu hình lịch sử bình chọn:', err);
-      alert(err?.message || 'Không thể lưu cấu hình lịch sử bình chọn.');
+      showAlert(err?.message || 'Không thể lưu cấu hình lịch sử bình chọn.', 'error');
     } finally {
       setSettingsSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!await showConfirm('CẢNH BÁO: Xóa bản ghi bình chọn này sẽ tự động giảm trừ 1 điểm của ứng viên tương ứng. Bạn có chắc chắn muốn xóa không?')) {
-      return;
-    }
+    const ok = await showConfirm(
+      'CẢNH BÁO: Xóa bản ghi bình chọn này sẽ tự động giảm trừ 1 điểm của ứng viên tương ứng. Bạn có chắc chắn muốn xóa không?',
+      'Xác nhận xóa lượt vote',
+      'warning',
+      'Xóa ngay'
+    );
+    if (!ok) return;
+
     try {
       const res = await fetch(apiUrl(`/api/admin/votes/${id}`), {
         method: 'DELETE',
       });
       if (res.ok) {
-        alert('Xóa lượt bình chọn thành công và đã hoàn lại điểm ứng viên!');
+        showAlert('Xóa lượt bình chọn thành công và đã hoàn lại điểm ứng viên!', 'success');
         loadLogs();
       } else {
         const errorData = await res.json();
-        alert(errorData.message || 'Xóa lượt bình chọn thất bại.');
+        showAlert(errorData.message || 'Xóa lượt bình chọn thất bại.', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('Đã xảy ra lỗi kết nối đến server.');
+      showAlert('Đã xảy ra lỗi kết nối đến server.', 'error');
     }
+  };
+
+  const handleDeleteBulk = async () => {
+    if (!selectedIds.size) return;
+    const ok = await showConfirm(`Bạn có chắc muốn xóa ${selectedIds.size} lượt bình chọn đã chọn không?`, 'Xóa lượt bình chọn', 'warning', 'Xóa ngay');
+    if (!ok) return;
+    const res = await fetch(apiUrl('/api/admin/votes/delete-bulk'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: Array.from(selectedIds) }) });
+    if (!res.ok) { showAlert('Xóa hàng loạt thất bại.', 'error'); return; }
+    showAlert('Đã xóa các lượt bình chọn đã chọn.', 'success');
+    loadLogs();
   };
 
   const handleExportCSV = () => {
@@ -188,6 +203,21 @@ export default function VoteLogsAdminPage() {
       );
   }, [appliedProjectSearch, candidateFilter, search, logs]);
 
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredLogs.length && filteredLogs.length > 0) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredLogs.map((l) => l.id)));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
+  };
+
   const uniqueCandidates = useMemo(() => {
     const seen = new Set<string>();
     const list: { sbd: string; name: string }[] = [];
@@ -213,59 +243,8 @@ export default function VoteLogsAdminPage() {
     setSelectedIds(new Set());
   };
 
-  const toggleSelectAll = () => {
-    if (selectedIds.size === filteredLogs.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredLogs.map((log) => log.id)));
-    }
-  };
-
-  const toggleSelectOne = (id: string) => {
-    const next = new Set(selectedIds);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    setSelectedIds(next);
-  };
-
-  const handleDeleteBulk = async () => {
-    if (selectedIds.size === 0) return;
-    if (
-      !await showConfirm(
-        `CẢNH BÁO: Bạn có chắc chắn muốn xóa ${selectedIds.size} lượt bình chọn đã chọn? Điểm của các ứng viên tương ứng sẽ tự động giảm trừ tương ứng. Hành động này không thể hoàn tác!`
-      )
-    ) {
-      return;
-    }
-    try {
-      setLoading(true);
-      const res = await fetch(apiUrl('/api/admin/votes/delete-bulk'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids: Array.from(selectedIds) }),
-      });
-      if (res.ok) {
-        alert(`Đã xóa thành công ${selectedIds.size} lượt bình chọn và hoàn lại điểm cho ứng viên!`);
-        setSelectedIds(new Set());
-        loadLogs();
-      } else {
-        const errorData = await res.json();
-        alert(errorData.message || 'Xóa hàng loạt thất bại.');
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Đã xảy ra lỗi kết nối đến server.');
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="space-y-4">
-      {/* Header section */}
       <section className="flex flex-col gap-3 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Nhật ký cử tri</p>

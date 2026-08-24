@@ -11,29 +11,58 @@ interface Toast {
   title: string;
 }
 
+interface ConfirmConfig {
+  message: string;
+  title: string;
+  type: AlertType;
+  confirmText?: string;
+  cancelText?: string;
+  resolve: (val: boolean) => void;
+}
+
+interface PromptConfig {
+  message: string;
+  title: string;
+  defaultValue?: string;
+  placeholder?: string;
+  resolve: (val: string | null) => void;
+}
+
 interface AlertContextType {
   showAlert: (message: string, type?: AlertType, title?: string) => Promise<boolean>;
-  showConfirm: (message: string, title?: string, type?: AlertType) => Promise<boolean>;
+  showConfirm: (message: string, title?: string, type?: AlertType, confirmText?: string, cancelText?: string) => Promise<boolean>;
+  showPrompt: (message: string, defaultValue?: string, title?: string, placeholder?: string) => Promise<string | null>;
 }
 
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
 export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [confirmConfig, setConfirmConfig] = useState<{
-    message: string;
-    title: string;
-    type: AlertType;
-    resolve: (val: boolean) => void;
-  } | null>(null);
+  const [confirmConfig, setConfirmConfig] = useState<ConfirmConfig | null>(null);
+  const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null);
+  const [promptInput, setPromptInput] = useState('');
 
   const showConfirm = useCallback((
     message: string,
-    title = 'Xác nhận',
-    type: AlertType = 'warning'
+    title = 'Xác nhận thao tác',
+    type: AlertType = 'warning',
+    confirmText = 'Xác nhận',
+    cancelText = 'Hủy bỏ'
   ): Promise<boolean> => {
     return new Promise<boolean>((resolve) => {
-      setConfirmConfig({ message, title, type, resolve });
+      setConfirmConfig({ message, title, type, confirmText, cancelText, resolve });
+    });
+  }, []);
+
+  const showPrompt = useCallback((
+    message: string,
+    defaultValue = '',
+    title = 'Nhập thông tin',
+    placeholder = 'Nhập nội dung tại đây...'
+  ): Promise<string | null> => {
+    setPromptInput(defaultValue);
+    return new Promise<string | null>((resolve) => {
+      setPromptConfig({ message, title, defaultValue, placeholder, resolve });
     });
   }, []);
 
@@ -45,14 +74,13 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
     
     setToasts((prev) => [...prev, { id, message, type, title: title || defaultTitle }]);
     
-    // Auto remove after 4 seconds
+    // Auto remove after 4.5 seconds
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
+    }, 4500);
     
     return new Promise<boolean>((resolve) => {
-      // Resolve after 1.5 seconds so redirects (like login) let the toast be seen
-      setTimeout(() => resolve(true), 1500);
+      setTimeout(() => resolve(true), 1200);
     });
   }, []);
 
@@ -75,7 +103,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
         } else if (msgStr.includes('thất bại') || msgStr.includes('lỗi') || msgStr.includes('failed') || msgStr.includes('error')) {
           type = 'error';
           title = 'Có lỗi xảy ra';
-        } else if (msgStr.includes('cảnh báo') || msgStr.includes('warning') || msgStr.includes('chú ý')) {
+        } else if (msgStr.includes('cảnh báo') || msgStr.includes('warning') || msgStr.includes('chú ý') || msgStr.includes('nguy hiểm')) {
           type = 'warning';
           title = 'Cảnh báo';
         }
@@ -90,11 +118,11 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   }, [showAlert]);
 
   return (
-    <AlertContext.Provider value={{ showAlert, showConfirm }}>
+    <AlertContext.Provider value={{ showAlert, showConfirm, showPrompt }}>
       {children}
       
       {/* Toast List Container */}
-      <div className="fixed left-4 right-4 top-[calc(16px+env(safe-area-inset-top))] z-[9999] ml-auto flex w-auto max-w-[380px] flex-col gap-3 pointer-events-none sm:left-auto sm:right-6 sm:top-6 sm:w-full" aria-live="polite" aria-relevant="additions">
+      <div className="fixed left-4 right-4 top-[calc(16px+env(safe-area-inset-top))] z-[9999] ml-auto flex w-auto max-w-[400px] flex-col gap-3 pointer-events-none sm:left-auto sm:right-6 sm:top-6 sm:w-full" aria-live="polite" aria-relevant="additions">
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes shrinkWidth {
             from { width: 100%; }
@@ -113,13 +141,13 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
           <div 
             key={toast.id}
             role={toast.type === 'error' || toast.type === 'warning' ? 'alert' : 'status'}
-            className="toast-item pointer-events-auto relative overflow-hidden flex items-start gap-3 rounded-2xl border border-white/10 bg-[#0b0f19]/95 backdrop-blur-md p-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 w-full"
+            className="toast-item pointer-events-auto relative overflow-hidden flex items-start gap-3.5 rounded-2xl border border-slate-700/60 bg-[#0c101d]/95 backdrop-blur-xl p-4 shadow-[0_12px_40px_rgba(0,0,0,0.45)] transition-all duration-300 w-full"
           >
-            {/* Ambient subtle glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#0A2FFF]/5 to-[#79BCC2]/5 opacity-35 pointer-events-none" />
+            {/* Ambient glow */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#0A2FFF]/10 to-[#79BCC2]/10 opacity-40 pointer-events-none" />
             
             {/* Icon */}
-            <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-xl border border-white/5 bg-white/[0.02]">
+            <div className="flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
               {toast.type === 'success' && (
                 <svg className="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -131,7 +159,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
                 </svg>
               )}
               {toast.type === 'warning' && (
-                <svg className="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" />
                 </svg>
               )}
@@ -144,7 +172,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Text details */}
-            <div className="flex-1 min-w-0 pr-4">
+            <div className="flex-1 min-w-0 pr-2">
               <h4 className="text-[14px] font-bold text-white tracking-wide">{toast.title}</h4>
               <p className="text-[13px] text-slate-300 mt-1 leading-relaxed font-medium whitespace-pre-line">{toast.message}</p>
             </div>
@@ -152,7 +180,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
             {/* Close button */}
             <button
               onClick={() => removeToast(toast.id)}
-              className="-mr-2 -mt-2 grid h-11 w-11 flex-shrink-0 place-items-center rounded-lg text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
+              className="-mr-1.5 -mt-1.5 grid h-9 w-9 flex-shrink-0 place-items-center rounded-lg text-slate-400 hover:bg-white/10 hover:text-white transition-colors"
               aria-label={`Đóng thông báo: ${toast.title}`}
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -162,64 +190,65 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
             {/* Animated Bottom Timer Bar */}
             <div 
-              className="absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" 
-              style={{ animation: 'shrinkWidth 4s linear forwards' }} 
+              className="absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-[#0A2FFF] via-[#38bdf8] to-[#79BCC2]" 
+              style={{ animation: 'shrinkWidth 4.5s linear forwards' }} 
             />
           </div>
         ))}
       </div>
 
+      {/* Modern Confirm Modal */}
       {confirmConfig && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 p-4 backdrop-blur-[4px] transition-all duration-300">
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-md transition-all duration-300">
           <style dangerouslySetInnerHTML={{ __html: `
             @keyframes scaleUpConfirmWeb {
-              from { transform: scale(0.95); opacity: 0; }
-              to { transform: scale(1); opacity: 1; }
+              from { transform: scale(0.93) translateY(8px); opacity: 0; }
+              to { transform: scale(1) translateY(0); opacity: 1; }
             }
             .confirm-modal-web {
               animation: scaleUpConfirmWeb 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
           `}} />
-          <div className="confirm-modal-web w-full max-w-md rounded-3xl border border-white/10 bg-[#0c101d]/95 backdrop-blur-md p-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0A2FFF]/5 to-[#79BCC2]/5 opacity-35 pointer-events-none" />
-            <div className="flex items-start gap-4 relative">
-              <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border ${
-                confirmConfig.type === 'error' ? 'border-rose-500/20 bg-rose-500/10 text-rose-400' :
-                confirmConfig.type === 'success' ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400' :
-                confirmConfig.type === 'warning' ? 'border-amber-500/20 bg-amber-500/10 text-amber-400' :
-                'border-[#79BCC2]/20 bg-[#79BCC2]/10 text-[#79BCC2]'
+          <div className="confirm-modal-web w-full max-w-md rounded-3xl border border-white/15 bg-[#0f172a]/95 backdrop-blur-2xl p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] relative overflow-hidden text-white">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0A2FFF]/10 to-[#79BCC2]/10 opacity-30 pointer-events-none" />
+            <div className="flex items-start gap-4 relative z-10">
+              <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border ${
+                confirmConfig.type === 'error' ? 'border-rose-500/30 bg-rose-500/15 text-rose-400' :
+                confirmConfig.type === 'success' ? 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400' :
+                confirmConfig.type === 'warning' ? 'border-amber-500/30 bg-amber-500/15 text-amber-400' :
+                'border-cyan-500/30 bg-cyan-500/15 text-cyan-400'
               }`}>
                 {confirmConfig.type === 'success' && (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
                 )}
                 {confirmConfig.type === 'error' && (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                   </svg>
                 )}
                 {(confirmConfig.type === 'warning' || confirmConfig.type === 'info') && (
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" />
                   </svg>
                 )}
               </div>
               <div className="flex-1">
-                <h3 className="text-base font-bold text-white tracking-wide">{confirmConfig.title}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-slate-300 font-medium whitespace-pre-line">{confirmConfig.message}</p>
+                <h3 className="text-lg font-black text-white tracking-tight">{confirmConfig.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300 font-medium whitespace-pre-line">{confirmConfig.message}</p>
               </div>
             </div>
-            <div className="mt-6 flex justify-end gap-3 relative">
+            <div className="mt-6 flex justify-end gap-3 relative z-10">
               <button
                 type="button"
                 onClick={() => {
                   confirmConfig.resolve(false);
                   setConfirmConfig(null);
                 }}
-                className="rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/10 px-4 py-2 text-xs font-bold text-slate-300 transition active:scale-[0.98]"
+                className="rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 px-5 py-2.5 text-xs font-bold text-slate-300 transition active:scale-[0.98]"
               >
-                Hủy bỏ
+                {confirmConfig.cancelText || 'Hủy bỏ'}
               </button>
               <button
                 type="button"
@@ -227,16 +256,72 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
                   confirmConfig.resolve(true);
                   setConfirmConfig(null);
                 }}
-                className={`rounded-xl px-4 py-2 text-xs font-bold text-white shadow transition active:scale-[0.98] ${
-                  confirmConfig.type === 'error' ? 'bg-rose-600 hover:bg-rose-700' :
-                  confirmConfig.type === 'success' ? 'bg-emerald-600 hover:bg-emerald-700' :
-                  confirmConfig.type === 'warning' ? 'bg-gradient-to-r from-[#ea580c] to-[#f59e0b] hover:brightness-110' :
-                  'bg-gradient-to-r from-[#0a2fff] to-[#79bcc2] hover:brightness-110'
+                className={`rounded-xl px-5 py-2.5 text-xs font-bold text-white shadow-lg transition active:scale-[0.98] ${
+                  confirmConfig.type === 'error' ? 'bg-rose-600 hover:bg-rose-500 shadow-rose-600/30' :
+                  confirmConfig.type === 'success' ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30' :
+                  confirmConfig.type === 'warning' ? 'bg-gradient-to-r from-amber-600 to-orange-600 hover:brightness-110 shadow-orange-600/30' :
+                  'bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 shadow-blue-600/30'
                 }`}
               >
-                Xác nhận
+                {confirmConfig.confirmText || 'Xác nhận'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modern Prompt Modal */}
+      {promptConfig && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-md transition-all duration-300">
+          <div className="confirm-modal-web w-full max-w-md rounded-3xl border border-white/15 bg-[#0f172a]/95 backdrop-blur-2xl p-6 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] relative overflow-hidden text-white">
+            <div className="flex items-start gap-4 relative z-10">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-blue-500/30 bg-blue-500/15 text-blue-400">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-black text-white tracking-tight">{promptConfig.title}</h3>
+                <p className="mt-1 text-sm text-slate-300 font-medium">{promptConfig.message}</p>
+              </div>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                promptConfig.resolve(promptInput);
+                setPromptConfig(null);
+              }}
+              className="mt-4 relative z-10"
+            >
+              <input
+                type="text"
+                autoFocus
+                value={promptInput}
+                onChange={(e) => setPromptInput(e.target.value)}
+                placeholder={promptConfig.placeholder}
+                className="w-full px-4 py-3 rounded-xl border border-slate-700 bg-slate-900/90 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
+
+              <div className="mt-5 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    promptConfig.resolve(null);
+                    setPromptConfig(null);
+                  }}
+                  className="rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 px-5 py-2.5 text-xs font-bold text-slate-300 transition active:scale-[0.98]"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-blue-600/30 transition active:scale-[0.98]"
+                >
+                  Xác nhận
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -251,3 +336,5 @@ export function useAlert() {
   }
   return context;
 }
+
+export default AlertProvider;

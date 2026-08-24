@@ -2,13 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '../../../src/i18n/use-language';
+import { localizedText } from '../../../src/i18n/content';
 
 interface Post {
   id: string;
   title: string;
+  titleEn?: string | null;
   slug: string;
   summary: string | null;
+  summaryEn?: string | null;
   content: string;
+  contentEn?: string | null;
   thumbnailUrl: string | null;
   category: string;
   views: number;
@@ -21,11 +26,13 @@ interface ClientPostDetailProps {
 }
 
 export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetailProps) {
+  const language = useLanguage();
+  const text = (vi?: string | null, en?: string | null) => localizedText(language, vi, en);
   if (!post) {
     return (
       <main className="flex-1 min-h-screen py-20 flex flex-col items-center justify-center text-center px-4" style={{ background: 'var(--site-bg)' }}>
         <div className="text-5xl mb-4">⚠️</div>
-        <h1 className="text-xl font-bold text-[var(--site-text)]">Không tìm thấy bài viết</h1>
+        <h1 className="text-xl font-bold text-[var(--site-text)]">{language === 'en' ? 'Post not found' : 'Không tìm thấy bài viết'}</h1>
         <p className="text-xs text-[var(--site-muted)] mt-1 max-w-sm">
           Bài viết này không tồn tại hoặc đã bị ẩn bởi quản trị viên.
         </p>
@@ -123,7 +130,7 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
               <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-              <span className="line-clamp-1 max-w-[240px]">{post.title}</span>
+              <span className="line-clamp-1 max-w-[240px]">{text(post.title, post.titleEn)}</span>
             </div>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider mb-4"
@@ -132,7 +139,7 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold text-center sm:text-justify max-w-[1100px] leading-tight mx-auto" style={{ color: 'var(--site-text)', textJustify: 'inter-word' }}>
-              {post.title}
+              {text(post.title, post.titleEn)}
             </h1>
             
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs mt-4" style={{ color: 'var(--site-muted)' }}>
@@ -163,25 +170,25 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
               <div className="w-full rounded-3xl overflow-hidden mb-8 border border-[var(--site-line)] shadow-lg aspect-video max-h-[420px]">
                 <img
                   src={post.thumbnailUrl}
-                  alt={post.title}
+                  alt={text(post.title, post.titleEn)}
                   className="w-full h-full object-cover"
                 />
               </div>
             )}
 
             {/* Post Summary */}
-            {post.summary && (
+            {text(post.summary, post.summaryEn) && (
               <div className="p-5 rounded-2xl border border-[var(--site-line)] bg-white/[0.02] mb-8"
                 style={{ background: 'color-mix(in srgb, var(--site-primary) 3%, var(--site-card))', borderLeft: '4px solid var(--site-primary)' }}>
                 <p className="text-xs font-black uppercase text-[var(--site-primary)] mb-1.5 tracking-wider">Tóm tắt bài viết</p>
                 <p className="text-sm font-semibold text-[var(--site-text)] leading-relaxed italic m-0">
-                  {post.summary}
+                  {text(post.summary, post.summaryEn)}
                 </p>
               </div>
             )}
 
             {/* Rich Content Body */}
-            <article className="post-body-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <article className="post-body-content" dangerouslySetInnerHTML={{ __html: text(post.content, post.contentEn) }} />
 
             <div className="h-[1px] w-full bg-[var(--site-line)] my-12" />
 
@@ -211,7 +218,7 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
                           </div>
                           <h4 className="text-sm font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2">
                             <Link href={`/tin-tuc/${rp.slug}`} className="hover:text-[var(--site-primary)] transition">
-                              {rp.title}
+                              {text(rp.title, rp.titleEn)}
                             </Link>
                           </h4>
                         </div>

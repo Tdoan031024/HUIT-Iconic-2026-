@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { TimelineEvent } from '@/lib/types';
 import { apiUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
 
 function emptyForm() {
   return {
@@ -16,6 +17,7 @@ function emptyForm() {
 }
 
 export default function TimelineAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [search, setSearch] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -76,12 +78,12 @@ export default function TimelineAdminPage() {
     e.preventDefault();
     try {
       await submitEvent('POST');
-      alert('Thêm mốc thời gian thành công!');
+      showAlert('Thêm mốc thời gian thành công!', 'success');
       setIsAddModalOpen(false);
       loadTimeline();
     } catch (err) {
       console.error(err);
-      alert('Thao tác thất bại, kiểm tra kết nối API.');
+      showAlert('Thao tác thất bại, kiểm tra kết nối API.', 'error');
     }
   };
 
@@ -89,25 +91,26 @@ export default function TimelineAdminPage() {
     e.preventDefault();
     try {
       await submitEvent('PUT');
-      alert('Cập nhật mốc thời gian thành công!');
+      showAlert('Cập nhật mốc thời gian thành công!', 'success');
       setIsEditModalOpen(false);
       loadTimeline();
     } catch (err) {
       console.error(err);
-      alert('Thao tác thất bại, kiểm tra kết nối API.');
+      showAlert('Thao tác thất bại, kiểm tra kết nối API.', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa mốc thời gian này không?')) return;
+    const ok = await showConfirm('Bạn có chắc chắn muốn xóa mốc thời gian này không?', 'Xác nhận xóa mốc thời gian', 'error', 'Xóa ngay');
+    if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/timeline/${id}`), { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
-      alert('Xóa mốc thời gian thành công!');
+      showAlert('Xóa mốc thời gian thành công!', 'success');
       loadTimeline();
     } catch (err) {
       console.error(err);
-      alert('Thao tác thất bại, kiểm tra kết nối API.');
+      showAlert('Thao tác thất bại, kiểm tra kết nối API.', 'error');
     }
   };
 

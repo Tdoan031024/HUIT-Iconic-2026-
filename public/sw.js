@@ -1,15 +1,14 @@
 /**
- * HUIT Startup 2026 — Service Worker
+ * HUIT's ICONIC 2026 — Service Worker
  * Provides offline caching via cache-first strategy for static assets
  * and network-first strategy for dynamic API and page requests.
  */
 
-const CACHE_VERSION = 'v1';
-const STATIC_CACHE = `huit-startup-static-${CACHE_VERSION}`;
-const DYNAMIC_CACHE = `huit-startup-dynamic-${CACHE_VERSION}`;
+const CACHE_VERSION = 'v2';
+const STATIC_CACHE = `huit-iconic-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `huit-iconic-dynamic-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
-  '/',
   '/manifest.json',
   '/favicon.png',
   '/icons/icon-192.png',
@@ -61,6 +60,12 @@ self.addEventListener('fetch', (event) => {
         .catch(() => caches.match(request))
         .then((res) => res || new Response('{}', { headers: { 'Content-Type': 'application/json' } }))
     );
+    return;
+  }
+
+  // Uploaded campaign assets must always revalidate, otherwise old banners can flash after deploy.
+  if (url.pathname.startsWith('/uploads/') || url.pathname.startsWith('/duan/')) {
+    event.respondWith(fetch(request).catch(() => caches.match(request)));
     return;
   }
 

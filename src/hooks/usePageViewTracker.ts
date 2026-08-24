@@ -28,13 +28,10 @@ export function usePageViewTracker() {
         localStorage.setItem(storageKey, visitorId);
       }
 
-      const apiBase =
-        process.env.NEXT_PUBLIC_API_URL ||
-        (process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5000' : '');
+      const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || '';
+      const endpoint = `${apiBase}/api/analytics/page-view`;
 
-      if (!apiBase) return;
-
-      fetch(`${apiBase.replace(/\/$/, '')}/api/analytics/page-view`, {
+      fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         keepalive: true,

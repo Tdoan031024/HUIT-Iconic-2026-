@@ -55,14 +55,6 @@ function useCountUp(target: number, duration = 1800, active = false) {
   return count;
 }
 
-const LOCAL_MOCK_CANDIDATES: Candidate[] = [
-  { id: '1', sbd: '085', name: 'Dự án Nông nghiệp xanh', votes: 106100, imageUrl: '/original_assets/image389b.png', description: 'Giải pháp ứng dụng công nghệ để tối ưu sản xuất nông nghiệp bền vững.' },
-  { id: '2', sbd: '089', name: 'Nền tảng học tập thông minh', votes: 62215, imageUrl: '/original_assets/image725f.png', description: 'Ứng dụng AI hỗ trợ cá nhân hóa lộ trình học tập cho học sinh, sinh viên.' },
-  { id: '3', sbd: '024', name: 'Sản phẩm tái chế sáng tạo', votes: 22800, imageUrl: '/original_assets/image940e.jpg', description: 'Dự án biến vật liệu tái chế thành sản phẩm có giá trị thương mại.' },
-  { id: '4', sbd: '096', name: 'Chăm sóc sức khỏe cộng đồng', votes: 20590, imageUrl: '/original_assets/image8681.png', description: 'Mô hình kết nối tư vấn sức khỏe và theo dõi chỉ số cơ bản từ xa.' },
-  { id: '5', sbd: '018', name: 'Du lịch trải nghiệm địa phương', votes: 16070, imageUrl: '/original_assets/imageada2.png', description: 'Nền tảng quảng bá văn hóa bản địa và tour trải nghiệm cho giới trẻ.' },
-  { id: '6', sbd: '095', name: 'Thương mại xanh cho SME', votes: 8410, imageUrl: '/original_assets/image4706.png', description: 'Giải pháp chuyển đổi số cho hộ kinh doanh và doanh nghiệp vừa và nhỏ.' },
-];
 
 function getStoredUser() {
   if (typeof window === 'undefined') return null;
@@ -458,21 +450,27 @@ export default function RankingPage() {
         const res = await fetch(apiUrl('/api/candidates'));
         if (res.ok) {
           const data = await res.json();
-          setCandidates(data);
+          setCandidates(Array.isArray(data) ? data : []);
         } else {
-          setCandidates(LOCAL_MOCK_CANDIDATES);
+          setCandidates([]);
         }
-      } catch { setCandidates(LOCAL_MOCK_CANDIDATES); console.log('Using local mock data.'); }
-      finally { setIsLoading(false); }
+      } catch {
+        setCandidates([]);
+      } finally {
+        setIsLoading(false);
+      }
     }
     loadCandidates();
 
     const interval = setInterval(async () => {
       try {
         const res = await fetch(apiUrl('/api/candidates'));
-        if (res.ok) { const data = await res.json(); setCandidates(data); }
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) setCandidates(data);
+        }
       } catch { }
-    }, 10000);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -749,8 +747,8 @@ export default function RankingPage() {
                   <span>Bảng xếp hạng</span>
                 </div>
 
-                <span className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
-                  {settings?.aboutTitle || "HUIT STARTUP LẦN THỨ VII 2026"}
+                <span suppressHydrationWarning className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
+                  {settings?.aboutTitle || "HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT"}
                 </span>
 
                 <h1 className="mx-auto mt-5 max-w-[900px] text-[32px] sm:text-[54px] font-black uppercase leading-[1.05] text-neutral-900 dark:text-white">

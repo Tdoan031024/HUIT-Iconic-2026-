@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiUrl, formatAssetUrl } from '../../api';
 import DateTimeInput from '../../components/DateTimeInput';
+import { useAlert } from '../../AlertProvider';
 
 type VotingPromotion = {
   id: string;
@@ -38,6 +39,7 @@ function createPromotionDraft(): VotingPromotion {
 }
 
 export default function SettingsAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   // Gate settings state
   const [isGateOpen, setIsGateOpen] = useState(true);
   const [startDate, setStartDate] = useState('2024-10-20T00:00');
@@ -150,19 +152,30 @@ export default function SettingsAdminPage() {
         body: JSON.stringify(updatedSettings)
       });
       if (res.ok) {
-        alert('Đã lưu cấu hình hệ thống thành công!');
+        showAlert('Đã lưu cấu hình hệ thống thành công!', 'success');
         return;
       }
     } catch (err) {
       console.error('Failed to save settings to API.', err);
     }
-    alert('Không thể kết nối đến backend API. Lưu cấu hình thất bại!');
+    showAlert('Không thể kết nối đến backend API. Lưu cấu hình thất bại!', 'error');
   };
 
   const handleResetVotes = async () => {
-    const confirm1 = confirm('CẢNH BÁO NGUY HIỂM: Bạn có chắc chắn muốn đặt lại (RESET) toàn bộ số phiếu bình chọn của tất cả các thí sinh về 0 không?');
+    const confirm1 = await showConfirm(
+      'CẢNH BÁO NGUY HIỂM: Bạn có chắc chắn muốn đặt lại (RESET) toàn bộ số phiếu bình chọn của tất cả các thí sinh về 0 không?',
+      'Cảnh báo nguy hiểm',
+      'warning',
+      'Tiếp tục'
+    );
     if (!confirm1) return;
-    const confirm2 = confirm('XÁC NHẬN LẦN CUỐI: Hành động này sẽ xóa sạch số lượt vote hiện tại và không thể khôi phục lại được. Nhấn OK để thực hiện.');
+
+    const confirm2 = await showConfirm(
+      'XÁC NHẬN LẦN CUỐI: Hành động này sẽ xóa sạch số lượt vote hiện tại và không thể khôi phục lại được. Bạn có chắc chắn thực hiện?',
+      'Xác nhận lần cuối',
+      'error',
+      'Reset ngay'
+    );
     if (!confirm2) return;
 
     try {
@@ -170,13 +183,13 @@ export default function SettingsAdminPage() {
         method: 'POST'
       });
       if (res.ok) {
-        alert('Đã thiết lập lại toàn bộ điểm bình chọn của thí sinh về 0 thành công!');
+        showAlert('Đã thiết lập lại toàn bộ điểm bình chọn của thí sinh về 0 thành công!', 'success');
         return;
       }
     } catch (err) {
       console.error('Failed to reset votes on API.', err);
     }
-    alert('Không thể kết nối đến backend API. Đặt lại số phiếu thất bại!');
+    showAlert('Không thể kết nối đến backend API. Đặt lại số phiếu thất bại!', 'error');
   };
 
   return (

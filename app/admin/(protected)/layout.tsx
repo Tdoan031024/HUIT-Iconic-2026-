@@ -1,10 +1,11 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { verifyAdminSession } from '@/lib/auth';
 
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const token = cookies().get('admin_session')?.value;
-  // If token is set or in dev, allow access
-  const isAuthenticated = !!token || process.env.NODE_ENV === 'development';
+  const admin = await verifyAdminSession(null, token);
+  const isAuthenticated = Boolean(admin);
 
   if (!isAuthenticated) {
     redirect('/401?redirect=/admin');

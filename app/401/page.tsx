@@ -7,7 +7,8 @@ import { getStatusPreset } from '@/src/components/status-page-presets';
 
 function UnauthorizedContent() {
   const searchParams = useSearchParams();
-  const loginHref = `/dang-nhap${searchParams.get('redirect') ? `?redirect=${encodeURIComponent(searchParams.get('redirect') as string)}` : ''}`;
+  const redirectPath = searchParams?.get('redirect');
+  const loginHref = `/dang-nhap${redirectPath ? `?redirect=${encodeURIComponent(redirectPath)}` : ''}`;
   const preset = getStatusPreset(401);
 
   return (

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { apiUrl, formatAssetUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
 
 type Step = {
   number: string;
@@ -87,6 +88,7 @@ function normalizeRates(rawRates: any[]): ExchangeRate[] {
 }
 
 export default function GuidesAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [activeTab, setActiveTab] = useState(0);
   const [sections, setSections] = useState<GuideSection[]>(defaultSections);
   const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>(defaultExchangeRates);
@@ -163,7 +165,7 @@ export default function GuidesAdminPage() {
         body: formData,
       });
       if (!res.ok) {
-        alert('Tải ảnh thất bại.');
+        showAlert('Tải ảnh thất bại.', 'error');
         return;
       }
 
@@ -188,10 +190,10 @@ export default function GuidesAdminPage() {
         return nextSections;
       });
 
-      alert('Tải ảnh minh họa thành công và đã lưu tự động.');
+      showAlert('Tải ảnh minh họa thành công và đã lưu tự động.', 'success');
     } catch (err) {
       console.error(err);
-      alert('Không thể kết nối server tải ảnh.');
+      showAlert('Không thể kết nối server tải ảnh.', 'error');
     }
   };
 
@@ -199,11 +201,13 @@ export default function GuidesAdminPage() {
     setExchangeRates((prev) => prev.map((rate, idx) => idx === index ? { ...rate, [field]: value } : rate));
   };
 
-  const handleResetDefaults = () => {
-    if (!confirm('Khôi phục nội dung hướng dẫn mặc định?')) return;
+  const handleResetDefaults = async () => {
+    const ok = await showConfirm('Khôi phục nội dung hướng dẫn về trạng thái mặc định ban đầu?', 'Khôi phục mặc định', 'warning', 'Khôi phục');
+    if (!ok) return;
     setSections(defaultSections);
     setExchangeRates(defaultExchangeRates);
     setActiveTab(0);
+    showAlert('Đã khôi phục dữ liệu hướng dẫn mặc định!', 'info');
   };
 
   const handleSave = async () => {
@@ -214,13 +218,13 @@ export default function GuidesAdminPage() {
         body: JSON.stringify({ guideSections: sections, exchangeRates }),
       });
       if (res.ok) {
-        alert('Đã lưu cấu hình Hướng dẫn & Thể lệ thành công.');
+        showAlert('Đã lưu cấu hình Hướng dẫn & Thể lệ thành công.', 'success');
         return;
       }
     } catch (err) {
       console.error('Failed to save guide settings', err);
     }
-    alert('Không thể lưu cấu hình Hướng dẫn & Thể lệ.');
+    showAlert('Không thể lưu cấu hình Hướng dẫn & Thể lệ.', 'error');
   };
 
   const handleFaqChange = (index: number, field: 'question' | 'answer', value: string) => {

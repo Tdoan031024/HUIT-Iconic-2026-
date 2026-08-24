@@ -114,7 +114,10 @@ export default function LoginPage() {
   // Forgot password modal state
   const [forgotOpen, setForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
-  const [forgotSubmitted, setForgotSubmitted] = useState(false);
+  const [forgotCode, setForgotCode] = useState('');
+  const [forgotNewPassword, setForgotNewPassword] = useState('');
+  const [forgotStep, setForgotStep] = useState<'request' | 'confirm' | 'done'>('request');
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   useEffect(() => {
     if (!registerOpen) return;
@@ -296,13 +299,44 @@ export default function LoginPage() {
     }
   };
 
-  const handleForgotSubmit = (e: React.FormEvent) => {
+  const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(forgotEmail)) {
       showAlert('Vui lòng nhập đúng địa chỉ email đã đăng ký.', 'warning', 'Email không hợp lệ');
       return;
     }
-    setForgotSubmitted(true);
+    setForgotLoading(true);
+    try {
+      const res = await fetch(apiUrl('/api/web/auth/password-reset/request'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: forgotEmail }) });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.message || 'Không thể gửi mã khôi phục.');
+      setForgotStep('confirm');
+      showAlert('Mã khôi phục đã được gửi. Kiểm tra email của bạn.', 'success', 'Đã gửi mã');
+    } catch (error: any) {
+      showAlert(error.message || 'Không thể gửi mã khôi phục.', 'error', 'Lỗi khôi phục');
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const handleForgotConfirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(forgotCode) || forgotNewPassword.length < 6) {
+      showAlert('Nhập mã 6 số và mật khẩu mới có ít nhất 6 ký tự.', 'warning', 'Thông tin chưa hợp lệ');
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const res = await fetch(apiUrl('/api/web/auth/password-reset/confirm'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: forgotEmail, code: forgotCode, newPassword: forgotNewPassword }) });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.message || 'Không thể đặt lại mật khẩu.');
+      setForgotStep('done');
+      showAlert('Mật khẩu đã được cập nhật.', 'success', 'Hoàn tất');
+    } catch (error: any) {
+      showAlert(error.message || 'Không thể đặt lại mật khẩu.', 'error', 'Lỗi khôi phục');
+    } finally {
+      setForgotLoading(false);
+    }
   };
 
   return (
@@ -610,7 +644,9 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => {
                     setForgotEmail(email);
-                    setForgotSubmitted(false);
+                    setForgotCode('');
+                    setForgotNewPassword('');
+                    setForgotStep('request');
                     setForgotOpen(true);
                   }}
                   className="link-hover text-[#79BCC2] text-[13px] font-semibold underline-offset-4 hover:underline"
@@ -950,10 +986,10 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              {!forgotSubmitted ? (
+              {forgotStep === 'request' ? (
                 <form onSubmit={handleForgotSubmit} className="space-y-4">
                   <p className="text-[13.5px] leading-relaxed text-white/70">
-                    Nhập địa chỉ email bạn đã sử dụng để đăng ký. Ban tổ chức sẽ gửi hướng dẫn khôi phục lại mật khẩu cho bạn.
+                    Nhập email đã đăng ký. Hệ thống sẽ gửi mã xác thực 6 số có hiệu lực trong 10 phút.
                   </p>
                   <div className="space-y-1.5">
                     <label className="text-[12px] font-semibold text-white/80">Địa chỉ email</label>
@@ -978,8 +1014,24 @@ export default function LoginPage() {
                       type="submit"
                       className="btn-login h-[44px] rounded-[12px] bg-gradient-to-r from-[#0A2FFF] to-[#1a5aff] px-5 text-[13px] font-bold text-white uppercase tracking-wider"
                     >
-                      Gửi yêu cầu
+                      {forgotLoading ? 'Đang gửi...' : 'Gửi mã xác thực'}
                     </button>
+                  </div>
+                </form>
+              ) : forgotStep === 'confirm' ? (
+                <form onSubmit={handleForgotConfirm} className="space-y-4">
+                  <p className="text-[13.5px] leading-relaxed text-white/70">Nhập mã 6 số đã nhận được và tạo mật khẩu mới cho tài khoản.</p>
+                  <div className="space-y-1.5">
+                    <label className="text-[12px] font-semibold text-white/80">Mã xác thực</label>
+                    <input inputMode="numeric" maxLength={6} required value={forgotCode} onChange={(e) => setForgotCode(e.target.value.replace(/\D/g, ''))} placeholder="000000" className="login-input h-[46px] w-full rounded-[14px] border-2 border-transparent bg-white/90 px-4 text-center text-[20px] font-black tracking-[0.35em] text-neutral-800" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[12px] font-semibold text-white/80">Mật khẩu mới</label>
+                    <input type="password" minLength={6} required value={forgotNewPassword} onChange={(e) => setForgotNewPassword(e.target.value)} placeholder="Ít nhất 6 ký tự" className="login-input h-[46px] w-full rounded-[14px] border-2 border-transparent bg-white/90 px-4 text-[14px] text-neutral-800" />
+                  </div>
+                  <div className="pt-2 flex gap-3 justify-end">
+                    <button type="button" onClick={() => setForgotStep('request')} className="h-[44px] rounded-[12px] border border-white/15 px-4 text-[13px] font-bold text-white/65 hover:text-white">Gửi lại mã</button>
+                    <button type="submit" disabled={forgotLoading} className="btn-login h-[44px] rounded-[12px] bg-gradient-to-r from-[#0A2FFF] to-[#1a5aff] px-5 text-[13px] font-bold text-white uppercase tracking-wider disabled:opacity-60">{forgotLoading ? 'Đang xử lý...' : 'Đổi mật khẩu'}</button>
                   </div>
                 </form>
               ) : (
@@ -987,24 +1039,15 @@ export default function LoginPage() {
                   <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 grid place-items-center mx-auto text-xl font-bold">
                     ✓
                   </div>
-                  <h4 className="text-[17px] font-bold text-white">Yêu cầu đã được ghi nhận</h4>
-                  <p className="text-[13.5px] text-white/70 leading-relaxed">
-                    Vui lòng liên hệ với Ban tổ chức qua email <strong className="text-[#79BCC2]">iec@huit.edu.vn</strong> kèm email <strong className="text-white">{forgotEmail}</strong> để được cấp lại mật khẩu ngay lập tức.
-                  </p>
+                  <h4 className="text-[17px] font-bold text-white">Đổi mật khẩu thành công</h4>
+                  <p className="text-[13.5px] text-white/70 leading-relaxed">Bạn có thể đóng cửa sổ này và đăng nhập bằng mật khẩu mới.</p>
                   <div className="pt-3 flex flex-col gap-2">
-                    <a
-                      href={`mailto:iec@huit.edu.vn?subject=Khôi phục mật khẩu tài khoản ${forgotEmail}&body=Kính gửi BTC, tôi cần khôi phục mật khẩu cho tài khoản email: ${forgotEmail}`}
-                      className="btn-login h-[44px] rounded-[12px] bg-gradient-to-r from-[#0A2FFF] to-[#1a5aff] px-5 text-[13px] font-bold text-white flex items-center justify-center gap-2"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
-                      Gửi email trực tiếp cho BTC
-                    </a>
                     <button
                       type="button"
                       onClick={() => setForgotOpen(false)}
-                      className="h-[40px] text-[13px] text-white/50 hover:text-white underline"
+                      className="btn-login h-[44px] rounded-[12px] bg-gradient-to-r from-[#0A2FFF] to-[#1a5aff] px-5 text-[13px] font-bold text-white"
                     >
-                      Quay lại đăng nhập
+                      Đóng và đăng nhập
                     </button>
                   </div>
                 </div>

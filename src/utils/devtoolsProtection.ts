@@ -224,12 +224,12 @@ const stopObserving = (): void => {
  * Returns a cleanup function to stop monitoring and remove DOM modifications.
  */
 export function initDevToolsProtection(config?: DevToolsProtectionConfig): () => void {
-  // SSR Safety check
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
+  // SSR & Development Safety check
+  if (typeof window === 'undefined' || typeof document === 'undefined' || process.env.NODE_ENV === 'development') {
     return () => {};
   }
 
-  const mergedConfig = { ...DEFAULT_CONFIG, ...config };
+  const mergedConfig = { ...DEFAULT_CONFIG, ...config, showElementsWarning: false };
 
   if (!mergedConfig.enabled) {
     return () => {};

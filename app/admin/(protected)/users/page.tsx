@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { WebUser } from '@/lib/types';
 import { apiUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
 
 const providerLabel: Record<string, string> = {
   email: 'Đăng ký thường',
@@ -233,6 +234,7 @@ function escapeCSVValue(val: any): string {
 }
 
 export default function UsersAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [users, setUsers] = useState<WebUser[]>([]);
   const [search, setSearch] = useState('');
   const [provider, setProvider] = useState('ALL');
@@ -344,29 +346,39 @@ export default function UsersAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa người dùng này không? Hành động này không thể hoàn tác.')) {
-      return;
-    }
+    const ok = await showConfirm(
+      'Bạn có chắc chắn muốn xóa người dùng này không? Hành động này không thể hoàn tác.',
+      'Xác nhận xóa người dùng',
+      'error',
+      'Xóa ngay'
+    );
+    if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/web-users/${id}`), {
         method: 'DELETE',
       });
       if (res.ok) {
-        alert('Xóa người dùng thành công!');
+        showAlert('Xóa người dùng thành công!', 'success');
         loadUsers();
       } else {
         const errorData = await res.json();
-        alert(errorData.message || 'Xóa người dùng thất bại.');
+        showAlert(errorData.message || 'Xóa người dùng thất bại.', 'error');
       }
     } catch (err) {
       console.error(err);
-      alert('Đã xảy ra lỗi kết nối đến server.');
+      showAlert('Đã xảy ra lỗi kết nối đến server.', 'error');
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} người dùng đã chọn? Hành động này không thể hoàn tác.`)) return;
+    const ok = await showConfirm(
+      `Bạn có chắc chắn muốn xóa ${selectedIds.length} người dùng đã chọn? Hành động này không thể hoàn tác.`,
+      'Xác nhận xóa hàng loạt',
+      'error',
+      `Xóa ${selectedIds.length} người dùng`
+    );
+    if (!ok) return;
 
     let successCount = 0;
     let failCount = 0;
@@ -387,22 +399,30 @@ export default function UsersAdminPage() {
       })
     );
 
-    alert(`Đã xóa thành công ${successCount} người dùng.${failCount > 0 ? ` Thất bại ${failCount} người dùng.` : ''}`);
-    if (successCount > 0) {
-      loadUsers();
-    }
+    showAlert(
+      `Đã xóa thành công ${successCount} người dùng.${failCount > 0 ? ` Thất bại ${failCount} người dùng.` : ''}`,
+      failCount === 0 ? 'success' : 'warning'
+    );
     setSelectedIds([]);
+    loadUsers();
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    try {
-      const isAdd = modalMode === 'add';
-      const url = isAdd 
-        ? apiUrl('/api/admin/web-users') 
-        : apiUrl(`/api/admin/web-users/${selectedUser?.id}`);
-      const method = isAdd ? 'POST' : 'PUT';
+  const handleSubmitModal = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.fullName?.trim()) {
+      showAlert('Vui lòng nhập họ và tên', 'warning');
+      return;
+    }
+    if (!form.email?.trim()) {
+      showAlert('Vui lòng nhập địa chỉ email', 'warning');
+      return;
+    }
 
+    const isAdd = modalMode === 'add';
+    const url = isAdd ? apiUrl('/api/admin/web-users') : apiUrl(`/api/admin/web-users/${selectedUser?.id}`);
+    const method = isAdd ? 'POST' : 'PUT';
+
+    try {
       const bodyPayload = { ...form };
       if (!isAdd && !bodyPayload.password) {
         delete bodyPayload.password;
@@ -410,14 +430,12 @@ export default function UsersAdminPage() {
 
       const res = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload),
       });
 
       if (res.ok) {
-        alert(isAdd ? 'Thêm người dùng mới thành công!' : 'Cập nhật thông tin người dùng thành công!');
+        showAlert(isAdd ? 'Thêm người dùng mới thành công!' : 'Cập nhật thông tin người dùng thành công!', 'success');
         setModalMode(null);
         loadUsers();
       } else {
@@ -649,7 +667,7 @@ export default function UsersAdminPage() {
           form={form}
           setForm={setForm}
           onClose={() => setModalMode(null)}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitModal}
         />
       )}
 

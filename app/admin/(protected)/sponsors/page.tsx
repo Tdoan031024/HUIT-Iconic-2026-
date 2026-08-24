@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Sponsor } from '@/lib/types';
 import { apiUrl, formatAssetUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
+import ImageDropzone from '../../components/ImageDropzone';
 
 const TIER_COLORS = {
   PLATINUM: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -117,6 +119,7 @@ function DetailModal({
 }
 
 export default function SponsorsAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [search, setSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -215,7 +218,7 @@ export default function SponsorsAdminPage() {
   const openAddModal = () => {
     setFormName('');
     setFormTier('PLATINUM');
-    setFormLogoUrl('/images/eventista.7a1126d5.svg');
+    setFormLogoUrl('');
     setFormDescription('');
     setFormWebsiteUrl('');
     setFormEmail('');
@@ -303,30 +306,32 @@ export default function SponsorsAdminPage() {
     } catch (err) {
       console.error(err);
     }
-    alert('Không thể kết nối đến server để cập nhật nhà tài trợ.');
+    showAlert('Không thể kết nối đến server để cập nhật nhà tài trợ.', 'error');
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa nhà tài trợ này không? Hành động này không thể hoàn tác.')) return;
+    const ok = await showConfirm('Bạn có chắc chắn muốn xóa nhà tài trợ này không? Hành động này không thể hoàn tác.', 'Xác nhận xóa nhà tài trợ', 'error', 'Xóa ngay');
+    if (!ok) return;
 
     try {
       const res = await fetch(apiUrl(`/api/admin/sponsors/${id}`), {
         method: 'DELETE',
       });
       if (res.ok) {
-        alert('Xóa nhà tài trợ thành công!');
+        showAlert('Xóa nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
       }
     } catch (err) {
       console.error(err);
     }
-    alert('Không thể kết nối đến server để xóa nhà tài trợ.');
+    showAlert('Không thể kết nối đến server để xóa nhà tài trợ.', 'error');
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} nhà tài trợ đã chọn? Hành động này không thể hoàn tác.`)) return;
+    const ok = await showConfirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} nhà tài trợ đã chọn? Hành động này không thể hoàn tác.`, 'Xác nhận xóa hàng loạt', 'error', `Xóa ${selectedIds.length} nhà tài trợ`);
+    if (!ok) return;
 
     let successCount = 0;
     let failCount = 0;
@@ -347,7 +352,7 @@ export default function SponsorsAdminPage() {
       })
     );
 
-    alert(`Đã xóa thành công ${successCount} nhà tài trợ.${failCount > 0 ? ` Thất bại ${failCount} nhà tài trợ.` : ''}`);
+    showAlert(`Đã xóa thành công ${successCount} nhà tài trợ.${failCount > 0 ? ` Thất bại ${failCount} nhà tài trợ.` : ''}`, failCount === 0 ? 'success' : 'warning');
     if (successCount > 0) {
       loadFromApi();
     }
@@ -721,74 +726,20 @@ export default function SponsorsAdminPage() {
               </button>
             </div>
 
-            {/* Live Logo Preview Container */}
-            <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5">
-              <div className="flex h-16 w-28 flex-shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white p-2 shadow-sm overflow-hidden relative">
-                {formLogoUrl ? (
-                  <img
-                    src={formatAssetUrl(formLogoUrl)}
-                    alt="Xem trước logo"
-                    className="max-h-full max-w-full object-contain"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/images/startuplogo.png';
-                    }}
-                  />
-                ) : (
-                  <span className="text-[10px] font-extrabold text-slate-400">Chưa có logo</span>
-                )}
-              </div>
-              <div className="flex-1 text-xs">
-                <p className="font-bold text-slate-800 flex items-center gap-1.5">
-                  <span>🖼️</span> Xem trước hiển thị Logo
-                </p>
-                <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-                  Logo sẽ được căn chỉnh hiển thị trực tiếp trên trang chủ và danh sách nhà tài trợ đồng hành.
-                </p>
-              </div>
-            </div>
+            {/* Image Dropzone Component */}
+            <ImageDropzone
+              label="Logo nhà tài trợ / Đối tác"
+              subLabel="Kéo &amp; thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
+              aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
+              value={formLogoUrl}
+              onChange={setFormLogoUrl}
+              required
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs pt-1">
               <div className="flex flex-col space-y-1.5 md:col-span-2">
                 <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
                 <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} placeholder="Nhập tên nhà tài trợ / thương hiệu" required />
-              </div>
-
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-end">
-                  <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Đường dẫn logo (URL) *</label>
-                    <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formLogoUrl} onChange={e => setFormLogoUrl(e.target.value)} required />
-                  </div>
-                  <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Hoặc tải logo từ máy tính</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-slate-900 file:text-white hover:file:bg-emerald-700 cursor-pointer transition"
-                      onChange={async (event) => {
-                        const file = event.target.files?.[0];
-                        if (!file) return;
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        try {
-                          const res = await fetch(apiUrl('/api/admin/upload'), {
-                            method: 'POST',
-                            body: formData,
-                          });
-                          if (res.ok) {
-                            const data = await res.json();
-                            setFormLogoUrl(data.url);
-                          } else {
-                            alert('Tải logo lên thất bại.');
-                          }
-                        } catch (err) {
-                          console.error(err);
-                          alert('Có lỗi xảy ra khi tải logo.');
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
               </div>
 
               <div className="flex flex-col space-y-1.5">
@@ -860,74 +811,20 @@ export default function SponsorsAdminPage() {
               </button>
             </div>
 
-            {/* Live Logo Preview Container */}
-            <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5">
-              <div className="flex h-16 w-28 flex-shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white p-2 shadow-sm overflow-hidden relative">
-                {formLogoUrl ? (
-                  <img
-                    src={formatAssetUrl(formLogoUrl)}
-                    alt="Xem trước logo"
-                    className="max-h-full max-w-full object-contain"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/images/startuplogo.png';
-                    }}
-                  />
-                ) : (
-                  <span className="text-[10px] font-extrabold text-slate-400">Chưa có logo</span>
-                )}
-              </div>
-              <div className="flex-1 text-xs">
-                <p className="font-bold text-slate-800 flex items-center gap-1.5">
-                  <span>🖼️</span> Xem trước hiển thị Logo
-                </p>
-                <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-                  Logo sẽ được căn chỉnh hiển thị trực tiếp trên trang chủ và danh sách nhà tài trợ đồng hành.
-                </p>
-              </div>
-            </div>
+            {/* Image Dropzone Component */}
+            <ImageDropzone
+              label="Logo nhà tài trợ / Đối tác"
+              subLabel="Kéo &amp; thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
+              aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
+              value={formLogoUrl}
+              onChange={setFormLogoUrl}
+              required
+            />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs pt-1">
               <div className="flex flex-col space-y-1.5 md:col-span-2">
                 <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
                 <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} required />
-              </div>
-
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-end">
-                  <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Đường dẫn logo (URL) *</label>
-                    <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formLogoUrl} onChange={e => setFormLogoUrl(e.target.value)} required />
-                  </div>
-                  <div className="flex flex-col space-y-1.5">
-                    <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Hoặc tải logo từ máy tính</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-slate-900 file:text-white hover:file:bg-emerald-700 cursor-pointer transition"
-                      onChange={async (event) => {
-                        const file = event.target.files?.[0];
-                        if (!file) return;
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        try {
-                          const res = await fetch(apiUrl('/api/admin/upload'), {
-                            method: 'POST',
-                            body: formData,
-                          });
-                          if (res.ok) {
-                            const data = await res.json();
-                            setFormLogoUrl(data.url);
-                          } else {
-                            alert('Tải logo lên thất bại.');
-                          }
-                        } catch (err) {
-                          console.error(err);
-                          alert('Có lỗi xảy ra khi tải logo.');
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
               </div>
 
               <div className="flex flex-col space-y-1.5">

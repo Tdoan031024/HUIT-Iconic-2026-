@@ -1,88 +1,24 @@
 {
-  "name": "HUIT Startup 2026",
-  "short_name": "HUIT Startup",
-  "description": "Nền tảng cuộc thi khởi nghiệp sáng tạo HUIT Startup 2026 - Đổi mới sáng tạo hướng tới phát triển bền vững",
+  "name": "HUIT's ICONIC 2026 - Cổng Bình Chọn Nét Đẹp & Đại Sứ Sinh Viên",
+  "short_name": "ICONIC 2026",
+  "description": "Cổng bình chọn trực tuyến chính thức cuộc thi Nét đẹp & Đại sứ Sinh viên HUIT's ICONIC 2026 Trường Đại học Công Thương TP.HCM",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a1628",
-  "theme_color": "#0f766e",
+  "background_color": "#060914",
+  "theme_color": "#0A2FFF",
   "orientation": "portrait-primary",
-  "categories": ["education", "social", "business"],
-  "lang": "vi",
-  "dir": "ltr",
   "icons": [
     {
-      "src": "/icons/icon-72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-192.png",
+      "src": "/images/logo_iconic.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-512.png",
+      "src": "/images/logo_iconic.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/images/og-default.png",
-      "sizes": "1200x630",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "HUIT Startup 2026 - Trang chủ"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Bảng xếp hạng",
-      "short_name": "Xếp hạng",
-      "description": "Xem bảng xếp hạng bình chọn",
-      "url": "/bang-xep-hang",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Tin tức",
-      "short_name": "Tin tức",
-      "description": "Xem tin tức và thông báo",
-      "url": "/tin-tuc",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+      "purpose": "any maskable"
     }
   ]
 }

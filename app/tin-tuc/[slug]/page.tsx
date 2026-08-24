@@ -1,46 +1,43 @@
 import React from 'react';
 import ClientPostDetail from './ClientPostDetail';
-import { SAMPLE_NEWS_POSTS } from '../samplePosts';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 async function getPost(slug: string) {
+  if (!API_BASE_URL) return null;
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`, { 
-      next: { revalidate: 60 } 
+      cache: 'no-store' 
     });
     if (!res.ok) {
-      return SAMPLE_NEWS_POSTS.find((post) => post.slug === slug) || null;
+      return null;
     }
     const data = await res.json();
-    return data || SAMPLE_NEWS_POSTS.find((post) => post.slug === slug) || null;
+    return data || null;
   } catch (err) {
     console.error(`Error fetching post details for slug: ${slug}`, err);
-    return SAMPLE_NEWS_POSTS.find((post) => post.slug === slug) || null;
+    return null;
   }
 }
 
 async function getRelatedPosts(category: string, currentPostId: string) {
+  if (!API_BASE_URL) return [];
   try {
     const res = await fetch(`${API_BASE_URL}/api/posts`, { 
-      next: { revalidate: 60 } 
+      cache: 'no-store' 
     });
     if (!res.ok) {
-      return SAMPLE_NEWS_POSTS
-        .filter((p) => p.id !== currentPostId && p.category === category)
-        .slice(0, 3);
+      return [];
     }
     const allPosts = await res.json();
-    const source = Array.isArray(allPosts) && allPosts.length > 0 ? allPosts : SAMPLE_NEWS_POSTS;
+    const source = Array.isArray(allPosts) ? allPosts : [];
     return source
       .filter((p: any) => p.id !== currentPostId && p.category === category)
       .slice(0, 3);
   } catch (err) {
     console.error('Error fetching related posts:', err);
-    return SAMPLE_NEWS_POSTS
-      .filter((p) => p.id !== currentPostId && p.category === category)
-      .slice(0, 3);
+    return [];
   }
 }
 

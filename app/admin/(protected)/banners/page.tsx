@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { Banner } from '@/lib/types';
 import { apiUrl, formatAssetUrl } from '../../api';
+import { useAlert } from '../../AlertProvider';
+import ImageDropzone from '../../components/ImageDropzone';
 
 type AdminBanner = Banner & {
   isActive?: boolean;
@@ -78,43 +80,14 @@ function BannerModal({
               <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitle} onChange={(event) => setFormTitle(event.target.value)} required />
             </label>
 
-            <div className="space-y-1.5">
-              <label className="block space-y-1.5">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Đường dẫn hình ảnh hoặc video</span>
-                <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formImageUrl} onChange={(event) => setFormImageUrl(event.target.value)} required />
-              </label>
-              <div className="block space-y-1.5">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider block">Hoặc tải file từ máy tính</span>
-                <input
-                  type="file"
-                  accept="image/*,video/mp4"
-                  className="w-full text-xs text-[#52605b] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-[#123c34] file:text-white hover:file:bg-[#0f766e] cursor-pointer"
-                  onChange={async (event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) return;
-                    
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    
-                    try {
-                      const res = await fetch(apiUrl('/api/admin/upload'), {
-                        method: 'POST',
-                        body: formData,
-                      });
-                      if (res.ok) {
-                        const data = await res.json();
-                        setFormImageUrl(data.url);
-                      } else {
-                        alert('Tải ảnh/video lên thất bại.');
-                      }
-                    } catch (err) {
-                      console.error(err);
-                      alert('Có lỗi xảy ra khi kết nối server tải ảnh.');
-                    }
-                  }}
-                />
-              </div>
-            </div>
+            <ImageDropzone
+              label="Hình ảnh / Video banner *"
+              subLabel="Kéo &amp; thả hình ảnh banner từ thư mục máy tính vào đây hoặc click để chọn"
+              aspectRatioHint="Khuyên dùng: Tỷ lệ 16:9 hoặc 21:9 ngang chuẩn Hero"
+              value={formImageUrl}
+              onChange={setFormImageUrl}
+              required
+            />
 
             <label className="block space-y-1.5">
               <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Liên kết điều hướng khi bấm</span>
@@ -445,6 +418,7 @@ function ImportModal({
 }
 
 export default function BannersAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [banners, setBanners] = useState<AdminBanner[]>([]);
   const [search, setSearch] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -525,15 +499,17 @@ export default function BannersAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa banner này không?')) return;
+    const ok = await showConfirm('Bạn có chắc chắn muốn xóa banner này không?', 'Xác nhận xóa banner', 'error', 'Xóa ngay');
+    if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/banners/${id}`), { method: 'DELETE' });
       if (res.ok) {
-        alert('Xóa banner thành công!');
+        showAlert('Xóa banner thành công!', 'success');
         loadBanners();
       }
     } catch (err) {
       console.error(err);
+      showAlert('Đã xảy ra lỗi khi xóa banner.', 'error');
     }
   };
 

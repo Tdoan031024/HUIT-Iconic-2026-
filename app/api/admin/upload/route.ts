@@ -3,6 +3,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import sharp from 'sharp';
+import { logApiError } from '@/lib/api-error';
+
+const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+const ALLOWED_VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov', '.ogg'];
+const MAX_IMAGE_SIZE = 15 * 1024 * 1024; // 15MB
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_IMAGE_PIXELS = 40_000_000;
 
 export async function POST(req: Request) {
   try {
@@ -12,37 +19,76 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Không tìm thấy file tải lên.' }, { status: 400 });
     }
 
+    const ext = path.extname(file.name).toLowerCase();
+    const isImage = ALLOWED_IMAGE_EXTENSIONS.includes(ext);
+    const isVideo = ALLOWED_VIDEO_EXTENSIONS.includes(ext);
+
+    if (!isImage && !isVideo) {
+      return NextResponse.json(
+        { error: `Định dạng tệp "${ext}" không được hỗ trợ. Vui lòng chọn ảnh (JPG, PNG, WEBP, SVG) hoặc video (MP4, WEBM).` },
+        { status: 400 }
+      );
+    }
+
+    if (isImage && file.size > MAX_IMAGE_SIZE) {
+      return NextResponse.json({ error: 'Dung lượng ảnh vượt quá giới hạn 15MB.' }, { status: 400 });
+    }
+
+    if (isVideo && file.size > MAX_VIDEO_SIZE) {
+      return NextResponse.json({ error: 'Dung lượng video vượt quá giới hạn 50MB.' }, { status: 400 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
-    const uploadDir = path.join(process.cwd(), 'public/uploads');
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
-    const ext = path.extname(file.name).toLowerCase();
-    const baseName = crypto.randomUUID();
+    const baseName = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
 
-    if (['.mp4', '.webm', '.ogg', '.mov'].includes(ext)) {
-      const videoFilename = `${baseName}${ext}`;
-      const videoPath = path.join(uploadDir, videoFilename);
-      fs.writeFileSync(videoPath, buffer);
-      return NextResponse.json({ url: `/uploads/${videoFilename}` });
+    if (ext === '.mp4') {
+      if (buffer.length < 12 || buffer.toString('ascii', 4, 8) !== 'ftyp') {
+        return NextResponse.json({ error: 'Video MP4 không hợp lệ.' }, { status: 400 });
+      }
+      const filename = `${baseName}${ext}`;
+      const filePath = path.join(uploadDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      return NextResponse.json({ url: `/uploads/${filename}`, filename, size: file.size });
+    }
+
+    if (ext === '.svg') {
+      return NextResponse.json({ error: 'SVG không được phép tải lên vì lý do bảo mật.' }, { status: 400 });
+    }
+
+    if (ext === '.gif') {
+      const filename = `${baseName}${ext}`;
+      const filePath = path.join(uploadDir, filename);
+      fs.writeFileSync(filePath, buffer);
+      return NextResponse.json({ url: `/uploads/${filename}`, filename, size: file.size });
     }
 
     const webpFilename = `${baseName}.webp`;
     const webpPath = path.join(uploadDir, webpFilename);
 
     try {
-      await sharp(buffer)
+      const image = sharp(buffer);
+      const metadata = await image.metadata();
+      if (!metadata.width || !metadata.height || metadata.width * metadata.height > MAX_IMAGE_PIXELS) {
+        return NextResponse.json({ error: 'Ảnh vượt quá giới hạn 40 triệu điểm ảnh.' }, { status: 400 });
+      }
+      await image
         .rotate()
-        .webp({ quality: 82, effort: 4 })
+        .webp({ quality: 85, effort: 4 })
         .toFile(webpPath);
-      return NextResponse.json({ url: `/uploads/${webpFilename}` });
-    } catch (e) {
+      return NextResponse.json({ url: `/uploads/${webpFilename}`, filename: webpFilename, size: file.size });
+    } catch {
       const origFilename = `${baseName}${ext}`;
       fs.writeFileSync(path.join(uploadDir, origFilename), buffer);
-      return NextResponse.json({ url: `/uploads/${origFilename}` });
+      return NextResponse.json({ url: `/uploads/${origFilename}`, filename: origFilename, size: file.size });
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Lỗi tải file' }, { status: 500 });
+    await logApiError(req, 500, error);
+    console.error('Upload handler error:', error);
+    return NextResponse.json({ error: error.message || 'Lỗi xử lý file tải lên' }, { status: 500 });
   }
 }

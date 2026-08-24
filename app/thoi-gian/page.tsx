@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '../api';
+import { useLanguage } from '../../src/i18n/use-language';
+import { localizedText } from '../../src/i18n/content';
 
 function CountdownTimer({ targetDate }: { targetDate: string }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -70,8 +72,9 @@ function parseVN(dStr: string | undefined | null) {
 }
 
 export default function TimelinePage() {
-  const registerUrl =
-    'https://docs.google.com/forms/d/e/1FAIpQLSdlRmaBRgPAl_rbLjDOY__ROcyZsCOnoxec2izDhRVJTcHBfA/viewform';
+  const registerUrl = '';
+  const language = useLanguage();
+  const text = (vi?: string | null, en?: string | null) => localizedText(language, vi, en);
 
   const [settings, setSettings] = useState<any>(null);
   const [events, setEvents] = useState<any[]>([]);
@@ -122,45 +125,7 @@ export default function TimelinePage() {
     });
   }
 
-  const staticRounds = [
-    {
-      title: 'Vòng loại', eyebrow: 'Giai đoạn 01',
-      summary: 'Hoàn tất hồ sơ đăng ký, tập huấn định hướng và công bố kết quả vòng loại.',
-      color: '#FDE047', bg: 'from-[#FDE047]/14 to-[#0A2FFF]/8',
-      steps: [
-        { date: '15/5 - 15/6/2026', title: 'Nhận hồ sơ đăng ký dự thi', isImportant: true },
-        { date: '17/06/2026', title: 'Tập huấn định hướng', isImportant: false },
-        { date: '20/6/2026', title: 'Hạn chót nộp hồ sơ vòng loại', isImportant: true },
-        { date: '27/6 - 28/6/2026', title: 'Chấm hồ sơ vòng loại', isImportant: false },
-        { date: '30/6/2026', title: 'Công bố kết quả vòng loại', isImportant: true },
-      ],
-    },
-    {
-      title: 'Vòng bán kết', eyebrow: 'Giai đoạn 02',
-      summary: 'Đào tạo chuyên sâu, hoàn thiện thuyết minh và thi bán kết tại HUIT Startup Open Day.',
-      color: '#79BCC2', bg: 'from-[#79BCC2]/16 to-[#0A2FFF]/8',
-      steps: [
-        { date: '04/7 - 05/7/2026', title: 'Đào tạo, huấn luyện kỹ năng khởi nghiệp đổi mới sáng tạo', isImportant: false },
-        { date: '19/7/2026', title: 'Hạn chót nộp bản thuyết minh dự án hoàn chỉnh', isImportant: true },
-        { date: '25/7/2026', title: 'Thi bán kết, trưng bày sản phẩm hoặc dịch vụ', isImportant: true },
-        { date: '25/7/2026', title: 'Chọn Top 10 đội mỗi bảng vào vòng chung kết', isImportant: true },
-      ],
-    },
-    {
-      title: 'Vòng chung kết', eyebrow: 'Giai đoạn 03',
-      summary: 'Kiểm chứng thị trường, kết nối nguồn lực, bình chọn online và thuyết trình chung kết.',
-      color: '#F97316', bg: 'from-[#F97316]/14 to-[#79BCC2]/8',
-      steps: [
-        { date: '01/8 - 16/8/2026', title: 'HUIT Startup Tour và kiểm chứng thực tế dự án', isImportant: false },
-        { date: '17/8 - 17/9/2026', title: 'Kết nối nhà đầu tư, cố vấn và hoàn thiện định hướng phát triển', isImportant: false },
-        { date: '20/9/2026', title: 'Hỗ trợ hoàn thiện thuyết minh dự án và kế hoạch kinh doanh', isImportant: false },
-        { date: '21/9 - 28/9/2026', title: 'Vòng chung kết online', isImportant: true },
-        { date: '03/10/2026', title: 'Trưng bày sản phẩm, dịch vụ và thuyết trình chung kết', isImportant: true },
-      ],
-    },
-  ];
-
-  const displayRounds = events && events.length > 0 ? roundsList : staticRounds;
+  const displayRounds = events && events.length > 0 ? roundsList.filter((round) => round.steps.length > 0) : [];
 
   const keyMilestones = events && events.length > 0
     ? events
@@ -168,7 +133,7 @@ export default function TimelinePage() {
       .map((e: any) => {
         let displayDate = e.date;
         if (displayDate.includes('/2026')) displayDate = displayDate.replace('/2026', '');
-        let displayTitle = e.title;
+        let displayTitle = text(e.title, e.titleEn);
         if (displayTitle.toLowerCase().includes('nhận hồ sơ')) displayTitle = 'Nhận hồ sơ đăng ký dự thi';
         else if (displayTitle.toLowerCase().includes('hạn chót nộp') || displayTitle.toLowerCase().includes('hạn nộp')) displayTitle = 'Hạn chót nộp hồ sơ';
         else if (displayTitle.toLowerCase().includes('bán kết')) displayTitle = 'Vòng Bán kết';
@@ -179,12 +144,7 @@ export default function TimelinePage() {
         }
         return [displayDate, displayTitle];
       })
-    : [
-      ['15/5', 'Mở nhận hồ sơ'],
-      ['20/6', 'Hạn nộp vòng loại'],
-      ['25/7', 'Vòng Bán kết'],
-      ['03/10', 'Vòng Chung kết'],
-    ];
+    : [];
   const currentMilestoneIndex = useMemo(() => {
     if (!isMounted) return 0;
     const today = new Date();
@@ -200,7 +160,7 @@ export default function TimelinePage() {
   const isRegistrationOpen = !isMounted || (settings
     ? settings.isRegistrationOpen !== false &&
       (!settings.registrationDeadline || parseVN(settings.registrationDeadline).getTime() >= Date.now())
-    : true);
+    : false);
 
   if (!isMounted) return null;
 
@@ -491,8 +451,8 @@ export default function TimelinePage() {
               <span>›</span>
               <span>Thời gian</span>
             </div>
-            <span className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
-              {isMounted && settings?.aboutTitle ? settings.aboutTitle : "HUIT STARTUP LẦN THỨ VII 2026"}
+            <span suppressHydrationWarning className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
+              {isMounted && settings?.aboutTitle ? settings.aboutTitle : ''}
             </span>
             <h1 className="mx-auto mt-5 max-w-[900px] text-[32px] sm:text-[54px] font-black uppercase leading-[1.05] text-neutral-900 dark:text-white">
               Thời gian các vòng thi
@@ -539,6 +499,7 @@ export default function TimelinePage() {
           </section>
 
           {/* === TIMELINE TRACKER === */}
+          {keyMilestones.length > 0 && (
           <section className="timeline-enter mt-5" style={{ animationDelay: '120ms' }}>
             <div style={{ textAlign:'center', marginBottom:12 }}>
               <p style={{ fontSize:11, fontWeight:800, textTransform:'uppercase', letterSpacing:'0.2em', color:'var(--site-muted)', marginBottom:4 }}>Lịch trình tổng quan</p>
@@ -550,7 +511,7 @@ export default function TimelinePage() {
               <div className="timeline-progress-bar">
                 <div
                   className="timeline-progress-bar-active"
-                  style={{ width: `${(currentMilestoneIndex / (keyMilestones.length - 1)) * 100}%` }}
+                  style={{ width: `${keyMilestones.length > 1 ? (currentMilestoneIndex / (keyMilestones.length - 1)) * 100 : 0}%` }}
                 />
               </div>
               {keyMilestones.map(([date, label], i) => {
@@ -579,6 +540,7 @@ export default function TimelinePage() {
               })}
             </div>
           </section>
+          )}
 
           {/* Round Cards */}
           <section className="mt-14 space-y-14">
@@ -592,7 +554,7 @@ export default function TimelinePage() {
                       <p className="text-[12px] font-black uppercase tracking-[0.28em]" style={{ color: round.color }}>
                         {round.eyebrow}
                       </p>
-                      <h2 className="mt-2 text-[28px] sm:text-[40px] font-black uppercase text-neutral-900 dark:text-white">{round.title}</h2>
+                      <h2 className="mt-2 text-[28px] sm:text-[40px] font-black uppercase text-neutral-900 dark:text-white">{language === 'en' ? ({ 'Vòng loại': 'Qualifiers', 'Vòng bán kết': 'Semi-finals', 'Vòng chung kết': 'Finals' } as Record<string, string>)[round.title] || round.title : round.title}</h2>
                     </div>
                     <p className="max-w-[640px] text-[14px] sm:text-[15px] leading-relaxed text-neutral-600 dark:text-white/70">
                       {round.summary}
@@ -623,7 +585,7 @@ export default function TimelinePage() {
                               </div>
                             </div>
                             <div className="mt-6 flex flex-1 flex-col justify-between">
-                              <h3 className="text-[17px] font-extrabold leading-snug text-neutral-900 dark:text-white">{stepObj.title}</h3>
+                              <h3 className="text-[17px] font-extrabold leading-snug text-neutral-900 dark:text-white">{text(stepObj.title, stepObj.titleEn)}</h3>
                               <div className="mt-5 flex items-center justify-between gap-3 border-t border-neutral-200 dark:border-white/10 pt-4">
                                 {stepObj.isImportant ? (
                                   <span className="inline-flex rounded-full border border-amber-500/35 bg-amber-500/10 dark:border-[#FDE047]/35 dark:bg-[#FDE047]/12 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-[#FDE047]">
@@ -646,6 +608,7 @@ export default function TimelinePage() {
           </section>
 
           {/* CTA Section with Countdown */}
+          {settings?.registrationDeadline && (
           <section className="timeline-enter countdown-container" style={{ animationDelay: '520ms' }}>
             <p className="countdown-eyebrow">
               Còn bao lâu nữa?
@@ -654,7 +617,7 @@ export default function TimelinePage() {
               Đừng bỏ lỡ mốc đăng ký!
             </h2>
 
-            <CountdownTimer targetDate={isMounted && settings?.registrationDeadline ? settings.registrationDeadline : "2026-06-20T23:59:59"} />
+            <CountdownTimer targetDate={settings.registrationDeadline} />
 
             <p className="countdown-desc">
               Hãy chuẩn bị hồ sơ sớm để đội thi có đủ thời gian hoàn thiện ý tưởng, sản phẩm và kế hoạch triển khai.
@@ -687,6 +650,7 @@ export default function TimelinePage() {
               </button>
             )}
           </section>
+          )}
         </div>
       </main>
     </>

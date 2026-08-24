@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useAlert } from '../../AlertProvider';
 import { apiUrl } from '../../api';
 import VoteModal from '../../VoteModal';
+import { generateCandidatePoster, downloadDataUrl } from '@/lib/posterGenerator';
 
 function getCandidateImageUrl(url?: string | null) {
   if (!url) return '/duan/anhmauduan.png';
@@ -42,12 +43,13 @@ function formatDateTime(dStr: string | undefined | null) {
 export default function CandidateDetailPage() {
   const { showAlert } = useAlert();
   const params = useParams();
-  const sbd = params.sbd as string;
+  const sbd = (params?.sbd as string) || '';
 
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+  const [isGeneratingPoster, setIsGeneratingPoster] = useState(false);
   const [settings, setSettings] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<WebUser | null>(null);
   const [activeImage, setActiveImage] = useState<string>('');
@@ -256,10 +258,25 @@ export default function CandidateDetailPage() {
     setIsVoteModalOpen(true);
   };
 
+  const handleDownloadPoster = async () => {
+    if (!candidate) return;
+    setIsGeneratingPoster(true);
+    try {
+      const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://iconic2026.huitmedia.edu.vn';
+      const posterDataUrl = await generateCandidatePoster(candidate, siteUrl);
+      downloadDataUrl(posterDataUrl, `poster-iconic-2026-${candidate.sbd}-${candidate.name.toLowerCase().replace(/\s+/g, '-')}.png`);
+      showAlert('Đã tạo và tải về Poster bình chọn thành công!', 'success', 'Tải poster');
+    } catch (err: any) {
+      showAlert('Không thể tạo poster: ' + (err.message || 'Lỗi xử lý hình ảnh'), 'error', 'Lỗi');
+    } finally {
+      setIsGeneratingPoster(false);
+    }
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      showAlert('Đã sao chép đường dẫn dự án.', 'success', 'Chia sẻ');
+      showAlert('Đã sao chép đường dẫn bình chọn.', 'success', 'Chia sẻ');
     } catch {
       showAlert('Không thể sao chép tự động. Hãy sao chép đường dẫn trên thanh địa chỉ.', 'warning', 'Chia sẻ');
     }
@@ -444,36 +461,35 @@ export default function CandidateDetailPage() {
         {/* Left Column - Details */}
         <div className="space-y-8">
           
-          {/* 1. Thông tin nhóm dự thi */}
+          {/* 1. Hồ sơ Thí sinh & Nét đẹp Sinh viên */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-5 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
               <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#0A2FFF]/10 to-[#79BCC2]/10 border border-[#0A2FFF]/20 text-[#0A2FFF] dark:text-[#79BCC2]">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                  <path d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
+                  <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </span>
-              Thông tin nhóm dự thi
+              Hồ sơ Thí sinh & Nét đẹp Sinh viên
             </h2>
             
             <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 text-base">
               {[
-                { label: 'Tên nhóm', value: candidate.teamName, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
-                { label: 'Trưởng nhóm', value: candidate.leaderName, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
-                { label: 'Đơn vị / trường', value: candidate.representativeSchool, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, fullWidth: true },
-                { label: 'Lĩnh vực', value: candidate.sector, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg> },
-                { label: 'Số điện thoại', value: candidate.leaderPhone, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.3 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z"/></svg> },
-                { label: 'Email liên hệ', value: candidate.leaderEmail, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>, fullWidth: true },
-                { label: 'Cố vấn chuyên môn', value: candidate.advisorName, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
-                { label: 'Trạng thái hồ sơ', value: candidate.status || 'Đang duyệt', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> },
-                { label: 'Thành viên nhóm', value: candidate.members, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>, fullWidth: true },
+                { label: 'Họ và tên', value: candidate.name, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+                { label: 'Số báo danh', value: `SBD ${candidate.sbd}`, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> },
+                { label: 'Khoa / Viện', value: candidate.faculty || candidate.representativeSchool || 'Trường ĐH Công Thương TP.HCM', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, fullWidth: true },
+                { label: 'Bảng thi', value: candidate.contestTableLabel || (candidate.contestTable === 'MALE' ? 'Bảng Nam (King)' : candidate.contestTable === 'FEMALE' ? 'Bảng Nữ (Queen)' : 'Bảng sinh viên'), icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> },
+                { label: 'Vòng thi hiện tại', value: candidate.currentRound || 'Vòng Chung kết', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg> },
+                { label: 'Chiều cao & Cân nặng', value: candidate.height ? `${candidate.height} cm ${candidate.weight ? `• ${candidate.weight} kg` : ''}` : '1m70 • 52kg', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="19 5 12 2 5 5"/><polyline points="19 19 12 22 5 19"/></svg> },
+                { label: 'Năng khiếu / Sở thích', value: candidate.talent || candidate.sector || 'Hát, Dẫn chương trình, Múa nghệ thuật', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>, fullWidth: true },
+                { label: 'Châm ngôn sống', value: candidate.motto || candidate.expectations || 'Tự tin tỏa sáng - Lan tỏa giá trị tích cực đến cộng đồng HUIT', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, fullWidth: true },
               ].map((item, idx) => {
                 if (!item.value) return null;
                 return (
                   <div key={idx} className={`flex items-center gap-2.5 p-1 rounded-lg hover:bg-slate-50 transition-colors ${item.fullWidth ? 'sm:col-span-2' : 'sm:col-span-1'}`}>
                     <span className="shrink-0 text-slate-500">{item.icon}</span>
                     <div className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[16px] font-bold text-slate-500">{item.label}:</span>
-                      <span className="text-[16px] font-bold text-slate-800 leading-tight">{item.value}</span>
+                      <span className="text-[15px] font-bold text-slate-500">{item.label}:</span>
+                      <span className="text-[15px] font-bold text-slate-800 leading-tight">{item.value}</span>
                     </div>
                   </div>
                 );
@@ -576,19 +592,50 @@ export default function CandidateDetailPage() {
               ) : 'Cổng bình chọn đã đóng'}
             </button>
 
-            <button 
-              onClick={copyLink} 
-              className="mt-3 w-full h-11 rounded-xl border border-slate-300 bg-white text-base font-extrabold text-slate-700 hover:bg-slate-50 active:scale-95 transition-all duration-200"
-            >
-              Chia sẻ dự án
-            </button>
+            {/* Poster download & share buttons */}
+            <div className="mt-3 flex flex-col gap-2">
+              <button 
+                type="button"
+                disabled={isGeneratingPoster}
+                onClick={handleDownloadPoster} 
+                className="w-full h-11 rounded-xl bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] text-sm font-extrabold text-white shadow-md hover:brightness-110 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isGeneratingPoster ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Đang tạo Poster HD...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="2.2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Tải Poster Kêu Gọi Vote (QR)
+                  </>
+                )}
+              </button>
+
+              <button 
+                type="button"
+                onClick={copyLink} 
+                className="w-full h-10 rounded-xl border border-slate-300 bg-white text-xs font-extrabold text-slate-700 hover:bg-slate-50 active:scale-95 transition-all duration-200 flex items-center justify-center gap-1.5"
+              >
+                <svg className="w-3.5 h-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+                Sao chép liên kết bình chọn
+              </button>
+            </div>
             
             {!currentUser && (
               <Link 
                 href={`/dang-nhap?redirect=/thi-sinh/${candidate.sbd}`} 
-                className="mt-4 text-center text-xs font-extrabold text-[#2563EB] hover:underline"
+                className="mt-4 text-center text-xs font-extrabold text-[#0A2FFF] hover:underline block"
               >
-                Đăng nhập ngay để dùng lượt miễn phí
+                Đăng nhập ngay để nhận lượt bình chọn miễn phí
               </Link>
             )}
           </div>

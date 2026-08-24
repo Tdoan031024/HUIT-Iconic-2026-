@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 async function fetchPosts() {
+  if (!API_BASE) return [];
   try {
     const res = await fetch(`${API_BASE}/api/posts`, { next: { revalidate: 3600 } });
     if (res.ok) return (await res.json()) as any[];
@@ -12,6 +13,7 @@ async function fetchPosts() {
 }
 
 async function fetchCandidates() {
+  if (!API_BASE) return [];
   try {
     const res = await fetch(`${API_BASE}/api/candidates`, { next: { revalidate: 3600 } });
     if (res.ok) return (await res.json()) as any[];

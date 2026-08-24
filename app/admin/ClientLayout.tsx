@@ -95,16 +95,34 @@ const guidesIcon = (
   </svg>
 );
 
+const trashIcon = (
+  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 6h18" />
+    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
+  </svg>
+);
+
+const monitoringIcon = (
+  <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 3v18h18" /><path d="m7 16 3-4 3 2 5-7" />
+  </svg>
+);
+
 const navGroups = [
   {
     title: 'Quản lý',
     items: [
       { href: '/admin', label: 'Tổng quan', icon: dashboardIcon },
-      { href: '/admin/candidates', label: 'Dự án', icon: candidatesIcon },
+      { href: '/admin/candidates', label: 'Thí sinh', icon: candidatesIcon },
       { href: '/admin/votes', label: 'Lịch sử bình chọn', icon: votesIcon },
       { href: '/admin/users', label: 'Người dùng', icon: usersIcon },
       { href: '/admin/sponsors', label: 'Nhà tài trợ', icon: sponsorsIcon },
       { href: '/admin/news', label: 'Tin tức', icon: newsIcon },
+      { href: '/admin/trash', label: 'Thùng rác', icon: trashIcon },
+      { href: '/admin/monitoring', label: 'Giám sát hệ thống', icon: monitoringIcon },
     ],
   },
   {
@@ -124,11 +142,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   '/admin': { title: 'Tổng quan', description: 'Theo dõi trạng thái nền tảng và dữ liệu vận hành.' },
-  '/admin/candidates': { title: 'Dự án', description: 'Quản lý danh sách dự án, điểm bình chọn và hồ sơ hiển thị.' },
+  '/admin/candidates': { title: 'Thí sinh', description: 'Quản lý danh sách thí sinh, điểm bình chọn và hồ sơ hiển thị.' },
   '/admin/votes': { title: 'Lịch sử bình chọn', description: 'Theo dõi nhật ký phiếu bầu chi tiết và xuất dữ liệu đối soát.' },
   '/admin/users': { title: 'Người dùng', description: 'Kiểm soát tài khoản và phân quyền truy cập hệ thống.' },
   '/admin/sponsors': { title: 'Nhà tài trợ', description: 'Cập nhật đối tác đồng hành và tài nguyên thương hiệu.' },
   '/admin/news': { title: 'Tin tức', description: 'Quản trị nội dung cập nhật và thông báo quan trọng.' },
+  '/admin/trash': { title: 'Thùng rác', description: 'Xem, khôi phục hoặc xóa vĩnh viễn dữ liệu đã xóa (tự hủy sau 30 ngày).' },
+  '/admin/monitoring': { title: 'Giám sát hệ thống', description: 'Theo dõi hoạt động quản trị và lỗi API gần đây.' },
   '/admin/banners': { title: 'Banner', description: 'Điều chỉnh hình ảnh chiến dịch và điểm chạm chính.' },
   '/admin/introduction': { title: 'Thông tin cuộc thi', description: 'Quản lý phần giới thiệu và nội dung landing page.' },
   '/admin/timeline': { title: 'Mốc thời gian', description: 'Cập nhật lịch trình và trạng thái các vòng thi.' },
@@ -504,7 +524,8 @@ function BellButton() {
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const currentMeta = getPageMeta(pathname);
+  const safePathname = pathname || '/';
+  const currentMeta = getPageMeta(safePathname);
   const [sidebarWidth, setSidebarWidth] = React.useState(238);
   const [isResizing, setIsResizing] = React.useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -527,14 +548,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   ]);
 
   React.useEffect(() => {
-    const matched = navItems.find((item) => (item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)));
+    const matched = navItems.find((item) => (item.href === '/' ? safePathname === '/' : safePathname.startsWith(item.href)));
     if (matched) {
       setOpenTabs((prev) => {
         if (prev.some((tab) => tab.href === matched.href)) return prev;
         return [...prev, { href: matched.href, label: matched.label, icon: matched.icon }];
       });
     }
-  }, [pathname]);
+  }, [safePathname]);
 
   const handleTabClick = (href: string) => {
     if (pathname !== href) {
@@ -701,8 +722,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+    if (href === '/') return safePathname === '/';
+    return safePathname.startsWith(href);
   };
 
   const startResizing = React.useCallback((event: React.MouseEvent) => {

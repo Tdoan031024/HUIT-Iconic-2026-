@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Candidate } from '@/lib/types';
 import { apiUrl, formatAssetUrl } from '../../api';
 import DateTimeInput from '../../components/DateTimeInput';
+import ImageDropzone from '../../components/ImageDropzone';
 
 type VotingPromotion = {
   id: string;
@@ -439,21 +440,13 @@ function ProjectModal({
             <span className={labelText}>Điểm bình chọn</span>
             <input type="number" min={0} className={inputClass} value={form.votes || 0} onChange={(event) => update('votes', Number(event.target.value))} />
           </label>
-          <div className="space-y-1.5">
-            <span className={labelText}>Đường dẫn ảnh</span>
-            <div className="flex gap-2">
-              <input className={inputClass} value={form.imageUrl || ''} onChange={(event) => update('imageUrl', event.target.value)} />
-              <button
-                type="button"
-                onClick={() => {
-                  setUploadingIndex('main');
-                  modalFileRef.current?.click();
-                }}
-                className="h-10 shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 hover:border-emerald-500 hover:text-emerald-700 transition"
-              >
-                Tải lên
-              </button>
-            </div>
+          <div className="md:col-span-2">
+            <ImageDropzone
+              label="Hình ảnh chân dung đại diện"
+              value={form.imageUrl || ''}
+              onChange={(url) => update('imageUrl', url)}
+              aspectRatioHint="Khuyên dùng ảnh chân dung rõ nét (3:4 hoặc 1:1)"
+            />
           </div>
           <label className="space-y-1.5">
             <span className={labelText}>Tên nhóm</span>

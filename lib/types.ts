@@ -7,8 +7,18 @@ export interface Candidate {
   description: string;
   biography?: string;
   detailsUrl?: string;
-  contestTable?: 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE';
+  contestTable?: 'MALE' | 'FEMALE' | 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE' | string;
   contestTableLabel?: string;
+  faculty?: string;
+  dob?: string;
+  gender?: 'MALE' | 'FEMALE' | string;
+  height?: string | number;
+  weight?: string | number;
+  measurements?: string;
+  talent?: string;
+  motto?: string;
+  achievements?: string;
+  hobbies?: string;
   sector?: string;
   stage?: string;
   status?: string;
@@ -33,6 +43,7 @@ export interface Sponsor {
   logoUrl: string;
   tier: 'PLATINUM' | 'GOLD' | 'SILVER' | 'PARTNER';
   description?: string;
+  descriptionEn?: string;
   websiteUrl?: string;
   email?: string;
   phone?: string;
@@ -42,6 +53,7 @@ export interface Sponsor {
 export interface Banner {
   id: string;
   title: string;
+  titleEn?: string | null;
   imageUrl: string;
   link?: string;
   isActive: boolean;
@@ -51,7 +63,9 @@ export interface TimelineEvent {
   id: string;
   date: string;
   title: string;
+  titleEn?: string | null;
   description: string;
+  descriptionEn?: string | null;
   isActive: boolean;
   round?: string;
   isImportant?: boolean;
@@ -132,8 +146,15 @@ export interface SystemSettings {
   sponsorBannerUrl?: string;
   hideSponsorBanner?: boolean;
   hidePublicVoteHistory?: boolean;
+  themeVideoEmbedUrl?: string;
+  themeVideoTitle?: string;
+  themeVideoTitleEn?: string;
+  themeVideoDescription?: string;
+  themeVideoDescriptionEn?: string;
   aboutTitle?: string;
+  aboutTitleEn?: string;
   aboutDescription?: string;
+  aboutDescriptionEn?: string;
   aboutImageUrl?: string;
   statsCandidates?: string;
   statsVotes?: string;
@@ -143,10 +164,12 @@ export interface SystemSettings {
   statsMedia?: string;
   statsSchools?: string;
   aboutSubtitle?: string;
+  aboutSubtitleEn?: string;
   aboutTheme?: string;
   aboutOrganizerDetail?: string;
   aboutSectors?: string;
   aboutBenefits?: string;
+  aboutBenefitsEn?: string;
   aboutParticipants?: string;
   aboutPrize?: string;
   aboutContactName?: string;

@@ -475,7 +475,18 @@ export default function OverviewPage() {
     loadVotes();
 
     const votesInterval = setInterval(loadVotes, 15000);
-    return () => clearInterval(votesInterval);
+    const analyticsInterval = setInterval(async () => {
+      try {
+        const response = await fetch(apiUrl('/api/admin/analytics/summary'), { cache: 'no-store' });
+        if (response.ok) setAnalyticsData(await response.json());
+      } catch (error) {
+        console.error('Failed to refresh analytics.', error);
+      }
+    }, 10000);
+    return () => {
+      clearInterval(votesInterval);
+      clearInterval(analyticsInterval);
+    };
   }, []);
 
   const totalVotes = useMemo(() => candidates.reduce((sum, item) => sum + item.votes, 0), [candidates]);
@@ -512,13 +523,14 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-7">
         <KPIBlock label="Dự án" value={isLoading ? '--' : <AnimatedMetric value={candidates.length} />} icon={<FolderIcon />} tone="blue" loading={isLoading} />
         <KPIBlock label="Tổng vote" value={isLoading ? '--' : <AnimatedMetric value={totalVotes} />} icon={<VoteIcon />} tone="violet" loading={isLoading} />
         <KPIBlock label="Dẫn đầu" value={leadingCandidate?.sbd || '001'} icon={<TrophyIcon />} tone="amber" loading={isLoading} />
         <KPIBlock label="Thời gian còn lại" value={formatRemaining(endDate)} icon={<CalendarIcon />} tone="emerald" loading={isLoading} />
         <KPIBlock label="Lượt truy cập" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.totalViews || 0} />} icon={<ActivityStackIcon />} tone="blue" loading={isLoading} />
         <KPIBlock label="Khách 30 ngày" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.uniqueVisitors30Days || 0} />} icon={<ActivityCreateIcon />} tone="emerald" loading={isLoading} />
+        <KPIBlock label="Đang truy cập" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.activeVisitors || 0} />} icon={<ActivityCreateIcon />} tone="violet" loading={isLoading} />
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">

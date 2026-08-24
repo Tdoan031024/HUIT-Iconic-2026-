@@ -1,22 +1,88 @@
 import { NextResponse } from 'next/server';
-import { validateAdminCredentials } from '@/lib/service';
+import { validateAdminCredentials, logAdminAction } from '@/lib/service';
+import { logApiError } from '@/lib/api-error';
+import { generateAdminSessionToken } from '@/lib/auth';
+
+// In-memory rate limiting for login attempts
+interface LoginAttempt {
+  count: number;
+  lockedUntil?: number;
+  lastAttempt: number;
+}
+
+const loginAttempts = new Map<string, LoginAttempt>();
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 export async function POST(req: Request) {
   try {
-    const { username, password } = await req.json();
+    const { username, password, rememberMe } = await req.json();
     if (!username || !password) {
       return NextResponse.json({ message: 'Thiếu thông tin đăng nhập.' }, { status: 400 });
     }
 
-    const admin = await validateAdminCredentials(username, password);
-    if (!admin) {
-      return NextResponse.json({ message: 'Tên đăng nhập hoặc mật khẩu không chính xác.' }, { status: 401 });
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';
+    const rateLimitKey = `${clientIp}_${username.trim().toLowerCase()}`;
+    const now = Date.now();
+
+    const attempt = loginAttempts.get(rateLimitKey);
+    if (attempt && attempt.lockedUntil && attempt.lockedUntil > now) {
+      const remainingMinutes = Math.ceil((attempt.lockedUntil - now) / (60 * 1000));
+      await logAdminAction(username, 'LOGIN_LOCKED', 'AUTH', undefined, undefined, `Bị chặn đăng nhập do nhập sai quá 5 lần (Còn ${remainingMinutes} phút)`, clientIp);
+      return NextResponse.json(
+        {
+          message: `Bạn đã nhập sai mật khẩu quá ${MAX_ATTEMPTS} lần liên tiếp. Tài khoản tạm thời bị khóa trong ${remainingMinutes} phút để đảm bảo an toàn.`,
+        },
+        { status: 429 }
+      );
     }
 
+    const admin = await validateAdminCredentials(username, password);
+    if (!admin) {
+      const currentCount = (attempt?.count || 0) + 1;
+      const willLock = currentCount >= MAX_ATTEMPTS;
+      loginAttempts.set(rateLimitKey, {
+        count: currentCount,
+        lockedUntil: willLock ? now + LOCKOUT_DURATION_MS : undefined,
+        lastAttempt: now,
+      });
+
+      await logAdminAction(username, 'LOGIN_FAILED', 'AUTH', undefined, undefined, `Đăng nhập thất bại lần ${currentCount}/${MAX_ATTEMPTS}`, clientIp);
+
+      if (willLock) {
+        return NextResponse.json(
+          {
+            message: `Bạn đã nhập sai quá ${MAX_ATTEMPTS} lần liên tiếp. Hệ thống đã tạm khóa tài khoản trong 15 phút.`,
+          },
+          { status: 429 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          message: `Tên đăng nhập hoặc mật khẩu không chính xác. (Sai ${currentCount}/${MAX_ATTEMPTS} lần)`,
+        },
+        { status: 401 }
+      );
+    }
+
+    // Login successful -> clear failed attempts
+    loginAttempts.delete(rateLimitKey);
+
+    await logAdminAction(admin.username, 'LOGIN_SUCCESS', 'AUTH', admin.id, admin.username, 'Đăng nhập vào trang quản trị thành công', clientIp);
+
     const res = NextResponse.json({ ok: true, admin });
-    res.cookies.set('admin_session', admin.id, { path: '/', httpOnly: true });
+    res.cookies.set('admin_session', generateAdminSessionToken(admin.id, Boolean(rememberMe)), {
+      path: '/',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+    });
     return res;
   } catch (error: any) {
+    await logApiError(req, 500, error);
+    console.error('Login error:', error);
     return NextResponse.json({ message: error.message || 'Lỗi đăng nhập' }, { status: 500 });
   }
 }

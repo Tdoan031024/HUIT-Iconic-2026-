@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Candidate } from '@/lib/types';
 import { apiUrl, formatAssetUrl } from '../../../api';
+import { useAlert } from '../../../AlertProvider';
+import ImageDropzone from '../../../components/ImageDropzone';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
@@ -327,21 +329,13 @@ function ProjectModal({
             <span className={labelText}>Điểm bình chọn</span>
             <input type="number" min={0} className={inputClass} value={form.votes || 0} onChange={(event) => update('votes', Number(event.target.value))} />
           </label>
-          <div className="space-y-1.5">
-            <span className={labelText}>Đường dẫn ảnh</span>
-            <div className="flex gap-2">
-              <input className={inputClass} value={form.imageUrl || ''} onChange={(event) => update('imageUrl', event.target.value)} />
-              <button
-                type="button"
-                onClick={() => {
-                  setUploadingIndex('main');
-                  modalFileRef.current?.click();
-                }}
-                className="h-10 shrink-0 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 hover:border-emerald-500 hover:text-emerald-700 transition"
-              >
-                Tải lên
-              </button>
-            </div>
+          <div className="md:col-span-2">
+            <ImageDropzone
+              label="Hình ảnh chân dung đại diện"
+              value={form.imageUrl || ''}
+              onChange={(url) => update('imageUrl', url)}
+              aspectRatioHint="Khuyên dùng ảnh chân dung rõ nét (3:4 hoặc 1:1)"
+            />
           </div>
           <label className="space-y-1.5">
             <span className={labelText}>Tên nhóm</span>
@@ -684,8 +678,9 @@ function ProjectModal({
 }
 
 export default function CandidateDetailAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const params = useParams();
-  const sbd = params.sbd as string;
+  const sbd = (params?.sbd as string) || '';
   const [project, setProject] = useState<Candidate | null>(null);
   const [projects, setProjects] = useState<Candidate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -774,9 +769,9 @@ export default function CandidateDetailAdminPage() {
       const saved = await res.json();
       setProject(saved);
       setActiveImage(targetUrl);
-      alert('Đã thiết lập ảnh được chọn làm ảnh chính!');
+      showAlert('Đã thiết lập ảnh được chọn làm ảnh chính!', 'success');
     } else {
-      alert('Không thể thiết lập làm ảnh chính.');
+      showAlert('Không thể thiết lập làm ảnh chính.', 'error');
     }
   };
 
@@ -793,7 +788,8 @@ export default function CandidateDetailAdminPage() {
         newShowcaseImages = currentUrls.slice(1).join(',');
       }
       
-      if (!confirm('Xóa ảnh này là ảnh chính hiện tại của dự án?')) return;
+      const ok = await showConfirm('Xóa ảnh này là ảnh chính hiện tại của dự án?', 'Xác nhận xóa ảnh chính', 'error', 'Xóa ảnh');
+      if (!ok) return;
       
       const res = await fetch(apiUrl(`/api/admin/candidates/${project.id}`), {
         method: 'PUT',
@@ -808,9 +804,9 @@ export default function CandidateDetailAdminPage() {
         const saved = await res.json();
         setProject(saved);
         setActiveImage(newMain);
-        alert('Đã xóa ảnh chính!');
+        showAlert('Đã xóa ảnh chính!', 'success');
       } else {
-        alert('Không thể xóa ảnh.');
+        showAlert('Không thể xóa ảnh.', 'error');
       }
       return;
     }
@@ -818,7 +814,8 @@ export default function CandidateDetailAdminPage() {
     const currentUrls = project.showcaseImages ? project.showcaseImages.split(',').map(u => u.trim()).filter(Boolean) : [];
     const targetIdx = currentUrls.indexOf(targetUrl);
     if (targetIdx >= 0) {
-      if (!confirm('Xóa ảnh trưng bày này khỏi dự án?')) return;
+      const ok = await showConfirm('Xóa ảnh trưng bày này khỏi dự án?', 'Xác nhận xóa ảnh trưng bày', 'error', 'Xóa ảnh');
+      if (!ok) return;
       const updatedUrls = currentUrls.filter(u => u !== targetUrl);
       const newShowcaseImages = updatedUrls.join(',');
       
@@ -834,8 +831,6 @@ export default function CandidateDetailAdminPage() {
         if (activeImage === targetUrl) {
           setActiveImage(saved.imageUrl || '');
         }
-        alert('Đã xóa ảnh trưng bày!');
-      } else {
         alert('Không thể xóa ảnh.');
       }
     }
@@ -945,12 +940,13 @@ export default function CandidateDetailAdminPage() {
 
   const handleDelete = async () => {
     if (!project) return;
-    if (!confirm('Xóa hồ sơ dự án này khỏi hệ thống?')) return;
+    const ok = await showConfirm('Xóa hồ sơ dự án này khỏi hệ thống? Hành động này không thể hoàn tác.', 'Xác nhận xóa dự án', 'error', 'Xóa ngay');
+    if (!ok) return;
     const res = await fetch(apiUrl(`/api/admin/candidates/${project.id}`), { method: 'DELETE' });
     if (res.ok) {
       window.location.href = '/candidates';
     } else {
-      alert('Không thể xóa hồ sơ dự án.');
+      showAlert('Không thể xóa hồ sơ dự án.', 'error');
     }
   };
 
