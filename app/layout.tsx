@@ -10,6 +10,8 @@ import { apiUrl } from './api';
 import { initDevToolsProtection } from '../src/utils/devtoolsProtection';
 import { AISearch } from '../src/components/AISearch';
 import { usePageViewTracker } from '../src/hooks/usePageViewTracker';
+import StatusPage from '../src/components/StatusPage';
+import { getStatusPreset } from '../src/components/status-page-presets';
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese'],
@@ -165,6 +167,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   // ─── Maintenance Mode ─────────────────────────────────
   if (settings?.isMaintenanceMode) {
+    const preset = getStatusPreset(503);
+
     return (
       <html lang="vi" className={beVietnamPro.variable}>
         <head>
@@ -176,24 +180,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <link rel="stylesheet" href="/css/431944509084d071.css" />
           <style>{`body { background-color: #030612 !important; color: #ffffff; font-family: var(--font-sans), sans-serif; margin: 0; }`}</style>
         </head>
-        <body className={`${beVietnamPro.className} dark bg-[#030612] flex items-center justify-center min-h-screen p-4 overflow-hidden relative`}>
-          <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-          <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] rounded-full bg-cyan-600/10 blur-[120px] pointer-events-none" />
-          <div className="max-w-md w-full text-center z-10 bg-white/[0.02] backdrop-blur-xl border border-white/5 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col items-center">
-            <h1 className="text-xl font-bold text-white tracking-wide uppercase">{settings.eventTitle}</h1>
-            <p className="text-[12px] text-cyan-400/80 font-medium mt-1 uppercase tracking-wider">{settings.organizer}</p>
-            <div className="h-[1px] w-full bg-white/10 my-6" />
-            <h2 className="text-lg font-semibold text-slate-100">Hệ thống đang bảo trì</h2>
-            <p className="text-[14px] text-slate-400 mt-2 leading-relaxed">
-              Chúng tôi đang tiến hành nâng cấp định kỳ để cải thiện trải nghiệm bình chọn của bạn.
-            </p>
-            <div className="mt-8 p-4 bg-white/[0.02] border border-white/5 rounded-xl w-full text-left">
-              <p className="text-[12px] text-slate-400">Đơn vị hỗ trợ kỹ thuật:</p>
-              <p className="text-[14px] font-medium text-slate-200 mt-0.5">
-                Email: <a href={`mailto:${settings.contactEmail}`} className="text-[var(--site-primary)] hover:underline">{settings.contactEmail}</a>
-              </p>
-            </div>
-          </div>
+        <body className={beVietnamPro.className}>
+          <StatusPage
+            {...preset}
+            description={`Website ${settings.eventTitle} đang tạm dừng để bảo trì hoặc nâng cấp dịch vụ. Vui lòng quay lại sau ít phút.`}
+            hint={`Nếu cần hỗ trợ gấp, bạn có thể liên hệ ${settings.organizer} qua email ${settings.contactEmail}.`}
+            actions={[
+              { label: 'Thử lại', onClick: () => window.location.reload(), variant: 'primary' },
+              { label: 'Về trang chủ', href: '/', variant: 'secondary' },
+            ]}
+          />
         </body>
       </html>
     );

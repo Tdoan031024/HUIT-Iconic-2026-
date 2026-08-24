@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useAlert } from '../AlertProvider';
 
@@ -13,6 +13,7 @@ export default function AdminLoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const { showAlert } = useAlert();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +36,9 @@ export default function AdminLoginPage() {
         showAlert('Đăng nhập thành công!', 'success');
 
         // Cookie phiên được set bởi API (httpOnly). Chuyển về dashboard ngay.
-        window.location.href = '/admin';
+        window.location.href = searchParams.get('redirect') || '/admin';
+      } else if (response.status === 429) {
+        router.push('/429');
       } else {
         const message = data?.message || 'Tên đăng nhập hoặc mật khẩu không chính xác.';
         showAlert(message, 'error');

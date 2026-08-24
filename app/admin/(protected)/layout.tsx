@@ -7,7 +7,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   const isAuthenticated = !!token || process.env.NODE_ENV === 'development';
 
   if (!isAuthenticated) {
-    redirect('/admin/login');
+    redirect('/401?redirect=/admin');
   }
 
   return <>{children}</>;
