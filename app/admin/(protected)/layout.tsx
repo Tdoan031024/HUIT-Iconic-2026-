@@ -8,7 +8,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
   const isAuthenticated = Boolean(admin);
 
   if (!isAuthenticated) {
-    redirect('/401?redirect=/admin');
+    redirect('/admin/login?redirect=/admin');
   }
 
   return <>{children}</>;
