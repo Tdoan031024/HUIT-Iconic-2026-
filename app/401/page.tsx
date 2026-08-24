@@ -1,10 +1,11 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import StatusPage from '@/src/components/StatusPage';
 import { getStatusPreset } from '@/src/components/status-page-presets';
 
-export default function UnauthorizedPage() {
+function UnauthorizedContent() {
   const searchParams = useSearchParams();
   const loginHref = `/dang-nhap${searchParams.get('redirect') ? `?redirect=${encodeURIComponent(searchParams.get('redirect') as string)}` : ''}`;
   const preset = getStatusPreset(401);
@@ -18,5 +19,13 @@ export default function UnauthorizedPage() {
         { label: 'Thử lại', onClick: () => window.location.reload(), variant: 'ghost' },
       ]}
     />
+  );
+}
+
+export default function UnauthorizedPage() {
+  return (
+    <Suspense fallback={null}>
+      <UnauthorizedContent />
+    </Suspense>
   );
 }
