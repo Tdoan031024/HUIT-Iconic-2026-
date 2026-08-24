@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Candidate, WebUser } from '@/lib/types';
 import { apiUrl } from './api';
 import { fireConfetti } from '@/lib/confetti';
@@ -46,6 +46,9 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
   const [step, setStep] = useState<'confirm' | 'success'>('confirm');
   const [isVoting, setIsVoting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '';
 
   useEffect(() => {
     const user = getStoredUser();
@@ -72,6 +75,33 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (!turnstileSiteKey || !turnstileRef.current) return;
+    const renderWidget = () => {
+      if (!(window as any).turnstile || !turnstileRef.current) return;
+      (window as any).turnstile.render(turnstileRef.current, {
+        sitekey: turnstileSiteKey,
+        theme: 'light',
+        callback: (token: string) => {
+          setTurnstileToken(token);
+          (window as any).__iconicTurnstileToken = token;
+        },
+        'expired-callback': () => {
+          setTurnstileToken('');
+          delete (window as any).__iconicTurnstileToken;
+        },
+      });
+    };
+    if ((window as any).turnstile) renderWidget();
+    else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = renderWidget;
+      document.head.appendChild(script);
+    }
+  }, [turnstileSiteKey]);
+
   const handleLoginRedirect = () => {
     window.location.href = `/dang-nhap?redirect=${encodeURIComponent(window.location.pathname)}`;
   };
@@ -92,6 +122,11 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
 
     try {
       const token = localStorage.getItem('huit_web_token');
+      let deviceId = localStorage.getItem('iconic_device_id');
+      if (!deviceId) {
+        deviceId = crypto.randomUUID();
+        localStorage.setItem('iconic_device_id', deviceId);
+      }
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) {
         headers.Authorization = `Bearer ${token}`;
@@ -103,6 +138,8 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
         body: JSON.stringify({
           userId: currentUser.id,
           eventId: 'thi-sinh-duoc-yeu-thich-nhat',
+          deviceId,
+          turnstileToken: turnstileToken || undefined,
         }),
       });
 
@@ -293,6 +330,10 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
                       Mỗi tài khoản được tặng 2 lượt bình chọn miễn phí mỗi ngày.
                     </p>
 
+                    {turnstileSiteKey && currentUser ? (
+                      <div className="mt-3 flex justify-center" ref={turnstileRef} aria-label="Xác minh bảo mật" />
+                    ) : null}
+
                     {errorMessage ? (
                       <div className="mt-2.5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-[13px] leading-5 text-rose-700">
                         {errorMessage}
@@ -310,7 +351,7 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
                       ) : (
                         <button
                           onClick={handleVoteSubmit}
-                          disabled={isVoting || quotaRemaining <= 0}
+                          disabled={isVoting || quotaRemaining <= 0 || (!!turnstileSiteKey && !turnstileToken)}
                           className="flex h-[50px] w-full items-center justify-center gap-3 rounded-[14px] bg-[linear-gradient(90deg,#1167f5_0%,#8a3ffc_100%)] px-6 text-[15px] font-bold uppercase tracking-[0.05em] text-white shadow-[0_16px_30px_rgba(67,56,202,0.28)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(67,56,202,0.32)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                         >
                           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

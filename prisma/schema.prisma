@@ -134,7 +134,14 @@ model VoteRecord {
   voterPhone    String
   voteTime      DateTime @default(now())
   transactionId String?
+  ipHash        String?
+  deviceHash    String?
+  riskScore     Int      @default(0)
+  riskReason    String?  @db.Text
 
+  @@index([ipHash])
+  @@index([deviceHash])
+  @@index([voteTime])
   @@map("voterecord")
 }
 
@@ -227,6 +234,35 @@ model ApiErrorLog {
   @@index([statusCode])
   @@index([path])
   @@map("apierrorlog")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  title     String
+  message   String    @db.Text
+  type      String    @default("INFO")
+  isActive  Boolean   @default(true)
+  startsAt  DateTime  @default(now())
+  endsAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+
+  @@index([isActive, startsAt])
+  @@map("notification")
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([status, createdAt])
+  @@map("supportticket")
 }
 
 enum sponsor_tier {

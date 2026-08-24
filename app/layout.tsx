@@ -13,6 +13,7 @@ import { usePageViewTracker } from '../src/hooks/usePageViewTracker';
 import StatusPage from '../src/components/StatusPage';
 import { getStatusPreset } from '../src/components/status-page-presets';
 import { Language, languageLabels, translate } from '../src/i18n';
+import { NotificationBell } from '../src/components/NotificationBell';
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese'],
@@ -219,6 +220,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     { href: '/bang-xep-hang', label: t('ranking') },
     { href: '/the-le', label: t('guide') },
     { href: '/tin-tuc', label: t('news') },
+    { href: '/ho-tro', label: t('supportCenter') },
   ];
 
   const drawerLinks = [
@@ -251,6 +253,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       href: '/tin-tuc',
       label: t('news'),
       icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M16 8h2"/><path d="M16 12h2"/><path d="M16 16h2"/><path d="M6 8h6v8H6z"/></svg>,
+    },
+    {
+      href: '/ho-tro',
+      label: t('supportCenter'),
+      icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 10h8M8 14h5"/></svg>,
     },
   ];
 
@@ -409,6 +416,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
                     {/* Desktop Right Side Actions */}
                     <div className="ml-2 flex items-center gap-2">
+                      <NotificationBell />
                       {currentUser ? (
                         <div className="hidden sm:flex items-center gap-2 ml-1">
                           <span className="text-[13px] font-bold max-w-[130px] truncate" style={{ color: 'var(--site-text)' }}>

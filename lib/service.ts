@@ -185,21 +185,38 @@ export async function getDashboardStats() {
   return { totalPosts, totalUsers, totalWebUsers: totalUsers, totalSponsors, totalVotes, settings, analytics, chartData };
 }
 
+export async function getActiveNotifications() {
+  const now = new Date();
+  return prisma.notification.findMany({
+    where: { isActive: true, startsAt: { lte: now }, OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
+    orderBy: { createdAt: 'desc' },
+    take: 20,
+  });
+}
+
+export async function createSupportTicket(data: { name: string; email: string; subject: string; message: string }) {
+  return prisma.supportTicket.create({ data: { ...data, status: 'OPEN' } });
+}
+
+export async function getSupportTickets() {
+  return prisma.supportTicket.findMany({ orderBy: { createdAt: 'desc' }, take: 200 });
+}
+
 // --- ADMIN AUTH ---
 export async function validateAdminCredentials(username: string, password: string) {
   const admin = await prisma.adminUser.findFirst({
     where: { username, isActive: true },
   });
 
-  if (!admin) {
+  if (!admin && process.env.NODE_ENV !== 'production') {
     if (
       (username === 'Iconic2026.Huitmedia' && password === 'Huit@media2019') ||
       (username === 'admin' && password === 'admin123')
     ) {
       return { id: 'admin-iconic', username: username, role: 'SUPER_ADMIN' };
     }
-    return null;
   }
+  if (!admin) return null;
 
   let isValid = false;
   if (isMd5Hash(admin.passwordHash)) {
@@ -340,6 +357,20 @@ export async function voteCandidate(sbd: string, body: any, authHeader?: string,
 
   const candidate = await getCandidateBySbd(sbd);
   const addPoints = body.points || 1;
+  const signalSecret = process.env.JWT_SECRET || 'iconic-vote-signal-secret';
+  const ipHash = clientIp ? crypto.createHash('sha256').update(`${signalSecret}:ip:${clientIp}`).digest('hex') : null;
+  const deviceId = String(body.deviceId || '').trim();
+  const deviceHash = deviceId ? crypto.createHash('sha256').update(`${signalSecret}:device:${deviceId}`).digest('hex') : null;
+  const recentSince = new Date(Date.now() - 10 * 60 * 1000);
+  const [recentIpVotes, recentDeviceVotes] = await Promise.all([
+    ipHash ? prisma.voteRecord.count({ where: { ipHash, voteTime: { gte: recentSince } } }) : Promise.resolve(0),
+    deviceHash ? prisma.voteRecord.count({ where: { deviceHash, voteTime: { gte: recentSince } } }) : Promise.resolve(0),
+  ]);
+  const riskReasons: string[] = [];
+  if (recentIpVotes >= 12) riskReasons.push('IP_RATE_SPIKE');
+  if (recentDeviceVotes >= 8) riskReasons.push('DEVICE_RATE_SPIKE');
+  const riskScore = Math.min(100, recentIpVotes * 4 + recentDeviceVotes * 6);
+  if (riskScore >= 80) throw new Error('Hoạt động bình chọn bất thường. Vui lòng thử lại sau.');
 
   const updated = await prisma.candidate.update({
     where: { id: candidate.id },
@@ -350,6 +381,10 @@ export async function voteCandidate(sbd: string, body: any, authHeader?: string,
       candidateId: candidate.id,
       voterPhone: body.voterPhone || body.userId || 'GUEST',
       transactionId: body.transactionId,
+      ipHash,
+      deviceHash,
+      riskScore,
+      riskReason: riskReasons.length ? riskReasons.join(',') : null,
     },
   });
   return { success: true, candidate: { ...candidate, votes: updated.votes } };
