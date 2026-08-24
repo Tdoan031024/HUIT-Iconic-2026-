@@ -1,761 +1,755 @@
-# HUIT's ICONIC – Đại sứ Truyền thông Đại học Công Thương TP.HCM
+# HUIT's ICONIC – Media Ambassador Program of Ho Chi Minh City University of Industry and Trade
 
-> Tài liệu tổng hợp thông tin về chương trình **HUIT's ICONIC – Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM**.
+> Consolidated information about **HUIT's ICONIC – the Media Ambassador Search Competition of Ho Chi Minh City University of Industry and Trade (HUIT)**.
 >
-> **Phạm vi:** HUIT's ICONIC 2024 – lần I và các hoạt động của Đại sứ sau cuộc thi.
+> **Scope:** HUIT's ICONIC 2024 (Season I) and ambassador activities after the competition.
 
 ---
 
-## 1. Tổng quan
+## 1. Overview
 
-### Tên chính thức
+### Official title
 
-**Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM – HUIT's ICONIC 2024**
+**HUIT's ICONIC 2024 – Media Ambassador Search Competition of Ho Chi Minh City University of Industry and Trade**
 
-Đây là lần đầu tiên Trường Đại học Công Thương TP.HCM tổ chức cuộc thi tìm kiếm Đại sứ Truyền thông.
+This was the first year HUIT organized a Media Ambassador competition.
 
-HUIT's ICONIC hướng tới việc tìm kiếm những sinh viên có:
+HUIT's ICONIC sought students with:
 
-* Vẻ đẹp tâm hồn
-* Nét đẹp trí tuệ
-* Sự thanh lịch
-* Cá tính
-* Khả năng giao tiếp
-* Khả năng truyền tải thông điệp
-* Tinh thần năng động
-* Tư duy sáng tạo
-* Bản lĩnh trước công chúng
+* Integrity and positive values
+* Intelligence and creativity
+* Elegance and personal style
+* Communication capability
+* Message delivery skills
+* Dynamic spirit
+* Confidence in public settings
 
-Mục tiêu cuối cùng là tìm kiếm những gương mặt có khả năng đại diện cho hình ảnh sinh viên và thương hiệu của HUIT trong các hoạt động truyền thông.
+The core objective was to identify students who can represent both the HUIT student image and the university brand in communication activities.
 
 ---
 
-## 2. Đơn vị tổ chức
+## 2. Organizing Units
 
-### Đơn vị tổ chức
+### Organizing institution
 
-**Trường Đại học Công Thương TP.HCM – HUIT**
+**Ho Chi Minh City University of Industry and Trade (HUIT)**
 
-### Đơn vị đầu mối truyền thông
+### Lead communication unit
 
-**Trung tâm Tuyển sinh và Truyền thông HUIT**
+**HUIT Admissions and Communications Center**
 
-### Thông tin liên hệ được công bố năm 2024
+### Public contact information (2024)
 
 * Email: `media@huit.edu.vn`
-* Điện thoại: `0708765157`
-* Người liên hệ: Khánh Linh
-* Fanpage: HUIT's Iconic - Đại sứ Truyền thông Đại học Công Thương TP.HCM
+* Phone: `0708765157`
+* Contact person: Khánh Linh
+* Fanpage: HUIT's Iconic - Media Ambassador Program of Ho Chi Minh City University of Industry and Trade
 
 ### Fanpage
 
-HUIT's Iconic - Đại sứ Truyền thông Đại học Công Thương TP.HCM
+HUIT's Iconic - Media Ambassador Program of Ho Chi Minh City University of Industry and Trade
 
 https://www.facebook.com/Daisutruyenthonghuit
 
 ---
 
-# 3. Mục tiêu của HUIT's ICONIC
+# 3. Goals of HUIT's ICONIC
 
-HUIT's ICONIC có thể được khái quát qua ba mục tiêu chính.
+HUIT's ICONIC can be summarized by three main goals.
 
-## 3.1. Tìm kiếm gương mặt đại diện HUIT
+## 3.1. Find representative student faces for HUIT
 
-Cuộc thi tìm kiếm những sinh viên có khả năng trở thành Đại sứ Truyền thông của Trường Đại học Công Thương TP.HCM.
+The competition selected students with potential to become official HUIT Media Ambassadors.
 
-Đại sứ là những gương mặt đại diện cho hình ảnh:
+Ambassadors are expected to represent:
 
-* Năng động
-* Tự tin
-* Sáng tạo
-* Văn minh
-* Trách nhiệm
-* Có khả năng truyền cảm hứng
+* Dynamism
+* Confidence
+* Creativity
+* Professional conduct
+* Responsibility
+* Inspirational impact
 
-## 3.2. Phát triển năng lực sinh viên
+## 3.2. Develop student capabilities
 
-Cuộc thi tạo môi trường để sinh viên rèn luyện:
+The competition provided an environment for students to strengthen:
 
-* Giao tiếp
-* Thuyết trình
-* Ứng xử
-* Làm việc nhóm
-* Giải quyết vấn đề
-* Trình diễn
-* Xây dựng hình ảnh cá nhân
-* Truyền tải thông điệp
-* Khả năng làm việc trước công chúng
+* Communication
+* Public speaking
+* Behavior and etiquette
+* Teamwork
+* Problem solving
+* Performance skills
+* Personal branding
+* Message communication
+* Public confidence
 
-## 3.3. Quảng bá hình ảnh HUIT
+## 3.3. Promote HUIT's image
 
-Đại sứ góp phần:
+Ambassadors contribute to:
 
-* Quảng bá hình ảnh HUIT
-* Lan tỏa giá trị của nhà trường
-* Giới thiệu môi trường học tập
-* Kết nối sinh viên
-* Truyền cảm hứng cho học sinh THPT
-* Tham gia hoạt động cộng đồng
-* Hỗ trợ hoạt động truyền thông và tuyển sinh
-
----
-
-# 4. Đối tượng dự thi
-
-Theo thể lệ HUIT's ICONIC 2024, đối tượng dự thi là:
-
-**Sinh viên đang theo học tại Trường Đại học Công Thương TP.HCM.**
-
-### Điều kiện
-
-* Nữ cao từ **1m58** trở lên.
-* Nam cao từ **1m65** trở lên.
-* Có đạo đức tốt.
-* Không đang chịu hình thức kỷ luật của nhà trường.
-* Không vi phạm pháp luật.
-* Đáp ứng các điều kiện khác được quy định trong thể lệ cuộc thi.
-
-> Một số điều kiện trong thể lệ là điều kiện riêng của mùa 2024 và không nên mặc định áp dụng cho các mùa sau.
+* Promoting HUIT's image
+* Spreading university values
+* Introducing the learning environment
+* Connecting with students
+* Inspiring high school students
+* Joining community activities
+* Supporting communication and admissions
 
 ---
 
-# 5. Quy mô HUIT's ICONIC 2024
+# 4. Eligibility
 
-HUIT's ICONIC 2024 nhận được **hơn 100 hồ sơ đăng ký**.
+According to HUIT's ICONIC 2024 regulations, participants were:
 
-Tại vòng sơ khảo ngày **06/10/2024**, có:
+**Students currently studying at Ho Chi Minh City University of Industry and Trade.**
 
-**110 thí sinh**
+### Conditions
 
-tham gia.
+* Female candidates: minimum height **1m58**
+* Male candidates: minimum height **1m65**
+* Good ethics and conduct
+* No active school disciplinary action
+* No legal violations
+* Compliance with other published competition regulations
 
-Sau vòng sơ khảo:
+> Some conditions were specific to the 2024 season and should not be assumed to apply to later seasons.
 
-**110 thí sinh → Top 60**
+---
 
-Trong đó:
+# 5. Scale of HUIT's ICONIC 2024
 
-* 30 thí sinh nam
-* 30 thí sinh nữ
+HUIT's ICONIC 2024 received **more than 100 registrations**.
 
-Sau các vòng tiếp theo:
+At the preliminary round on **06/10/2024**, there were:
+
+**110 contestants**
+
+After the preliminary round:
+
+**110 contestants → Top 60**
+
+Including:
+
+* 30 male contestants
+* 30 female contestants
+
+After later rounds:
 
 **Top 60 → Top 36**
 
-Top 36 bước vào đêm chung kết.
+Top 36 entered the final night.
 
-### Hành trình tổng quát
+### High-level journey
 
 ```text
-Hơn 100 hồ sơ
-      ↓
-110 thí sinh sơ khảo
-      ↓
+More than 100 applications
+         ↓
+110 preliminary contestants
+         ↓
 Top 60
-30 Nam + 30 Nữ
-      ↓
+30 Male + 30 Female
+         ↓
 Top 36
-      ↓
-Chung kết
-      ↓
-Quán quân Nam + Quán quân Nữ
+         ↓
+Final Night
+         ↓
+Male Champion + Female Champion
 ```
 
 ---
 
-# 6. Timeline HUIT's ICONIC 2024
+# 6. HUIT's ICONIC 2024 Timeline
 
-| Thời gian        | Hoạt động                  |
-| ---------------- | -------------------------- |
-| 05/09/2024       | Phát động cuộc thi         |
-| 30/09/2024       | Hạn đăng ký                |
-| 06/10/2024       | Vòng sơ khảo               |
-| Tháng 10–11/2024 | Các hoạt động vòng bán kết |
-| 24/11/2024       | Đêm chung kết              |
+| Time            | Activity                   |
+| --------------- | -------------------------- |
+| 05/09/2024      | Competition launch         |
+| 30/09/2024      | Registration deadline      |
+| 06/10/2024      | Preliminary round          |
+| Oct–Nov 2024    | Semi-final activities      |
+| 24/11/2024      | Final night                |
 
 ---
 
-# 7. Các vòng thi
+# 7. Competition Rounds
 
-## 7.1. Vòng sơ khảo
+## 7.1. Preliminary round
 
-Vòng sơ khảo diễn ra ngày:
+Date:
 
 **06/10/2024**
 
-Có 110 thí sinh tham gia.
+Participants: 110 contestants.
 
-Các nội dung được đánh giá gồm:
+Evaluation categories:
 
-* Trình diễn
-* Ứng xử
-* Tài năng
-* Khả năng thể hiện bản thân
+* Performance presence
+* Response and communication
+* Talent
+* Self-expression
 
-Sau vòng sơ khảo, Ban Giám khảo chọn:
+After this round, judges selected:
 
 **Top 60**
 
-gồm:
+Including:
 
-* 30 nam
-* 30 nữ
+* 30 male contestants
+* 30 female contestants
 
 ---
 
-# 8. Vòng bán kết
+# 8. Semi-final Round
 
-Top 60 tiếp tục trải qua các hoạt động chính:
+Top 60 contestants continued through:
 
 1. Photoshoot
-2. Tài năng
+2. Talent
 3. Fashion Show
-4. Bình chọn trực tuyến
+4. Online Voting
 
 ---
 
 ## 8.1. Photoshoot
 
-Thí sinh tham gia các buổi chụp ảnh để thể hiện:
+Contestants joined photo sessions to demonstrate:
 
-* Thần thái
-* Phong cách
-* Khả năng tạo dáng
-* Hình ảnh cá nhân
-* Khả năng truyền tải hình ảnh HUIT
+* Presence
+* Style
+* Posing ability
+* Personal image
+* Ability to represent HUIT's brand image
 
-Trang phục và bối cảnh được tổ chức theo yêu cầu của BTC.
+Wardrobe and settings were arranged according to the organizing committee's requirements.
 
 ---
 
-## 8.2. Tài năng
+## 8.2. Talent
 
-Thí sinh thể hiện tài năng đã đăng ký.
+Contestants performed their registered talent categories.
 
-Các dạng tài năng có thể bao gồm:
+Examples included:
 
-* Ca hát
-* Nhảy
-* MC
-* Diễn xuất
-* Biểu diễn nghệ thuật
-* Các năng khiếu cá nhân khác
+* Singing
+* Dance
+* MC hosting
+* Acting
+* Artistic performance
+* Other personal talents
 
-Thí sinh chủ động chuẩn bị nội dung và phần trình diễn của mình.
+Contestants were responsible for preparing their own content and performance.
 
 ---
 
 ## 8.3. Fashion Show
 
-Thí sinh tham gia trình diễn thời trang.
+Contestants took part in fashion runway performance.
 
-Các tiêu chí thể hiện bao gồm:
+Evaluation areas:
 
 * Catwalk
-* Thần thái
-* Phong cách
-* Khả năng làm chủ sân khấu
-* Khả năng thể hiện cá tính
+* Presence
+* Style
+* Stage control
+* Personality expression
 
 ---
 
-## 8.4. Bình chọn trực tuyến
+## 8.4. Online Voting
 
-HUIT's ICONIC 2024 có hệ thống bình chọn trực tuyến.
+HUIT's ICONIC 2024 used an online voting platform.
 
-Cổng bình chọn:
+Voting portal:
 
 https://huiticonic.1vote.vn/
 
-Hệ thống được vận hành trên nền tảng **1VOTE của Eventista**.
+The system was operated on **Eventista's 1VOTE platform**.
 
-Theo thể lệ, thí sinh có thành tích bình chọn nổi bật có cơ hội tiến thẳng vào các vòng tiếp theo.
+According to competition rules, contestants with strong voting performance had opportunities to advance.
 
 ---
 
-# 9. Đêm chung kết
+# 9. Final Night
 
-### Thời gian
+### Date
 
 **24/11/2024**
 
-### Đối tượng
+### Participants
 
 **Top 36**
 
-Đêm chung kết gồm các phần thi chính:
+Main competition segments:
 
-1. Opening Dance & Hô tên
-2. Trình diễn áo dài
-3. Trình diễn dạ hội
-4. Thuyết trình theo hashtag chủ đề
-5. Ứng xử
-
----
-
-## 9.1. Opening Dance & Hô tên
-
-Các thí sinh cùng xuất hiện trên sân khấu.
-
-Nội dung tập trung vào:
-
-* Đồng diễn
-* Giới thiệu
-* Hình ảnh cá nhân
-* Khả năng làm chủ sân khấu
+1. Opening Dance & Name Call
+2. Traditional Vietnamese long dress presentation
+3. Evening wear presentation
+4. Theme hashtag speech
+5. Q&A response
 
 ---
 
-## 9.2. Trình diễn áo dài
+## 9.1. Opening Dance & Name Call
 
-Thí sinh trình diễn áo dài.
+All finalists appeared on stage together.
 
-Tiêu chí thể hiện:
+Focus areas:
 
-* Sự thanh lịch
-* Phong thái
-* Thần thái
-* Khả năng trình diễn
-* Hình ảnh văn hóa Việt Nam
-
----
-
-## 9.3. Trình diễn dạ hội
-
-Thí sinh trình diễn trang phục dạ hội.
-
-Tập trung vào:
-
-* Thần thái
-* Phong cách
-* Khả năng catwalk
-* Khả năng làm chủ sân khấu
+* Group choreography
+* Introduction
+* Personal image
+* Stage confidence
 
 ---
 
-## 9.4. Thuyết trình theo hashtag chủ đề
+## 9.2. Traditional Vietnamese long dress presentation
 
-Thí sinh thực hiện phần thuyết trình theo chủ đề/hashtag được BTC đưa ra.
+Contestants presented in traditional Vietnamese long dress.
 
-Thời lượng:
+Evaluation criteria:
 
-**2 phút**
-
-Phần thi nhằm đánh giá:
-
-* Tư duy
-* Khả năng diễn đạt
-* Khả năng phản biện
-* Khả năng truyền tải thông điệp
-* Sự tự tin
-* Quan điểm cá nhân
+* Elegance
+* Presence
+* Composure
+* Performance quality
+* Representation of Vietnamese cultural image
 
 ---
 
-## 9.5. Ứng xử
+## 9.3. Evening wear presentation
 
-Các thí sinh xuất sắc nhất bước vào phần thi ứng xử.
+Contestants presented evening wear.
 
-Mục tiêu:
+Focus areas:
 
-* Đánh giá khả năng xử lý tình huống
-* Khả năng tư duy
-* Khả năng giao tiếp
-* Khả năng trình bày quan điểm
-* Bản lĩnh trước công chúng
+* Presence
+* Style
+* Catwalk quality
+* Stage control
 
 ---
 
-# 10. Ban Giám khảo
+## 9.4. Theme hashtag speech
 
-## Chung kết HUIT's ICONIC 2024
+Contestants delivered a speech based on a topic/hashtag from the organizing committee.
 
-Ban Giám khảo gồm:
+Duration:
+
+**2 minutes**
+
+This segment assessed:
+
+* Thinking
+* Expression
+* Critical response
+* Message delivery
+* Confidence
+* Personal perspective
+
+---
+
+## 9.5. Q&A response
+
+Top contestants entered the Q&A segment.
+
+Objectives:
+
+* Situation handling
+* Reasoning
+* Communication
+* Opinion presentation
+* Public composure
+
+---
+
+# 10. Judging Panel
+
+## HUIT's ICONIC 2024 Final
+
+Judges included:
 
 ### Lâm Bích Tuyền
 
-Á hậu Hòa bình Việt Nam 2024.
+Miss Grand Vietnam 2024 runner-up.
 
 ### Đồng Ánh Quỳnh
 
-Á quân The Face Việt Nam 2017.
+Runner-up of The Face Vietnam 2017.
 
 ### Đinh Thị Triều Tiên
 
-Top 10 Miss Universe Việt Nam 2024.
+Top 10 Miss Universe Vietnam 2024.
 
 ### Nam Cường
 
-MC, diễn viên, ca sĩ.
+MC, actor, singer.
 
 ### Lê Anh Minh
 
-Đạo diễn Catwalk.
+Catwalk director.
 
 ### Hoàng Nhung
 
-Á hậu Miss Cosmo.
+Miss Cosmo runner-up.
 
 ### Nguyễn Minh Khắc
 
-Á vương Man Of the Year 2022.
+Man Of the Year 2022 runner-up.
 
 ---
 
-# 11. Ban Giám khảo vòng sơ khảo
+# 11. Preliminary Round Judges
 
-Vòng sơ khảo có sự tham gia của:
+The preliminary round featured:
 
 ### Lê Anh Minh
 
-Đạo diễn Catwalk.
+Catwalk director.
 
 ### Lê Hồng Hạnh
 
-Á hậu Hòa bình Việt Nam 2023.
+Miss Grand Vietnam 2023 runner-up.
 
 ### Hữu Long
 
-Siêu mẫu.
+Supermodel.
 
 ---
 
-# 12. Kết quả HUIT's ICONIC 2024
+# 12. HUIT's ICONIC 2024 Results
 
-## 12.1. Quán quân Nữ
+## 12.1. Female Champion
 
 ### Dương Trần Linh Chi
 
-* Danh hiệu: **Quán quân HUIT's ICONIC 2024**
-* Đơn vị: Khoa Quản trị Kinh doanh
+* Title: **HUIT's ICONIC 2024 Champion**
+* Faculty: Business Administration
 
-Linh Chi được HUIT giới thiệu là sinh viên có tinh thần cầu tiến, tích cực phát triển bản thân và nổi bật trong hành trình cuộc thi.
+HUIT introduced Linh Chi as a student known for growth mindset, proactive self-development, and a strong competition journey.
 
 ---
 
-# 13. Quán quân Nam
+# 13. Male Champion
 
 ### Nguyễn Việt Hoàng Vỹ
 
-* Danh hiệu: **Quán quân HUIT's ICONIC 2024**
-* Đơn vị: Khoa Quản trị Kinh doanh
+* Title: **HUIT's ICONIC 2024 Champion**
+* Faculty: Business Administration
 
-Hoàng Vỹ được giới thiệu là sinh viên năng động, tích cực tham gia:
+Hoàng Vỹ was introduced as an active student with strong engagement in:
 
-* Hoạt động ngoại khóa
-* Hoạt động tình nguyện
-* Hoạt động cộng đồng
-* Hoạt động tập thể
+* Extracurricular activities
+* Volunteer activities
+* Community activities
+* Collective student activities
 
 ---
 
-# 14. Á quân Nữ
+# 14. Female Runner-up
 
 ### Lê Ngọc Yến Vy
 
-* Danh hiệu: **Á quân HUIT's ICONIC 2024**
-* Đơn vị: Khoa Ngoại ngữ
+* Title: **HUIT's ICONIC 2024 Runner-up**
+* Faculty: Foreign Languages
 
-Yến Vy được HUIT nhắc đến với hành trình vượt qua sự e ngại sân khấu và từng bước thể hiện khả năng:
+HUIT highlighted her progress in overcoming stage hesitation and improving:
 
 * Catwalk
-* Ứng xử
-* Trình diễn
-* Tài năng
+* Q&A response
+* Performance
+* Talent showcase
 
 ---
 
-# 15. Á quân Nam
+# 15. Male Runner-up
 
 ### Nguyễn Đình Tú
 
-* Danh hiệu: **Á quân HUIT's ICONIC 2024**
-* Đơn vị: Khoa Quản trị Kinh doanh
+* Title: **HUIT's ICONIC 2024 Runner-up**
+* Faculty: Business Administration
 
-Nguyễn Đình Tú gây chú ý trong hành trình cuộc thi nhờ khả năng vượt qua áp lực sân khấu và thể hiện bản thân qua:
+He was recognized for overcoming stage pressure and expressing himself through:
 
 * Catwalk
-* Ứng xử
-* Tài năng
-* Trình diễn
+* Q&A response
+* Talent showcase
+* Performance
 
 ---
 
-# 16. Bảng kết quả
+# 16. Result Table
 
-| Danh hiệu     | Họ tên               | Khoa                |
-| ------------- | -------------------- | ------------------- |
-| Quán quân Nam | Nguyễn Việt Hoàng Vỹ | Quản trị Kinh doanh |
-| Quán quân Nữ  | Dương Trần Linh Chi  | Quản trị Kinh doanh |
-| Á quân Nam    | Nguyễn Đình Tú       | Quản trị Kinh doanh |
-| Á quân Nữ     | Lê Ngọc Yến Vy       | Ngoại ngữ           |
-
----
-
-# 17. Cơ cấu giải thưởng
-
-Theo thể lệ HUIT's ICONIC 2024:
-
-## Quán quân Nam
-
-Giá trị giải thưởng:
-
-**5.000.000 VNĐ**
-
-Kèm:
-
-* Vương miện
-* Sash
-* Cúp
-* Hoa
-* Quà từ nhà tài trợ
-
-## Quán quân Nữ
-
-Giá trị giải thưởng:
-
-**5.000.000 VNĐ**
-
-Kèm:
-
-* Vương miện
-* Sash
-* Cúp
-* Hoa
-* Quà từ nhà tài trợ
-
-## Á quân Nam
-
-Giá trị:
-
-**2.000.000 VNĐ**
-
-Kèm:
-
-* Sash
-* Cúp
-* Hoa
-* Quà nhà tài trợ
-
-## Á quân Nữ
-
-Giá trị:
-
-**2.000.000 VNĐ**
-
-Kèm:
-
-* Sash
-* Cúp
-* Hoa
-* Quà nhà tài trợ
+| Title            | Full Name             | Faculty                 |
+| ---------------- | --------------------- | ----------------------- |
+| Male Champion    | Nguyễn Việt Hoàng Vỹ  | Business Administration |
+| Female Champion  | Dương Trần Linh Chi   | Business Administration |
+| Male Runner-up   | Nguyễn Đình Tú        | Business Administration |
+| Female Runner-up | Lê Ngọc Yến Vy        | Foreign Languages       |
 
 ---
 
-# 18. Các giải phụ
+# 17. Prize Structure
 
-HUIT's ICONIC 2024 có các giải phụ:
+According to HUIT's ICONIC 2024 regulations:
 
-* Đại sứ Áo dài
-* Đại sứ Quảng cáo
+## Male Champion
+
+Prize value:
+
+**5,000,000 VND**
+
+Includes:
+
+* Crown
+* Sash
+* Trophy
+* Flowers
+* Sponsor gifts
+
+## Female Champion
+
+Prize value:
+
+**5,000,000 VND**
+
+Includes:
+
+* Crown
+* Sash
+* Trophy
+* Flowers
+* Sponsor gifts
+
+## Male Runner-up
+
+Prize value:
+
+**2,000,000 VND**
+
+Includes:
+
+* Sash
+* Trophy
+* Flowers
+* Sponsor gifts
+
+## Female Runner-up
+
+Prize value:
+
+**2,000,000 VND**
+
+Includes:
+
+* Sash
+* Trophy
+* Flowers
+* Sponsor gifts
+
+---
+
+# 18. Side Awards
+
+HUIT's ICONIC 2024 side awards:
+
+* Traditional Costume Ambassador
+* Advertising Ambassador
 * Fashion Iconic
 * Best Talent
-* Thí sinh Ứng xử hay nhất
+* Best Q&A Performer
 
-Theo cơ cấu giải thưởng ban đầu, mỗi giải phụ có giá trị:
+According to the original structure, each side award value was:
 
-**1.000.000 VNĐ**
-
----
-
-# 19. Học bổng và phần thưởng đặc biệt
-
-Sau chung kết, hai Quán quân được công bố nhận thêm các phần thưởng/học bổng.
-
-Bao gồm:
-
-* Vương miện Đại sứ
-* Học bổng tiếng Anh trị giá **10 triệu đồng**
-* Học bổng tiếng Hàn hoặc tiếng Nhật trị giá **10 triệu đồng**
-* Học bổng Thạc sĩ toàn phần trị giá **20.000 USD** tại Đại học Shinawatra, Thái Lan
-
-> Các khoản học bổng này cần được phân biệt với cơ cấu giải thưởng tiền mặt trong thể lệ ban đầu.
+**1,000,000 VND**
 
 ---
 
-# 20. Đại sứ Truyền thông là gì?
+# 19. Scholarships and Special Rewards
 
-Đại sứ Truyền thông HUIT không chỉ là danh hiệu trao tại đêm chung kết.
+After the final, both champions were announced to receive additional rewards/scholarships.
 
-Đại sứ có vai trò đại diện hình ảnh HUIT trong các hoạt động phù hợp.
+Including:
 
-Các hoạt động có thể bao gồm:
+* Ambassador crown
+* English scholarship worth **10 million VND**
+* Korean or Japanese scholarship worth **10 million VND**
+* Full master's scholarship worth **20,000 USD** at Shinawatra University, Thailand
 
-* Truyền thông
-* Sự kiện
-* Tuyển sinh
-* Hướng nghiệp
-* Hoạt động cộng đồng
-* Hoạt động sinh viên
-* Hoạt động văn hóa
-* Hoạt động kết nối
-* Truyền cảm hứng
+> These scholarship items should be distinguished from the original cash prize structure.
 
 ---
 
-# 21. Vai trò của Đại sứ
+# 20. What is a Media Ambassador?
 
-Đại sứ có thể thực hiện các nhiệm vụ:
+A HUIT Media Ambassador is not only a title awarded on final night.
 
-### Đại diện hình ảnh
+Ambassadors represent HUIT's image in suitable activities.
 
-Xuất hiện trong các hoạt động phù hợp với hình ảnh và định hướng của HUIT.
+These activities may include:
 
-### Truyền thông
-
-Tham gia sản xuất hoặc xuất hiện trong các nội dung truyền thông.
-
-### Tuyển sinh
-
-Giao lưu với học sinh THPT và chia sẻ trải nghiệm thực tế về môi trường học tập tại HUIT.
-
-### Cộng đồng
-
-Tham gia các chương trình thiện nguyện và hoạt động xã hội.
-
-### Kết nối sinh viên
-
-Truyền tải thông tin và tạo cầu nối giữa nhà trường với sinh viên.
-
-### Truyền cảm hứng
-
-Khuyến khích sinh viên:
-
-* Học tập
-* Rèn luyện
-* Tham gia hoạt động
-* Phát triển bản thân
-* Đóng góp cho cộng đồng
+* Communication campaigns
+* Events
+* Admissions
+* Career orientation
+* Community engagement
+* Student activities
+* Cultural activities
+* Connection initiatives
+* Inspirational outreach
 
 ---
 
-# 22. Định hướng của Nguyễn Việt Hoàng Vỹ
+# 21. Ambassador Roles
 
-Hoàng Vỹ định hướng lan tỏa:
+Ambassadors may take on responsibilities such as:
 
-* Tinh thần học tập chủ động
-* Tư duy sáng tạo
-* Trách nhiệm
-* Tinh thần tập thể
-* Hoạt động cộng đồng
-* Phát triển bản thân
+### Brand representation
 
-Mục tiêu là góp phần xây dựng cộng đồng sinh viên HUIT đoàn kết và tích cực.
+Appear in activities aligned with HUIT's orientation and image.
 
----
+### Communication
 
-# 23. Định hướng của Dương Trần Linh Chi
+Participate in communication content production or public appearances.
 
-Linh Chi định hướng trở thành cầu nối giữa:
+### Admissions
 
-**Nhà trường ↔ Sinh viên**
+Engage with high school students and share real learning experiences at HUIT.
 
-Các định hướng bao gồm:
+### Community
 
-* Giúp sinh viên hiểu hơn về HUIT
-* Truyền tải thông tin của trường
-* Lắng nghe ý kiến sinh viên
-* Tạo các sản phẩm truyền thông sáng tạo
-* Truyền cảm hứng
-* Khơi dậy niềm tự hào HUIT
-* Tham gia hoạt động văn hóa
-* Tham gia hoạt động nghệ thuật
+Join charity and social impact programs.
 
-Linh Chi gắn định hướng của mình với các giá trị:
+### Student connection
 
-**Nhân văn – Đoàn kết – Đổi mới – Tiên phong**
+Bridge communication between the university and students.
+
+### Inspiration
+
+Encourage students to:
+
+* Study actively
+* Develop discipline
+* Join activities
+* Improve themselves
+* Contribute to the community
 
 ---
 
-# 24. Hoạt động sau cuộc thi
+# 22. Orientation of Nguyễn Việt Hoàng Vỹ
 
-HUIT's ICONIC không kết thúc sau đêm chung kết.
+Hoàng Vỹ expressed a focus on spreading:
 
-Các Đại sứ tiếp tục tham gia hoạt động của trường trong năm 2025.
+* Proactive learning spirit
+* Creative thinking
+* Responsibility
+* Team spirit
+* Community engagement
+* Self-development
+
+The goal is to help build a united and active HUIT student community.
 
 ---
 
-## 24.1. Hoạt động cộng đồng tại An Giang
+# 23. Orientation of Dương Trần Linh Chi
 
-Ngày:
+Linh Chi described her direction as being a bridge between:
+
+**University ↔ Students**
+
+Key focus areas:
+
+* Helping students better understand HUIT
+* Delivering school information clearly
+* Listening to student feedback
+* Creating creative communication products
+* Inspiring students
+* Strengthening HUIT pride
+* Participating in cultural activities
+* Participating in arts activities
+
+She aligned this direction with values of:
+
+**Humanity – Unity – Innovation – Pioneering**
+
+---
+
+# 24. Post-competition Activities
+
+HUIT's ICONIC did not end after final night.
+
+Ambassadors continued joining university activities in 2025.
+
+---
+
+## 24.1. Community activity in An Giang
+
+Date:
 
 **18–19/01/2025**
 
-Địa điểm:
+Location:
 
-**Huyện Tri Tôn, tỉnh An Giang**
+**Tri Tôn District, An Giang Province**
 
-Chương trình:
+Program:
 
-**“Vui Tết đoàn viên”**
+**"Tet Reunion Celebration"**
 
-Các Đại sứ HUIT's ICONIC tham gia:
+HUIT's ICONIC ambassadors joined:
 
-* Thăm các hộ gia đình khó khăn
-* Trao quà
-* Giao lưu
-* Văn nghệ
-* Hoạt động cộng đồng
-* Hỗ trợ người lao động có hoàn cảnh khó khăn
-
----
-
-# 25. Chương trình “Ươm mầm tương lai”
-
-Năm 2025, Đại sứ HUIT's ICONIC tiếp tục tham gia chương trình:
-
-**“Ươm mầm tương lai”**
-
-HUIT trao học bổng với tổng giá trị:
-
-**400 triệu đồng**
-
-cho học sinh tại:
-
-**20 trường THPT thuộc 18 tỉnh/thành**
-
-Các Đại sứ tham gia đồng hành trong hoạt động này.
-
-Vai trò bao gồm:
-
-* Giao lưu
-* Truyền cảm hứng
-* Hướng nghiệp
-* Chia sẻ trải nghiệm
-* Quảng bá hình ảnh HUIT
+* Visits to disadvantaged families
+* Gift distribution
+* Community interaction
+* Cultural performance
+* Community service activities
+* Support for workers in difficult conditions
 
 ---
 
-# 26. Đại sứ trong hoạt động tuyển sinh
+# 25. "Nurturing the Future" Program
 
-HUIT sử dụng lực lượng Đại sứ Truyền thông trong các hoạt động hướng nghiệp và tuyển sinh.
+In 2025, HUIT's ICONIC ambassadors continued participating in:
 
-Đại sứ có thể:
+**"Nurturing the Future"**
 
-* Giao lưu với học sinh THPT
-* Chia sẻ trải nghiệm học tập
-* Giải đáp thắc mắc
-* Giới thiệu môi trường HUIT
-* Chia sẻ hoạt động sinh viên
-* Truyền cảm hứng lựa chọn ngành học
+HUIT awarded scholarships with total value:
 
-Điểm đặc biệt là Đại sứ có thể chia sẻ dưới góc nhìn của **một sinh viên đang/đã trải nghiệm môi trường HUIT**.
+**400 million VND**
+
+To students from:
+
+**20 high schools across 18 provinces/cities**
+
+Ambassadors contributed through:
+
+* Student interaction
+* Inspirational sharing
+* Career orientation
+* Experience sharing
+* Promoting HUIT's image
 
 ---
 
-# 27. Cổng bình chọn HUIT's ICONIC
+# 26. Ambassadors in Admissions Activities
 
-### Nền tảng
+HUIT uses Media Ambassadors in career orientation and admissions.
+
+Ambassadors may:
+
+* Interact with high school students
+* Share real study experiences
+* Answer common questions
+* Introduce HUIT's environment
+* Share student life activities
+* Inspire major and career choice
+
+A key advantage is that ambassadors communicate from the perspective of **current or former students with direct HUIT experience**.
+
+---
+
+# 27. HUIT's ICONIC Voting Portal
+
+### Platform
 
 **1VOTE – Eventista**
 
@@ -763,170 +757,170 @@ HUIT sử dụng lực lượng Đại sứ Truyền thông trong các hoạt đ
 
 https://huiticonic.1vote.vn/
 
-Cổng bình chọn được sử dụng trong HUIT's ICONIC 2024.
+Used for HUIT's ICONIC 2024 voting.
 
-Hệ thống từng hiển thị:
+The system displayed:
 
-* Số báo danh
-* Họ tên thí sinh
-* Hình ảnh
-* Thông tin thí sinh
-* Điểm/lượt bình chọn
-* Bảng xếp hạng
+* Contestant number
+* Full name
+* Image
+* Contestant information
+* Voting score/count
+* Leaderboard
 
 ---
 
-# 28. HUIT's ICONIC có phải cuộc thi hoa hậu?
+# 28. Is HUIT's ICONIC a beauty pageant?
 
-**Không nên gọi chính thức là cuộc thi hoa hậu.**
+**It should not be officially labeled as a beauty pageant.**
 
-Tên và mục tiêu chính thức của chương trình là:
+The official program name and objective are:
 
-**Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM**
+**Media Ambassador Search Competition of Ho Chi Minh City University of Industry and Trade**
 
-Cuộc thi có một số yếu tố tương đồng với các cuộc thi sắc đẹp:
+The competition includes some elements commonly seen in pageants:
 
 * Catwalk
 * Photoshoot
-* Áo dài
-* Dạ hội
+* Traditional Vietnamese long dress
+* Evening wear
 * Fashion Show
-* Ứng xử
-* Vương miện
+* Q&A response
+* Crown
 * Sash
 
-Tuy nhiên, mục tiêu chính vẫn là tìm kiếm **gương mặt đại diện truyền thông và hình ảnh sinh viên HUIT**.
+However, the core objective remains identifying **media representatives and student image ambassadors for HUIT**.
 
-Ngoài yếu tố ngoại hình, cuộc thi chú trọng:
+Beyond appearance, the program emphasizes:
 
-* Tư duy
-* Giao tiếp
-* Ứng xử
-* Khả năng truyền tải thông điệp
-* Bản lĩnh
-* Tài năng
-* Khả năng truyền cảm hứng
-
----
-
-# 29. Những giá trị cốt lõi có thể dùng để mô tả HUIT's ICONIC
-
-Có thể khái quát tinh thần chương trình thành:
-
-## TÂM
-
-Đạo đức, trách nhiệm và tinh thần cộng đồng.
-
-## TRÍ
-
-Tư duy, kiến thức và khả năng ứng xử.
-
-## SẮC
-
-Hình ảnh, thần thái và phong cách.
-
-## TÀI
-
-Năng khiếu và khả năng thể hiện bản thân.
-
-## BẢN LĨNH
-
-Sự tự tin và khả năng làm chủ sân khấu.
-
-## TRUYỀN CẢM HỨNG
-
-Khả năng lan tỏa thông điệp và giá trị tích cực.
-
-> Đây là cách tổng hợp để mô tả chương trình, không phải khẩu hiệu chính thức được BTC công bố.
+* Thinking
+* Communication
+* Response skills
+* Message delivery
+* Composure
+* Talent
+* Inspirational ability
 
 ---
 
-# 30. Thông tin về mùa 2025/2026
+# 29. Core Values to Describe HUIT's ICONIC
 
-Tại thời điểm tổng hợp tài liệu này, các nguồn chính thức của HUIT được kiểm tra chưa cung cấp một bộ thông tin đầy đủ tương đương mùa 2024 về:
+A concise value framework for the program:
 
-* Thể lệ HUIT's ICONIC 2025
-* Danh sách thí sinh 2025
-* Lịch thi 2025
-* Kết quả một mùa 2025
-* Thể lệ HUIT's ICONIC 2026
-* Danh sách thí sinh 2026
-* Lịch thi 2026
+## HEART
 
-Trong bài tổng kết chung kết 2024, HUIT từng gửi lời hẹn:
+Ethics, responsibility, and community spirit.
 
-**“Hẹn gặp lại tại HUIT's Iconic 2025”**
+## MIND
 
-Tuy nhiên, thông tin này không đủ để khẳng định đã có một mùa thi mới với đầy đủ quy trình tương tự.
+Thinking, knowledge, and response capability.
 
-Do đó, dữ liệu chắc chắn nhất hiện tại là:
+## PRESENCE
 
-**HUIT's ICONIC 2024 – mùa đầu tiên**
+Image, composure, and style.
 
-và các hoạt động của những Đại sứ sau cuộc thi.
+## TALENT
 
----
+Personal ability and self-expression.
 
-# 31. Thông tin nhanh
+## COURAGE
 
-| Nội dung            | Thông tin                                                               |
-| ------------------- | ----------------------------------------------------------------------- |
-| Tên chương trình    | HUIT's ICONIC                                                           |
-| Tên đầy đủ          | Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM |
-| Mùa                 | Lần I                                                                   |
-| Năm                 | 2024                                                                    |
-| Đơn vị tổ chức      | Trường Đại học Công Thương TP.HCM                                       |
-| Đơn vị truyền thông | Trung tâm Tuyển sinh và Truyền thông HUIT                               |
-| Đối tượng           | Sinh viên HUIT                                                          |
-| Hồ sơ đăng ký       | Hơn 100                                                                 |
-| Thí sinh sơ khảo    | 110                                                                     |
-| Top sơ khảo         | 60                                                                      |
-| Top chung kết       | 36                                                                      |
-| Chung kết           | 24/11/2024                                                              |
-| Quán quân Nam       | Nguyễn Việt Hoàng Vỹ                                                    |
-| Quán quân Nữ        | Dương Trần Linh Chi                                                     |
-| Á quân Nam          | Nguyễn Đình Tú                                                          |
-| Á quân Nữ           | Lê Ngọc Yến Vy                                                          |
-| Bình chọn           | 1VOTE – Eventista                                                       |
-| Website bình chọn   | https://huiticonic.1vote.vn/                                            |
+Confidence and stage control.
+
+## INSPIRATION
+
+Ability to spread positive values and messages.
+
+> This is a synthesized descriptive framework, not an official slogan published by the organizing committee.
 
 ---
 
-# 32. Danh sách nguồn tham khảo
+# 30. Information about 2025/2026 Seasons
 
-## Nguồn chính thức HUIT
+At the time this document was compiled, verified official HUIT sources had not yet provided a complete data set equivalent to 2024 for:
 
-1. Phát động cuộc thi HUIT's ICONIC 2024
+* HUIT's ICONIC 2025 regulations
+* 2025 contestant list
+* 2025 competition schedule
+* 2025 season result set
+* HUIT's ICONIC 2026 regulations
+* 2026 contestant list
+* 2026 competition schedule
+
+In the 2024 final recap, HUIT shared the message:
+
+**"See you again at HUIT's Iconic 2025"**
+
+However, this alone is not sufficient to confirm a full new season with an equivalent official process.
+
+Therefore, the most reliable confirmed dataset at present is:
+
+**HUIT's ICONIC 2024 – Season I**
+
+And ambassador activities after the competition.
+
+---
+
+# 31. Quick Facts
+
+| Item                    | Information                                                              |
+| ----------------------- | ------------------------------------------------------------------------ |
+| Program name            | HUIT's ICONIC                                                            |
+| Full name               | Media Ambassador Search Competition of Ho Chi Minh City University and Trade |
+| Season                  | Season I                                                                 |
+| Year                    | 2024                                                                     |
+| Organizing institution  | Ho Chi Minh City University of Industry and Trade                        |
+| Communication unit      | HUIT Admissions and Communications Center                                |
+| Participant group       | HUIT students                                                            |
+| Registrations           | More than 100                                                            |
+| Preliminary contestants | 110                                                                      |
+| Preliminary top         | 60                                                                       |
+| Final top               | 36                                                                       |
+| Final date              | 24/11/2024                                                               |
+| Male champion           | Nguyễn Việt Hoàng Vỹ                                                     |
+| Female champion         | Dương Trần Linh Chi                                                      |
+| Male runner-up          | Nguyễn Đình Tú                                                           |
+| Female runner-up        | Lê Ngọc Yến Vy                                                           |
+| Voting platform         | 1VOTE – Eventista                                                        |
+| Voting website          | https://huiticonic.1vote.vn/                                             |
+
+---
+
+# 32. Reference Sources
+
+## Official HUIT sources
+
+1. HUIT's ICONIC 2024 competition launch
    https://tstt.huit.edu.vn/tin-tuc-hoat-dong/phat-dong-cuoc-thi-tim-kiem-dai-su-truyen-thong-truong-dai-hoc-cong-thuong-tp-hcm-lan-i-nam-2024
 
-2. Vòng sơ khảo HUIT's ICONIC 2024
+2. HUIT's ICONIC 2024 preliminary round
    https://huit.edu.vn/thong-bao/vong-so-khao-cuoc-thi-tim-kiem-dai-su-truyen-thong-dai-hoc-cong-thuong-tp-hcm-huit%E2%80%99s-iconic-2024%E2%80%9D
 
-3. Chung kết HUIT's ICONIC 2024
+3. HUIT's ICONIC 2024 final round
    https://huit.edu.vn/tin-tuc-hoat-dong/huit%E2%80%99s-iconic-2024-dem-chung-ket-tim-kiem-dai-su-truyen-thong-dai-hoc-cong-thuong-tp-hcm-thanh-cong-ruc-ro
 
-4. HUIT's ICONIC – Hai Quán quân lan tỏa tinh thần đoàn kết và khát vọng truyền cảm hứng
+4. HUIT's ICONIC – Two champions spreading unity and inspiration
    https://huit.edu.vn/thong-bao/huit%E2%80%99s-iconic-2024-hai-quan-quan-lan-toa-tinh-than-doan-ket-va-khat-vong-truyen-cam-hung%E2%80%9D
 
-5. Quán quân Dương Trần Linh Chi
+5. Champion profile: Dương Trần Linh Chi
    https://huit.edu.vn/thong-bao/quan-quan-huit039s-iconic-2024-duong-tran-linh-chi-muc-tieu-lon-thuong-bat-dau-tu-nhung-y-tuong-nho-hay-bat-dau-ngay-tu-hom-nay-%E2%80%9D
 
-6. Quán quân Nguyễn Việt Hoàng Vỹ
+6. Champion profile: Nguyễn Việt Hoàng Vỹ
    https://huit.edu.vn/nguoi-hoc/quan-quan-huit039s-iconic-2024-nguyen-viet-hoang-vy-quottuong-lai-phu-thuoc-vao-nhung-gi-ban-lam-hom-nayquot
 
-7. Á quân Nguyễn Đình Tú
+7. Runner-up profile: Nguyễn Đình Tú
    https://huit.edu.vn/nguoi-hoc/a-quan-huit-iconic-nguyen-dinh-tu-uoc-mo-chi-thuoc-ve-nhung-nguoi-dam-theo-duoi
 
-8. Hoạt động cộng đồng tại Tri Tôn
+8. Community program in Tri Tôn
    https://huit.edu.vn/tin-tuc/truong-dai-hoc-cong-thuong-tp-hcm-dai-su-truyen-thong-huit%E2%80%99s-iconic-2024-lan-toa-nhung-hanh-dong-nhan-ai-tai-huyen-tri-ton-tinh-an-giang
 
-9. Tổng kết hoạt động HUIT năm 2025
+9. HUIT 2025 annual activity recap
    https://iict.huit.edu.vn/tin-tuc-hoat-dong/nhin-lai-10-dau-an-noi-bat-nam-2025-cua-truong-dai-hoc-cong-thuong-tphcm
 
-10. Danh sách các trang mạng xã hội do HUIT và đơn vị trực thuộc quản lý
+10. List of official social channels managed by HUIT and affiliated units
     https://huit.edu.vn/tin-tuc-hoat-dong/cac-trang-mang-xa-hoi-do-truong-dai-hoc-cong-thuong-tp-hcm-va-cac-don-vi-truc-thuoc-truong-quan-ly
 
-## Cổng bình chọn
+## Voting portal
 
 **HUIT's ICONIC 2024 – 1VOTE**
 
@@ -934,62 +928,62 @@ https://huiticonic.1vote.vn/
 
 ## Fanpage
 
-**HUIT's Iconic - Đại sứ Truyền thông Đại học Công Thương TP.HCM**
+**HUIT's Iconic - Media Ambassador Program of Ho Chi Minh City University of Industry and Trade**
 
 https://www.facebook.com/Daisutruyenthonghuit
 
 ---
 
-# 33. Ghi chú về độ tin cậy dữ liệu
+# 33. Data Reliability Notes
 
-Tài liệu ưu tiên thông tin từ:
+This document prioritizes information from:
 
-1. Trường Đại học Công Thương TP.HCM
-2. Trung tâm Tuyển sinh và Truyền thông HUIT
-3. Các đơn vị trực thuộc HUIT
-4. Cổng bình chọn chính thức
-5. Báo chí đưa tin về chương trình
+1. Ho Chi Minh City University of Industry and Trade
+2. HUIT Admissions and Communications Center
+3. HUIT affiliated units
+4. Official voting portal
+5. Press coverage about the program
 
-Khi có khác biệt giữa nguồn báo chí và nguồn chính thức HUIT, ưu tiên thông tin từ HUIT.
+When press sources differ from official HUIT sources, official HUIT information takes priority.
 
-Ví dụ:
+Example:
 
-* Một nguồn báo chí ghi ngày chung kết là **26/10/2024**.
-* Các nguồn chính thức của HUIT xác nhận ngày chung kết là **24/11/2024**.
+* One press source reported the final date as **26/10/2024**.
+* Official HUIT sources confirmed the final date as **24/11/2024**.
 
-Vì vậy, dữ liệu được sử dụng trong tài liệu này là:
+Therefore, this document uses:
 
-**24/11/2024 – ngày chung kết HUIT's ICONIC 2024.**
+**24/11/2024 – official final date of HUIT's ICONIC 2024.**
 
 ---
 
-## Kết luận
+## Conclusion
 
-HUIT's ICONIC là chương trình tìm kiếm **Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM**, được tổ chức lần đầu vào năm 2024.
+HUIT's ICONIC is a **Media Ambassador Search Program of Ho Chi Minh City University of Industry and Trade**, first organized in 2024.
 
-Chương trình kết hợp giữa:
+The program combines:
 
-* Hình ảnh
-* Tài năng
-* Thời trang
-* Giao tiếp
-* Ứng xử
-* Thuyết trình
-* Truyền thông
-* Hoạt động cộng đồng
+* Image and style
+* Talent
+* Fashion
+* Communication
+* Response skills
+* Public speaking
+* Media activities
+* Community participation
 
-Mùa đầu tiên có hơn 100 hồ sơ, 110 thí sinh tham gia sơ khảo, chọn Top 60, Top 36 và tổ chức chung kết ngày 24/11/2024.
+Season I recorded more than 100 applications, 110 preliminary contestants, Top 60, Top 36, and the final on 24/11/2024.
 
-Hai Quán quân là:
+Two champions:
 
-**Dương Trần Linh Chi – Quán quân Nữ**
+**Dương Trần Linh Chi – Female Champion**
 
-**Nguyễn Việt Hoàng Vỹ – Quán quân Nam**
+**Nguyễn Việt Hoàng Vỹ – Male Champion**
 
-Hai Á quân là:
+Two runner-ups:
 
-**Lê Ngọc Yến Vy – Á quân Nữ**
+**Lê Ngọc Yến Vy – Female Runner-up**
 
-**Nguyễn Đình Tú – Á quân Nam**
+**Nguyễn Đình Tú – Male Runner-up**
 
-Sau cuộc thi, các Đại sứ tiếp tục đồng hành cùng HUIT trong các hoạt động truyền thông, tuyển sinh, hướng nghiệp và cộng đồng.
+After the competition, ambassadors continued supporting HUIT in communication, admissions, career orientation, and community programs.

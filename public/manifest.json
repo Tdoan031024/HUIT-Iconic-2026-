@@ -1,14 +1,18 @@
 {
   "name": "HUIT Startup 2026",
   "short_name": "HUIT Startup",
-  "description": "Nền tảng cuộc thi khởi nghiệp sáng tạo HUIT Startup 2026 - Đổi mới sáng tạo hướng tới phát triển bền vững",
+  "description": "Official platform for the HUIT Startup 2026 innovation competition - driving sustainable development through entrepreneurship and innovation",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a1628",
   "theme_color": "#0f766e",
   "orientation": "portrait-primary",
-  "categories": ["education", "social", "business"],
-  "lang": "vi",
+  "categories": [
+    "education",
+    "social",
+    "business"
+  ],
+  "lang": "en",
   "dir": "ltr",
   "icons": [
     {
@@ -66,23 +70,33 @@
       "sizes": "1200x630",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "HUIT Startup 2026 - Trang chủ"
+      "label": "HUIT Startup 2026 - Home Page"
     }
   ],
   "shortcuts": [
     {
-      "name": "Bảng xếp hạng",
-      "short_name": "Xếp hạng",
-      "description": "Xem bảng xếp hạng bình chọn",
+      "name": "Leaderboard",
+      "short_name": "Ranking",
+      "description": "View the voting leaderboard",
       "url": "/bang-xep-hang",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "Tin tức",
-      "short_name": "Tin tức",
-      "description": "Xem tin tức và thông báo",
+      "name": "News",
+      "short_name": "News",
+      "description": "View news and announcements",
       "url": "/tin-tuc",
-      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [
+        {
+          "src": "/icons/icon-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }

@@ -1,30 +1,30 @@
 # HUIT-Iconic-2026-
 
-# HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT
+# HUIT's ICONIC 2026 - HUIT Media Ambassador Search Competition
 
-Nền tảng bình chọn và quản trị duy nhất cho cuộc thi **HUIT's ICONIC 2026 - Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM**. 
+A unified voting and administration platform for the **HUIT's ICONIC 2026 - Media Ambassador Search Competition of Ho Chi Minh City University of Industry and Trade**.
 
-Dự án được hợp nhất và phát triển trên nền tảng **Next.js 14 App Router (Single Node Process)** cho cả Web Public, Admin Portal và REST API Handlers.
+The project is consolidated and developed on **Next.js 14 App Router (Single Node Process)** for the Public Web, Admin Portal, and REST API Handlers.
 
-## 🚀 Khởi chạy hệ thống
+## 🚀 Run the system
 
-### 1. Cài đặt thư viện:
+### 1. Install dependencies:
 ```bash
 npm install
 ```
 
-### 2. Chạy chế độ Development:
+### 2. Start in Development mode:
 ```bash
 npm run dev
 ```
 
-### 3. Build & Chạy Production:
+### 3. Build & run in Production:
 ```bash
 npm run build
 npm start
 ```
 
-## 🌐 Các đường dẫn chính
-- **Trang chủ công khai**: http://localhost:3000
-- **Bảng xếp hạng**: http://localhost:3000/bang-xep-hang
-- **Trang Quản trị Admin**: http://localhost:3000/admin (Đăng nhập: `admin` / `admin123`)
+## 🌐 Main routes
+- **Public home page**: http://localhost:3000
+- **Leaderboard**: http://localhost:3000/bang-xep-hang
+- **Admin portal**: http://localhost:3000/admin (Login: `admin` / `admin123`)
