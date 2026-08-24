@@ -1,39 +1,39 @@
-# Huong dan cap nhat code tren cPanel
+# cPanel Code Update Guide
 
-Tai lieu nay dung cho du an ICONIC2026 dang deploy tai:
+This document is for the ICONIC2026 project currently deployed at:
 
 ```text
 https://iconic2026.huitmedia.edu.vn
 ```
 
-Thu muc tren host:
+Host directory:
 
 ```text
 /home/uqqwmiabhosting/public_html/iconic2026.huitmedia.edu.vn
 ```
 
-Nhanh deploy hien tai:
+Current deployment branch:
 
 ```text
 main
 ```
 
-## 1. Vao dung thu muc du an
+## 1. Go to the correct project directory
 
-Mo Terminal trong cPanel, chay:
+Open Terminal in cPanel and run:
 
 ```bash
 cd /home/uqqwmiabhosting/public_html/iconic2026.huitmedia.edu.vn
 ```
 
-Kiem tra:
+Verify:
 
 ```bash
 pwd
 ls
 ```
 
-Ket qua dung phai thay cac file/thu muc chinh:
+You should see core files/folders such as:
 
 ```text
 package.json
@@ -44,56 +44,56 @@ public
 server.js
 ```
 
-## 2. Bat Node.js va npm
+## 2. Enable Node.js and npm
 
-Moi lan mo terminal moi, can chay:
+Each new terminal session requires:
 
 ```bash
 export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
 ```
 
-Kiem tra:
+Verify:
 
 ```bash
 node -v
 npm -v
 ```
 
-Neu hien version Node.js va npm la dung.
+If Node.js and npm versions are shown, the setup is correct.
 
-## 3. Kiem tra nhanh truoc khi cap nhat
+## 3. Quick check before updating
 
 ```bash
 git status --short --branch
 ```
 
-Neu chi co file runtime tren host nhu `.htaccess`, `tmp`, `node_modules`, log thi co the tiep tuc.
+If you only see host runtime files such as `.htaccess`, `tmp`, `node_modules`, or logs, you can continue.
 
-Neu thay cac file code dang sua truc tiep tren host, can kiem tra truoc khi pull de tranh mat code.
+If code files were edited directly on the host, review them first to avoid losing changes after pull.
 
-## 4. Lay code moi nhat
+## 4. Pull the latest code
 
-Neu deploy tu nhanh `main`:
+If deploying from `main`:
 
 ```bash
 git pull origin main
 ```
 
-Neu sau nay doi sang nhanh `dev`, dung:
+If you later switch to `dev`:
 
 ```bash
 git pull origin dev
 ```
 
-## 5. Cai lai package neu can
+## 5. Reinstall packages if needed
 
-Nen chay lenh nay sau khi pull code moi, dac biet khi `package.json` hoac `package-lock.json` co thay doi:
+Run this after pulling new code, especially when `package.json` or `package-lock.json` changes:
 
 ```bash
 npm install --include=dev
 ```
 
-## 6. Cap nhat Prisma va database
+## 6. Update Prisma and database
 
 Generate Prisma Client:
 
@@ -101,31 +101,31 @@ Generate Prisma Client:
 npx prisma generate
 ```
 
-Dong bo schema len MySQL:
+Sync schema to MySQL:
 
 ```bash
 npx prisma db push
 ```
 
-Neu `db push` bao loi ket noi database, kiem tra lai file `.env`.
+If `db push` reports a database connection error, recheck the `.env` file.
 
-File `.env` tren host can co dang:
+Example `.env` on host:
 
 ```env
-DATABASE_URL="mysql://uqqwmiabhosting_huit_iconic:Huit%40media2019@localhost:3306/uqqwmiabhosting_huit_iconic"
-JWT_SECRET="doi-thanh-chuoi-bi-mat-dai-kho-doan"
+DATABASE_URL="******localhost:3306/uqqwmiabhosting_huit_iconic"
+JWT_SECRET="replace-with-a-long-random-secret"
 NEXT_PUBLIC_API_URL=""
 ```
 
-Luu y: neu mat khau database co ky tu `@`, trong `DATABASE_URL` phai ghi thanh `%40`.
+Note: if the database password contains `@`, encode it as `%40` in `DATABASE_URL`.
 
-## 7. Build production
+## 7. Build for production
 
 ```bash
 npm run build
 ```
 
-Build thanh cong se co cac dong tuong tu:
+A successful build should include lines similar to:
 
 ```text
 Compiled successfully
@@ -133,29 +133,29 @@ Generating static pages
 Finalizing page optimization
 ```
 
-Neu build loi, dung lai va doc loi truoc khi restart app.
+If build fails, stop and read the error before restarting the app.
 
-## 8. Restart Node.js app trong cPanel
+## 8. Restart Node.js app in cPanel
 
-Vao:
+Go to:
 
 ```text
 cPanel -> Setup Node.js App
 ```
 
-Chon app:
+Select app:
 
 ```text
 iconic2026.huitmedia.edu.vn
 ```
 
-Bam:
+Click:
 
 ```text
 Restart
 ```
 
-Thong tin app dung nen la:
+Expected app configuration:
 
 ```text
 Application URL: iconic2026.huitmedia.edu.vn
@@ -164,9 +164,9 @@ Application startup file: server.js
 Node.js version: 22
 ```
 
-## 9. Kiem tra sau khi cap nhat
+## 9. Verify after update
 
-Mo trinh duyet:
+Open in browser:
 
 ```text
 https://iconic2026.huitmedia.edu.vn/
@@ -174,21 +174,21 @@ https://iconic2026.huitmedia.edu.vn/admin/login
 https://iconic2026.huitmedia.edu.vn/api/candidates
 ```
 
-Ket qua dung:
+Expected result:
 
-- Trang chu hien giao dien ICONIC2026.
-- Trang admin login hien form dang nhap.
-- `/api/candidates` tra ve JSON hoac `[]`.
+- Home page displays the ICONIC2026 interface.
+- Admin login page shows the login form.
+- `/api/candidates` returns JSON or `[]`.
 
-Kiem tra log neu web bi loi:
+Check logs if the website errors:
 
 ```bash
 tail -100 stderr.log
 ```
 
-## 10. Lenh cap nhat nhanh
+## 10. Quick update command set
 
-Khi da chac chan khong co code sua tay tren host, co the chay nhanh:
+When you are sure there are no manual code edits on the host, run:
 
 ```bash
 cd /home/uqqwmiabhosting/public_html/iconic2026.huitmedia.edu.vn
@@ -201,15 +201,15 @@ npx prisma db push
 npm run build
 ```
 
-Sau do vao cPanel `Setup Node.js App` va bam `Restart`.
+Then go to cPanel `Setup Node.js App` and click `Restart`.
 
-## 11. Loi thuong gap
+## 11. Common issues
 
 ### npm: command not found
 
-Nguyen nhan: terminal chua bat PATH Node.js.
+Cause: Node.js PATH is not enabled in this terminal session.
 
-Chay lai:
+Run again:
 
 ```bash
 export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
@@ -217,21 +217,21 @@ export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
 
 ### DNS_PROBE_FINISHED_NXDOMAIN
 
-Nguyen nhan: domain/subdomain chua tro DNS dung.
+Cause: domain/subdomain DNS is not correctly pointed.
 
-Can kiem tra DNS Zone cua `iconic2026.huitmedia.edu.vn`.
+Check DNS Zone for `iconic2026.huitmedia.edu.vn`.
 
 ### LiteSpeed 404
 
-Nguyen nhan thuong gap: request chua vao Node.js app, hoac `.htaccess` bi lan rule WordPress/SpeedyCache.
+Common cause: request is not routed to the Node.js app, or `.htaccess` contains conflicting WordPress/SpeedyCache rules.
 
-Kiem tra:
+Check:
 
 ```bash
 cat .htaccess
 ```
 
-File `.htaccess` nen chi giu cau hinh Passenger:
+`.htaccess` should only keep Passenger config:
 
 ```apache
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
@@ -245,13 +245,13 @@ PassengerStartupFile server.js
 
 ### 500 Internal Server Error
 
-Nguyen nhan thuong gap: Node app crash khi khoi dong.
+Common cause: Node app crashes on startup.
 
-Kiem tra:
+Check:
 
 ```bash
 tail -100 stderr.log
 cat server.js
 ```
 
-Sau khi sua loi, restart app trong cPanel.
+After fixing, restart the app in cPanel.

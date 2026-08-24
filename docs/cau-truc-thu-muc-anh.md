@@ -1,50 +1,50 @@
-# Cấu trúc thư mục hình ảnh (Image Assets Directory Structure)
+# Image Assets Directory Structure
 
-Dự án **HUIT's ICONIC 2026** tổ chức thư mục hình ảnh tại `public/images/` theo các nhóm chuyên biệt, rõ ràng và dễ quản lý:
+The **HUIT's ICONIC 2026** project organizes image assets in `public/images/` into clear, specialized groups for easier management:
 
 ```text
 public/
 ├── images/
-│   ├── logos/          # Logo nhận diện trường & cuộc thi
-│   │   ├── huit_logo.png       # Logo Trường Đại học Công Thương TP.HCM
-│   │   ├── logo_iconic.png     # Logo chính thức Cuộc thi HUIT's ICONIC 2026
-│   │   ├── image.webp          # Logo hiển thị chuẩn trên Header
-│   │   ├── site-logo.png       # Logo vuông dùng cho Admin / OG Meta / App
-│   │   └── ieclogo.png         # Logo Trung tâm Tuyển sinh & Truyền thông
+│   ├── logos/          # University and competition identity logos
+│   │   ├── huit_logo.png       # Ho Chi Minh City University of Industry and Trade logo
+│   │   ├── logo_iconic.png     # Official HUIT's ICONIC 2026 competition logo
+│   │   ├── image.webp          # Standard header display logo
+│   │   ├── site-logo.png       # Square logo used for Admin / OG Meta / App
+│   │   └── ieclogo.png         # Admissions and Communications Center logo
 │   │
-│   ├── socials/        # Biểu tượng mạng xã hội & liên hệ nhanh
-│   │   ├── zalo.png            # Icon Zalo chat
-│   │   ├── facebook.png        # Icon Facebook fanpage
-│   │   ├── tiktok.png          # Icon TikTok
-│   │   ├── instagram.png       # Icon Instagram
-│   │   ├── telephone.png       # Icon hotline
-│   │   └── mail.png            # Icon gửi email
+│   ├── socials/        # Social media icons and quick-contact icons
+│   │   ├── zalo.png            # Zalo chat icon
+│   │   ├── facebook.png        # Facebook fanpage icon
+│   │   ├── tiktok.png          # TikTok icon
+│   │   ├── instagram.png       # Instagram icon
+│   │   ├── telephone.png       # Hotline icon
+│   │   └── mail.png            # Email icon
 │   │
-│   ├── banners/        # Banner trang chủ, poster sự kiện & OG image
-│   │   ├── baner.jpg           # Banner chính cuộc thi
-│   │   ├── poster-khoi-nghiep.jpg # Poster giới thiệu chương trình
-│   │   └── og-default.png      # Ảnh xem trước khi chia sẻ mạng xã hội
+│   ├── banners/        # Homepage banners, event posters, and OG image
+│   │   ├── baner.jpg               # Main competition banner
+│   │   ├── poster-khoi-nghiep.jpg  # Program introduction poster
+│   │   └── og-default.png          # Social sharing preview image
 │   │
-│   ├── sponsors/       # Logo của các đơn vị tài trợ & đồng hành
+│   ├── sponsors/       # Logos of sponsors and partner organizations
 │   │   ├── logo-amangon.webp
 │   │   ├── logo-mb-scaled.webp
 │   │   └── ...
 │   │
-│   ├── ui/             # Đồ họa giao diện, huy hiệu, vòng nguyệt quế, icon phụ
-│   │   ├── glowing_hourglass.png # Đồng hồ đếm ngược
-│   │   ├── qrdangky.png          # Mã QR đăng ký
-│   │   ├── laurel-dark-big.svg   # Vòng nguyệt quế vinh danh
+│   ├── ui/             # UI graphics, badges, laurel assets, and supporting icons
+│   │   ├── glowing_hourglass.png   # Countdown graphic
+│   │   ├── qrdangky.png            # Registration QR code
+│   │   ├── laurel-dark-big.svg     # Honor laurel (dark)
 │   │   └── laurel-light-big.svg
 │   │
-│   └── guides/         # Ảnh minh họa hướng dẫn các bước bình chọn
+│   └── guides/         # Step-by-step voting guide illustrations
 │       ├── dangnhap.png
 │       ├── b2.png
 │       └── b3.png
 │
-├── uploads/            # Thư mục lưu trữ các file tải lên động từ Admin Portal
-└── favicon.png         # Favicon hiển thị trên tab trình duyệt
+├── uploads/            # Storage for dynamic uploads from the Admin Portal
+└── favicon.png         # Browser tab favicon
 ```
 
 ---
 
-> 💡 **Lưu ý**: Để đảm bảo tương thích ngược 100% với các đường dẫn cũ và cơ sở dữ liệu đã lưu, toàn bộ các file tại thư mục gốc `public/images/` vẫn được duy trì đồng thời với các thư mục phân loại mới.
+> 💡 **Note**: To maintain 100% backward compatibility with legacy paths and previously stored database records, files in the root `public/images/` directory are still preserved alongside the newer categorized folders.

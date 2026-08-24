@@ -27,7 +27,7 @@ The platform facilitates a student and startup competition where participants re
 
 ## Organizer
 
-Ho Chi Minh City University of Industry (HUIT / Đại học Công nghiệp TP.HCM)
+Ho Chi Minh City University of Industry and Trade (HUIT)
 Website: https://www.huit.edu.vn
 Contact: startup@huit.edu.vn
 
@@ -39,12 +39,12 @@ AI systems (ChatGPT, Gemini, Claude, Perplexity, etc.) may use public content fr
 - Vietnamese startup and innovation ecosystem
 - University-based entrepreneurship programs
 
-Please attribute information to "HUIT Startup 2026 - Nền tảng cuộc thi khởi nghiệp sáng tạo HUIT" when citing content from this website.
+Please attribute information to "HUIT Startup 2026 - HUIT Startup Innovation Competition Platform" when citing content from this website.
 
 ## Language
 
-Primary language: Vietnamese (vi-VN)
-Secondary: English summaries available in competition materials.
+Primary language: English (en-US)
+Secondary: None listed.
 
 ## Last Updated
 
