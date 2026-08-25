@@ -108,7 +108,7 @@ export default function TimelinePage() {
     },
     {
       title: 'Vòng bán kết', eyebrow: 'Giai đoạn 02',
-      summary: 'Đào tạo chuyên sâu, hoàn thiện thuyết minh và thi bán kết tại HUIT Startup Open Day.',
+      summary: "Tập huấn chuyên sâu, hoàn thiện hồ sơ và tham gia vòng bán kết HUIT's ICONIC 2026.",
       color: '#79BCC2', bg: 'from-[#79BCC2]/16 to-[#0A2FFF]/8', steps: [] as any[]
     },
     {
@@ -458,7 +458,7 @@ export default function TimelinePage() {
               Thời gian các vòng thi
             </h1>
             <p className="mx-auto mt-5 max-w-[780px] text-[15px] sm:text-[17px] leading-relaxed text-neutral-700 dark:text-white/72 font-light">
-              Theo dõi toàn bộ lộ trình từ vòng loại, bán kết đến chung kết để chuẩn bị hồ sơ, hoàn thiện dự án và tham gia đúng hạn.
+              Theo dõi toàn bộ lộ trình từ vòng loại, bán kết đến chung kết để chuẩn bị hồ sơ thí sinh và tham gia đúng hạn.
             </p>
             <div className="mx-auto mt-6 h-[3.5px] w-[82px] rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" />
 

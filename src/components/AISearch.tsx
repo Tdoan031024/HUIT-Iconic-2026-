@@ -164,7 +164,7 @@ export function AISearch({ className = '' }: { className?: string }) {
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Tìm kiếm dự án, tin tức..."
+          placeholder="Tìm kiếm thí sinh, tin tức..."
           className="min-w-0 flex-1 bg-transparent text-sm text-[var(--site-text)] placeholder-[var(--site-muted)] outline-none"
           aria-label="Tìm kiếm"
           autoComplete="off"
@@ -208,7 +208,7 @@ export function AISearch({ className = '' }: { className?: string }) {
                 return (
                   <div key={type}>
                     <p className="px-2 pb-1 pt-2 text-[10px] font-black uppercase tracking-wider text-[var(--site-muted)]">
-                      {type === 'post' ? 'Tin tức & Bài viết' : 'Dự án'}
+                      {type === 'post' ? 'Tin tức & Bài viết' : 'Thí sinh'}
                     </p>
                     {group.map((result) => (
                       <Link

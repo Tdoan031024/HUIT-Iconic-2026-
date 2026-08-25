@@ -229,7 +229,7 @@ export default function GioiThieuPage() {
 
   const statsYear = settings?.statsYear || '';
   const stats = [
-    [settings?.statsCandidates, 'Dự án đăng ký'],
+    [settings?.statsCandidates, 'Thí sinh đăng ký'],
     [settings?.statsVotes, 'Lượt bình chọn'],
     [settings?.statsParticipants, 'Sinh viên tham gia'],
     [settings?.statsViews, 'Lượt tiếp cận trên mạng xã hội'],
@@ -266,15 +266,15 @@ export default function GioiThieuPage() {
           mainEntity: [
             {
               '@type': 'Question',
-              name: 'HUIT Startup 2026 là gì?',
+              name: "HUIT's ICONIC 2026 là gì?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'HUIT Startup 2026 là cuộc thi khởi nghiệp sáng tạo lớn nhất tại Trường Đại học Công nghiệp TP.HCM (HUIT), nơi các sinh viên, học sinh và cá nhân trình bày ý tưởng và dự án khởi nghiệp để được bình chọn và kết nối với nhà đầu tư.',
+                text: "HUIT's ICONIC 2026 là cuộc thi tìm kiếm Đại sứ Truyền thông HUIT, nơi tôn vinh vẻ đẹp, trí tuệ, sự thanh lịch và bản lĩnh của sinh viên.",
               },
             },
             {
               '@type': 'Question',
-              name: 'Ai có thể tham gia cuộc thi HUIT Startup 2026?',
+              name: "Ai có thể tham gia cuộc thi HUIT's ICONIC 2026?",
               acceptedAnswer: {
                 '@type': 'Answer',
                 text: 'Cuộc thi mở cho học sinh THPT, sinh viên đại học/cao đẳng, cá nhân và tổ chức yêu thích khởi nghiệp, cũng như doanh nghiệp vừa và nhỏ tại TP.HCM và các tỉnh lân cận.',
@@ -282,26 +282,26 @@ export default function GioiThieuPage() {
             },
             {
               '@type': 'Question',
-              name: 'Làm thế nào để bình chọn cho dự án tại HUIT Startup 2026?',
+              name: "Làm thế nào để bình chọn cho thí sinh tại HUIT's ICONIC 2026?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Truy cập trang web HUIT Startup 2026, tìm dự án yêu thích tại mục Bảng xếp hạng hoặc Trang chủ, đăng nhập tài khoản và nhấn Bình chọn. Mỗi tài khoản có 2 lượt bình chọn miễn phí mỗi ngày.',
+                text: "Truy cập website HUIT's ICONIC 2026, tìm thí sinh yêu thích tại Bảng xếp hạng hoặc Trang chủ, đăng nhập và nhấn Bình chọn. Mỗi tài khoản có 2 lượt bình chọn miễn phí mỗi ngày.",
               },
             },
             {
               '@type': 'Question',
-              name: 'Giải thưởng của cuộc thi HUIT Startup 2026 là gì?',
+              name: "Giải thưởng của cuộc thi HUIT's ICONIC 2026 là gì?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Các dự án xuất sắc sẽ nhận được giải thưởng tiền mặt, kết nối với nhà đầu tư, cơ hội ươm tạo khởi nghiệp và được hỗ trợ phát triển sản phẩm từ HUIT và các đối tác đồng hành.',
+                text: 'Các thí sinh xuất sắc sẽ nhận được giải thưởng tiền mặt, kết nối với nhà đầu tư, cơ hội ươm tạo khởi nghiệp và được hỗ trợ phát triển sản phẩm từ HUIT và các đối tác đồng hành.',
               },
             },
             {
               '@type': 'Question',
-              name: 'Cuộc thi HUIT Startup 2026 diễn ra khi nào?',
+              name: "Cuộc thi HUIT's ICONIC 2026 diễn ra khi nào?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Cuộc thi HUIT Startup 2026 diễn ra trong năm 2026, bao gồm các giai đoạn: nhận hồ sơ, vòng loại, vòng bán kết và vòng chung kết. Chi tiết lịch trình xem tại mục Thời gian trên website.',
+                text: "Cuộc thi HUIT's ICONIC 2026 diễn ra trong năm 2026 với các vòng thi và hoạt động bình chọn theo lịch trình công bố trên website.",
               },
             },
           ],
@@ -710,7 +710,7 @@ export default function GioiThieuPage() {
               className={`about-hero flex flex-col items-center text-center mb-8 sm:mb-10 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
             >
               <div className="about-eyebrow mb-3">
-                Cuộc thi HUIT Startup lần thứ VII năm 2026 cấp Thành phố
+                Cuộc thi HUIT&apos;s ICONIC năm 2026
               </div>
               <h1 
                 className="relative font-black tracking-[-0.03em]"
@@ -1039,7 +1039,7 @@ export default function GioiThieuPage() {
                       <>
                         <p className="mb-3 text-[12px] font-bold uppercase tracking-wider text-[color:var(--about-accent)]">Quét mã để đăng ký nhanh</p>
                         <img
-                          alt="QR đăng ký HUIT Startup 2026"
+                          alt="QR đăng ký HUIT's ICONIC 2026"
                           src={formatImgUrl(settings.aboutContactQrUrl)}
                           className="mx-auto h-auto w-full max-w-[150px] rounded-lg bg-white p-2 shadow-md object-contain"
                         />

@@ -45,29 +45,29 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const post = await getPost(params.slug);
   if (!post) {
     return {
-      title: 'Không tìm thấy bài viết - HUIT Startup 2026',
+      title: "Không tìm thấy bài viết - HUIT's ICONIC 2026",
       description: 'Bài viết này không tồn tại hoặc đã bị xóa.',
       robots: 'noindex, nofollow',
     };
   }
 
-  const description = post.summary || `Đọc chi tiết bài viết ${post.title} trên cổng thông tin HUIT Startup 2026.`;
+  const description = post.summary || `Đọc chi tiết bài viết ${post.title} trên cổng thông tin HUIT's ICONIC 2026.`;
   const imageUrl = post.thumbnailUrl
     ? (post.thumbnailUrl.startsWith('http') ? post.thumbnailUrl : `${SITE_URL}${post.thumbnailUrl}`)
     : `${SITE_URL}/images/og-default.png`;
   const canonicalUrl = `${SITE_URL}/tin-tuc/${post.slug}`;
 
   return {
-    title: `${post.title} - HUIT Startup 2026`,
+    title: `${post.title} - HUIT's ICONIC 2026`,
     description,
-    keywords: [post.category, 'HUIT Startup', 'tin tức khởi nghiệp', 'startup', 'đổi mới sáng tạo'].filter(Boolean).join(', '),
+    keywords: [post.category, "HUIT's ICONIC", 'tin tức cuộc thi', 'đại sứ truyền thông'].filter(Boolean).join(', '),
     alternates: { canonical: canonicalUrl },
     openGraph: {
       type: 'article',
       title: post.title,
       description,
       url: canonicalUrl,
-      siteName: 'HUIT Startup 2026',
+      siteName: "HUIT's ICONIC 2026",
       locale: 'vi_VN',
       images: [{ url: imageUrl, width: 1200, height: 630, alt: post.title }],
       publishedTime: post.createdAt,
@@ -109,7 +109,7 @@ export default async function PostDetailPage({ params }: { params: { slug: strin
     },
     publisher: {
       '@type': 'Organization',
-      name: 'HUIT Startup 2026',
+      name: "HUIT's ICONIC 2026",
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo-huit.png` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/tin-tuc/${post.slug}` },

@@ -99,7 +99,7 @@ const tableLabels: Record<string, string> = {
   ENTERPRISE: 'Bảng doanh nghiệp',
 };
 
-const emptyProject: Partial<Candidate> = {
+const emptyCandidate: Partial<Candidate> = {
   sbd: '',
   name: '',
   votes: 0,
@@ -242,7 +242,7 @@ function serializeMembers(membersList: any[], isEnterprise: boolean): string {
     .join('\n');
 }
 
-function ProjectModal({
+function CandidateModal({
   title,
   form,
   setForm,
@@ -381,7 +381,7 @@ function ProjectModal({
       <form onSubmit={onSubmit} className="mx-auto my-6 w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Hồ sơ dự án dự thi</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Hồ sơ thí sinh dự thi</p>
             <h3 className="mt-1 text-xl font-black text-slate-900">{title}</h3>
           </div>
           <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:border-emerald-600 hover:text-emerald-700">
@@ -391,11 +391,11 @@ function ProjectModal({
 
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
           <label className="space-y-1.5 md:col-span-2">
-            <span className={labelText}>Tên dự án <span className="text-red-500 font-bold">*</span></span>
+            <span className={labelText}>Tên thí sinh <span className="text-red-500 font-bold">*</span></span>
             <input className={inputClass} value={form.name || ''} onChange={(event) => update('name', event.target.value)} required />
           </label>
           <label className="space-y-1.5">
-            <span className={labelText}>Mã dự án / SBD <span className="text-red-500 font-bold">*</span></span>
+            <span className={labelText}>Mã thí sinh / SBD <span className="text-red-500 font-bold">*</span></span>
             <input className={inputClass} value={form.sbd || ''} onChange={(event) => update('sbd', event.target.value)} required />
           </label>
           <label className="space-y-1.5">
@@ -477,7 +477,7 @@ function ProjectModal({
           <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 md:col-span-3 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className={labelText}>Hình ảnh trưng bày dự án</span>
+                <span className={labelText}>Hình ảnh trưng bày thí sinh</span>
                 <span className="text-[10px] font-bold text-slate-400 italic">Tối đa 5 hình ảnh để trưng bày trên trang chi tiết</span>
               </div>
               <div className="flex items-center gap-2">
@@ -624,7 +624,7 @@ function ProjectModal({
                           />
                         </label>
                         <label className="space-y-1">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Chức vụ trong dự án</span>
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Chức vụ trong thí sinh</span>
                           <input
                             type="text"
                             placeholder="Ví dụ: Lập trình viên"
@@ -790,7 +790,7 @@ function ProjectModal({
 
 const csvHeadersMap: Record<string, string> = {
   'SBD': 'sbd',
-  'Tên dự án': 'name',
+  'Tên thí sinh': 'name',
   'Bảng thi': 'contestTable',
   'Lĩnh vực': 'sector',
   'Vòng hiện tại': 'currentRound',
@@ -938,7 +938,7 @@ function ImportModal({
   const handleDownloadTemplate = () => {
     const headers = [
       'SBD',
-      'Tên dự án',
+      'Tên thí sinh',
       'Bảng thi',
       'Lĩnh vực',
       'Vòng hiện tại',
@@ -963,7 +963,7 @@ function ImportModal({
 
     const sampleRow = [
       'SBD001',
-      'Dự án 1',
+      'Thí sinh 1',
       'STUDENT',
       'Công nghệ thông tin',
       'Vòng loại',
@@ -980,8 +980,8 @@ function ImportModal({
       '/duan/SBD001/1.jpg,/duan/SBD001/2.jpg',
       'TP.HCM',
       'Có',
-      'Mô tả ngắn dự án công nghệ thông tin tuyển dụng việc làm.',
-      'Thuyết minh chi tiết dự án công nghệ thông tin gồm đầy đủ kế hoạch kinh doanh và lộ trình phát triển.',
+      'Mô tả ngắn thí sinh công nghệ thông tin tuyển dụng việc làm.',
+      'Thuyết minh chi tiết thí sinh công nghệ thông tin gồm đầy đủ kế hoạch kinh doanh và lộ trình phát triển.',
       'Hỗ trợ vốn và kết nối doanh nghiệp',
       'Thương mại hóa sản phẩm'
     ];
@@ -1025,7 +1025,7 @@ function ImportModal({
       if (result.errors && result.errors.length > 0) {
         setErrorLogs(result.errors);
       }
-      setSuccessMsg(`Đã nhập thành công ${result.successCount}/${fileData.length} dự án!`);
+      setSuccessMsg(`Đã nhập thành công ${result.successCount}/${fileData.length} thí sinh!`);
       if (result.successCount > 0) {
         onSuccess();
       }
@@ -1041,7 +1041,7 @@ function ImportModal({
       <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Nhập dữ liệu dự án</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Nhập dữ liệu thí sinh</p>
             <h3 className="mt-1 text-xl font-black text-slate-900">Nhập danh sách từ CSV</h3>
           </div>
           <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:border-emerald-600 hover:text-emerald-700">
@@ -1137,13 +1137,13 @@ function ImportModal({
 }
 
 export default function CandidatesAdminPage() {
-  const [projects, setProjects] = useState<Candidate[]>([]);
+  const [projects, setCandidates] = useState<Candidate[]>([]);
   const [search, setSearch] = useState('');
   const [tableFilter, setTableFilter] = useState('ALL');
   const [roundFilter, setRoundFilter] = useState('ALL');
   const [modalMode, setModalMode] = useState<'add' | 'edit' | null>(null);
-  const [selectedProject, setSelectedProject] = useState<Candidate | null>(null);
-  const [form, setForm] = useState<Partial<Candidate>>(emptyProject);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [form, setForm] = useState<Partial<Candidate>>(emptyCandidate);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
   const [registrationDeadline, setRegistrationDeadline] = useState('2026-06-20T23:59');
@@ -1199,17 +1199,17 @@ export default function CandidatesAdminPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const loadProjects = async () => {
+  const loadCandidates = async () => {
     try {
       const res = await fetch(apiUrl('/api/candidates'));
-      if (res.ok) setProjects(await res.json());
+      if (res.ok) setCandidates(await res.json());
     } catch {
-      setProjects([]);
+      setCandidates([]);
     }
   };
 
   useEffect(() => {
-    loadProjects();
+    loadCandidates();
   }, []);
 
   useEffect(() => {
@@ -1228,11 +1228,11 @@ export default function CandidatesAdminPage() {
     loadSettings();
   }, []);
 
-  const rankedProjects = useMemo(() => [...projects].sort((a, b) => b.votes - a.votes), [projects]);
+  const rankedCandidates = useMemo(() => [...projects].sort((a, b) => b.votes - a.votes), [projects]);
 
-  const filteredProjects = useMemo(() => {
+  const filteredCandidates = useMemo(() => {
     const keyword = search.trim().toLowerCase();
-    return rankedProjects
+    return rankedCandidates
       .filter((project) => tableFilter === 'ALL' || project.contestTable === tableFilter)
       .filter((project) => roundFilter === 'ALL' || project.currentRound === roundFilter)
       .filter((project) =>
@@ -1243,7 +1243,7 @@ export default function CandidatesAdminPage() {
         (project.leaderName || '').toLowerCase().includes(keyword) ||
         (project.representativeSchool || '').toLowerCase().includes(keyword)
       );
-  }, [rankedProjects, roundFilter, search, tableFilter]);
+  }, [rankedCandidates, roundFilter, search, tableFilter]);
 
   const missingInfo = projects.filter((project) => !project.teamName || !project.leaderName || !project.contestTable).length;
   const activePromotion = useMemo(() => {
@@ -1333,21 +1333,21 @@ export default function CandidatesAdminPage() {
   };
 
   const openAddModal = () => {
-    setSelectedProject(null);
-    setForm({ ...emptyProject });
+    setSelectedCandidate(null);
+    setForm({ ...emptyCandidate });
     setModalMode('add');
   };
 
   const openEditModal = (project: Candidate) => {
-    setSelectedProject(project);
-    setForm({ ...emptyProject, ...project });
+    setSelectedCandidate(project);
+    setForm({ ...emptyCandidate, ...project });
     setModalMode('edit');
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const isEdit = modalMode === 'edit' && selectedProject;
-    const endpoint = isEdit ? `/api/admin/candidates/${selectedProject.id}` : '/api/admin/candidates';
+    const isEdit = modalMode === 'edit' && selectedCandidate;
+    const endpoint = isEdit ? `/api/admin/candidates/${selectedCandidate.id}` : '/api/admin/candidates';
     const method = isEdit ? 'PUT' : 'POST';
     const res = await fetch(apiUrl(endpoint), {
       method,
@@ -1356,31 +1356,31 @@ export default function CandidatesAdminPage() {
     });
 
     if (!res.ok) {
-      alert('Không thể lưu hồ sơ dự án. Vui lòng kiểm tra backend.');
+      alert('Không thể lưu hồ sơ thí sinh. Vui lòng kiểm tra backend.');
       return;
     }
 
     const saved = await res.json();
-    setProjects((prev) => isEdit ? prev.map((project) => project.id === saved.id ? saved : project) : [saved, ...prev]);
+    setCandidates((prev) => isEdit ? prev.map((project) => project.id === saved.id ? saved : project) : [saved, ...prev]);
     
     if (isEdit) {
-      alert('Cập nhật hồ sơ dự án thành công!');
+      alert('Cập nhật hồ sơ thí sinh thành công!');
     } else {
-      alert('Thêm dự án mới thành công!');
+      alert('Thêm thí sinh mới thành công!');
     }
     
     setModalMode(null);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Xóa hồ sơ dự án này khỏi hệ thống?')) return;
+    if (!confirm('Xóa hồ sơ thí sinh này khỏi hệ thống?')) return;
     const res = await fetch(apiUrl(`/api/admin/candidates/${id}`), { method: 'DELETE' });
-    if (res.ok) setProjects((prev) => prev.filter((project) => project.id !== id));
+    if (res.ok) setCandidates((prev) => prev.filter((project) => project.id !== id));
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} dự án đã chọn? Hành động này không thể hoàn tác.`)) return;
+    if (!confirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} thí sinh đã chọn? Hành động này không thể hoàn tác.`)) return;
 
     let successCount = 0;
     let failCount = 0;
@@ -1401,9 +1401,9 @@ export default function CandidatesAdminPage() {
       })
     );
 
-    alert(`Đã xóa thành công ${successCount} dự án.${failCount > 0 ? ` Thất bại ${failCount} dự án.` : ''}`);
+    alert(`Đã xóa thành công ${successCount} thí sinh.${failCount > 0 ? ` Thất bại ${failCount} thí sinh.` : ''}`);
     if (successCount > 0) {
-      setProjects((prev) => prev.filter((project) => !selectedIds.includes(project.id)));
+      setCandidates((prev) => prev.filter((project) => !selectedIds.includes(project.id)));
     }
     setSelectedIds([]);
   };
@@ -1411,7 +1411,7 @@ export default function CandidatesAdminPage() {
   const handleExportCandidates = () => {
     const headers = [
       'SBD',
-      'Tên dự án',
+      'Tên thí sinh',
       'Bảng thi',
       'Lĩnh vực',
       'Vòng hiện tại',
@@ -1479,7 +1479,7 @@ export default function CandidatesAdminPage() {
   const handleDownloadCandidateTemplate = () => {
     const headers = [
       'SBD',
-      'Tên dự án',
+      'Tên thí sinh',
       'Bảng thi',
       'Lĩnh vực',
       'Vòng hiện tại',
@@ -1503,7 +1503,7 @@ export default function CandidatesAdminPage() {
     ];
     const sampleRow = [
       'DA001',
-      'Dự án mẫu HUIT Startup',
+      'Thí sinh mẫu HUIT ICONIC',
       'STUDENT',
       'Công nghệ, AI',
       'Vòng loại',
@@ -1520,8 +1520,8 @@ export default function CandidatesAdminPage() {
       '',
       'TP. Hồ Chí Minh',
       'Có',
-      'Mô tả ngắn về dự án mẫu.',
-      'Thuyết minh chi tiết dự án mẫu.',
+      'Mô tả ngắn về thí sinh mẫu.',
+      'Thuyết minh chi tiết thí sinh mẫu.',
       'Cần mentor và kết nối doanh nghiệp.',
       'Hoàn thiện sản phẩm sau cuộc thi.',
     ];
@@ -1544,7 +1544,7 @@ export default function CandidatesAdminPage() {
         <div className="flex flex-col gap-2.5 border-b border-slate-200/70 px-4 py-3.5 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--primary-strong)]">Quản lý cuộc thi</p>
-            <h2 className="mt-0.5 text-[20px] font-extrabold tracking-[-0.04em] text-slate-950">Danh sách dự án tham gia</h2>
+            <h2 className="mt-0.5 text-[20px] font-extrabold tracking-[-0.04em] text-slate-950">Danh sách thí sinh tham gia</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2.5">
             <button onClick={handleExportCandidates} className="admin-btn admin-btn-secondary !h-8 !min-h-0 px-2.5 text-xs gap-1.5 rounded-lg">
@@ -1573,14 +1573,14 @@ export default function CandidatesAdminPage() {
               Nhập
             </button>
             <button onClick={openAddModal} className="admin-btn admin-btn-primary min-w-[132px]">
-              Thêm dự án mới
+              Thêm thí sinh mới
             </button>
           </div>
         </div>
 
         <div className="relative z-[90] grid gap-2 overflow-visible p-3 xl:grid-cols-8">
           {[
-            ['Tổng dự án', projects.length.toLocaleString()],
+            ['Tổng thí sinh', projects.length.toLocaleString()],
             ['Thiếu thông tin', missingInfo.toLocaleString()],
           ].map(([label, value]) => (
             <div key={label} className="dashboard-stat-card flex min-h-[104px] flex-col justify-center xl:col-span-1">
@@ -1802,7 +1802,7 @@ export default function CandidatesAdminPage() {
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Tìm theo tên dự án, SBD, trưởng nhóm..."
+                placeholder="Tìm theo tên thí sinh, SBD, trưởng nhóm..."
                 className="admin-input w-full"
               />
             </div>
@@ -2006,7 +2006,7 @@ export default function CandidatesAdminPage() {
                     <div className="space-y-2">
                       <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                         <input type="checkbox" checked={visibleColumns.project} onChange={(e) => setVisibleColumns({ ...visibleColumns, project: e.target.checked })} className="rounded text-blue-600" />
-                        Cột Dự án
+                        Cột Thí sinh
                       </label>
                       <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                         <input type="checkbox" checked={visibleColumns.table} onChange={(e) => setVisibleColumns({ ...visibleColumns, table: e.target.checked })} className="rounded text-blue-600" />
@@ -2037,7 +2037,7 @@ export default function CandidatesAdminPage() {
           gridCols === 6 ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6' :
           'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'
         }`}>
-          {filteredProjects.map((p) => (
+          {filteredCandidates.map((p) => (
             <div key={p.id} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3 group">
               <div className="flex items-center justify-between">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
@@ -2052,7 +2052,7 @@ export default function CandidatesAdminPage() {
                   <img src={formatAssetUrl(p.imageUrl)} className="h-full w-full object-cover cursor-pointer" alt={p.name} />
                 </div>
                 <h3 className="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2">{p.name}</h3>
-                <p className="text-[11px] font-semibold text-slate-500">{p.teamName || p.representativeSchool || 'HUIT Startup'}</p>
+                <p className="text-[11px] font-semibold text-slate-500">{p.teamName || p.representativeSchool || 'HUIT ICONIC'}</p>
               </div>
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                 <button onClick={() => openEditModal(p)} className="text-xs font-bold text-blue-600 hover:underline">Sửa</button>
@@ -2066,7 +2066,7 @@ export default function CandidatesAdminPage() {
           {selectedIds.length > 0 && (
             <div className="flex items-center justify-between border-b border-rose-100 bg-rose-50/60 px-5 py-3 backdrop-blur-sm transition-all duration-300">
               <span className="text-xs font-bold text-rose-700">
-                Đã chọn <b className="text-[14px]">{selectedIds.length}</b> dự án
+                Đã chọn <b className="text-[14px]">{selectedIds.length}</b> thí sinh
               </span>
               <button
                 type="button"
@@ -2089,10 +2089,10 @@ export default function CandidatesAdminPage() {
                 <th className="px-4 py-3 w-10">
                   <input
                     type="checkbox"
-                    checked={filteredProjects.length > 0 && selectedIds.length === filteredProjects.length}
+                    checked={filteredCandidates.length > 0 && selectedIds.length === filteredCandidates.length}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setSelectedIds(filteredProjects.map((p) => p.id));
+                        setSelectedIds(filteredCandidates.map((p) => p.id));
                       } else {
                         setSelectedIds([]);
                       }
@@ -2100,7 +2100,7 @@ export default function CandidatesAdminPage() {
                     className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
                   />
                 </th>
-                <th className="px-4 py-3">Dự án</th>
+                <th className="px-4 py-3">Thí sinh</th>
                 <th className="px-4 py-3">Bảng thi</th>
                 <th className="px-4 py-3">Đại diện</th>
                 <th className="px-4 py-3 text-right">Điểm bình chọn</th>
@@ -2108,7 +2108,7 @@ export default function CandidatesAdminPage() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredProjects.map((project) => {
+              {filteredCandidates.map((project) => {
                 const projectTableLabel = project.contestTableLabel || tableLabels[project.contestTable || ''] || 'Chưa phân bảng';
  
                 return (
@@ -2184,10 +2184,10 @@ export default function CandidatesAdminPage() {
                 );
               })}
 
-              {filteredProjects.length === 0 && (
+              {filteredCandidates.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center text-sm font-semibold text-slate-500">
-                    Không có dự án phù hợp bộ lọc hiện tại.
+                    Không có thí sinh phù hợp bộ lọc hiện tại.
                   </td>
                 </tr>
               )}
@@ -2198,8 +2198,8 @@ export default function CandidatesAdminPage() {
       )}
 
       {modalMode && (
-        <ProjectModal
-          title={modalMode === 'add' ? 'Thêm dự án dự thi' : 'Cập nhật hồ sơ dự án'}
+        <CandidateModal
+          title={modalMode === 'add' ? 'Thêm thí sinh dự thi' : 'Cập nhật hồ sơ thí sinh'}
           form={form}
           setForm={setForm}
           onClose={() => setModalMode(null)}
@@ -2211,7 +2211,7 @@ export default function CandidatesAdminPage() {
         <ImportModal
           onClose={() => setIsImportModalOpen(false)}
           onSuccess={() => {
-            loadProjects();
+            loadCandidates();
           }}
         />
       )}

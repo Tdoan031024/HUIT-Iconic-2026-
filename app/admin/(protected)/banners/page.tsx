@@ -261,7 +261,7 @@ function ImportModal({
 
     const sampleRow = [
       '',
-      'Banner HUIT Startup 2026',
+      'Banner HUIT ICONIC 2026',
       '/uploads/baner.jpg',
       '#about-section',
       'Có'

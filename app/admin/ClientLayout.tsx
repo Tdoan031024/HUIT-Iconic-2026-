@@ -275,7 +275,7 @@ function BellButton() {
       list.push({
         id: `reg-closed-${settings.registrationDeadline || 'none'}`,
         type: 'warning',
-        message: 'Hạn nhận hồ sơ đăng ký dự án đã kết thúc.',
+        message: 'Hạn nhận hồ sơ đăng ký thí sinh đã kết thúc.',
       });
     }
 
@@ -493,7 +493,7 @@ function BellButton() {
                           <div className="min-w-0 flex-1">
                             <p className="text-[12.5px] text-slate-700 leading-normal">
                               <span className="font-bold text-slate-900">{vote.userName || 'Người dùng'}</span>{' '}
-                              đã bình chọn dự án{' '}
+                              đã bình chọn cho thí sinh{' '}
                               <span className="font-bold text-slate-800">{vote.candidateName}</span>
                             </p>
                             <div className="mt-1 flex items-center gap-2">
@@ -831,7 +831,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
               <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 min-w-0'}`}>
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-slate-200 bg-slate-50">
-                  <img src="/admin/uploads/logo-startup.png" alt="Administrator" className="h-full w-full object-contain p-1" />
+                  <img src="/images/image.webp" alt="HUIT's ICONIC 2026" className="h-full w-full object-contain p-1" />
                 </div>
                 {!isCollapsed && (
                   <div className="min-w-0">
@@ -1115,7 +1115,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               <div className="mt-4 space-y-3">
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[14px] border border-slate-200 bg-white">
-                    <img src="/admin/uploads/logo-startup.png" alt="Administrator" className="h-full w-full object-contain p-1.5" />
+                    <img src="/images/image.webp" alt="HUIT's ICONIC 2026" className="h-full w-full object-contain p-1.5" />
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-black text-slate-950">Administrator</p>
@@ -1125,7 +1125,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 <div className="grid gap-2 text-sm">
                   <div className="flex items-center justify-between rounded-xl border border-slate-100 px-3 py-2">
                     <span className="text-xs font-bold text-slate-500">Tên đăng nhập</span>
-                    <span className="text-xs font-black text-slate-900">Startup.Huitmedia</span>
+                    <span className="text-xs font-black text-slate-900">ICONIC.Huitmedia</span>
                   </div>
                   <div className="flex items-center justify-between rounded-xl border border-slate-100 px-3 py-2">
                     <span className="text-xs font-bold text-slate-500">Vai trò</span>

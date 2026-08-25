@@ -83,7 +83,7 @@ export function buildOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
-      email: 'startup@huit.edu.vn',
+      email: 'media@huit.edu.vn',
     },
   };
 }
@@ -171,8 +171,8 @@ export function buildCandidateSchema(candidate: {
   return {
     '@context': 'https://schema.org',
     '@type': 'Event',
-    name: `Dự án ${candidate.name} - HUIT Startup 2026`,
-    description: candidate.description || `Dự án ${candidate.name} tham gia cuộc thi HUIT Startup 2026.`,
+    name: `${candidate.name} - HUIT's ICONIC 2026`,
+    description: candidate.description || `${candidate.name} tham gia cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT's ICONIC 2026.`,
     image: candidate.imageUrl || DEFAULT_OG_IMAGE,
     url: `${SITE_URL}/thi-sinh/${candidate.sbd}`,
     startDate: '2026-01-01',

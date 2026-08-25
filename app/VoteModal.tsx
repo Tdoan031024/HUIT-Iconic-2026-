@@ -251,7 +251,7 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
                     />
                   </div>
 
-                  {/* Right: Project Name, Badges & Detailed Info */}
+                  {/* Right: Candidate Name, Badges & Detailed Info */}
                   <div className="min-w-0 flex-1 text-center sm:text-left pt-0.5">
                     <h3 className="text-[20px] sm:text-[22px] font-extrabold leading-tight text-slate-900">
                       {candidate.name}
@@ -297,7 +297,7 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
                 {/* Description spans full width below */}
                 {candidate.description && (
                   <p className="text-[13px] leading-relaxed text-slate-500 text-justify">
-                    <span className="font-bold text-slate-700">Mô tả dự án: </span>
+                    <span className="font-bold text-slate-700">Mô tả thí sinh: </span>
                     <span>{candidate.description}</span>
                   </p>
                 )}
@@ -422,7 +422,7 @@ export default function VoteModal({ candidate, onClose, onSuccess }: VoteModalPr
                   </div>
                   <div className="min-w-0">
                     <h4 className="truncate text-[20px] font-semibold tracking-normal text-slate-950">{candidate.name}</h4>
-                    <p className="mt-1 text-[13px] font-medium text-slate-500">Mã dự án: {candidate.sbd}</p>
+                    <p className="mt-1 text-[13px] font-medium text-slate-500">Mã thí sinh: {candidate.sbd}</p>
                     <p className="mt-2 text-[14px] text-slate-600">
                       Bạn còn <span className="font-semibold text-[#2563eb]">{freeQuota.remaining}</span> / {freeQuota.limit} lượt hôm nay.
                     </p>

@@ -365,7 +365,7 @@ export default function TheLePage() {
               Sẵn sàng bình chọn?
             </h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, maxWidth: 480, margin: '0 auto 24px' }}>
-              Đăng nhập để sử dụng 2 lượt bình chọn miễn phí mỗi ngày và ủng hộ dự án bạn yêu thích.
+              Đăng nhập để sử dụng 2 lượt bình chọn miễn phí mỗi ngày và ủng hộ thí sinh bạn yêu thích.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/bang-xep-hang" className="hero-btn-primary">

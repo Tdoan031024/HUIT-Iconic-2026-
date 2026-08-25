@@ -548,7 +548,7 @@ export default function LoginPage() {
             <h1 className="text-[28px] sm:text-[36px] font-extrabold text-white uppercase tracking-[0.06em] mb-1">
               Đăng nhập
             </h1>
-            <p className="text-[13px] text-white/40 tracking-wider">HUIT STARTUP 2026 — Cổng bình chọn chính thức</p>
+            <p className="text-[13px] text-white/40 tracking-wider">HUIT&apos;s ICONIC 2026 — Cổng bình chọn chính thức</p>
             <div className="h-[2.5px] w-[50px] bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] mx-auto rounded-full mt-4 transition-all duration-[1000ms]" style={{ width: mounted ? '50px' : '0px' }} />
           </div>
 
@@ -924,7 +924,7 @@ export default function LoginPage() {
                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                       </svg>
-                      Bảng dự án quan tâm
+                      Bảng thí sinh quan tâm
                     </span>
                     <select
                       name="contestTable"

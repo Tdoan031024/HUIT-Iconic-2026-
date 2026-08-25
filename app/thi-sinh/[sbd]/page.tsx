@@ -283,13 +283,13 @@ export default function CandidateDetailPage() {
   };
 
   if (isLoading) {
-    return <main className="min-h-[60vh] bg-[#F8FAFC] px-4 py-24 text-center text-base font-bold text-slate-600">Đang tải hồ sơ dự án...</main>;
+    return <main className="min-h-[60vh] bg-[#F8FAFC] px-4 py-24 text-center text-base font-bold text-slate-600">Đang tải hồ sơ thí sinh...</main>;
   }
 
   if (!candidate) {
     return (
       <main className="min-h-[60vh] bg-[#F8FAFC] px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold text-slate-950">Không tìm thấy dự án</h1>
+        <h1 className="text-2xl font-bold text-slate-950">Không tìm thấy thí sinh</h1>
         <Link href="/" className="mt-4 inline-block text-sm font-bold text-[#2563EB] hover:underline">Quay lại trang chủ</Link>
       </main>
     );
@@ -303,7 +303,7 @@ export default function CandidateDetailPage() {
       {/* ─── BREADCRUMB ─── */}
       <div className="max-w-[1300px] mx-auto px-4 pt-3">
         <nav className="text-sm text-slate-500 flex items-center gap-2" aria-label="Breadcrumb">
-          <Link href="/" className="hover:text-slate-900 transition-colors font-medium">Dự án</Link>
+          <Link href="/" className="hover:text-slate-900 transition-colors font-medium">Thí sinh</Link>
           <span className="text-slate-300" aria-hidden="true">/</span>
           <span aria-current="page" className="text-slate-800 font-bold truncate">{candidate.name}</span>
         </nav>
@@ -313,7 +313,7 @@ export default function CandidateDetailPage() {
       <section className="max-w-[1300px] mx-auto px-4 pt-3 pb-1">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-[#0A2FFF]/10 to-[#79BCC2]/10 border border-[#0A2FFF]/25 text-[#0A2FFF] dark:text-[#79BCC2] text-[10px] font-bold rounded-full w-max tracking-wide uppercase">
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-          Mã dự án · {candidate.sbd}
+          Mã thí sinh · {candidate.sbd}
         </span>
         <h1 className="mt-2 text-2xl md:text-[32px] font-black text-slate-900 tracking-tight leading-snug">
           {candidate.name}
@@ -334,7 +334,7 @@ export default function CandidateDetailPage() {
               type="button"
               onClick={() => handleOpenLightbox(activeImage || getCandidateImageUrl(candidate.imageUrl))}
               className="overflow-hidden rounded-2xl cursor-zoom-in relative group text-left transition-all duration-300 active:scale-[0.99] w-full flex-1 h-[260px] md:h-[280px]"
-              aria-label={`Phóng to ảnh dự án ${candidate.name}`}
+              aria-label={`Phóng to ảnh thí sinh ${candidate.name}`}
             >
               <img 
                 src={activeImage || getCandidateImageUrl(candidate.imageUrl)}
@@ -497,7 +497,7 @@ export default function CandidateDetailPage() {
             </div>
           </div>
 
-          {/* 2. Thuyết minh dự án */}
+          {/* 2. Thuyết minh thí sinh */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-6 sm:p-8 shadow-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
             <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-300 pb-4">
               <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-50 border border-slate-300 text-slate-700">
@@ -505,12 +505,12 @@ export default function CandidateDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504( 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
               </span>
-              Thuyết minh dự án
+              Thuyết minh thí sinh
             </h2>
 
-            {/* Stylized Project Executive Summary Quote Box */}
+            {/* Stylized Candidate Executive Summary Quote Box */}
             <div className="mt-6 p-5 rounded-2xl bg-slate-50 border-l-4 border-[#2563EB] text-slate-700 text-[16px] leading-relaxed italic font-medium">
-              <span className="font-extrabold not-italic text-slate-800 uppercase text-xs tracking-wider block mb-1.5">Tóm tắt cốt lõi dự án:</span>
+              <span className="font-extrabold not-italic text-slate-800 uppercase text-xs tracking-wider block mb-1.5">Tóm tắt cốt lõi thí sinh:</span>
               "{candidate.description}"
             </div>
 
@@ -563,13 +563,13 @@ export default function CandidateDetailPage() {
           
           {/* Voting Card */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-6 shadow-sm flex flex-col transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400">Cổng bình chọn HUIT Startup</span>
-            <h2 className="mt-1 text-xl font-extrabold text-slate-900 tracking-tight">Bình chọn cho dự án</h2>
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">Cổng bình chọn HUIT ICONIC</span>
+            <h2 className="mt-1 text-xl font-extrabold text-slate-900 tracking-tight">Bình chọn cho thí sinh</h2>
             
             <div className="mt-4 rounded-xl bg-slate-50 p-4 border border-slate-300 text-left">
-              <p className="text-[15px] font-extrabold text-slate-800">Mỗi lần bình chọn cộng 1 lượt cho dự án.</p>
+              <p className="text-[15px] font-extrabold text-slate-800">Mỗi lần bình chọn cộng 1 lượt cho thí sinh.</p>
               <p className="mt-2 text-[14px] leading-relaxed text-slate-500 font-medium">
-                Mỗi tài khoản có 2 lượt miễn phí mỗi ngày cho toàn bộ dự án. Dùng hết 2 lượt thì không thể vote cho dự án khác cho đến ngày hôm sau.
+                Mỗi tài khoản có 2 lượt miễn phí mỗi ngày cho toàn bộ thí sinh. Dùng hết 2 lượt thì không thể vote cho thí sinh khác cho đến ngày hôm sau.
               </p>
             </div>
             
@@ -675,7 +675,7 @@ export default function CandidateDetailPage() {
 
           {/* Social share widget */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-6 shadow-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
-            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Chia sẻ dự án</h3>
+            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Chia sẻ thí sinh</h3>
             
             <div className="mt-4 flex items-center justify-start gap-4">
               <a 
@@ -722,7 +722,7 @@ export default function CandidateDetailPage() {
                 <div className="absolute top-1 right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-slate-400 rounded-tr"></div>
                 <div className="absolute bottom-1 left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-slate-400 rounded-bl"></div>
                 <div className="absolute bottom-1 right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-slate-400 rounded-br"></div>
-                <img src={qrCodeUrl} alt="QR Code Link to Project" className="w-[84px] h-[84px] rounded-lg" />
+                <img src={qrCodeUrl} alt="QR Code Link to Candidate" className="w-[84px] h-[84px] rounded-lg" />
               </div>
               <div>
                 <p className="text-[14px] font-extrabold text-slate-800">Quét QR để bình chọn</p>
@@ -745,7 +745,7 @@ export default function CandidateDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375 3.375 0 11-.75 0 .375 3.375 0 01.75 0z" />
                 </svg>
               </span>
-              Hình ảnh dự án
+              Hình ảnh thí sinh
             </h2>
             
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -792,7 +792,7 @@ export default function CandidateDetailPage() {
                 </svg>
               </span>
               <div className="hidden sm:block">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Dự án trước</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Thí sinh trước</p>
                 <p className="text-[14px] font-bold text-slate-800 group-hover:text-[#2563EB] transition-colors truncate max-w-[180px] md:max-w-[280px]">
                   {prevAndNext.prev.name}
                 </p>
@@ -804,7 +804,7 @@ export default function CandidateDetailPage() {
               href="/"
               className="text-xs font-black uppercase tracking-wider text-slate-500 hover:text-[#2563EB] transition-colors border border-slate-300 rounded-xl px-4 py-2.5 bg-slate-50 hover:bg-white active:scale-95 shadow-sm"
             >
-              Tất cả dự án
+              Tất cả thí sinh
             </Link>
 
             {/* Next Candidate Link */}
@@ -818,7 +818,7 @@ export default function CandidateDetailPage() {
                 </svg>
               </span>
               <div className="hidden sm:block">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Dự án tiếp theo</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Thí sinh tiếp theo</p>
                 <p className="text-[14px] font-bold text-slate-800 group-hover:text-[#2563EB] transition-colors truncate max-w-[180px] md:max-w-[280px]">
                   {prevAndNext.next.name}
                 </p>
@@ -835,7 +835,7 @@ export default function CandidateDetailPage() {
           ref={lightboxRef}
           role="dialog"
           aria-modal="true"
-          aria-label={`Bộ sưu tập ảnh dự án ${candidate.name}`}
+          aria-label={`Bộ sưu tập ảnh thí sinh ${candidate.name}`}
           className="fixed inset-0 z-[1200] flex flex-col items-center justify-center bg-black/90 transition-opacity duration-300 animate-in fade-in"
           onClick={() => setIsLightboxOpen(false)}
         >
