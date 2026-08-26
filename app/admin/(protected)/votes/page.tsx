@@ -88,7 +88,7 @@ export default function VoteLogsAdminPage() {
     try {
       setSettingsSaving(true);
       const res = await fetch(apiUrl('/api/admin/settings'), {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ hidePublicVoteHistory: next }),
       });

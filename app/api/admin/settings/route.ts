@@ -10,7 +10,7 @@ export async function GET() {
   }
 }
 
-export async function PUT(req: Request) {
+async function saveSettings(req: Request) {
   try {
     const body = await req.json();
     const updated = await updateSettings(body);
@@ -18,4 +18,13 @@ export async function PUT(req: Request) {
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Lỗi server' }, { status: 500 });
   }
+}
+
+// Keep PUT for local/API clients and expose POST for cPanel proxies that reject PUT.
+export async function PUT(req: Request) {
+  return saveSettings(req);
+}
+
+export async function POST(req: Request) {
+  return saveSettings(req);
 }

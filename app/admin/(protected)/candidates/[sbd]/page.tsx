@@ -245,6 +245,7 @@ function ProjectModal({
     update('showcaseImages', newList.filter(Boolean).join(','));
   };
 
+
   const handleAddShowcase = () => {
     if (showcaseList.length >= 5) return;
     const sbd = form.sbd?.trim() || 'TEMP';
@@ -266,8 +267,8 @@ function ProjectModal({
   const labelText = 'text-[10px] font-black uppercase tracking-[0.12em] text-slate-500';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
-      <form onSubmit={onSubmit} className="mx-auto my-6 w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="mx-auto my-6 w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Hồ sơ dự án dự thi</p>
@@ -288,7 +289,7 @@ function ProjectModal({
             <input className={inputClass} value={form.sbd || ''} onChange={(event) => update('sbd', event.target.value)} required />
           </label>
           <label className="space-y-1.5">
-            <span className={labelText}>Bảng thi</span>
+            <span className={labelText}>Hạng mục dự thi</span>
             <select
               className={inputClass}
               value={form.contestTable || 'STUDENT'}
@@ -326,7 +327,7 @@ function ProjectModal({
             <input className={inputClass} value={form.status || ''} onChange={(event) => update('status', event.target.value)} />
           </label>
           <label className="space-y-1.5">
-            <span className={labelText}>Điểm bình chọn</span>
+            <span className={labelText}>Lượt bình chọn</span>
             <input type="number" min={0} className={inputClass} value={form.votes || 0} onChange={(event) => update('votes', Number(event.target.value))} />
           </label>
           <div className="md:col-span-2">
@@ -523,28 +524,6 @@ function ProjectModal({
                           />
                         </label>
                         <label className="space-y-1">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Đơn vị công tác</span>
-                          <input
-                            type="text"
-                            placeholder="Ví dụ: Công ty A"
-                            className={rowInputClass}
-                            value={member.company || ''}
-                            onChange={(e) => handleMemberFieldChange(index, 'company', e.target.value)}
-                          />
-                        </label>
-                        <label className="space-y-1">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Số điện thoại</span>
-                          <input
-                            type="tel"
-                            pattern="0[0-9]{9,10}"
-                            title="Số điện thoại phải gồm 10 hoặc 11 chữ số và bắt đầu bằng số 0"
-                            placeholder="Ví dụ: 0987654321"
-                            className={rowInputClass}
-                            value={member.phone || ''}
-                            onChange={(e) => handleMemberFieldChange(index, 'phone', e.target.value)}
-                          />
-                        </label>
-                        <label className="space-y-1">
                           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email</span>
                           <input
                             type="email"
@@ -610,16 +589,6 @@ function ProjectModal({
                             onChange={(e) => handleMemberFieldChange(index, 'phone', e.target.value)}
                           />
                         </label>
-                        <label className="space-y-1">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email</span>
-                          <input
-                            type="email"
-                            placeholder="Ví dụ: email@domain.com"
-                            className={rowInputClass}
-                            value={member.email || ''}
-                            onChange={(e) => handleMemberFieldChange(index, 'email', e.target.value)}
-                          />
-                        </label>
                       </div>
                     )}
                   </div>
@@ -640,12 +609,20 @@ function ProjectModal({
             </select>
           </label>
           <label className="space-y-1.5 md:col-span-3">
-            <span className={labelText}>Mô tả ngắn <span className="text-red-500 font-bold">*</span></span>
+            <span className={labelText}>Mô tả ngắn (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
             <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.description || ''} onChange={(event) => update('description', event.target.value)} required />
           </label>
           <label className="space-y-1.5 md:col-span-3">
-            <span className={labelText}>Thuyết minh / nội dung chi tiết</span>
+            <span className={labelText}>Mô tả ngắn tiếng Anh (English Description)</span>
+            <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.descriptionEn || ''} onChange={(event) => update('descriptionEn', event.target.value)} placeholder="English short summary of the candidate/project..." />
+          </label>
+          <label className="space-y-1.5 md:col-span-3">
+            <span className={labelText}>Thuyết minh / nội dung chi tiết (Tiếng Việt)</span>
             <textarea className="h-28 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.biography || ''} onChange={(event) => update('biography', event.target.value)} />
+          </label>
+          <label className="space-y-1.5 md:col-span-3">
+            <span className={labelText}>Thuyết minh / nội dung tiếng Anh (English Proposal / Biography)</span>
+            <textarea className="h-28 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.biographyEn || ''} onChange={(event) => update('biographyEn', event.target.value)} placeholder="Full English proposal or detailed project introduction..." />
           </label>
           <label className="space-y-1.5 md:col-span-3">
             <span className={labelText}>Nhu cầu hỗ trợ</span>
@@ -1035,7 +1012,7 @@ export default function CandidateDetailAdminPage() {
 
               <div className="grid min-w-[260px] grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-orange-100 bg-orange-50 p-5 text-center">
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-orange-500">Điểm bình chọn</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-orange-500">Lượt bình chọn</p>
                   <p className="mt-2 text-3xl font-black tabular-nums text-[#e45136]">{project.votes.toLocaleString()}</p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center">
@@ -1171,7 +1148,7 @@ export default function CandidateDetailAdminPage() {
         <aside className="space-y-5">
           <SectionCard title="Phân loại & tiến độ">
             <div className="space-y-3">
-              <InfoItem label="Bảng thi" value={tableLabel} />
+              <InfoItem label="Hạng mục dự thi" value={tableLabel} />
               <InfoItem label="Lĩnh vực" value={project.sector} />
               <InfoItem label="Vòng hiện tại" value={project.currentRound} />
               <InfoItem label="Trạng thái hồ sơ" value={project.status} />

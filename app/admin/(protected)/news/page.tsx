@@ -515,270 +515,352 @@ export default function NewsAdminPage() {
         </table>
       </div>
 
-      {/* ADD/EDIT MODAL */}
+      {/* ADD/EDIT MODAL - REDESIGNED PREMIUM UI */}
       {modalMode && (
-        <div className="fixed inset-0 bg-[#10211d]/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-slate-950/65 flex items-center justify-center p-2 sm:p-4 md:p-6 z-50 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200" 
+          onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}
+        >
           <form 
             onSubmit={modalMode === 'add' ? handleAddSubmit : handleEditSubmit} 
-            className={`bg-white border border-[#dce5e1] p-5 flex flex-col transition-all duration-200 ${
+            onMouseDown={(event) => event.stopPropagation()}
+            className={`bg-white border border-slate-200/90 flex flex-col transition-all duration-300 shadow-2xl ${
               isMaximized 
-                ? 'fixed inset-0 z-50 rounded-none w-screen h-screen space-y-4 overflow-y-auto my-0 p-6 shadow-none' 
-                : 'rounded-xl w-full max-w-4xl space-y-3.5 my-8 shadow-2xl animate-in fade-in zoom-in duration-200'
+                ? 'fixed inset-0 z-50 rounded-none w-screen h-screen overflow-y-auto my-0 p-0 shadow-none' 
+                : 'rounded-2xl w-full max-w-6xl my-4 max-h-[92vh] overflow-hidden'
             }`}
           >
-            <div className="flex items-center justify-between border-b border-[#edf2f0] pb-2.5">
-              <h3 className="text-base font-black text-[#123c34]">
-                {modalMode === 'add' ? 'Viết bài viết mới' : 'Chỉnh sửa bài viết'}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsMaximized(!isMaximized)}
-                className="flex items-center gap-1 px-2.5 py-1.5 border border-[#dce5e1] hover:bg-[#edf4f1] rounded-lg text-[#52605b] text-[10px] font-bold transition-colors cursor-pointer"
-                title={isMaximized ? "Thu nhỏ lại" : "Phóng to toàn màn hình"}
-              >
-                {isMaximized ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 14h6v6m0-6l-6 6M20 10h-6V4m0 6l6-6"/>
-                    </svg>
-                    <span>Thu nhỏ</span>
-                  </>
-                ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                    </svg>
-                    <span>Phóng to</span>
-                  </>
-                )}
-              </button>
-            </div>
-            
-            <div className={`grid grid-cols-1 md:grid-cols-4 gap-4 ${isMaximized ? 'flex-1' : ''}`}>
-              {/* Left Column - Meta */}
-              <div className={`flex flex-col space-y-3 md:col-span-1 border-r border-slate-100 pr-3.5 ${isMaximized ? 'overflow-y-auto max-h-[calc(100vh-140px)]' : ''}`}>
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề bài viết *</label>
-                  <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formTitle} onChange={e => { setFormTitle(e.target.value); if (!isSlugCustomized) { setFormSlug(slugify(e.target.value)); } }} required placeholder="Nhập tiêu đề..." />
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50/90 via-white to-slate-50/50">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-500/20">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                 </div>
-
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề tiếng Anh</label>
-                  <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formTitleEn} onChange={e => setFormTitleEn(e.target.value)} placeholder="English title (optional)" />
-                </div>
-
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Slug (Đường dẫn URL)</label>
-                  <input type="text" className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold" value={formSlug} onChange={e => { setFormSlug(slugify(e.target.value)); setIsSlugCustomized(true); }} placeholder="Tự sinh nếu để trống..." />
-                </div>
-
-                <div className="flex flex-col space-y-1.5">
-                  <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Danh mục *</label>
-                  <select 
-                    className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold"
-                    value={formCategory}
-                    onChange={e => setFormCategory(e.target.value)}
-                  >
-                    <option value="Tin tức">Tin tức (Mặc định)</option>
-                    <option value="Thông báo">Thông báo</option>
-                  </select>
-                </div>
-
-                <ImageDropzone
-                  label="Ảnh đại diện (Thumbnail)"
-                  value={formThumbnailUrl}
-                  onChange={setFormThumbnailUrl}
-                  aspectRatioHint="Khuyên dùng 16:9 hoặc 4:3"
-                />
-
-                <div className="flex items-center justify-between p-2.5 bg-[#fbfdfc] rounded-xl border border-[#dce5e1] mt-2">
-                  <div className="flex flex-col">
-                    <span className="font-bold text-xs text-[#123c34]">Trạng thái hiển thị</span>
-                    <span className="text-[9px] text-[#6b7773]">Hiển thị ngay trên website</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-black text-slate-900 tracking-tight">
+                      {modalMode === 'add' ? 'Viết bài viết mới' : 'Chỉnh sửa bài viết'}
+                    </h3>
+                    <span className="rounded-md bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 text-[10px] font-black text-emerald-700 uppercase tracking-wider">
+                      {modalMode === 'add' ? 'Bản mới' : `#${selectedPost?.id.slice(-6)}`}
+                    </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setFormIsActive(!formIsActive)}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      formIsActive ? 'bg-[#0f766e]' : 'bg-slate-300'
-                    }`}
-                  >
-                    <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      formIsActive ? 'translate-x-4' : 'translate-x-0'
-                    }`} />
-                  </button>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {modalMode === 'add' ? 'Tạo nội dung bài viết, tin tức hoặc thông báo xuất bản lên hệ thống' : `Đang chỉnh sửa bài viết: ${formTitle || 'Chưa đặt tiêu đề'}`}
+                  </p>
                 </div>
               </div>
 
-              {/* Right Column - Editor / Content */}
-              <div className="flex flex-col space-y-3.5 md:col-span-3">
-                {/* Tabs Switcher */}
-                <div className="flex border-b border-[#dce5e1] gap-4 text-xs font-bold">
-                  <button
-                    type="button"
-                    onClick={() => setActiveEditorTab('edit')}
-                    className={`pb-2 border-b-2 transition-colors ${
-                      activeEditorTab === 'edit'
-                        ? 'border-[#0f766e] text-[#0f766e]'
-                        : 'border-transparent text-[#6b7773] hover:text-[#123c34]'
-                    }`}
-                  >
-                    📝 Soạn thảo nội dung
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveEditorTab('seo')}
-                    className={`pb-2 border-b-2 transition-colors ${
-                      activeEditorTab === 'seo'
-                        ? 'border-[#0f766e] text-[#0f766e]'
-                        : 'border-transparent text-[#6b7773] hover:text-[#123c34]'
-                    }`}
-                  >
-                    🔍 SEO &amp; Xem trước chia sẻ
-                  </button>
-                </div>
+              {/* Header Right Actions */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsMaximized(!isMaximized)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 rounded-xl text-slate-600 text-xs font-bold transition-all shadow-sm"
+                  title={isMaximized ? "Thu nhỏ lại" : "Phóng to toàn màn hình"}
+                >
+                  {isMaximized ? (
+                    <>
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 14h6v6m0-6l-6 6M20 10h-6V4m0 6l6-6"/>
+                      </svg>
+                      <span>Thu nhỏ</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                      </svg>
+                      <span>Phóng to</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalMode(null)}
+                  className="grid h-8 w-8 place-items-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                  aria-label="Đóng modal"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
 
-                {activeEditorTab === 'edit' ? (
-                  <>
-                    <div className="flex flex-col space-y-1.5">
-                      <div className="flex justify-between items-center">
-                        <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mô tả tóm tắt ngắn *</label>
-                        <div className="flex items-center gap-1.5 bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[10px] font-bold">
-                          <button
-                            type="button"
-                            onClick={() => setEditorMode('wysiwyg')}
-                            className={`px-2 py-1 rounded transition-colors ${editorMode === 'wysiwyg' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                          >
-                            🎨 Trực quan (WYSIWYG)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setEditorMode('raw')}
-                            className={`px-2 py-1 rounded transition-colors ${editorMode === 'raw' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                          >
-                            💻 Mã nguồn / Markdown
-                          </button>
+            {/* Navigation Tabs Bar */}
+            <div className="px-6 border-b border-slate-200/80 bg-slate-50/50 flex items-center justify-between gap-4 overflow-x-auto [scrollbar-width:none]">
+              <div className="flex gap-1 py-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveEditorTab('edit')}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-150 ${
+                    activeEditorTab === 'edit'
+                      ? 'bg-white text-emerald-700 border border-slate-200/90 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
+                  }`}
+                >
+                  <span className="text-sm">🇻🇳</span>
+                  <span>Nội dung Tiếng Việt</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveEditorTab('preview')}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-150 ${
+                    activeEditorTab === 'preview'
+                      ? 'bg-white text-blue-700 border border-slate-200/90 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
+                  }`}
+                >
+                  <span className="text-sm">🇬🇧</span>
+                  <span>Bản dịch Tiếng Anh</span>
+                  {formTitleEn || formContentEn ? (
+                    <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[9px] font-extrabold text-blue-700">Đã điền</span>
+                  ) : (
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveEditorTab('seo')}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-150 ${
+                    activeEditorTab === 'seo'
+                      ? 'bg-white text-teal-700 border border-slate-200/90 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
+                  }`}
+                >
+                  <span className="text-sm">🔍</span>
+                  <span>SEO &amp; Xem trước chia sẻ</span>
+                </button>
+              </div>
+
+              {/* Quick Word Counter */}
+              <div className="hidden sm:flex items-center gap-3 text-[11px] font-semibold text-slate-500 shrink-0">
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                  {formContent.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).filter(Boolean).length} từ (VI)
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                  ~{Math.max(1, Math.ceil(formContent.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).filter(Boolean).length / 200))} phút đọc
+                </span>
+              </div>
+            </div>
+            
+            {/* Modal Body: 2-Column Responsive Grid */}
+            <div className={`p-5 overflow-y-auto flex-1 ${isMaximized ? 'h-[calc(100vh-140px)]' : 'max-h-[calc(92vh-145px)]'}`}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                
+                {/* ─── LEFT COLUMN: Main Content Area (8 Cols) ─── */}
+                <div className="lg:col-span-8 space-y-4">
+                  {activeEditorTab === 'edit' ? (
+                    <>
+                      {/* Tiêu đề tiếng Việt */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <span className="text-emerald-600 font-bold">1.</span> Tiêu đề bài viết <span className="text-red-500">*</span>
+                          </label>
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                            formTitle.length >= 40 && formTitle.length <= 70 
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                              : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {formTitle.length}/70 ký tự
+                          </span>
                         </div>
+                        <input 
+                          type="text" 
+                          className="h-11 w-full px-3.5 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-sm font-bold focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all" 
+                          value={formTitle} 
+                          onChange={e => { 
+                            setFormTitle(e.target.value); 
+                            if (!isSlugCustomized) { 
+                              setFormSlug(slugify(e.target.value)); 
+                            } 
+                          }} 
+                          required 
+                          placeholder="Ví dụ: Lễ Phát Động Cuộc Thi HUIT's ICONIC 2026..." 
+                        />
                       </div>
-                      <textarea rows={2} className="px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold resize-none" value={formSummary} onChange={e => setFormSummary(e.target.value)} required placeholder="Giới thiệu tóm tắt khoảng 2-3 câu..." />
-                      <textarea rows={2} className="px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold resize-none" value={formSummaryEn} onChange={e => setFormSummaryEn(e.target.value)} placeholder="English summary (optional)" />
-                    </div>
 
-                    <div className="flex flex-col flex-1 min-h-[350px]">
-                      <label className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider mb-1">Nội dung tiếng Anh (tuỳ chọn)</label>
-                      <textarea rows={4} className="mb-3 px-3 py-2 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs resize-y" value={formContentEn} onChange={e => setFormContentEn(e.target.value)} placeholder="English HTML/Markdown content. Nếu bỏ trống, hệ thống dùng nội dung tiếng Việt." />
-                      {editorMode === 'wysiwyg' ? (
-                        /* ─── Visual WYSIWYG Editor Toolbar ─── */
-                        <div className="flex justify-between items-center bg-[#f8fafc] border border-[#dce5e1] border-b-0 rounded-t-lg px-3 py-1.5 flex-wrap gap-2">
-                          <div className="flex items-center gap-1.5 flex-wrap text-slate-500">
-                            {/* Block Styles */}
+                      {/* Tóm tắt tiếng Việt */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <span className="text-emerald-600 font-bold">2.</span> Tóm tắt ngắn (Lead / Summary) <span className="text-red-500">*</span>
+                          </label>
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                            formSummary.length >= 120 && formSummary.length <= 160 
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                              : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {formSummary.length}/160 ký tự
+                          </span>
+                        </div>
+                        <textarea 
+                          rows={3} 
+                          className="w-full p-3 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs font-semibold focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 transition-all resize-none leading-relaxed" 
+                          value={formSummary} 
+                          onChange={e => setFormSummary(e.target.value)} 
+                          required 
+                          placeholder="Mô tả tóm tắt nội dung chính trong 2-3 câu ngắn gọn để làm phần mở đầu và hiển thị trong danh sách tin..." 
+                        />
+                      </div>
+
+                      {/* Nội dung bài viết tiếng Việt */}
+                      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+                        {/* Editor Header & Toolbar */}
+                        <div className="p-3.5 border-b border-slate-200 bg-slate-50/80 flex flex-wrap items-center justify-between gap-2.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                              <span className="text-emerald-600 font-bold">3.</span> Nội dung chi tiết <span className="text-red-500">*</span>
+                            </span>
+                          </div>
+
+                          {/* Editor Mode Selector */}
+                          <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-sm text-xs font-bold">
+                            <button
+                              type="button"
+                              onClick={() => setEditorMode('wysiwyg')}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                                editorMode === 'wysiwyg'
+                                  ? 'bg-emerald-600 text-white shadow-sm'
+                                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span>🎨</span>
+                              <span>Trực quan (WYSIWYG)</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditorMode('raw')}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                                editorMode === 'raw'
+                                  ? 'bg-emerald-600 text-white shadow-sm'
+                                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                              }`}
+                            >
+                              <span>💻</span>
+                              <span>Markdown / HTML</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Editor Controls Bar */}
+                        {editorMode === 'wysiwyg' ? (
+                          <div className="px-3.5 py-2 border-b border-slate-200 bg-slate-50/40 flex flex-wrap items-center gap-1.5 text-slate-600">
+                            {/* Headings */}
                             <select
                               onChange={(e) => {
                                 if (e.target.value) {
                                   document.execCommand('formatBlock', false, e.target.value);
-                                  e.target.value = ''; // Reset select
+                                  e.target.value = '';
                                 }
                               }}
-                              className="h-7 px-1.5 rounded border border-[#dce5e1] text-[11px] bg-white font-bold text-slate-700 outline-none"
+                              className="h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 outline-none hover:border-slate-300 focus:border-emerald-600 transition shadow-sm"
                             >
                               <option value="">Định dạng chữ...</option>
                               <option value="p">Đoạn văn (Paragraph)</option>
-                              <option value="h1">Tiêu đề lớn 1</option>
-                              <option value="h2">Tiêu đề vừa 2</option>
-                              <option value="h3">Tiêu đề nhỏ 3</option>
+                              <option value="h1">Tiêu đề lớn (H1)</option>
+                              <option value="h2">Tiêu đề vừa (H2)</option>
+                              <option value="h3">Tiêu đề nhỏ (H3)</option>
                               <option value="blockquote">Trích dẫn (Quote)</option>
                             </select>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
+                            <span className="w-px h-5 bg-slate-200 mx-1" />
 
-                            {/* Inline Format Actions */}
-                            <div className="flex items-center gap-0.5">
+                            {/* Basic Styling */}
+                            <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 shadow-sm">
                               <button
                                 type="button"
                                 onClick={() => document.execCommand('bold', false)}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 font-bold text-xs"
-                                title="In đậm (Bold)"
+                                className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 font-black text-xs text-slate-800"
+                                title="In đậm (Ctrl+B)"
                               >
-                                <strong>B</strong>
+                                B
                               </button>
                               <button
                                 type="button"
                                 onClick={() => document.execCommand('italic', false)}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 italic text-xs"
-                                title="In nghiêng (Italic)"
+                                className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 italic text-xs text-slate-800 font-serif"
+                                title="In nghiêng (Ctrl+I)"
                               >
-                                <em>I</em>
+                                I
                               </button>
                               <button
                                 type="button"
                                 onClick={() => document.execCommand('underline', false)}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 underline text-xs"
-                                title="Gạch chân (Underline)"
+                                className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 underline text-xs text-slate-800 font-bold"
+                                title="Gạch chân (Ctrl+U)"
                               >
-                                <u>U</u>
+                                U
                               </button>
                               <button
                                 type="button"
                                 onClick={() => document.execCommand('strikeThrough', false)}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 line-through text-xs"
-                                title="Gạch ngang (Strikethrough)"
+                                className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 line-through text-xs text-slate-800 font-bold"
+                                title="Gạch ngang chữ"
                               >
                                 S
                               </button>
                             </div>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
+                            <span className="w-px h-5 bg-slate-200 mx-1" />
 
-                            {/* Text alignments */}
-                            <div className="flex items-center gap-0.5">
-                              <button type="button" onClick={() => document.execCommand('justifyLeft', false)} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Canh trái">
+                            {/* Alignment */}
+                            <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 shadow-sm">
+                              <button type="button" onClick={() => document.execCommand('justifyLeft', false)} className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 text-slate-700" title="Canh trái">
                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="15" y1="18" x2="3" y2="18"/></svg>
                               </button>
-                              <button type="button" onClick={() => document.execCommand('justifyCenter', false)} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Canh giữa">
+                              <button type="button" onClick={() => document.execCommand('justifyCenter', false)} className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 text-slate-700" title="Canh giữa">
                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="16" y1="18" x2="8" y2="18"/></svg>
                               </button>
-                              <button type="button" onClick={() => document.execCommand('justifyRight', false)} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Canh phải">
+                              <button type="button" onClick={() => document.execCommand('justifyRight', false)} className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 text-slate-700" title="Canh phải">
                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="9" y2="18"/></svg>
                               </button>
                             </div>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
+                            <span className="w-px h-5 bg-slate-200 mx-1" />
 
-                            {/* Lists */}
-                            <div className="flex items-center gap-0.5">
-                              <button type="button" onClick={() => document.execCommand('insertUnorderedList', false)} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Danh sách không thứ tự">
+                            {/* Lists & Blocks */}
+                            <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 shadow-sm">
+                              <button type="button" onClick={() => document.execCommand('insertUnorderedList', false)} className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 text-slate-700" title="Danh sách gạch đầu dòng">
                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>
                               </button>
-                              <button type="button" onClick={() => document.execCommand('insertOrderedList', false)} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Danh sách có thứ tự">
+                              <button type="button" onClick={() => document.execCommand('insertOrderedList', false)} className="h-7 w-7 grid place-items-center rounded-md hover:bg-slate-100 text-slate-700" title="Danh sách số 1, 2, 3">
                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
                               </button>
                             </div>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
+                            <span className="w-px h-5 bg-slate-200 mx-1" />
 
-                            {/* Insert Elements */}
-                            <div className="flex items-center gap-0.5">
+                            {/* Insert Features */}
+                            <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 shadow-sm">
                               <button
                                 type="button"
                                 onClick={async () => {
                                   const url = await showPrompt('Nhập địa chỉ liên kết (URL):', 'https://', 'Chèn liên kết');
                                   if (url) document.execCommand('createLink', false, url);
                                 }}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-blue-600 font-bold"
+                                className="h-7 px-2 flex items-center gap-1 rounded-md hover:bg-blue-50 text-blue-600 text-xs font-bold"
                                 title="Chèn liên kết"
                               >
-                                🔗
+                                <span>🔗</span> <span className="hidden sm:inline">Link</span>
                               </button>
                               <button
                                 type="button"
                                 onClick={async () => {
-                                  const url = await showPrompt('Nhập URL hình ảnh:', '', 'Chèn hình ảnh', 'https://... hoặc /images/...');
+                                  const url = await showPrompt('Nhập URL hình ảnh:', '', 'Chèn hình ảnh', 'https://... hoặc /uploads/...');
                                   if (url) document.execCommand('insertImage', false, url);
                                 }}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-emerald-600 font-bold"
+                                className="h-7 px-2 flex items-center gap-1 rounded-md hover:bg-emerald-50 text-emerald-600 text-xs font-bold"
                                 title="Chèn hình ảnh"
                               >
-                                🖼️
+                                <span>🖼️</span> <span className="hidden sm:inline">Ảnh</span>
                               </button>
                               <button
                                 type="button"
@@ -786,256 +868,446 @@ export default function NewsAdminPage() {
                                   const tableHtml = `
                                     <table class="w-full border-collapse border border-slate-300 my-4 text-xs">
                                       <thead>
-                                        <tr class="bg-slate-50 border-b border-slate-300">
-                                          <th class="border border-slate-300 px-3 py-2 font-bold text-slate-700">Tiêu đề 1</th>
-                                          <th class="border border-slate-300 px-3 py-2 font-bold text-slate-700">Tiêu đề 2</th>
+                                        <tr class="bg-slate-100 border-b border-slate-300">
+                                          <th class="border border-slate-300 px-3 py-2 font-bold text-slate-800">Tiêu đề cột 1</th>
+                                          <th class="border border-slate-300 px-3 py-2 font-bold text-slate-800">Tiêu đề cột 2</th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                         <tr class="border-b border-slate-200">
-                                          <td class="border border-slate-300 px-3 py-2">Nội dung ô 1</td>
-                                          <td class="border border-slate-300 px-3 py-2">Nội dung ô 2</td>
+                                          <td class="border border-slate-300 px-3 py-2">Nội dung 1</td>
+                                          <td class="border border-slate-300 px-3 py-2">Nội dung 2</td>
                                         </tr>
                                       </tbody>
                                     </table>
                                   `;
                                   document.execCommand('insertHTML', false, tableHtml);
                                 }}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-indigo-600 font-bold"
-                                title="Chèn bảng biểu mẫu"
+                                className="h-7 px-2 flex items-center gap-1 rounded-md hover:bg-purple-50 text-purple-600 text-xs font-bold"
+                                title="Chèn bảng"
                               >
-                                📊
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => document.execCommand('insertHorizontalRule', false)}
-                                className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-slate-600 font-bold"
-                                title="Chèn đường kẻ phân cách"
-                              >
-                                ➖
+                                <span>📊</span> <span className="hidden sm:inline">Bảng</span>
                               </button>
                             </div>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
-
-                            {/* Clear Format */}
                             <button
                               type="button"
                               onClick={() => document.execCommand('removeFormat', false)}
-                              className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-red-500 font-semibold"
-                              title="Xóa định dạng"
+                              className="h-8 px-2.5 rounded-lg border border-slate-200 bg-white hover:bg-rose-50 text-rose-600 text-xs font-bold transition shadow-sm ml-auto"
+                              title="Xóa tất cả định dạng của vùng chọn"
                             >
-                              🧹
+                              🧹 Xóa định dạng
                             </button>
                           </div>
-                        </div>
-                      ) : (
-                        /* ─── Raw Markdown/HTML Editor Toolbar ─── */
-                        <div className="flex justify-between items-center bg-[#f8fafc] border border-[#dce5e1] border-b-0 rounded-t-lg px-3 py-1.5 flex-wrap gap-2">
-                          <div className="flex items-center gap-1.5 flex-wrap text-slate-500">
-                            <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => insertTag('# ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 font-black border border-transparent text-[#123c34] text-xs transition" title="Tiêu đề H1">H1</button>
-                              <button type="button" onClick={() => insertTag('## ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 font-extrabold border border-transparent text-[#123c34] text-xs transition" title="Tiêu đề H2">H2</button>
-                              <button type="button" onClick={() => insertTag('### ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 font-bold border border-transparent text-[#123c34] text-xs transition" title="Tiêu đề H3">H3</button>
+                        ) : (
+                          <div className="px-3.5 py-2 border-b border-slate-200 bg-slate-50/40 flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center gap-1 flex-wrap text-slate-600 text-xs font-bold">
+                              <button type="button" onClick={() => insertTag('# ', '')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800">H1</button>
+                              <button type="button" onClick={() => insertTag('## ', '')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800">H2</button>
+                              <button type="button" onClick={() => insertTag('### ', '')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800">H3</button>
+                              <button type="button" onClick={() => insertTag('**', '**')} className="h-7 w-7 grid place-items-center rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800 font-bold">B</button>
+                              <button type="button" onClick={() => insertTag('*', '*')} className="h-7 w-7 grid place-items-center rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800 italic">I</button>
+                              <button type="button" onClick={() => insertTag('- ', '')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800">• List</button>
+                              <button type="button" onClick={() => insertTag('> ', '')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-slate-100 text-slate-800">&ldquo; Quote</button>
+                              <button type="button" onClick={() => openCustomPrompt('link')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-blue-50 text-blue-600">🔗 Link</button>
+                              <button type="button" onClick={() => openCustomPrompt('image')} className="h-7 px-2 rounded-md bg-white border border-slate-200 hover:bg-emerald-50 text-emerald-600">🖼️ Ảnh</button>
                             </div>
 
-                            <span className="w-[1px] h-4 bg-slate-200" />
-
-                            <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => insertTag('**', '**')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 font-bold text-xs" title="In đậm"><strong>B</strong></button>
-                              <button type="button" onClick={() => insertTag('*', '*')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 italic text-xs" title="In nghiêng"><em>I</em></button>
-                              <button type="button" onClick={() => insertTag('~~', '~~')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 line-through text-xs" title="Gạch ngang">S</button>
-                            </div>
-
-                            <span className="w-[1px] h-4 bg-slate-200" />
-
-                            <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => insertTag('- ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Gạch đầu dòng">•</button>
-                              <button type="button" onClick={() => insertTag('1. ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Danh sách số">1.</button>
-                              <button type="button" onClick={() => insertTag('> ', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80" title="Trích dẫn">&ldquo;</button>
-                            </div>
-
-                            <span className="w-[1px] h-4 bg-slate-200" />
-
-                            <div className="flex items-center gap-1">
-                              <button type="button" onClick={() => openCustomPrompt('link')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-blue-600" title="Chèn liên kết URL">🔗</button>
-                              <button type="button" onClick={() => openCustomPrompt('image')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-emerald-600" title="Chèn hình ảnh">🖼️</button>
-                              <button type="button" onClick={() => insertTag('\n| Cột 1 | Cột 2 |\n|---|---|\n| Ô 1 | Ô 2 |\n', '')} className="h-7 w-7 flex items-center justify-center rounded hover:bg-slate-200/80 text-indigo-600" title="Chèn bảng">📊</button>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => setShowPreviewPane(!showPreviewPane)}
-                              className={`flex items-center gap-1 px-2.5 py-1 text-[9px] font-extrabold border rounded-lg transition-all ${
-                                showPreviewPane ? 'bg-[#0f766e] border-[#0f766e] text-white shadow-sm' : 'bg-white border-[#dce5e1] text-[#52605b] hover:bg-[#edf4f1]'
+                              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all ${
+                                showPreviewPane 
+                                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm' 
+                                  : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                               }`}
                             >
-                              👁️ <span>{showPreviewPane ? 'Đang bật Xem trước' : 'Xem trước'}</span>
+                              <span>👁️</span>
+                              <span>{showPreviewPane ? 'Đang chia đôi Xem trước' : 'Xem trước Markdown'}</span>
                             </button>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {/* ─── Editor Content Panes ─── */}
-                      <div className={`flex-1 flex flex-col border border-[#dce5e1] rounded-b-lg overflow-hidden bg-white ${isMaximized ? 'min-h-[450px] md:h-[calc(100vh-280px)]' : 'min-h-[320px]'}`}>
-                        {editorMode === 'wysiwyg' ? (
-                          /* Visual WYSIWYG Pane */
-                          <div
-                            ref={editorRef}
-                            contentEditable
-                            onInput={handleWysiwygInput}
-                            className="flex-1 w-full p-4 text-[13px] leading-relaxed text-slate-800 outline-none overflow-y-auto select-text prose max-w-none text-justify bg-white"
-                            style={{ minHeight: '220px' }}
-                          />
-                        ) : (
-                          /* Raw Source Code Pane */
-                          <div className={`flex-1 grid grid-cols-1 ${showPreviewPane ? 'md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200' : ''} overflow-hidden`}>
-                            <textarea
-                              id="post-content-textarea"
-                              className={`w-full p-3 text-xs font-mono focus:outline-none resize-none leading-relaxed bg-white h-full ${isMaximized ? 'min-h-[400px]' : 'min-h-[220px]'}`}
-                              value={formContent}
-                              onChange={e => setFormContent(e.target.value)}
-                              placeholder="Nhập mã nguồn HTML hoặc cú pháp Markdown chi tiết..."
-                              required
+                        {/* Editor Editable Area */}
+                        <div className={`flex-1 bg-white min-h-[360px] ${isMaximized ? 'min-h-[550px]' : ''}`}>
+                          {editorMode === 'wysiwyg' ? (
+                            <div
+                              ref={editorRef}
+                              contentEditable
+                              onInput={handleWysiwygInput}
+                              className="w-full h-full p-5 text-[14px] leading-relaxed text-slate-900 outline-none overflow-y-auto select-text prose max-w-none min-h-[360px]"
+                              style={{ minHeight: isMaximized ? '550px' : '360px' }}
                             />
-                            {showPreviewPane && (
-                              <div className={`p-3 overflow-y-auto bg-slate-50/50 text-slate-800 text-xs leading-relaxed prose max-w-none ${isMaximized ? 'h-[450px] md:h-[calc(100vh-280px)]' : 'max-h-[380px] min-h-[220px]'}`}>
-                                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-2 border-b pb-1">Xem trước nội dung:</p>
-                                {formContent ? (
-                                  <div dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(formContent) }} className="space-y-2 select-text" />
-                                ) : (
-                                  <p className="text-slate-400 italic text-xs">Nội dung xem trước sẽ hiển thị ở đây...</p>
-                                )}
+                          ) : (
+                            <div className={`grid grid-cols-1 ${showPreviewPane ? 'lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200' : ''} h-full`}>
+                              <textarea
+                                id="post-content-textarea"
+                                className="w-full p-4 text-xs font-mono text-slate-900 focus:outline-none resize-none leading-relaxed bg-white min-h-[360px]"
+                                value={formContent}
+                                onChange={e => setFormContent(e.target.value)}
+                                placeholder="Nhập mã nguồn HTML hoặc cú pháp Markdown chi tiết..."
+                                required
+                              />
+                              {showPreviewPane && (
+                                <div className="p-4 overflow-y-auto bg-slate-50/50 text-slate-900 text-xs leading-relaxed prose max-w-none min-h-[360px]">
+                                  <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2 border-b border-slate-200 pb-1">Xem trước nội dung:</p>
+                                  {formContent ? (
+                                    <div dangerouslySetInnerHTML={{ __html: parseMarkdownToHtml(formContent) }} className="space-y-2 select-text" />
+                                  ) : (
+                                    <p className="text-slate-400 italic text-xs">Nội dung xem trước sẽ hiển thị ở đây...</p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  ) : activeEditorTab === 'preview' ? (
+                    /* ─── TAB: ENGLISH TRANSLATION ─── */
+                    <div className="space-y-4">
+                      {/* Tiêu đề tiếng Anh */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <span className="text-blue-600 font-bold">EN 1.</span> Tiêu đề tiếng Anh (English Title)
+                          </label>
+                          <span className="text-[10px] font-bold text-slate-400">Tùy chọn (Optional)</span>
+                        </div>
+                        <input 
+                          type="text" 
+                          className="h-11 w-full px-3.5 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-sm font-bold focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all" 
+                          value={formTitleEn} 
+                          onChange={e => setFormTitleEn(e.target.value)} 
+                          placeholder="Example: Opening Ceremony of HUIT's ICONIC 2026 Contest..." 
+                        />
+                      </div>
+
+                      {/* Tóm tắt tiếng Anh */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <span className="text-blue-600 font-bold">EN 2.</span> Tóm tắt tiếng Anh (English Summary)
+                          </label>
+                          <span className="text-[10px] font-bold text-slate-400">Tùy chọn (Optional)</span>
+                        </div>
+                        <textarea 
+                          rows={3} 
+                          className="w-full p-3 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs font-semibold focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none leading-relaxed" 
+                          value={formSummaryEn} 
+                          onChange={e => setFormSummaryEn(e.target.value)} 
+                          placeholder="Brief 2-3 sentences summary in English for international visitors..." 
+                        />
+                      </div>
+
+                      {/* Nội dung tiếng Anh */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-black uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                            <span className="text-blue-600 font-bold">EN 3.</span> Nội dung tiếng Anh (English Content)
+                          </label>
+                          <span className="text-[10px] font-bold text-slate-400">Nếu bỏ trống, hệ thống sẽ sử dụng nội dung Tiếng Việt</span>
+                        </div>
+                        <textarea 
+                          rows={14} 
+                          className="w-full p-4 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs font-mono focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all leading-relaxed" 
+                          value={formContentEn} 
+                          onChange={e => setFormContentEn(e.target.value)} 
+                          placeholder="Nhập nội dung bài viết bằng tiếng Anh (hỗ trợ HTML hoặc cú pháp Markdown)..." 
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    /* ─── TAB: SEO & SOCIAL PREVIEW ─── */
+                    <div className="space-y-4">
+                      {/* SEO Score Card */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">📊</span>
+                            <div>
+                              <h4 className="text-sm font-black text-slate-900">Đánh giá chuẩn SEO On-page</h4>
+                              <p className="text-xs text-slate-500 font-medium">Tối ưu thẻ tìm kiếm và khả năng hiển thị trên Google</p>
+                            </div>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-black border ${
+                            formTitle.length >= 40 && formSummary.length >= 100 
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                              : 'bg-amber-50 text-amber-700 border-amber-200'
+                          }`}>
+                            {formTitle.length >= 40 && formSummary.length >= 100 ? '⭐ Tốt (95/100)' : '⚠️ Cần bổ sung thêm'}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3.5 space-y-1.5">
+                            <div className="flex justify-between items-center text-xs font-bold">
+                              <span className="text-slate-700">Độ dài tiêu đề SEO</span>
+                              <span className={formTitle.length >= 45 && formTitle.length <= 70 ? 'text-emerald-600 font-black' : 'text-amber-600'}>
+                                {formTitle.length} / 70 ký tự
+                              </span>
+                            </div>
+                            <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  formTitle.length >= 45 && formTitle.length <= 70 ? 'bg-emerald-500' : 'bg-amber-400'
+                                }`}
+                                style={{ width: `${Math.min((formTitle.length / 70) * 100, 100)}%` }}
+                              />
+                            </div>
+                            <p className="text-[10px] text-slate-400 font-medium">Khuyên dùng từ 45 - 70 ký tự.</p>
+                          </div>
+
+                          <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3.5 space-y-1.5">
+                            <div className="flex justify-between items-center text-xs font-bold">
+                              <span className="text-slate-700">Độ dài mô tả ngắn (Meta Description)</span>
+                              <span className={formSummary.length >= 120 && formSummary.length <= 160 ? 'text-emerald-600 font-black' : 'text-amber-600'}>
+                                {formSummary.length} / 160 ký tự
+                              </span>
+                            </div>
+                            <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full rounded-full transition-all duration-300 ${
+                                  formSummary.length >= 120 && formSummary.length <= 160 ? 'bg-emerald-500' : 'bg-amber-400'
+                                }`}
+                                style={{ width: `${Math.min((formSummary.length / 160) * 100, 100)}%` }}
+                              />
+                            </div>
+                            <p className="text-[10px] text-slate-400 font-medium">Khuyên dùng từ 120 - 160 ký tự.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Google Simulator Card */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                        <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                          <span>🔍</span> Mô phỏng kết quả tìm kiếm Google Search
+                        </h4>
+                        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm space-y-1 select-text">
+                          <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <span className="grid h-5 w-5 place-items-center rounded-full bg-slate-100 text-[10px]">🌐</span>
+                            <span className="text-slate-700 font-medium">https://iconic2026.huitmedia.edu.vn</span>
+                            <span>›</span>
+                            <span>tin-tuc</span>
+                            <span>›</span>
+                            <span className="text-emerald-700 font-semibold">{formSlug || 'duong-dan-bai-viet'}</span>
+                          </div>
+                          <h3 className="text-base text-blue-700 hover:underline font-bold cursor-pointer pt-0.5 leading-snug">
+                            {formTitle ? `${formTitle} - HUIT's ICONIC 2026` : 'Tiêu đề bài viết sẽ hiển thị tại đây...'}
+                          </h3>
+                          <p className="text-xs text-slate-600 leading-relaxed max-w-2xl line-clamp-2">
+                            {formSummary || 'Nhập đoạn tóm tắt bài viết để hiển thị phần trích dẫn nội dung trên kết quả tìm kiếm Google...'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Social Share Simulator */}
+                      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                        <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                          <span>👥</span> Mô phỏng chia sẻ mạng xã hội (Facebook, Zalo, LinkedIn)
+                        </h4>
+                        <div className="rounded-2xl border border-slate-200 overflow-hidden shadow-sm max-w-lg bg-white select-text">
+                          <div className="w-full aspect-[1200/630] bg-slate-100 relative overflow-hidden flex items-center justify-center border-b border-slate-100">
+                            {formThumbnailUrl ? (
+                              <img 
+                                src={formatAssetUrl(formThumbnailUrl)} 
+                                alt="Thumbnail" 
+                                className="w-full h-full object-cover" 
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center gap-1 text-slate-400 text-xs">
+                                <span>🖼️</span>
+                                <span>Chưa có ảnh đại diện bài viết</span>
                               </div>
                             )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-
-                  </>
-                ) : (
-                  <div className={`flex flex-col space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200 overflow-y-auto ${isMaximized ? 'h-[60vh] md:h-[calc(100vh-200px)]' : 'max-h-[500px]'}`}>
-                    {/* Character Analysis */}
-                    <div>
-                      <h4 className="text-xs font-black text-[#123c34] uppercase tracking-wide mb-2.5">📊 Phân tích SEO On-page</h4>
-                      
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div className="bg-white p-3 rounded-lg border border-slate-200">
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="font-bold text-[#123c34]">Độ dài tiêu đề SEO</span>
-                            <span className={`font-mono font-bold ${
-                              formTitle.length >= 50 && formTitle.length <= 60 
-                                ? 'text-emerald-600' 
-                                : 'text-amber-500'
-                            }`}>
-                              {formTitle.length} ký tự
-                            </span>
+                          <div className="p-3.5 bg-slate-50/80 space-y-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">ICONIC2026.HUITMEDIA.EDU.VN</span>
+                            <h4 className="text-sm font-extrabold text-slate-900 line-clamp-1 leading-snug">
+                              {formTitle || 'Chưa nhập tiêu đề bài viết...'}
+                            </h4>
+                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                              {formSummary || 'Nhập tóm tắt bài viết để hiển thị bản mô tả chia sẻ bắt mắt trên mạng xã hội...'}
+                            </p>
                           </div>
-                          <div className="w-full bg-slate-100 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                            <div 
-                              className={`h-full rounded-full transition-all ${
-                                formTitle.length >= 50 && formTitle.length <= 60 ? 'bg-emerald-500' : 'bg-amber-400'
-                              }`} 
-                              style={{ width: `${Math.min((formTitle.length / 70) * 100, 100)}%` }} 
-                            />
-                          </div>
-                          <p className="text-[10px] text-slate-400 mt-1">Khuyên dùng từ 50 - 60 ký tự.</p>
-                        </div>
-
-                        <div className="bg-white p-3 rounded-lg border border-slate-200">
-                          <div className="flex justify-between items-center text-xs">
-                            <span className="font-bold text-[#123c34]">Độ dài mô tả (Description)</span>
-                            <span className={`font-mono font-bold ${
-                              formSummary.length >= 140 && formSummary.length <= 160 
-                                ? 'text-emerald-600' 
-                                : 'text-amber-500'
-                            }`}>
-                              {formSummary.length} ký tự
-                            </span>
-                          </div>
-                          <div className="w-full bg-slate-100 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                            <div 
-                              className={`h-full rounded-full transition-all ${
-                                formSummary.length >= 140 && formSummary.length <= 160 ? 'bg-emerald-500' : 'bg-amber-400'
-                              }`} 
-                              style={{ width: `${Math.min((formSummary.length / 175) * 100, 100)}%` }} 
-                            />
-                          </div>
-                          <p className="text-[10px] text-slate-400 mt-1">Khuyên dùng từ 140 - 160 ký tự.</p>
                         </div>
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    {/* Google Simulator */}
-                    <div>
-                      <h4 className="text-xs font-black text-[#123c34] uppercase tracking-wide mb-2.5">🔍 Mô phỏng Google Search (Desktop)</h4>
-                      <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col font-sans select-text">
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                          <span>🌐 https://iconic2026.huitmedia.edu.vn</span>
-                          <span>›</span>
-                          <span>tin-tuc</span>
-                          <span>›</span>
-                          <span className="text-[#0f766e] font-semibold">{formSlug || 'tieu-de-bai-viet'}</span>
-                        </div>
-                        <h3 className="text-[19px] text-[#1a0dab] font-medium hover:underline cursor-pointer mt-0.5 leading-tight truncate">
-                          {formTitle ? `${formTitle} - HUIT's ICONIC 2026` : 'Chưa nhập tiêu đề bài viết...'}
-                        </h3>
-                        <p className="text-xs text-slate-600 mt-1 leading-normal max-w-[600px] line-clamp-2">
-                          {formSummary || 'Chưa nhập tóm tắt mô tả ngắn. Nội dung tóm tắt mô tả bài viết sẽ xuất hiện ở đây khi hiển thị kết quả tìm kiếm trên Google.'}
+                {/* ─── RIGHT COLUMN: Meta / Settings Sidebar (4 Cols) ─── */}
+                <div className="lg:col-span-4 space-y-4">
+                  
+                  {/* Card 1: Cài đặt xuất bản */}
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+                    <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2.5 flex items-center gap-2">
+                      <span>⚙️</span> Thiết lập xuất bản
+                    </h4>
+
+                    {/* Trạng thái hiển thị */}
+                    <div className="flex items-center justify-between p-3 rounded-xl border border-slate-200/80 bg-slate-50/70">
+                      <div>
+                        <p className="text-xs font-black text-slate-900">Trạng thái hiển thị</p>
+                        <p className="text-[10px] font-medium text-slate-500">
+                          {formIsActive ? 'Đang bật hiển thị công khai' : 'Tạm ẩn (Lưu bản nháp)'}
                         </p>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => setFormIsActive(!formIsActive)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          formIsActive ? 'bg-emerald-600' : 'bg-slate-300'
+                        }`}
+                      >
+                        <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
+                          formIsActive ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </button>
                     </div>
 
-                    {/* Facebook Simulator */}
-                    <div>
-                      <h4 className="text-xs font-black text-[#123c34] uppercase tracking-wide mb-2.5">👥 Mô phỏng chia sẻ Facebook (Zalo, LinkedIn)</h4>
-                      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm max-w-[500px] flex flex-col font-sans select-text">
-                        <div className="w-full aspect-[1200/630] bg-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-100">
-                          <img 
-                            src={formatAssetUrl(formThumbnailUrl) || '/uploads/baner.jpg'} 
-                            alt="FB share preview" 
-                            className="w-full h-full object-cover" 
-                          />
-                        </div>
-                        <div className="p-3 bg-slate-50 border-t border-slate-100 flex flex-col">
-                          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">iconic2026.huitmedia.edu.vn</span>
-                          <span className="text-sm font-bold text-[#1d2129] mt-0.5 line-clamp-1">
-                            {formTitle || 'Chưa nhập tiêu đề bài viết...'}
-                          </span>
-                          <span className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
-                            {formSummary || 'Nhập mô tả tóm tắt ngắn để hiển thị mô tả chia sẻ trên Facebook...'}
-                          </span>
-                        </div>
+                    {/* Danh mục bài viết */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                        Danh mục bài viết <span className="text-red-500">*</span>
+                      </label>
+                      <select 
+                        className="h-10 w-full px-3 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 text-xs font-bold focus:bg-white focus:outline-none focus:border-emerald-600 transition"
+                        value={formCategory}
+                        onChange={e => setFormCategory(e.target.value)}
+                      >
+                        <option value="Tin tức">Tin tức (Mặc định)</option>
+                        <option value="Thông báo">Thông báo</option>
+                        <option value="Sự kiện">Sự kiện &amp; Hoạt động</option>
+                        <option value="Hướng dẫn">Hướng dẫn &amp; Thể lệ</option>
+                      </select>
+                    </div>
+
+                    {/* Slug URL */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                          Đường dẫn tĩnh (Slug)
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormSlug(slugify(formTitle));
+                            setIsSlugCustomized(false);
+                          }}
+                          className="text-[10px] font-bold text-emerald-700 hover:underline"
+                          title="Tạo lại slug tự động từ tiêu đề bài viết"
+                        >
+                          Tạo lại từ tiêu đề
+                        </button>
+                      </div>
+                      <input 
+                        type="text" 
+                        className="h-10 w-full px-3 rounded-xl bg-slate-50/70 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-xs font-mono font-semibold focus:bg-white focus:outline-none focus:border-emerald-600 transition" 
+                        value={formSlug} 
+                        onChange={e => { 
+                          setFormSlug(slugify(e.target.value)); 
+                          setIsSlugCustomized(true); 
+                        }} 
+                        placeholder="tu-dong-tao-slug..." 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Card 2: Ảnh đại diện Thumbnail */}
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3">
+                    <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2.5 flex items-center gap-2">
+                      <span>🖼️</span> Ảnh đại diện bài viết
+                    </h4>
+                    
+                    <ImageDropzone
+                      label="Kéo thả hoặc tải ảnh lên"
+                      value={formThumbnailUrl}
+                      onChange={setFormThumbnailUrl}
+                      aspectRatioHint="Chuẩn 16:9 hoặc 4:3 (Tối đa 10MB)"
+                    />
+
+                    <div className="space-y-1 pt-1">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Hoặc nhập link URL ảnh:</span>
+                      <input
+                        type="text"
+                        className="h-9 w-full px-3 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 transition"
+                        value={formThumbnailUrl}
+                        onChange={e => setFormThumbnailUrl(e.target.value)}
+                        placeholder="https://... hoặc /uploads/..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Card 3: Thống kê nhanh */}
+                  <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm space-y-2.5 text-xs">
+                    <h4 className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                      📌 Thông tin bài viết
+                    </h4>
+                    <div className="space-y-1.5 text-slate-600">
+                      <div className="flex justify-between py-1 border-b border-slate-100">
+                        <span className="text-slate-500">Chế độ:</span>
+                        <span className="font-bold text-slate-800">{modalMode === 'add' ? 'Thêm mới' : 'Chỉnh sửa'}</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-slate-100">
+                        <span className="text-slate-500">Bản tiếng Việt:</span>
+                        <span className="font-bold text-emerald-600">{formTitle && formContent ? '✓ Hoàn tất' : 'Đang soạn...'}</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span className="text-slate-500">Bản tiếng Anh:</span>
+                        <span className={`font-bold ${formTitleEn || formContentEn ? 'text-blue-600' : 'text-slate-400'}`}>
+                          {formTitleEn || formContentEn ? '✓ Đã có' : 'Chưa có (Tuỳ chọn)'}
+                        </span>
                       </div>
                     </div>
                   </div>
-                )}
+
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-[#edf2f0]">
-              <button type="button" onClick={() => setModalMode(null)} className="px-3.5 py-1.5 border border-[#dce5e1] hover:bg-[#edf4f1] rounded-lg text-[#52605b] text-[10px] font-bold transition-colors">Hủy bỏ</button>
-              <button type="submit" className="px-3.5 py-1.5 bg-[#123c34] hover:bg-[#0f766e] rounded-lg text-white text-[10px] font-bold shadow transition-colors">Lưu lại</button>
+            {/* Modal Footer Bar */}
+            <div className="flex items-center justify-between px-6 py-3.5 border-t border-slate-200/80 bg-slate-50/90 backdrop-blur-md">
+              <div className="text-xs text-slate-500 font-medium">
+                {modalMode === 'add' ? 'Bài viết sẽ được đăng tải ngay sau khi lưu.' : 'Các thay đổi sẽ được cập nhật trực tiếp.'}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setModalMode(null)} 
+                  className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-100 rounded-xl text-slate-700 text-xs font-bold transition shadow-sm active:scale-[0.98]"
+                >
+                  Hủy bỏ
+                </button>
+                <button 
+                  type="submit" 
+                  className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl text-white text-xs font-black shadow-md shadow-emerald-600/20 transition active:scale-[0.98]"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{modalMode === 'add' ? 'Xuất bản bài viết' : 'Lưu thay đổi'}</span>
+                </button>
+              </div>
             </div>
           </form>
         </div>
       )}
 
+      {/* CUSTOM PROMPT MODAL (Link / Image) */}
       {customPrompt.isOpen && (
-        <div className="fixed inset-0 bg-[#10211d]/75 flex items-center justify-center p-4 z-[100] backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-slate-950/70 flex items-center justify-center p-4 z-[100] backdrop-blur-sm animate-in fade-in duration-200">
           <form 
             onSubmit={handleCustomPromptSubmit}
-            className="bg-white border border-[#dce5e1] p-5 rounded-xl w-full max-w-md flex flex-col space-y-4 shadow-2xl animate-in zoom-in duration-200"
+            className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-md flex flex-col space-y-4 shadow-2xl animate-in zoom-in duration-200"
           >
-            <div className="flex items-center justify-between border-b border-[#edf2f0] pb-2.5">
-              <h4 className="text-sm font-black text-[#123c34] flex items-center gap-1.5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h4 className="text-sm font-black text-slate-900 flex items-center gap-2">
                 {customPrompt.type === 'link' ? (
-                  <svg className="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <span className="grid h-7 w-7 place-items-center rounded-lg bg-blue-50 text-blue-600 font-bold">🔗</span>
                 ) : (
-                  <svg className="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-50 text-emerald-600 font-bold">🖼️</span>
                 )}
                 {customPrompt.title}
               </h4>
@@ -1049,11 +1321,11 @@ export default function NewsAdminPage() {
             </div>
 
             <div className="flex flex-col space-y-3.5">
-              <div className="flex flex-col space-y-1">
-                <label className="text-[9px] font-extrabold text-[#52605b] uppercase tracking-wider">{customPrompt.label1}</label>
+              <div className="flex flex-col space-y-1.5">
+                <label className="text-[10px] font-black text-slate-600 uppercase tracking-wider">{customPrompt.label1}</label>
                 <input 
                   type="text" 
-                  className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-semibold"
+                  className="h-10 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 text-xs font-semibold"
                   value={customPrompt.val1}
                   onChange={e => setCustomPrompt(prev => ({ ...prev, val1: e.target.value }))}
                   required
@@ -1061,11 +1333,11 @@ export default function NewsAdminPage() {
                 />
               </div>
 
-              <div className="flex flex-col space-y-1">
-                <label className="text-[9px] font-extrabold text-[#52605b] uppercase tracking-wider">{customPrompt.label2}</label>
+              <div className="flex flex-col space-y-1.5">
+                <label className="text-[10px] font-black text-slate-600 uppercase tracking-wider">{customPrompt.label2}</label>
                 <input 
                   type="text" 
-                  className="h-9 px-3 rounded-lg bg-[#fbfdfc] border border-[#dce5e1] text-[#18211f] focus:outline-none focus:border-[#0f766e] text-xs font-mono font-semibold"
+                  className="h-10 px-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 text-xs font-mono font-semibold"
                   value={customPrompt.val2}
                   onChange={e => setCustomPrompt(prev => ({ ...prev, val2: e.target.value }))}
                   required
@@ -1074,19 +1346,19 @@ export default function NewsAdminPage() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-[#edf2f0]">
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
               <button 
                 type="button" 
                 onClick={() => setCustomPrompt(prev => ({ ...prev, isOpen: false }))}
-                className="px-3.5 py-1.5 border border-[#dce5e1] hover:bg-[#edf4f1] rounded-lg text-[#52605b] text-[10px] font-bold transition-colors cursor-pointer"
+                className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-100 rounded-xl text-slate-700 text-xs font-bold transition shadow-sm cursor-pointer"
               >
                 Hủy bỏ
               </button>
               <button 
                 type="submit" 
-                className="px-4 py-1.5 bg-[#123c34] hover:bg-[#0f766e] rounded-lg text-white text-[10px] font-bold shadow transition-colors cursor-pointer"
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl text-white text-xs font-black shadow-md transition cursor-pointer"
               >
-                Chèn vào nội dung
+                Chèn vào bài viết
               </button>
             </div>
           </form>

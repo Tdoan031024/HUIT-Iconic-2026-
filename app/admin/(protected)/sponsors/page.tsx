@@ -30,8 +30,8 @@ function DetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
-      <div className="mx-auto my-12 w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div onMouseDown={(event) => event.stopPropagation()} className="mx-auto my-12 w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <div className="bg-white p-1.5 rounded-lg border border-slate-200 flex items-center justify-center w-20 h-12 overflow-hidden shadow">
@@ -101,11 +101,20 @@ function DetailModal({
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2">
-            <p className={labelText}>Giới thiệu / Mô tả đối tác</p>
+            <p className={labelText}>Giới thiệu / Mô tả đối tác (Tiếng Việt)</p>
             <p className="text-xs font-semibold text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
               {sponsor.description || 'Chưa có thông tin giới thiệu chi tiết.'}
             </p>
           </div>
+
+          {sponsor.descriptionEn && (
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2">
+              <p className={labelText}>Giới thiệu / Mô tả đối tác tiếng Anh (English Description)</p>
+              <p className="text-xs font-semibold text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
+                {sponsor.descriptionEn}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex justify-end border-t border-slate-100 pt-4">
@@ -164,6 +173,7 @@ export default function SponsorsAdminPage() {
   const [formTier, setFormTier] = useState<Sponsor['tier']>('PLATINUM');
   const [formLogoUrl, setFormLogoUrl] = useState('');
   const [formDescription, setFormDescription] = useState('');
+  const [formDescriptionEn, setFormDescriptionEn] = useState('');
   const [formWebsiteUrl, setFormWebsiteUrl] = useState('');
   const [formEmail, setFormEmail] = useState('');
   const [formPhone, setFormPhone] = useState('');
@@ -220,6 +230,7 @@ export default function SponsorsAdminPage() {
     setFormTier('PLATINUM');
     setFormLogoUrl('');
     setFormDescription('');
+    setFormDescriptionEn('');
     setFormWebsiteUrl('');
     setFormEmail('');
     setFormPhone('');
@@ -233,6 +244,7 @@ export default function SponsorsAdminPage() {
     setFormTier(s.tier);
     setFormLogoUrl(s.logoUrl);
     setFormDescription(s.description || '');
+    setFormDescriptionEn(s.descriptionEn || '');
     setFormWebsiteUrl(s.websiteUrl || '');
     setFormEmail(s.email || '');
     setFormPhone(s.phone || '');
@@ -252,6 +264,7 @@ export default function SponsorsAdminPage() {
       tier: formTier,
       logoUrl: formLogoUrl,
       description: formDescription || undefined,
+      descriptionEn: formDescriptionEn || undefined,
       websiteUrl: formWebsiteUrl || undefined,
       email: formEmail || undefined,
       phone: formPhone || undefined,
@@ -266,14 +279,14 @@ export default function SponsorsAdminPage() {
       });
       if (res.ok) {
         setModalMode(null);
-        alert('Thêm nhà tài trợ thành công!');
+        showAlert('Thêm nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
       }
     } catch (err) {
       console.error(err);
     }
-    alert('Không thể kết nối đến server để thêm nhà tài trợ.');
+    showAlert('Không thể kết nối đến server để thêm nhà tài trợ.', 'error');
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
@@ -285,6 +298,7 @@ export default function SponsorsAdminPage() {
       tier: formTier,
       logoUrl: formLogoUrl,
       description: formDescription || '',
+      descriptionEn: formDescriptionEn || '',
       websiteUrl: formWebsiteUrl || '',
       email: formEmail || '',
       phone: formPhone || '',
@@ -299,7 +313,7 @@ export default function SponsorsAdminPage() {
       });
       if (res.ok) {
         setModalMode(null);
-        alert('Cập nhật nhà tài trợ thành công!');
+        showAlert('Cập nhật nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
       }
@@ -707,8 +721,8 @@ export default function SponsorsAdminPage() {
 
       {/* ADD SPONSOR MODAL */}
       {modalMode === 'add' && (
-        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-          <form onSubmit={handleAddSubmit} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
+          <form onSubmit={handleAddSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
@@ -777,8 +791,13 @@ export default function SponsorsAdminPage() {
               </div>
 
               <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
                 <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
+              </div>
+
+              <div className="flex flex-col space-y-1.5 md:col-span-2">
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
+                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
               </div>
             </div>
 
@@ -792,8 +811,8 @@ export default function SponsorsAdminPage() {
 
       {/* EDIT SPONSOR MODAL */}
       {modalMode === 'edit' && (
-        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-          <form onSubmit={handleEditSubmit} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
+          <form onSubmit={handleEditSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
@@ -862,8 +881,13 @@ export default function SponsorsAdminPage() {
               </div>
 
               <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
                 <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
+              </div>
+
+              <div className="flex flex-col space-y-1.5 md:col-span-2">
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
+                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
               </div>
             </div>
 

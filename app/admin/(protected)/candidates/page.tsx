@@ -30,7 +30,7 @@ function createPromotionDraft(preset: PromotionQuickPreset = 'NOW', multiplier =
   const now = new Date();
   let start = new Date(now);
   let end = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-  let name = 'Promotion đang chạy';
+  let name = 'Chương trình nhân điểm đang chạy';
 
   if (preset === 'TONIGHT') {
     start = new Date(now);
@@ -46,7 +46,7 @@ function createPromotionDraft(preset: PromotionQuickPreset = 'NOW', multiplier =
     start.setHours(8, 0, 0, 0);
     end = new Date(start);
     end.setHours(17, 0, 0, 0);
-    name = 'Promotion ngày mai';
+    name = 'Chương trình nhân điểm ngày mai';
   }
 
   if (preset === 'WEEKEND') {
@@ -57,7 +57,7 @@ function createPromotionDraft(preset: PromotionQuickPreset = 'NOW', multiplier =
     end = new Date(start);
     end.setDate(end.getDate() + 1);
     end.setHours(22, 0, 0, 0);
-    name = 'Promotion cuối tuần';
+    name = 'Chương trình nhân điểm cuối tuần';
   }
 
   return {
@@ -244,12 +244,14 @@ function serializeMembers(membersList: any[], isEnterprise: boolean): string {
 
 function CandidateModal({
   title,
+  mode,
   form,
   setForm,
   onClose,
   onSubmit,
 }: {
   title: string;
+  mode: 'add' | 'edit';
   form: Partial<Candidate>;
   setForm: (value: Partial<Candidate>) => void;
   onClose: () => void;
@@ -377,12 +379,12 @@ function CandidateModal({
   const labelText = 'text-[10px] font-black uppercase tracking-[0.12em] text-slate-500';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
-      <form onSubmit={onSubmit} className="mx-auto my-6 w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+    <div className="fixed inset-0 z-[1000] overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="mx-auto my-6 w-full max-w-5xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Hồ sơ thí sinh dự thi</p>
-            <h3 className="mt-1 text-xl font-black text-slate-900">{title}</h3>
+            <h3 id="candidate-modal-title" className="mt-1 text-xl font-black text-slate-900">{title}</h3>
           </div>
           <button type="button" onClick={onClose} className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-bold text-slate-600 hover:border-emerald-600 hover:text-emerald-700">
             Đóng
@@ -390,16 +392,19 @@ function CandidateModal({
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="md:col-span-3 border-b border-slate-100 pb-1 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">
+            Thông tin cơ bản
+          </div>
           <label className="space-y-1.5 md:col-span-2">
             <span className={labelText}>Tên thí sinh <span className="text-red-500 font-bold">*</span></span>
             <input className={inputClass} value={form.name || ''} onChange={(event) => update('name', event.target.value)} required />
           </label>
           <label className="space-y-1.5">
-            <span className={labelText}>Mã thí sinh / SBD <span className="text-red-500 font-bold">*</span></span>
+            <span className={labelText}>Mã dự thi (SBD) <span className="text-red-500 font-bold">*</span></span>
             <input className={inputClass} value={form.sbd || ''} onChange={(event) => update('sbd', event.target.value)} required />
           </label>
           <label className="space-y-1.5">
-            <span className={labelText}>Bảng thi</span>
+            <span className={labelText}>Hạng mục dự thi</span>
             <select
               className={inputClass}
               value={form.contestTable || 'STUDENT'}
@@ -436,10 +441,17 @@ function CandidateModal({
             <span className={labelText}>Trạng thái</span>
             <input className={inputClass} value={form.status || ''} onChange={(event) => update('status', event.target.value)} />
           </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>Điểm bình chọn</span>
-            <input type="number" min={0} className={inputClass} value={form.votes || 0} onChange={(event) => update('votes', Number(event.target.value))} />
-          </label>
+          {mode === 'edit' && (
+            <label className="space-y-1.5">
+              <span className={labelText}>Lượt bình chọn</span>
+              <div className="flex h-10 items-center rounded-lg border border-slate-200 bg-slate-100 px-3 text-xs font-bold text-slate-500" aria-label="Lượt bình chọn, chỉ xem" title="Lượt bình chọn được cập nhật từ hệ thống">
+                {(form.votes || 0).toLocaleString()} lượt
+              </div>
+            </label>
+          )}
+          <div className="md:col-span-3 border-b border-slate-100 pb-1 pt-2 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">
+            Hồ sơ và hình ảnh
+          </div>
           <div className="md:col-span-2">
             <ImageDropzone
               label="Hình ảnh chân dung đại diện"
@@ -448,30 +460,37 @@ function CandidateModal({
               aspectRatioHint="Khuyên dùng ảnh chân dung rõ nét (3:4 hoặc 1:1)"
             />
           </div>
-          <label className="space-y-1.5">
-            <span className={labelText}>Tên nhóm</span>
-            <input className={inputClass} value={form.teamName || ''} onChange={(event) => update('teamName', event.target.value)} />
-          </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>Đơn vị / trường</span>
-            <input className={inputClass} value={form.representativeSchool || ''} onChange={(event) => update('representativeSchool', event.target.value)} />
-          </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>Trưởng nhóm</span>
-            <input className={inputClass} value={form.leaderName || ''} onChange={(event) => update('leaderName', event.target.value)} />
-          </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>SĐT trưởng nhóm</span>
-            <input type="tel" pattern="0[0-9]{9,10}" title="Số điện thoại phải gồm 10 hoặc 11 chữ số và bắt đầu bằng số 0" placeholder="Ví dụ: 0987654321" className={inputClass} value={form.leaderPhone || ''} onChange={(event) => update('leaderPhone', event.target.value)} />
-          </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>Email trưởng nhóm</span>
-            <input type="email" placeholder="Ví dụ: email@domain.com" className={inputClass} value={form.leaderEmail || ''} onChange={(event) => update('leaderEmail', event.target.value)} />
-          </label>
-          <label className="space-y-1.5">
-            <span className={labelText}>Cố vấn</span>
-            <input className={inputClass} value={form.advisorName || ''} onChange={(event) => update('advisorName', event.target.value)} />
-          </label>
+          {isEnterprise && (
+            <>
+              <div className="md:col-span-3 border-b border-slate-100 pb-1 pt-2 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">
+                Thông tin đội thi / doanh nghiệp
+              </div>
+              <label className="space-y-1.5">
+                <span className={labelText}>Tên nhóm / doanh nghiệp</span>
+                <input className={inputClass} value={form.teamName || ''} onChange={(event) => update('teamName', event.target.value)} />
+              </label>
+              <label className="space-y-1.5">
+                <span className={labelText}>Đơn vị / trường</span>
+                <input className={inputClass} value={form.representativeSchool || ''} onChange={(event) => update('representativeSchool', event.target.value)} />
+              </label>
+              <label className="space-y-1.5">
+                <span className={labelText}>Người đại diện</span>
+                <input className={inputClass} value={form.leaderName || ''} onChange={(event) => update('leaderName', event.target.value)} />
+              </label>
+              <label className="space-y-1.5">
+                <span className={labelText}>Số điện thoại liên hệ</span>
+                <input type="tel" pattern="0[0-9]{9,10}" title="Số điện thoại phải gồm 10 hoặc 11 chữ số và bắt đầu bằng số 0" placeholder="Ví dụ: 0987654321" className={inputClass} value={form.leaderPhone || ''} onChange={(event) => update('leaderPhone', event.target.value)} />
+              </label>
+              <label className="space-y-1.5">
+                <span className={labelText}>Email liên hệ</span>
+                <input type="email" placeholder="Ví dụ: email@domain.com" className={inputClass} value={form.leaderEmail || ''} onChange={(event) => update('leaderEmail', event.target.value)} />
+              </label>
+              <label className="space-y-1.5">
+                <span className={labelText}>Cố vấn</span>
+                <input className={inputClass} value={form.advisorName || ''} onChange={(event) => update('advisorName', event.target.value)} />
+              </label>
+            </>
+          )}
 
           {/* Showcase Images Gallery */}
           <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 md:col-span-3 space-y-4">
@@ -551,7 +570,7 @@ function CandidateModal({
             )}
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 md:col-span-3 space-y-4">
+          {isEnterprise && <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 md:col-span-3 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
                 <span className={labelText}>Thành viên nhóm</span>
@@ -737,7 +756,7 @@ function CandidateModal({
                 ))}
               </div>
             )}
-          </div>
+          </div>}
 
           <label className="space-y-1.5">
             <span className={labelText}>Địa điểm triển khai</span>
@@ -751,12 +770,20 @@ function CandidateModal({
             </select>
           </label>
           <label className="space-y-1.5 md:col-span-3">
-            <span className={labelText}>Mô tả ngắn <span className="text-red-500 font-bold">*</span></span>
+            <span className={labelText}>Mô tả ngắn (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
             <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.description || ''} onChange={(event) => update('description', event.target.value)} required />
           </label>
           <label className="space-y-1.5 md:col-span-3">
-            <span className={labelText}>Thuyết minh / nội dung chi tiết</span>
+            <span className={labelText}>Mô tả ngắn tiếng Anh (English Description)</span>
+            <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.descriptionEn || ''} onChange={(event) => update('descriptionEn', event.target.value)} placeholder="English short summary of the candidate/project..." />
+          </label>
+          <label className="space-y-1.5 md:col-span-3">
+            <span className={labelText}>Thuyết minh / nội dung chi tiết (Tiếng Việt)</span>
             <textarea className="h-28 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.biography || ''} onChange={(event) => update('biography', event.target.value)} />
+          </label>
+          <label className="space-y-1.5 md:col-span-3">
+            <span className={labelText}>Thuyết minh / nội dung tiếng Anh (English Proposal / Biography)</span>
+            <textarea className="h-28 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white" value={form.biographyEn || ''} onChange={(event) => update('biographyEn', event.target.value)} placeholder="Full English proposal or detailed project introduction..." />
           </label>
           <label className="space-y-1.5 md:col-span-3">
             <span className={labelText}>Nhu cầu hỗ trợ</span>
@@ -790,12 +817,15 @@ function CandidateModal({
 
 const csvHeadersMap: Record<string, string> = {
   'SBD': 'sbd',
-  'Tên thí sinh': 'name',
+  // Accept headers from older templates while exposing the new contest terminology.
   'Bảng thi': 'contestTable',
+  'Điểm bình chọn': 'votes',
+  'Tên thí sinh': 'name',
+      'Hạng mục dự thi': 'contestTable',
   'Lĩnh vực': 'sector',
   'Vòng hiện tại': 'currentRound',
   'Trạng thái': 'status',
-  'Điểm bình chọn': 'votes',
+      'Lượt bình chọn': 'votes',
   'Đường dẫn ảnh': 'imageUrl',
   'Tên nhóm': 'teamName',
   'Đơn vị trường': 'representativeSchool',
@@ -939,11 +969,11 @@ function ImportModal({
     const headers = [
       'SBD',
       'Tên thí sinh',
-      'Bảng thi',
+      'Hạng mục dự thi',
       'Lĩnh vực',
       'Vòng hiện tại',
       'Trạng thái',
-      'Điểm bình chọn',
+      'Lượt bình chọn',
       'Đường dẫn ảnh',
       'Tên nhóm',
       'Đơn vị trường',
@@ -1037,8 +1067,8 @@ function ImportModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm flex items-center justify-center">
-      <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Nhập dữ liệu thí sinh</p>
@@ -1245,7 +1275,7 @@ export default function CandidatesAdminPage() {
       );
   }, [rankedCandidates, roundFilter, search, tableFilter]);
 
-  const missingInfo = projects.filter((project) => !project.teamName || !project.leaderName || !project.contestTable).length;
+  const missingInfo = projects.filter((project) => !project.name || !project.sbd || !project.contestTable || !project.description || !project.imageUrl).length;
   const activePromotion = useMemo(() => {
     const now = currentTime;
     const parseVN = (dStr: string) => {
@@ -1280,7 +1310,7 @@ export default function CandidatesAdminPage() {
       }
       const currentSettings = await currentRes.json();
       const res = await fetch(apiUrl('/api/admin/settings'), {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...currentSettings,
@@ -1333,12 +1363,24 @@ export default function CandidatesAdminPage() {
   };
 
   const openAddModal = () => {
+    setShowPromotionManager(false);
+    setOpenPromotionApplyId(null);
+    setIsImportModalOpen(false);
+    setIsTableFilterOpen(false);
+    setIsRoundFilterOpen(false);
+    setIsViewConfigOpen(false);
     setSelectedCandidate(null);
     setForm({ ...emptyCandidate });
     setModalMode('add');
   };
 
   const openEditModal = (project: Candidate) => {
+    setShowPromotionManager(false);
+    setOpenPromotionApplyId(null);
+    setIsImportModalOpen(false);
+    setIsTableFilterOpen(false);
+    setIsRoundFilterOpen(false);
+    setIsViewConfigOpen(false);
     setSelectedCandidate(project);
     setForm({ ...emptyCandidate, ...project });
     setModalMode('edit');
@@ -1412,11 +1454,11 @@ export default function CandidatesAdminPage() {
     const headers = [
       'SBD',
       'Tên thí sinh',
-      'Bảng thi',
+      'Hạng mục dự thi',
       'Lĩnh vực',
       'Vòng hiện tại',
       'Trạng thái',
-      'Điểm bình chọn',
+      'Lượt bình chọn',
       'Đường dẫn ảnh',
       'Tên nhóm',
       'Đơn vị trường',
@@ -1480,11 +1522,11 @@ export default function CandidatesAdminPage() {
     const headers = [
       'SBD',
       'Tên thí sinh',
-      'Bảng thi',
+      'Hạng mục dự thi',
       'Lĩnh vực',
       'Vòng hiện tại',
       'Trạng thái',
-      'Điểm bình chọn',
+      'Lượt bình chọn',
       'Đường dẫn ảnh',
       'Tên nhóm',
       'Đơn vị trường',
@@ -1543,7 +1585,7 @@ export default function CandidatesAdminPage() {
       <section className="admin-card relative z-[80] overflow-visible p-0">
         <div className="flex flex-col gap-2.5 border-b border-slate-200/70 px-4 py-3.5 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--primary-strong)]">Quản lý cuộc thi</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.22em] text-[var(--primary-strong)]">Điều hành cuộc thi</p>
             <h2 className="mt-0.5 text-[20px] font-extrabold tracking-[-0.04em] text-slate-950">Danh sách thí sinh tham gia</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2.5">
@@ -1562,9 +1604,14 @@ export default function CandidatesAdminPage() {
                 <path d="M12 18v-6" />
                 <path d="m9 15 3 3 3-3" />
               </svg>
-              Tai mau
+              Tải mẫu
             </button>
-            <button onClick={() => setIsImportModalOpen(true)} className="admin-btn admin-btn-secondary !h-8 !min-h-0 px-2.5 text-xs gap-1.5 rounded-lg">
+            <button onClick={() => {
+              setShowPromotionManager(false);
+              setOpenPromotionApplyId(null);
+              setModalMode(null);
+              setIsImportModalOpen(true);
+            }} className="admin-btn admin-btn-secondary !h-8 !min-h-0 px-2.5 text-xs gap-1.5 rounded-lg">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
                 <polyline points="8 10 12 14 16 10" />
@@ -1646,7 +1693,7 @@ export default function CandidatesAdminPage() {
             <div className="space-y-1 text-left">
               <span className="block text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Trạng thái cổng</span>
               <p className="text-[11px] font-semibold text-slate-500 truncate leading-normal">
-                {isGateOpen ? 'Đang mở nhận lượt vote' : 'Đã đóng nhận lượt vote'}
+                {isGateOpen ? 'Đang mở nhận lượt bình chọn' : 'Đã đóng nhận lượt bình chọn'}
               </p>
             </div>
           </div>
@@ -1654,11 +1701,11 @@ export default function CandidatesAdminPage() {
           <div className="dashboard-stat-card relative z-40 flex min-h-[118px] flex-col justify-between !overflow-visible xl:col-span-2">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Promotion</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Chương trình nhân điểm</p>
                 <p className="mt-2 truncate text-[22px] font-extrabold tracking-[-0.04em] text-slate-950">
                   {activePromotion ? `Đang chạy x${activePromotion.multiplier}` : 'Chưa chạy'}
                 </p>
-                <p className="mt-1 text-[11px] font-semibold text-slate-500">{votingPromotions.length} khung giờ</p>
+                <p className="mt-1 text-[11px] font-semibold text-slate-500">{votingPromotions.length} khung giờ nhân điểm</p>
               </div>
               <button type="button" onClick={() => setShowPromotionManager((prev) => !prev)} className="admin-btn admin-btn-secondary min-w-[92px]">
                 {showPromotionManager ? 'Ẩn' : 'Quản lý'}
@@ -1679,8 +1726,8 @@ export default function CandidatesAdminPage() {
           <div className="relative z-[100] border-t border-slate-200/70 px-3 py-3">
             <div className="mb-3 flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Quy trình tạo Promotion</p>
-                <p className="mt-1 text-[13px] font-medium text-slate-500">Chọn mẫu thời gian, kiểm tra hệ số nhân điểm, sau đó bấm Lưu để áp dụng.</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Tạo chương trình nhân điểm</p>
+                <p className="mt-1 text-[13px] font-medium text-slate-500">Chọn thời gian và hệ số nhân điểm, sau đó bấm Lưu để áp dụng.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button type="button" onClick={() => addQuickPromotion('NOW', 2)} className="admin-btn admin-btn-secondary !h-8 px-3 text-xs">Bắt đầu ngay x2</button>
@@ -2010,7 +2057,7 @@ export default function CandidatesAdminPage() {
                       </label>
                       <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                         <input type="checkbox" checked={visibleColumns.table} onChange={(e) => setVisibleColumns({ ...visibleColumns, table: e.target.checked })} className="rounded text-blue-600" />
-                        Cột Bảng thi
+                        Cột Hạng mục dự thi
                       </label>
                       <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                         <input type="checkbox" checked={visibleColumns.leader} onChange={(e) => setVisibleColumns({ ...visibleColumns, leader: e.target.checked })} className="rounded text-blue-600" />
@@ -2018,7 +2065,7 @@ export default function CandidatesAdminPage() {
                       </label>
                       <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
                         <input type="checkbox" checked={visibleColumns.votes} onChange={(e) => setVisibleColumns({ ...visibleColumns, votes: e.target.checked })} className="rounded text-blue-600" />
-                        Cột Điểm bình chọn
+                        Cột Lượt bình chọn
                       </label>
                     </div>
                   </div>
@@ -2044,7 +2091,7 @@ export default function CandidatesAdminPage() {
                   {p.sbd}
                 </span>
                 <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                  🗳️ {p.votes} vote
+                  🗳️ {p.votes} lượt bình chọn
                 </span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2 py-2">
@@ -2101,9 +2148,9 @@ export default function CandidatesAdminPage() {
                   />
                 </th>
                 <th className="px-4 py-3">Thí sinh</th>
-                <th className="px-4 py-3">Bảng thi</th>
+                        <th className="px-4 py-3">Hạng mục dự thi</th>
                 <th className="px-4 py-3">Đại diện</th>
-                <th className="px-4 py-3 text-right">Điểm bình chọn</th>
+                        <th className="px-4 py-3 text-right">Lượt bình chọn</th>
                 <th className="px-4 py-3 text-right">Thao tác</th>
               </tr>
             </thead>
@@ -2200,6 +2247,7 @@ export default function CandidatesAdminPage() {
       {modalMode && (
         <CandidateModal
           title={modalMode === 'add' ? 'Thêm thí sinh dự thi' : 'Cập nhật hồ sơ thí sinh'}
+          mode={modalMode}
           form={form}
           setForm={setForm}
           onClose={() => setModalMode(null)}

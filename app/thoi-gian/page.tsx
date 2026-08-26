@@ -4,9 +4,12 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '../api';
 import { useLanguage } from '../../src/i18n/use-language';
+import { translate } from '../../src/i18n';
 import { localizedText } from '../../src/i18n/content';
 
 function CountdownTimer({ targetDate }: { targetDate: string }) {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   useEffect(() => {
     const update = () => {
@@ -26,10 +29,10 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
 
   const pad = (n: number) => String(n).padStart(2, '0');
   const units = [
-    { value: timeLeft.days, label: 'Ngày' },
-    { value: timeLeft.hours, label: 'Giờ' },
-    { value: timeLeft.minutes, label: 'Phút' },
-    { value: timeLeft.seconds, label: 'Giây' },
+    { value: timeLeft.days, label: t('days') },
+    { value: timeLeft.hours, label: t('hours') },
+    { value: timeLeft.minutes, label: t('minutes') },
+    { value: timeLeft.seconds, label: t('seconds') },
   ];
 
   return (
@@ -447,18 +450,20 @@ export default function TimelinePage() {
           <section className="timeline-enter text-center">
             {/* Breadcrumb */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, marginBottom:18, fontSize:12, color:'var(--site-muted)' }}>
-              <Link href="/" style={{ color:'var(--site-primary)', textDecoration:'none' }}>Trang chủ</Link>
+              <Link href="/" style={{ color:'var(--site-primary)', textDecoration:'none' }}>{translate(language, 'home')}</Link>
               <span>›</span>
-              <span>Thời gian</span>
+              <span>{translate(language, 'schedule')}</span>
             </div>
             <span suppressHydrationWarning className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
-              {isMounted && settings?.aboutTitle ? settings.aboutTitle : ''}
+              {isMounted && settings?.aboutTitle ? localizedText(language, settings.aboutTitle, settings.aboutTitleEn) : ''}
             </span>
             <h1 className="mx-auto mt-5 max-w-[900px] text-[32px] sm:text-[54px] font-black uppercase leading-[1.05] text-neutral-900 dark:text-white">
-              Thời gian các vòng thi
+              {language === 'en' ? 'Competition Schedule' : 'Thời gian các vòng thi'}
             </h1>
             <p className="mx-auto mt-5 max-w-[780px] text-[15px] sm:text-[17px] leading-relaxed text-neutral-700 dark:text-white/72 font-light">
-              Theo dõi toàn bộ lộ trình từ vòng loại, bán kết đến chung kết để chuẩn bị hồ sơ thí sinh và tham gia đúng hạn.
+              {language === 'en'
+                ? 'Follow the complete official roadmap from preliminary, semi-final to the grand finale awards gala.'
+                : 'Theo dõi toàn bộ lộ trình từ vòng loại, bán kết đến chung kết để chuẩn bị hồ sơ thí sinh và tham gia đúng hạn.'}
             </p>
             <div className="mx-auto mt-6 h-[3.5px] w-[82px] rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" />
 
@@ -470,7 +475,7 @@ export default function TimelinePage() {
                   rel="noopener noreferrer"
                   className="rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-white shadow-[0_10px_30px_rgba(10,47,255,0.35)] transition hover:scale-[1.03]"
                 >
-                  Đăng ký ngay
+                  {language === 'en' ? 'Register Now' : 'Đăng ký ngay'}
                 </a>
               ) : isRegistrationOpen ? (
                 <a
@@ -479,21 +484,22 @@ export default function TimelinePage() {
                   rel="noopener noreferrer"
                   className="rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-white shadow-[0_10px_30px_rgba(10,47,255,0.35)] transition hover:scale-[1.03]"
                 >
-                  Đăng ký ngay
+                  {language === 'en' ? 'Register Now' : 'Đăng ký ngay'}
                 </a>
               ) : (
                 <button
+                  type="button"
                   disabled
-                  className="rounded-full bg-neutral-300 dark:bg-white/10 px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-neutral-500 dark:text-white/40 cursor-not-allowed"
+                  className="cursor-not-allowed rounded-full bg-slate-300 dark:bg-slate-800 px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-slate-500 shadow-none"
                 >
-                  Đã đóng đăng ký
+                  {language === 'en' ? 'Registration Closed' : 'Đã đóng cổng đăng ký'}
                 </button>
               )}
               <Link
-                href="/gioi-thieu"
-                className="rounded-full border border-neutral-300 dark:border-white/20 bg-neutral-100 dark:bg-white/8 px-8 py-3.5 text-[14px] font-bold uppercase tracking-wider text-neutral-800 dark:text-white transition hover:border-[#79BCC2]/60 hover:bg-neutral-200 dark:hover:bg-white/12"
+                href="/the-le"
+                className="rounded-full border border-slate-300 dark:border-white/20 bg-white/50 dark:bg-white/5 backdrop-blur px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-neutral-800 dark:text-white transition hover:bg-white/80 dark:hover:bg-white/10"
               >
-                Thông tin cuộc thi
+                {language === 'en' ? 'Rules & Guidelines' : 'Xem thể lệ'}
               </Link>
             </div>
           </section>

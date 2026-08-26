@@ -8,6 +8,9 @@ import { useAlert } from '../../AlertProvider';
 import { apiUrl } from '../../api';
 import VoteModal from '../../VoteModal';
 import { generateCandidatePoster, downloadDataUrl } from '@/lib/posterGenerator';
+import { useLanguage } from '../../../src/i18n/use-language';
+import { translate, localizeTable, localizeRound } from '../../../src/i18n';
+import { localizedText } from '../../../src/i18n/content';
 
 function getCandidateImageUrl(url?: string | null) {
   if (!url) return '/duan/anhmauduan.png';
@@ -40,7 +43,38 @@ function formatDateTime(dStr: string | undefined | null) {
   return `${pad(utc7.getUTCHours())}:${pad(utc7.getUTCMinutes())} ngày ${pad(utc7.getUTCDate())}/${pad(utc7.getUTCMonth() + 1)}/${utc7.getUTCFullYear()}`;
 }
 
+function getReadableBiography(value: string | undefined | null, language: string) {
+  if (!value) return '';
+  const text = String(value).trim();
+  if (!text.startsWith('{') && !text.startsWith('[')) return text;
+
+  try {
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== 'object') return text;
+    const labels: Record<string, string> = language === 'en' ? {
+      teamName: 'Project / Team', representativeSchool: 'School / Unit', leaderName: 'Representative',
+      advisorName: 'Advisor', implementationLocation: 'Implementation location', supportNeeds: 'Support needs',
+      expectations: 'Expectations', talent: 'Field / focus', sector: 'Field / focus', motto: 'Motto',
+      achievements: 'Achievements', hobbies: 'Interests', longDescription: 'Project introduction'
+    } : {
+      teamName: 'Tên dự án / nhóm', representativeSchool: 'Trường / đơn vị', leaderName: 'Đại diện',
+      advisorName: 'Cố vấn', implementationLocation: 'Địa điểm triển khai', supportNeeds: 'Nhu cầu hỗ trợ',
+      expectations: 'Kỳ vọng', talent: 'Lĩnh vực / định hướng', sector: 'Lĩnh vực / định hướng', motto: 'Thông điệp',
+      achievements: 'Thành tích', hobbies: 'Sở thích', longDescription: 'Giới thiệu dự án'
+    };
+    const allowedKeys = Object.keys(labels);
+    return Object.entries(parsed)
+      .filter(([key, item]) => allowedKeys.includes(key) && item !== null && item !== undefined && item !== '')
+      .map(([key, item]) => `${labels[key]}: ${typeof item === 'boolean' ? (item ? (language === 'en' ? 'Yes' : 'Có') : (language === 'en' ? 'No' : 'Không')) : String(item)}`)
+      .join('\n');
+  } catch {
+    return text;
+  }
+}
+
 export default function CandidateDetailPage() {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const { showAlert } = useAlert();
   const params = useParams();
   const sbd = (params?.sbd as string) || '';
@@ -161,10 +195,10 @@ export default function CandidateDetailPage() {
     return diffDays > 0 ? `${diffDays} ngày` : 'Kết thúc';
   }, [settings?.endDate]);
 
-  const mockViews = useMemo(() => {
-    if (!candidate) return '0';
-    return (candidate.votes * 15 + 120).toLocaleString();
-  }, [candidate?.votes]);
+  const readableBiography = useMemo(
+    () => getReadableBiography(candidate?.biography || candidate?.description, language),
+    [candidate?.biography, candidate?.description, language]
+  );
 
   const currentRank = useMemo(() => {
     if (!candidate || allCandidates.length === 0) return 'Top --';
@@ -310,7 +344,7 @@ export default function CandidateDetailPage() {
       </div>
 
       {/* ─── HERO SECTION (Title & Description Full Width) ─── */}
-      <section className="max-w-[1300px] mx-auto px-4 pt-3 pb-1">
+      <section className="max-w-[1180px] mx-auto px-4 pt-6 pb-3">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-[#0A2FFF]/10 to-[#79BCC2]/10 border border-[#0A2FFF]/25 text-[#0A2FFF] dark:text-[#79BCC2] text-[10px] font-bold rounded-full w-max tracking-wide uppercase">
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
           Mã thí sinh · {candidate.sbd}
@@ -324,8 +358,8 @@ export default function CandidateDetailPage() {
       </section>
 
       {/* ─── IMAGE & STATS SECTION (2 Columns - Stretched Height) ─── */}
-      <section className="max-w-[1300px] mx-auto px-4 py-2">
-        <div className="grid gap-4 lg:grid-cols-[380px_1fr] items-stretch">
+      <section className="max-w-[1180px] mx-auto px-4 py-3">
+        <div className="grid gap-5 lg:grid-cols-[minmax(300px,390px)_1fr] items-stretch">
           
           {/* Left Column: Image & Thumbnails (Matched Height) */}
           <div className="flex flex-col gap-3 h-full justify-between">
@@ -333,13 +367,13 @@ export default function CandidateDetailPage() {
               ref={lightboxTriggerRef}
               type="button"
               onClick={() => handleOpenLightbox(activeImage || getCandidateImageUrl(candidate.imageUrl))}
-              className="overflow-hidden rounded-2xl cursor-zoom-in relative group text-left transition-all duration-300 active:scale-[0.99] w-full flex-1 h-[260px] md:h-[280px]"
+              className="overflow-hidden rounded-2xl cursor-zoom-in relative group text-left transition-all duration-300 active:scale-[0.99] w-full aspect-[3/4] bg-slate-100 border border-slate-200"
               aria-label={`Phóng to ảnh thí sinh ${candidate.name}`}
             >
               <img 
                 src={activeImage || getCandidateImageUrl(candidate.imageUrl)}
                 alt={candidate.name} 
-                className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105" 
+                className="absolute inset-0 w-full h-full object-contain rounded-2xl transition-transform duration-500 group-hover:scale-[1.02]"
               />
               <div className="absolute inset-0 rounded-2xl bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="h-8 w-8 text-white drop-shadow" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -377,7 +411,7 @@ export default function CandidateDetailPage() {
             <div className="grid grid-cols-2 gap-3 flex-1">
               {[
                 {
-                  label: 'Lượt bình chọn',
+                  label: t('votes'),
                   value: candidate.votes.toLocaleString(),
                   bgIcon: 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
                   icon: (
@@ -387,18 +421,7 @@ export default function CandidateDetailPage() {
                   )
                 },
                 {
-                  label: 'Lượt xem',
-                  value: mockViews,
-                  bgIcon: 'bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400',
-                  icon: (
-                    <svg className="w-5 h-5 stroke-current fill-none" strokeWidth="2.2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )
-                },
-                {
-                  label: 'Bảng xếp hạng',
+                  label: t('ranking'),
                   value: currentRank,
                   bgIcon: 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400',
                   icon: (
@@ -408,14 +431,20 @@ export default function CandidateDetailPage() {
                   )
                 },
                 {
-                  label: 'Kết thúc vote',
-                  value: remainingDays,
+                  label: language === 'en' ? 'Current round' : 'Vòng thi hiện tại',
+                  value: localizeRound(candidate.currentRound, language) || (language === 'en' ? 'Preliminary' : 'Vòng loại'),
                   bgIcon: 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
                   icon: (
                     <svg className="w-5 h-5 stroke-current fill-none" strokeWidth="2.2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 5h16M4 12h16M4 19h16" />
                     </svg>
                   )
+                },
+                {
+                  label: language === 'en' ? 'Voting status' : 'Trạng thái bình chọn',
+                  value: isGateOpen ? (language === 'en' ? 'Open' : 'Đang mở') : (language === 'en' ? 'Closed' : 'Đã đóng'),
+                  bgIcon: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400',
+                  icon: <span className="h-3 w-3 rounded-full bg-current" />
                 }
               ].map((stat, i) => (
                 <div key={i} className="bg-white dark:bg-slate-900 px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-500/30 hover:shadow-md transition-all duration-300 flex items-center justify-between gap-4">
@@ -433,15 +462,15 @@ export default function CandidateDetailPage() {
             {/* Compact project metadata details */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-gradient-to-r from-[#0A2FFF]/[0.03] to-[#79BCC2]/[0.03] border border-[#0A2FFF]/15 p-2.5 rounded-xl shrink-0">
               {[
-                ['Bảng thi', candidate.contestTableLabel || candidate.contestTable || 'Chưa phân bảng'],
-                ['Vòng thi', candidate.currentRound || 'Vòng loại'],
-                ['Điểm bình chọn', `${candidate.votes.toLocaleString()} điểm`],
+                [language === 'en' ? 'Category' : 'Hạng mục', localizeTable(candidate.contestTable, language) || (language === 'en' ? 'General category' : 'Chưa phân hạng mục')],
+                [language === 'en' ? 'Round' : 'Vòng thi', localizeRound(candidate.currentRound, language) || (language === 'en' ? 'Preliminary' : 'Vòng loại')],
+                [t('votes'), `${candidate.votes.toLocaleString()} ${language === 'en' ? 'votes' : 'lượt'}`],
               ].map(([lbl, val]) => (
                 <div key={lbl} className="flex justify-between sm:flex-col sm:justify-start gap-0.5 px-2 py-1 sm:border-r last:border-r-0 border-[#0A2FFF]/15">
                   <span className="text-[10px] font-bold text-[#0A2FFF]/70 dark:text-[#79BCC2]/70 uppercase tracking-wide">{lbl}</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-bold text-slate-800 dark:text-white">{val}</span>
-                    {lbl === 'Điểm bình chọn' && settings?.activeVotingPromotion && (
+                    {lbl === (t('votes')) && settings?.activeVotingPromotion && (
                       <span className="inline-flex items-center rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-black text-amber-700 border border-amber-200/60 animate-pulse">
                         x{settings.activeVotingPromotion.multiplier}
                       </span>
@@ -456,12 +485,12 @@ export default function CandidateDetailPage() {
       </section>
 
       {/* ─── MAIN BODY SECTION ─── */}
-      <section className="max-w-[1300px] mx-auto px-4 py-4 grid gap-8 lg:grid-cols-[1fr_380px]">
+      <section className="max-w-[1180px] mx-auto px-4 py-5 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         
         {/* Left Column - Details */}
         <div className="space-y-8">
           
-          {/* 1. Hồ sơ Thí sinh & Nét đẹp Sinh viên */}
+          {/* 1. Hồ sơ Thí sinh */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-5 sm:p-6 shadow-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
               <span className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#0A2FFF]/10 to-[#79BCC2]/10 border border-[#0A2FFF]/20 text-[#0A2FFF] dark:text-[#79BCC2]">
@@ -469,19 +498,18 @@ export default function CandidateDetailPage() {
                   <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </span>
-              Hồ sơ Thí sinh & Nét đẹp Sinh viên
+              {language === 'en' ? 'Candidate profile' : 'Thông tin thí sinh'}
             </h2>
             
             <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 text-base">
               {[
-                { label: 'Họ và tên', value: candidate.name, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
-                { label: 'Số báo danh', value: `SBD ${candidate.sbd}`, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> },
-                { label: 'Khoa / Viện', value: candidate.faculty || candidate.representativeSchool || 'Trường ĐH Công Thương TP.HCM', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, fullWidth: true },
-                { label: 'Bảng thi', value: candidate.contestTableLabel || (candidate.contestTable === 'MALE' ? 'Bảng Nam (King)' : candidate.contestTable === 'FEMALE' ? 'Bảng Nữ (Queen)' : 'Bảng sinh viên'), icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> },
-                { label: 'Vòng thi hiện tại', value: candidate.currentRound || 'Vòng Chung kết', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg> },
-                { label: 'Chiều cao & Cân nặng', value: candidate.height ? `${candidate.height} cm ${candidate.weight ? `• ${candidate.weight} kg` : ''}` : '1m70 • 52kg', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="19 5 12 2 5 5"/><polyline points="19 19 12 22 5 19"/></svg> },
-                { label: 'Năng khiếu / Sở thích', value: candidate.talent || candidate.sector || 'Hát, Dẫn chương trình, Múa nghệ thuật', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>, fullWidth: true },
-                { label: 'Châm ngôn sống', value: candidate.motto || candidate.expectations || 'Tự tin tỏa sáng - Lan tỏa giá trị tích cực đến cộng đồng HUIT', icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, fullWidth: true },
+                { label: language === 'en' ? 'Full Name' : 'Họ và tên', value: candidate.name, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+                { label: t('sbd'), value: `${candidate.sbd}`, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> },
+                { label: language === 'en' ? 'School / Unit' : 'Trường / đơn vị', value: candidate.faculty || candidate.representativeSchool, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, fullWidth: true },
+                { label: language === 'en' ? 'Category' : 'Hạng mục dự thi', value: localizeTable(candidate.contestTable, language) || candidate.contestTableLabel, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> },
+                { label: language === 'en' ? 'Current Round' : 'Vòng thi hiện tại', value: localizeRound(candidate.currentRound, language), icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg> },
+                { label: language === 'en' ? 'Project / Team' : 'Dự án / Nhóm', value: candidate.teamName, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+                { label: language === 'en' ? 'Field / Focus' : 'Lĩnh vực / định hướng', value: candidate.talent || candidate.sector, icon: <svg className="w-4 h-4 stroke-slate-500 fill-none mt-0.5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>, fullWidth: true },
               ].map((item, idx) => {
                 if (!item.value) return null;
                 return (
@@ -502,20 +530,22 @@ export default function CandidateDetailPage() {
             <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 border-b border-slate-300 pb-4">
               <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-50 border border-slate-300 text-slate-700">
                 <svg className="w-5 h-5 stroke-slate-700 fill-none" strokeWidth="2.2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504( 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
               </span>
-              Thuyết minh thí sinh
+              {language === 'en' ? 'Project Proposal & Showcase' : 'Thuyết minh dự án & Thí sinh'}
             </h2>
 
             {/* Stylized Candidate Executive Summary Quote Box */}
             <div className="mt-6 p-5 rounded-2xl bg-slate-50 border-l-4 border-[#2563EB] text-slate-700 text-[16px] leading-relaxed italic font-medium">
-              <span className="font-extrabold not-italic text-slate-800 uppercase text-xs tracking-wider block mb-1.5">Tóm tắt cốt lõi thí sinh:</span>
-              "{candidate.description}"
+              <span className="font-extrabold not-italic text-slate-800 uppercase text-xs tracking-wider block mb-1.5">
+                {language === 'en' ? 'Executive Summary:' : 'Tóm tắt cốt lõi thí sinh:'}
+              </span>
+              "{localizedText(language, candidate.description, (candidate as any).descriptionEn)}"
             </div>
 
             <div className="mt-6 text-lg leading-relaxed text-slate-600 whitespace-pre-line font-medium">
-              {candidate.biography || candidate.description}
+              {readableBiography}
             </div>
 
             {/* Custom Startup Feature Cards */}
@@ -538,9 +568,11 @@ export default function CandidateDetailPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
                   </svg>
                 </span>
-                Nhu cầu hỗ trợ
+                {t('supportNeeds')}
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">{candidate.supportNeeds || 'Chưa cập nhật nhu cầu hỗ trợ.'}</p>
+              <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">
+                {candidate.supportNeeds || (language === 'en' ? 'Mentorship, seed capital, and commercial partnership connections.' : 'Chưa cập nhật nhu cầu hỗ trợ.')}
+              </p>
             </div>
             
             <div className="bg-white rounded-[16px] border border-slate-300 p-6 sm:p-8 shadow-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
@@ -550,12 +582,13 @@ export default function CandidateDetailPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499c-.107-.218-.284-.41-.504-.51a1.2 1.2 0 00-1.393.267l-6 6a1.2 1.2 0 00-.267 1.393c.101.22.293.397.512.505l6 3a1.2 1.2 0 001.392-.267l6-6a1.2 1.2 0 00.267-1.393l-6-3zM21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25" />
                   </svg>
                 </span>
-                Kỳ vọng sau cuộc thi
+                {t('expectations')}
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">{candidate.expectations || 'Chưa cập nhật kỳ vọng.'}</p>
+              <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">
+                {candidate.expectations || (language === 'en' ? 'Bring positive impact to the community and inspire youth entrepreneurship.' : 'Chưa cập nhật kỳ vọng.')}
+              </p>
             </div>
           </div>
-
         </div>
 
         {/* Right Column - Sticky Sidebar */}
@@ -563,13 +596,21 @@ export default function CandidateDetailPage() {
           
           {/* Voting Card */}
           <div className="bg-white rounded-[16px] border border-slate-300 p-6 shadow-sm flex flex-col transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:border-slate-400/80">
-            <span className="text-xs font-black uppercase tracking-wider text-slate-400">Cổng bình chọn HUIT ICONIC</span>
-            <h2 className="mt-1 text-xl font-extrabold text-slate-900 tracking-tight">Bình chọn cho thí sinh</h2>
+            <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+              {language === 'en' ? 'HUIT ICONIC VOTING GATE' : 'Cổng bình chọn HUIT ICONIC'}
+            </span>
+            <h2 className="mt-1 text-xl font-extrabold text-slate-900 tracking-tight">
+              {language === 'en' ? 'Vote For Candidate' : 'Bình chọn cho thí sinh'}
+            </h2>
             
             <div className="mt-4 rounded-xl bg-slate-50 p-4 border border-slate-300 text-left">
-              <p className="text-[15px] font-extrabold text-slate-800">Mỗi lần bình chọn cộng 1 lượt cho thí sinh.</p>
+              <p className="text-[15px] font-extrabold text-slate-800">
+                {language === 'en' ? 'Each vote adds 1 score to the candidate.' : 'Mỗi lần bình chọn cộng 1 lượt cho thí sinh.'}
+              </p>
               <p className="mt-2 text-[14px] leading-relaxed text-slate-500 font-medium">
-                Mỗi tài khoản có 2 lượt miễn phí mỗi ngày cho toàn bộ thí sinh. Dùng hết 2 lượt thì không thể vote cho thí sinh khác cho đến ngày hôm sau.
+                {language === 'en'
+                  ? 'Each account receives 2 free votes per day across all candidates. Daily votes reset every midnight.'
+                  : 'Mỗi tài khoản có 2 lượt miễn phí mỗi ngày cho toàn bộ thí sinh. Dùng hết 2 lượt thì không thể vote cho thí sinh khác cho đến ngày hôm sau.'}
               </p>
             </div>
             
@@ -587,9 +628,9 @@ export default function CandidateDetailPage() {
                   <svg className="w-4 h-4 fill-white transition-transform duration-300 group-hover:scale-125 group-hover:animate-pulse" viewBox="0 0 24 24">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                   </svg>
-                  Bình chọn ngay
+                  {t('voteNow')}
                 </>
-              ) : 'Cổng bình chọn đã đóng'}
+              ) : t('votingGateClosed')}
             </button>
 
             {/* Poster download & share buttons */}
@@ -606,14 +647,14 @@ export default function CandidateDetailPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Đang tạo Poster HD...
+                    {language === 'en' ? 'Generating HD Poster...' : 'Đang tạo Poster HD...'}
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4 fill-none stroke-current" strokeWidth="2.2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
-                    Tải Poster Kêu Gọi Vote (QR)
+                    {language === 'en' ? 'Download Voting Poster (QR)' : 'Tải Poster Kêu Gọi Vote (QR)'}
                   </>
                 )}
               </button>
@@ -626,7 +667,7 @@ export default function CandidateDetailPage() {
                 <svg className="w-3.5 h-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                 </svg>
-                Sao chép liên kết bình chọn
+                {t('copyLink')}
               </button>
             </div>
             
@@ -635,7 +676,7 @@ export default function CandidateDetailPage() {
                 href={`/dang-nhap?redirect=/thi-sinh/${candidate.sbd}`} 
                 className="mt-4 text-center text-xs font-extrabold text-[#0A2FFF] hover:underline block"
               >
-                Đăng nhập ngay để nhận lượt bình chọn miễn phí
+                {language === 'en' ? 'Sign in now to get 2 free daily votes' : 'Đăng nhập ngay để nhận lượt bình chọn miễn phí'}
               </Link>
             )}
           </div>

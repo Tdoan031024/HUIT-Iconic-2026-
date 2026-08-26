@@ -44,8 +44,8 @@ function UserModal({
   const labelText = 'text-[10px] font-black uppercase tracking-[0.12em] text-slate-500';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
-      <form onSubmit={onSubmit} className="mx-auto my-6 w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="mx-auto my-6 w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl animate-in fade-in zoom-in duration-200">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Tài khoản người dùng</p>
@@ -141,8 +141,8 @@ function DetailModal({
   const valText = 'text-xs font-bold text-slate-800 mt-1';
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm">
-      <div className="mx-auto my-12 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div onMouseDown={(event) => event.stopPropagation()} className="mx-auto my-12 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-full bg-[#123c34] text-sm font-black text-white shadow">

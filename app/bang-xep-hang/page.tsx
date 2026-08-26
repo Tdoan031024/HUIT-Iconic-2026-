@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { useAlert } from '../AlertProvider';
 import { apiUrl } from '../api';
 import VoteModal from '../VoteModal';
+import { useLanguage } from '../../src/i18n/use-language';
+import { translate, localizeTable, localizeRound } from '../../src/i18n';
+import { localizedText } from '../../src/i18n/content';
 const PROJECT_FALLBACK_IMAGE = '/duan/anhmauduan.png';
 
 function getCandidateImageUrl(url?: string | null) {
@@ -88,7 +91,7 @@ function VoteToastNotification({ toast, onClose }: { toast: VoteToastItem; onClo
           <strong>{toast.userName || 'Ai đó'}</strong> vừa bình chọn cho{' '}
           <strong>{toast.candidateName}</strong>
         </p>
-        <span className="vote-toast-badge">+{toast.score} điểm 🔥</span>
+        <span className="vote-toast-badge">+{toast.score} lượt bình chọn</span>
       </div>
       <button onClick={onClose} className="vote-toast-close" aria-label="Đóng">×</button>
     </div>
@@ -187,6 +190,8 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
   isGateOpen: boolean;
   activeVotingPromotion?: any;
 }) {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const podiumRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -228,8 +233,8 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
         {/* Candidate details */}
         <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
           <div className="project-card-meta">
-            <span className="project-card-code-badge">Mã thí sinh: {candidate.sbd}</span>
-            <span className={`project-rank-badge ${rankTone}`}>Top {rank}</span>
+            <span className="project-card-code-badge">{t('sbd')}: {candidate.sbd}</span>
+            <span className={`project-rank-badge ${rankTone}`}>{t('rank')} {rank}</span>
           </div>
 
           <div className="project-title-group">
@@ -242,27 +247,27 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
 
           <div className="project-vote-stat flex items-center justify-between">
             <div>
-              <p className="project-vote-stat-label">Lượt bình chọn</p>
+              <p className="project-vote-stat-label">{t('votes')}</p>
               <p className="project-vote-stat-value">
                 {visible ? votesDisplay.toLocaleString() : candidate.votes.toLocaleString()}
               </p>
             </div>
             {activeVotingPromotion && (
               <span className="inline-flex items-center rounded-lg bg-amber-500/10 border border-amber-500/25 px-2 py-1 text-xs font-black text-amber-600 dark:text-amber-400 animate-pulse">
-                x{activeVotingPromotion.multiplier} Điểm 🔥
+                x{activeVotingPromotion.multiplier} {language === 'en' ? 'votes' : 'lượt'}
               </span>
             )}
           </div>
 
           <p className="project-card-description mt-2 line-clamp-2 min-h-[42px] text-left">
-            {candidate.description || 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.'}
+            {localizedText(language, candidate.description, (candidate as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
           </p>
 
           <div className="project-card-actions flex items-center gap-2">
             <button
               onClick={() => onVote(candidate)}
               disabled={!isGateOpen}
-              aria-label={isGateOpen ? `Bình chọn cho thí sinh ${candidate.name}` : 'Cổng bình chọn đã đóng'}
+              aria-label={isGateOpen ? `${t('voteNow')} ${candidate.name}` : t('votingGateClosed')}
               className={`project-vote-button sc-7f525aa4-0 eyRkL flex items-center justify-center gap-2 rounded-xl py-2.5 w-full border-0 cursor-pointer transition-all hover-shine-effect ${isGateOpen
                   ? 'active bg-primary dark:bg-neutral-white hover:opacity-90 active:scale-[0.98]'
                   : 'disabled bg-slate-200 dark:bg-slate-800/50 cursor-not-allowed'
@@ -273,14 +278,14 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
                   ? 'text-neutral-white dark:text-primary'
                   : 'text-slate-500 dark:text-slate-400'
                 }`}>
-                {isGateOpen ? 'Bình chọn' : 'Đã đóng'}
+                {isGateOpen ? t('voteNow') : (language === 'en' ? 'Closed' : 'Đã đóng')}
               </p>
             </button>
             <Link
               href={`/thi-sinh/${candidate.sbd}`}
               className="ranking-detail-button flex min-h-[40px] items-center justify-center rounded-xl px-4 font-bold uppercase tracking-wider transition whitespace-nowrap"
             >
-              Chi tiết
+              {t('viewDetails')}
             </Link>
           </div>
         </div>
@@ -290,7 +295,7 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
       <div className="podium-pedestal">
         <div className="podium-pedestal-num">{rank}</div>
         <div className="podium-pedestal-label">
-          {rank === 1 ? 'Quán quân' : rank === 2 ? 'Hạng 2' : 'Hạng 3'}
+          {rank === 1 ? (language === 'en' ? 'Champion' : 'Quán quân') : rank === 2 ? (language === 'en' ? '2nd Place' : 'Hạng 2') : (language === 'en' ? '3rd Place' : 'Hạng 3')}
         </div>
       </div>
     </div>
@@ -308,6 +313,8 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
   isGateOpen: boolean;
   activeVotingPromotion?: any;
 }) {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const cardRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -351,8 +358,8 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
         {/* Candidate details */}
         <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
           <div className="project-card-meta">
-            <span className="project-card-code-badge">Mã thí sinh: {c.sbd}</span>
-            <span className={`project-rank-badge ${rankTone}`}>Top {rank}</span>
+            <span className="project-card-code-badge">{t('sbd')}: {c.sbd}</span>
+            <span className={`project-rank-badge ${rankTone}`}>{t('rank')} {rank}</span>
           </div>
 
           <div className="project-title-group">
@@ -365,27 +372,27 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
 
           <div className="project-vote-stat flex items-center justify-between">
             <div>
-              <p className="project-vote-stat-label">Lượt bình chọn</p>
+              <p className="project-vote-stat-label">{t('votes')}</p>
               <p className="project-vote-stat-value">
                 {inView ? votesDisplay.toLocaleString() : c.votes.toLocaleString()}
               </p>
             </div>
             {activeVotingPromotion && (
               <span className="inline-flex items-center rounded-lg bg-amber-500/10 border border-amber-500/25 px-2 py-1 text-xs font-black text-amber-600 dark:text-amber-400 animate-pulse">
-                x{activeVotingPromotion.multiplier} Điểm 🔥
+                x{activeVotingPromotion.multiplier} {language === 'en' ? 'votes' : 'lượt'}
               </span>
             )}
           </div>
 
           <p className="project-card-description mt-2 line-clamp-2 min-h-[42px] text-left">
-            {c.description || 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.'}
+            {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
           </p>
 
           <div className="project-card-actions flex items-center gap-2">
             <button
               onClick={() => onVote(c)}
               disabled={!isGateOpen}
-              aria-label={isGateOpen ? `Bình chọn cho thí sinh ${c.name}` : 'Cổng bình chọn đã đóng'}
+              aria-label={isGateOpen ? `${t('voteNow')} ${c.name}` : t('votingGateClosed')}
               className={`project-vote-button sc-7f525aa4-0 eyRkL flex items-center justify-center gap-2 rounded-xl py-2.5 w-full border-0 cursor-pointer transition-all hover-shine-effect ${isGateOpen
                   ? 'active bg-primary dark:bg-neutral-white hover:opacity-90 active:scale-[0.98]'
                   : 'disabled bg-slate-200 dark:bg-slate-800/50 cursor-not-allowed'
@@ -396,14 +403,14 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
                   ? 'text-neutral-white dark:text-primary'
                   : 'text-slate-500 dark:text-slate-400'
                 }`}>
-                {isGateOpen ? 'Bình chọn' : 'Đã đóng'}
+                {isGateOpen ? t('voteNow') : (language === 'en' ? 'Closed' : 'Đã đóng')}
               </p>
             </button>
             <Link
               href={`/thi-sinh/${c.sbd}`}
               className="ranking-detail-button flex min-h-[40px] items-center justify-center rounded-xl px-4 font-bold uppercase tracking-wider transition whitespace-nowrap"
             >
-              Chi tiết
+              {t('viewDetails')}
             </Link>
           </div>
         </div>
@@ -429,7 +436,9 @@ function formatDateTime(dStr: string | undefined | null) {
   return `${pad(utc7.getUTCHours())}:${pad(utc7.getUTCMinutes())} ngày ${pad(utc7.getUTCDate())}/${pad(utc7.getUTCMonth() + 1)}/${utc7.getUTCFullYear()}`;
 }
 
-export default function RankingPage() {
+export default function BangXepHangPage() {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const { showAlert } = useAlert();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [activeVoteCandidate, setActiveVoteCandidate] = useState<Candidate | null>(null);
@@ -439,8 +448,8 @@ export default function RankingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<any>(null);
 
-  const titleSection = useInView(0.2);
-  const podiumSection = useInView(0.1);
+  const titleSection = useInView(0.05);
+  const podiumSection = useInView(0.05);
   const listSection = useInView(0.05);
 
   useEffect(() => {
@@ -742,21 +751,23 @@ export default function RankingPage() {
               <div ref={titleSection.ref} className={`flex flex-col items-center text-center w-full ${titleSection.visible ? 'anim-up' : 'opacity-0'}`}>
                 {/* Breadcrumb */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 18, fontSize: 12, color: 'var(--site-muted)' }}>
-                  <Link href="/" style={{ color: 'var(--site-primary)', textDecoration: 'none' }}>Trang chủ</Link>
+                  <Link href="/" style={{ color: 'var(--site-primary)', textDecoration: 'none' }}>{t('home')}</Link>
                   <span>›</span>
-                  <span>Bảng xếp hạng</span>
+                  <span>{t('ranking')}</span>
                 </div>
 
                 <span suppressHydrationWarning className="inline-flex rounded-full border border-blue-500/25 bg-blue-500/10 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.28em] text-blue-600 dark:text-blue-400">
-                  {settings?.aboutTitle || "HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT"}
+                  {localizedText(language, settings?.aboutTitle || "HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT", settings?.aboutTitleEn)}
                 </span>
 
                 <h1 className="mx-auto mt-5 max-w-[900px] text-[32px] sm:text-[54px] font-black uppercase leading-[1.05] text-neutral-900 dark:text-white">
-                  Bảng xếp hạng thí sinh
+                  {t('ranking')}
                 </h1>
 
                 <p className="mx-auto mt-5 max-w-[780px] text-[15px] sm:text-[17px] leading-relaxed text-neutral-700 dark:text-white/72 font-light">
-                  Cập nhật liên tục thứ hạng các thí sinh khởi nghiệp, tổng số lượt xem và tổng điểm bình chọn thực tế từ Hội đồng và Công chúng.
+                  {language === 'en'
+                    ? 'Real-time updated leaderboard of startup candidates, public reach and official voting scores from the Evaluation Board and Public Community.'
+                    : 'Cập nhật liên tục thứ hạng và số lượt bình chọn của các thí sinh ICONIC 2026 từ cộng đồng.'}
                 </p>
 
                 <div className="mx-auto mt-6 h-[3.5px] w-[82px] rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" />
@@ -773,13 +784,13 @@ export default function RankingPage() {
                   </span>
                   <input
                     type="text"
-                    placeholder="Tìm thí sinh theo tên hoặc MDB... vd: '085', 'Nông nghiệp'"
+                    placeholder={t('searchPlaceholder')}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    aria-label="Tìm thí sinh theo tên hoặc mã thí sinh"
+                    aria-label={t('search')}
                   />
                   {search && (
-                    <button type="button" className="search-clear" onClick={() => setSearch('')} aria-label="Xóa nội dung tìm kiếm">
+                    <button type="button" className="search-clear" onClick={() => setSearch('')} aria-label="Clear search">
                       <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                         <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
@@ -787,12 +798,12 @@ export default function RankingPage() {
                   )}
                 </div>
                 <div className="ranking-filter-toolbar">
-                  <div className="ranking-filter-pills" role="group" aria-label="Lọc thí sinh theo bảng thi">
+                  <div className="ranking-filter-pills" role="group" aria-label="Filter tracks">
                     {[
-                      ['ALL', 'Tất cả'],
-                      ['HIGH_SCHOOL', 'Học sinh'],
-                      ['STUDENT', 'Sinh viên'],
-                      ['ENTERPRISE', 'Doanh nghiệp']
+                      ['ALL', t('allTables')],
+                      ['HIGH_SCHOOL', t('tableHighSchool')],
+                      ['STUDENT', t('tableStudent')],
+                      ['ENTERPRISE', t('tableEnterprise')]
                     ].map(([value, label]) => (
                       <button
                         key={value}
@@ -807,13 +818,13 @@ export default function RankingPage() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
                     <div className="ranking-result-badge" aria-live="polite">
-                      {filteredCandidates.length > 0 ? `${filteredCandidates.length} thí sinh` : '0 thí sinh'}
+                      {filteredCandidates.length > 0 ? `${filteredCandidates.length} ${t('candidatesCount')}` : `0 ${t('candidatesCount')}`}
                     </div>
                     <label className="ranking-sort-label">
-                      <span>Sắp xếp</span>
+                      <span>{language === 'en' ? 'Sort' : 'Sắp xếp'}</span>
                       <select value={sortBy} onChange={event => setSortBy(event.target.value as typeof sortBy)}>
-                        <option value="votes">Nhiều phiếu nhất</option>
-                        <option value="sbd">Mã thí sinh tăng dần</option>
+                        <option value="votes">{t('sortByVotesDesc')}</option>
+                        <option value="sbd">{t('sortBySbdAsc')}</option>
                       </select>
                     </label>
                   </div>
@@ -830,10 +841,10 @@ export default function RankingPage() {
               ) : filteredCandidates.length === 0 ? (
                 <div className="empty-state mt-8">
                   <div className="empty-state-icon" style={{ fontSize: 56, filter: 'grayscale(0.5)' }}>🔍</div>
-                  <h3>Không tìm thấy thí sinh</h3>
-                  <p>Thử đổi từ khóa, bảng thi hoặc cách sắp xếp</p>
+                  <h3>{t('noCandidatesFound')}</h3>
+                  <p>{language === 'en' ? 'Try changing keywords, track filter or sorting.' : 'Thử đổi từ khóa, bảng thi hoặc cách sắp xếp'}</p>
                   <button onClick={() => { setSearch(''); setCategory('ALL'); setSortBy('votes'); }} className="ranking-reset-button">
-                    Xem tất cả thí sinh
+                    {language === 'en' ? 'View all candidates' : 'Xem tất cả thí sinh'}
                   </button>
                 </div>
               ) : (
@@ -843,10 +854,10 @@ export default function RankingPage() {
                     <div ref={podiumSection.ref} className="w-full max-w-[1360px] mx-auto px-4 mb-10 mt-8">
                       <div className="mb-6 flex flex-col gap-2 text-center">
                         <p className={`text-[12px] font-bold uppercase tracking-[0.28em] text-[#79BCC2] ${podiumSection.visible ? 'anim-up' : ''}`}>
-                          🏆 Thí sinh nổi bật nhất
+                          🏆 {language === 'en' ? 'TOP CANDIDATES' : 'Thí sinh nổi bật nhất'}
                         </p>
                         <h2 className={`ranking-title text-[22px] sm:text-[34px] font-extrabold uppercase ${podiumSection.visible ? 'anim-up anim-d100' : ''}`}>
-                          Bục vinh danh
+                          {language === 'en' ? 'Honor Podium' : 'Bục vinh danh'}
                         </h2>
                       </div>
 
