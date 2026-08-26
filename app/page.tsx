@@ -363,6 +363,7 @@ export default function HomePage() {
                 type: isVideo ? 'video' : 'image',
                 url: b.imageUrl,
                 title: b.title,
+                titleEn: b.titleEn,
                 link: b.link || '#'
               };
             });
@@ -519,7 +520,7 @@ export default function HomePage() {
         sponsorsObserver.disconnect();
       }
     };
-  }, []);
+  }, [hasAboutContent]);
 
   // Drag-to-slide states and handlers
   const [dragOffset, setDragOffset] = useState(0);
@@ -706,6 +707,14 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+
+              {slides[currentBannerIndex]?.title && (
+                <div className="border-b border-slate-200/80 bg-white px-4 py-3 text-center shadow-sm sm:px-6 sm:py-4">
+                  <p className="mx-auto max-w-4xl text-sm font-bold leading-relaxed text-slate-800 sm:text-base">
+                    {localizedText(language, slides[currentBannerIndex].title, slides[currentBannerIndex].titleEn)}
+                  </p>
+                </div>
+              )}
 
             </div>
           </div>
@@ -1011,6 +1020,7 @@ export default function HomePage() {
                   />
                 </div>
               </div>
+
             </div>
           </div>
 
