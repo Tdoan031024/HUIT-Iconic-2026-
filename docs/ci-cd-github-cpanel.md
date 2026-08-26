@@ -14,6 +14,8 @@ Mỗi lần push vào nhánh `main`, GitHub Actions sẽ:
 6. Đồng bộ Prisma database.
 7. Build lại và restart CloudLinux Passenger.
 
+Bước deploy sử dụng `npm install` để tận dụng dependencies đã có trên host, bỏ generate Prisma trùng lặp và giới hạn bộ nhớ Node để tránh CloudLinux kết thúc tiến trình với lỗi `137`.
+
 Database production và `.env` không nằm trong repository. Workflow chỉ sử dụng `.env` hiện có trên host.
 
 ## Cấu hình GitHub Secrets
