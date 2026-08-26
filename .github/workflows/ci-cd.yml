@@ -54,11 +54,12 @@ jobs:
             set -e
             cd /home/uqqwmiabhosting/public_html/iconic2026.huitmedia.edu.vn
             export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
-            export NODE_OPTIONS=--max-old-space-size=768
+            export NODE_OPTIONS=--max-old-space-size=512
+            export NEXT_DISABLE_SWC_WORKER=1
             git switch main
             git pull --ff-only origin main
             npm install --include=dev
             npx prisma db push --skip-generate
-            npm run build
+            npx next build
             mkdir -p tmp
             touch tmp/restart.txt
