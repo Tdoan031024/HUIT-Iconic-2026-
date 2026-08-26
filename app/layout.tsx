@@ -219,7 +219,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     { href: '/bang-xep-hang', label: t('ranking') },
     { href: '/the-le', label: t('guide') },
     { href: '/tin-tuc', label: t('news') },
-    { href: '/ho-tro', label: t('supportCenter') },
   ];
 
   const drawerLinks = [
@@ -334,16 +333,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </a>
 
             {/* ── STICKY HEADER (Chuẩn Web Startup) ── */}
-            <div className="sticky-outer-wrapper" style={{ height: '80px' }}>
+            <div className="sticky-outer-wrapper" style={{ height: '72px' }}>
               <div
                 className="sticky-inner-wrapper"
-                style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1001, height: '80px' }}
+                style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1001, height: '72px' }}
               >
                 {/* Glass header bar */}
-                <div className="absolute h-[80px] top-0 left-0 right-0 w-full flex justify-center header-glass">
+                <div className="absolute h-[72px] top-0 left-0 right-0 w-full flex justify-center header-glass">
                   <div className="header-accent-line" />
 
-                  <div className="sc-1a037b37-0 RKByV relative flex w-full items-center h-full px-4 sm:px-0">
+                  <div className="sc-1a037b37-0 RKByV header-content-shell relative flex w-full items-center h-full px-4 sm:px-0">
 
                     {/* Mobile Menu Action Buttons */}
                     <div className="mobile-header-actions sm-desktop:hidden flex items-center gap-1">
