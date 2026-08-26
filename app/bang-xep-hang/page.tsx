@@ -124,7 +124,7 @@ function VoteToastContainer() {
             const newToast: VoteToastItem = {
               id: `${latestVote.id}-${Date.now()}`,
               userName: latestVote.userName || 'Người dùng',
-              candidateName: latestVote.candidateName || 'Dự án',
+              candidateName: latestVote.candidateName || 'Thí sinh',
               score: latestVote.score || 1,
               createdAt: latestVote.createdAt,
             };
@@ -203,9 +203,9 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
   return (
     <div ref={podiumRef} className={`podium-item ${rankClass}`} style={{ animationDelay: `${(rank - 1) * 100}ms` }}>
       
-      {/* Startup Project Card (Structured identically to the CandidateCard below) */}
+      {/* Startup Candidate Card (Structured identically to the CandidateCard below) */}
       <div className="project-card-clear project-showcase-card relative w-full border transition-all duration-300 overflow-hidden flex flex-col">
-        {/* Project banner image */}
+        {/* Candidate banner image */}
         <div className="project-card-media project-showcase-media relative block w-full aspect-[16/8.6]">
           <div className="project-media-shell m-2 mb-0 relative h-[calc(100%-8px)] overflow-hidden rounded-[13px] bg-black/15 border border-white/10">
             {rank === 1 && <div className="podium-crown">👑</div>}
@@ -225,10 +225,10 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
           </div>
         </div>
 
-        {/* Project details */}
+        {/* Candidate details */}
         <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
           <div className="project-card-meta">
-            <span className="project-card-code-badge">Mã dự án: {candidate.sbd}</span>
+            <span className="project-card-code-badge">Mã thí sinh: {candidate.sbd}</span>
             <span className={`project-rank-badge ${rankTone}`}>Top {rank}</span>
           </div>
 
@@ -262,7 +262,7 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
             <button
               onClick={() => onVote(candidate)}
               disabled={!isGateOpen}
-              aria-label={isGateOpen ? `Bình chọn cho dự án ${candidate.name}` : 'Cổng bình chọn đã đóng'}
+              aria-label={isGateOpen ? `Bình chọn cho thí sinh ${candidate.name}` : 'Cổng bình chọn đã đóng'}
               className={`project-vote-button sc-7f525aa4-0 eyRkL flex items-center justify-center gap-2 rounded-xl py-2.5 w-full border-0 cursor-pointer transition-all hover-shine-effect ${isGateOpen
                   ? 'active bg-primary dark:bg-neutral-white hover:opacity-90 active:scale-[0.98]'
                   : 'disabled bg-slate-200 dark:bg-slate-800/50 cursor-not-allowed'
@@ -329,7 +329,7 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
       className={`project-card-item h-full group w-full transition-all duration-300 ${visible ? 'anim-up' : ''}`}
     >
       <div className="project-card-clear project-showcase-card relative h-full rounded-[20px] border transition-all duration-300 overflow-hidden">
-        {/* Project banner image */}
+        {/* Candidate banner image */}
         <div className="project-card-media project-showcase-media relative block w-full aspect-[16/8.6]">
           <div className="project-media-shell m-2 mb-0 relative h-[calc(100%-8px)] overflow-hidden rounded-[13px] bg-black/15 border border-white/10">
             <img
@@ -348,10 +348,10 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
           </div>
         </div>
 
-        {/* Project details */}
+        {/* Candidate details */}
         <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
           <div className="project-card-meta">
-            <span className="project-card-code-badge">Mã dự án: {c.sbd}</span>
+            <span className="project-card-code-badge">Mã thí sinh: {c.sbd}</span>
             <span className={`project-rank-badge ${rankTone}`}>Top {rank}</span>
           </div>
 
@@ -385,7 +385,7 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
             <button
               onClick={() => onVote(c)}
               disabled={!isGateOpen}
-              aria-label={isGateOpen ? `Bình chọn cho dự án ${c.name}` : 'Cổng bình chọn đã đóng'}
+              aria-label={isGateOpen ? `Bình chọn cho thí sinh ${c.name}` : 'Cổng bình chọn đã đóng'}
               className={`project-vote-button sc-7f525aa4-0 eyRkL flex items-center justify-center gap-2 rounded-xl py-2.5 w-full border-0 cursor-pointer transition-all hover-shine-effect ${isGateOpen
                   ? 'active bg-primary dark:bg-neutral-white hover:opacity-90 active:scale-[0.98]'
                   : 'disabled bg-slate-200 dark:bg-slate-800/50 cursor-not-allowed'
@@ -752,11 +752,11 @@ export default function RankingPage() {
                 </span>
 
                 <h1 className="mx-auto mt-5 max-w-[900px] text-[32px] sm:text-[54px] font-black uppercase leading-[1.05] text-neutral-900 dark:text-white">
-                  Bảng xếp hạng dự án
+                  Bảng xếp hạng thí sinh
                 </h1>
 
                 <p className="mx-auto mt-5 max-w-[780px] text-[15px] sm:text-[17px] leading-relaxed text-neutral-700 dark:text-white/72 font-light">
-                  Cập nhật liên tục thứ hạng các dự án khởi nghiệp, tổng số lượt xem và tổng điểm bình chọn thực tế từ Hội đồng và Công chúng.
+                  Cập nhật liên tục thứ hạng các thí sinh khởi nghiệp, tổng số lượt xem và tổng điểm bình chọn thực tế từ Hội đồng và Công chúng.
                 </p>
 
                 <div className="mx-auto mt-6 h-[3.5px] w-[82px] rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" />
@@ -773,10 +773,10 @@ export default function RankingPage() {
                   </span>
                   <input
                     type="text"
-                    placeholder="Tìm dự án theo tên hoặc MDB... vd: '085', 'Nông nghiệp'"
+                    placeholder="Tìm thí sinh theo tên hoặc MDB... vd: '085', 'Nông nghiệp'"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    aria-label="Tìm dự án theo tên hoặc mã dự án"
+                    aria-label="Tìm thí sinh theo tên hoặc mã thí sinh"
                   />
                   {search && (
                     <button type="button" className="search-clear" onClick={() => setSearch('')} aria-label="Xóa nội dung tìm kiếm">
@@ -787,7 +787,7 @@ export default function RankingPage() {
                   )}
                 </div>
                 <div className="ranking-filter-toolbar">
-                  <div className="ranking-filter-pills" role="group" aria-label="Lọc dự án theo bảng thi">
+                  <div className="ranking-filter-pills" role="group" aria-label="Lọc thí sinh theo bảng thi">
                     {[
                       ['ALL', 'Tất cả'],
                       ['HIGH_SCHOOL', 'Học sinh'],
@@ -807,13 +807,13 @@ export default function RankingPage() {
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
                     <div className="ranking-result-badge" aria-live="polite">
-                      {filteredCandidates.length > 0 ? `${filteredCandidates.length} dự án` : '0 dự án'}
+                      {filteredCandidates.length > 0 ? `${filteredCandidates.length} thí sinh` : '0 thí sinh'}
                     </div>
                     <label className="ranking-sort-label">
                       <span>Sắp xếp</span>
                       <select value={sortBy} onChange={event => setSortBy(event.target.value as typeof sortBy)}>
                         <option value="votes">Nhiều phiếu nhất</option>
-                        <option value="sbd">Mã dự án tăng dần</option>
+                        <option value="sbd">Mã thí sinh tăng dần</option>
                       </select>
                     </label>
                   </div>
@@ -830,10 +830,10 @@ export default function RankingPage() {
               ) : filteredCandidates.length === 0 ? (
                 <div className="empty-state mt-8">
                   <div className="empty-state-icon" style={{ fontSize: 56, filter: 'grayscale(0.5)' }}>🔍</div>
-                  <h3>Không tìm thấy dự án</h3>
+                  <h3>Không tìm thấy thí sinh</h3>
                   <p>Thử đổi từ khóa, bảng thi hoặc cách sắp xếp</p>
                   <button onClick={() => { setSearch(''); setCategory('ALL'); setSortBy('votes'); }} className="ranking-reset-button">
-                    Xem tất cả dự án
+                    Xem tất cả thí sinh
                   </button>
                 </div>
               ) : (
@@ -843,7 +843,7 @@ export default function RankingPage() {
                     <div ref={podiumSection.ref} className="w-full max-w-[1360px] mx-auto px-4 mb-10 mt-8">
                       <div className="mb-6 flex flex-col gap-2 text-center">
                         <p className={`text-[12px] font-bold uppercase tracking-[0.28em] text-[#79BCC2] ${podiumSection.visible ? 'anim-up' : ''}`}>
-                          🏆 Dự án nổi bật nhất
+                          🏆 Thí sinh nổi bật nhất
                         </p>
                         <h2 className={`ranking-title text-[22px] sm:text-[34px] font-extrabold uppercase ${podiumSection.visible ? 'anim-up anim-d100' : ''}`}>
                           Bục vinh danh
@@ -882,7 +882,7 @@ export default function RankingPage() {
                   {listCandidates.length > 0 && (
                     <div id="danh-sach-du-an" ref={listSection.ref} className="flex scroll-mt-28 flex-col items-center mb-8 sm:mb-12">
                       <h2 className={`ranking-title text-[18px] sm:text-[28px] tracking-wide font-bold uppercase ${listSection.visible ? 'anim-up' : ''}`}>
-                        {showPodium ? 'Các vị trí tiếp theo' : 'Danh sách dự án'}
+                        {showPodium ? 'Các vị trí tiếp theo' : 'Danh sách thí sinh'}
                       </h2>
                       <div
                         className="h-[2.5px] bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] rounded-full mt-2 transition-all duration-[1000ms] ease-out"

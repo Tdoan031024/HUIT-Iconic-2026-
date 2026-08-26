@@ -12,7 +12,7 @@ import { AISearch } from '../src/components/AISearch';
 import { usePageViewTracker } from '../src/hooks/usePageViewTracker';
 import StatusPage from '../src/components/StatusPage';
 import { getStatusPreset } from '../src/components/status-page-presets';
-import { Language, languageLabels, translate } from '../src/i18n';
+import { Language, translate } from '../src/i18n';
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese'],
@@ -252,6 +252,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       label: t('news'),
       icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M16 8h2"/><path d="M16 12h2"/><path d="M16 16h2"/><path d="M6 8h6v8H6z"/></svg>,
     },
+    {
+      href: '/ho-tro',
+      label: t('supportCenter'),
+      icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/><path d="M8 10h8M8 14h5"/></svg>,
+    },
   ];
 
   // ─── Main Layout ─────────────────────────────────────
@@ -328,16 +333,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </a>
 
             {/* ── STICKY HEADER (Chuẩn Web Startup) ── */}
-            <div className="sticky-outer-wrapper" style={{ height: '80px' }}>
+            <div className="sticky-outer-wrapper" style={{ height: '72px' }}>
               <div
                 className="sticky-inner-wrapper"
-                style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1001, height: '80px' }}
+                style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1001, height: '72px' }}
               >
                 {/* Glass header bar */}
-                <div className="absolute h-[80px] top-0 left-0 right-0 w-full flex justify-center header-glass">
+                <div className="absolute h-[72px] top-0 left-0 right-0 w-full flex justify-center header-glass">
                   <div className="header-accent-line" />
 
-                  <div className="sc-1a037b37-0 RKByV relative flex w-full items-center h-full px-4 sm:px-0">
+                  <div className="sc-1a037b37-0 RKByV header-content-shell relative flex w-full items-center h-full px-4 sm:px-0">
 
                     {/* Mobile Menu Action Buttons */}
                     <div className="mobile-header-actions sm-desktop:hidden flex items-center gap-1">
@@ -353,24 +358,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                           <line x1="3" y1="18" x2="21" y2="18"/>
                         </svg>
                       </button>
+                    </div>
+
+                    <div className="mobile-header-controls sm-desktop:hidden">
+                      <div className="language-switcher" role="group" aria-label={t('language')}>
+                        <button type="button" className={language === 'vi' ? 'active' : ''} onClick={() => setLanguage('vi')} aria-pressed={language === 'vi'}>VI</button>
+                        <button type="button" className={language === 'en' ? 'active' : ''} onClick={() => setLanguage('en')} aria-pressed={language === 'en'}>EN</button>
+                      </div>
                       <button
                         onClick={toggleTheme}
-                        className="site-theme-toggle mobile-header-icon"
+                        className="site-theme-toggle theme-toggle-modern mobile-header-icon"
                         aria-label={theme === 'dark' ? t('lightTheme') : t('darkTheme')}
+                        aria-pressed={theme === 'dark'}
                         title={t('changeTheme')}
                       >
                         {theme === 'dark' ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="5"/>
-                            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                          </svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
                         ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                          </svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                         )}
                       </button>
                     </div>
@@ -408,7 +413,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     </div>
 
                     {/* Desktop Right Side Actions */}
-                    <div className="ml-2 flex items-center gap-2">
+                    <div className="header-right-actions ml-2 flex items-center gap-2">
                       {currentUser ? (
                         <div className="hidden sm:flex items-center gap-2 ml-1">
                           <span className="text-[13px] font-bold max-w-[130px] truncate" style={{ color: 'var(--site-text)' }}>
@@ -441,24 +446,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                       )}
 
-                      <label className="hidden md:flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--site-text)' }}>
-                        <span className="sr-only">{t('language')}</span>
-                        <select
-                          value={language}
-                          onChange={(event) => setLanguage(event.target.value as Language)}
-                          aria-label={t('language')}
-                          className="bg-transparent border border-current/20 rounded-lg px-1.5 py-1 text-xs font-semibold cursor-pointer"
-                        >
-                          <option value="vi">{languageLabels.vi}</option>
-                          <option value="en">{languageLabels.en}</option>
-                        </select>
-                      </label>
+                      <div className="language-switcher hidden md:flex" role="group" aria-label={t('language')}>
+                        <button type="button" className={language === 'vi' ? 'active' : ''} onClick={() => setLanguage('vi')} aria-pressed={language === 'vi'}>VI</button>
+                        <button type="button" className={language === 'en' ? 'active' : ''} onClick={() => setLanguage('en')} aria-pressed={language === 'en'}>EN</button>
+                      </div>
 
                       {/* Theme Toggle (Desktop) */}
                       <button
                         onClick={toggleTheme}
-                        className="site-theme-toggle hidden md:grid"
+                        className="site-theme-toggle theme-toggle-modern hidden md:grid"
                         aria-label={theme === 'dark' ? t('lightTheme') : t('darkTheme')}
+                        aria-pressed={theme === 'dark'}
                         title={t('changeTheme')}
                       >
                         {theme === 'dark' ? (
@@ -516,18 +514,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   </div>
 
                   <div className="mobile-drawer-footer">
-                    <label className="flex items-center justify-between mb-3 text-sm font-semibold" style={{ color: 'var(--site-text)' }}>
+                    <div className="mb-3 flex items-center justify-between text-sm font-semibold" style={{ color: 'var(--site-text)' }}>
                       <span>{t('language')}</span>
-                      <select
-                        value={language}
-                        onChange={(event) => setLanguage(event.target.value as Language)}
-                        aria-label={t('language')}
-                        className="bg-transparent border border-current/20 rounded-lg px-2 py-1 text-sm"
-                      >
-                        <option value="vi">{languageLabels.vi}</option>
-                        <option value="en">{languageLabels.en}</option>
-                      </select>
-                    </label>
+                      <div className="language-switcher" role="group" aria-label={t('language')}>
+                        <button type="button" className={language === 'vi' ? 'active' : ''} onClick={() => setLanguage('vi')} aria-pressed={language === 'vi'}>VI</button>
+                        <button type="button" className={language === 'en' ? 'active' : ''} onClick={() => setLanguage('en')} aria-pressed={language === 'en'}>EN</button>
+                      </div>
+                    </div>
                     {currentUser ? (
                       <div className="flex flex-col gap-2">
                         <p className="text-sm font-semibold" style={{ color: 'var(--site-text)' }}>

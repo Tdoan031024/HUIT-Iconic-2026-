@@ -188,8 +188,8 @@ function RichTextModal({
 
 export default function IntroductionAdminPage() {
   const { showAlert } = useAlert();
-  const [aboutTitle, setAboutTitle] = useState('HUIT STARTUP LẦN THỨ VII 2026');
-  const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi HUIT Startup lần VII - Cấp Thành phố năm 2026');
+  const [aboutTitle, setAboutTitle] = useState('HUIT ICONIC LẦN THỨ VII 2026');
+  const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi HUIT ICONIC lần VII - Cấp Thành phố năm 2026');
   const [aboutDescription, setAboutDescription] = useState('');
   const [statsCandidates, setStatsCandidates] = useState('20+');
   const [statsVotes, setStatsVotes] = useState('100K+');

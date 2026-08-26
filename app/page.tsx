@@ -154,7 +154,7 @@ function VoteToastContainer() {
             const newToast: VoteToastItem = {
               id: `${latestVote.id}-${Date.now()}`,
               userName: latestVote.userName || 'Người dùng',
-              candidateName: latestVote.candidateName || 'Dự án',
+              candidateName: latestVote.candidateName || 'Thí sinh',
               score: latestVote.score || 1,
               createdAt: latestVote.createdAt,
             };
@@ -207,7 +207,7 @@ function getCandidateImageUrl(url?: string | null) {
   return url;
 }
 
-function getProjectRankTone(rank: number) {
+function getCandidateRankTone(rank: number) {
   if (rank === 1) return 'gold';
   if (rank === 2) return 'silver';
   if (rank === 3) return 'bronze';
@@ -771,7 +771,7 @@ export default function HomePage() {
                       }`}
                   >
                     <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">244</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Dự án</p>
+                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Thí sinh</p>
                   </div>
 
                   <div
@@ -848,7 +848,7 @@ export default function HomePage() {
               >
                 <div className="relative aspect-[4/5] w-full max-w-[460px] mx-auto overflow-hidden rounded-[18px] group hover-shine-effect bg-transparent">
                   <img
-                    alt="Poster HUIT STARTUP"
+                    alt="Poster HUIT ICONIC"
                     className="w-full h-full object-contain object-center p-1 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                     src={settings.aboutImageUrl}
                   />
@@ -1053,18 +1053,18 @@ export default function HomePage() {
 
               {isLoading ? (
                 <div className="flex justify-center items-center py-20 text-neutral-600 dark:text-white">
-                  Đang tải danh sách dự án...
+                  Đang tải danh sách thí sinh...
                 </div>
               ) : filteredCandidates.length === 0 ? (
                 <div className="text-center py-20 text-neutral-500 dark:text-white/50">
-                  Không tìm thấy dự án phù hợp
+                  Không tìm thấy thí sinh phù hợp
                 </div>
               ) : (
                 <div className="project-cards-grid w-full mx-auto">
                   {visibleCandidates.map((c, idx) => {
                     // Find actual rank based on overall sorted position
                     const rank = sortedCandidates.findIndex(x => x.sbd === c.sbd) + 1;
-                    const rankTone = getProjectRankTone(rank);
+                    const rankTone = getCandidateRankTone(rank);
                     const candidateImage = getCandidateImageUrl(c.imageUrl);
 
                     return (
@@ -1078,7 +1078,7 @@ export default function HomePage() {
                       >
                         <div className="project-card-clear project-showcase-card relative h-full rounded-[20px] border transition-all duration-300 overflow-hidden">
 
-                          {/* Project banner image */}
+                          {/* Candidate banner image */}
                           <div className="project-card-media project-showcase-media relative block w-full aspect-[16/8.6]">
                             <div className="project-media-shell m-2 mb-0 relative h-[calc(100%-8px)] overflow-hidden rounded-[13px] bg-black/15 border border-white/10">
                               <img
@@ -1097,7 +1097,7 @@ export default function HomePage() {
                             </div>
                           </div>
 
-                          {/* Project details */}
+                          {/* Candidate details */}
                           <div className="project-card-body project-showcase-body flex flex-1 flex-col px-3 pt-3 pb-3">
                             <div className="project-card-meta">
                               <span className="project-card-code-badge">SBD: {c.sbd}</span>
@@ -1182,7 +1182,7 @@ export default function HomePage() {
                     href="/bang-xep-hang#danh-sach-du-an"
                     className="project-list-action active flex items-center justify-center rounded-full px-5 py-2.5 sm:px-6 sm:py-3 transition-all duration-200 text-[11px] sm:text-[13px] uppercase tracking-wider hover:-translate-y-0.5 active:scale-95"
                   >
-                    Xem danh sách dự án
+                    Xem danh sách thí sinh
                   </Link>
                 )}
               </div>
@@ -1199,7 +1199,7 @@ export default function HomePage() {
               <span className="modern-kicker">{language === 'en' ? 'Theme video' : 'Video chủ đề'}</span>
               {text(settings?.themeVideoTitle, settings?.themeVideoTitleEn) && <h2 id="video-title">{text(settings?.themeVideoTitle, settings?.themeVideoTitleEn)}</h2>}
               {text(settings?.themeVideoDescription, settings?.themeVideoDescriptionEn) && <p>{text(settings?.themeVideoDescription, settings?.themeVideoDescriptionEn)}</p>}
-              <Link href="/gioi-thieu" className="news-link">{language === 'en' ? 'Discover the ICONIC story →' : 'Khám phá câu chuyện HUIT Startup →'}</Link>
+              <Link href="/gioi-thieu" className="news-link">{language === 'en' ? 'Discover the ICONIC story →' : "Khám phá câu chuyện HUIT's ICONIC →"}</Link>
             </div>
             <div className="video-shell" style={{ aspectRatio: '267/476', maxWidth: '340px', margin: '0 auto' }}>
               <iframe 
@@ -1221,7 +1221,7 @@ export default function HomePage() {
           <div className="modern-container">
             <div className="modern-section-head">
               <span className="modern-kicker">{language === 'en' ? 'News & announcements' : 'Tin tức & Thông báo'}</span>
-              <h2 id="news-title">{language === 'en' ? 'Latest ICONIC updates' : 'Cập nhật mới nhất từ HUIT Startup'}</h2>
+              <h2 id="news-title">{language === 'en' ? 'Latest ICONIC updates' : "Cập nhật mới nhất từ HUIT's ICONIC"}</h2>
               <p>{language === 'en' ? 'Follow milestones, activities and important announcements throughout the competition.' : 'Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.'}</p>
             </div>
             <div className="news-grid-modern">

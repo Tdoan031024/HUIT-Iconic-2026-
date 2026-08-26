@@ -974,14 +974,14 @@ export default function NewsAdminPage() {
                       <h4 className="text-xs font-black text-[#123c34] uppercase tracking-wide mb-2.5">🔍 Mô phỏng Google Search (Desktop)</h4>
                       <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col font-sans select-text">
                         <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                          <span>🌐 https://huit.startup.edu.vn</span>
+                          <span>🌐 https://iconic2026.huitmedia.edu.vn</span>
                           <span>›</span>
                           <span>tin-tuc</span>
                           <span>›</span>
                           <span className="text-[#0f766e] font-semibold">{formSlug || 'tieu-de-bai-viet'}</span>
                         </div>
                         <h3 className="text-[19px] text-[#1a0dab] font-medium hover:underline cursor-pointer mt-0.5 leading-tight truncate">
-                          {formTitle ? `${formTitle} - HUIT Startup 2026` : 'Chưa nhập tiêu đề bài viết...'}
+                          {formTitle ? `${formTitle} - HUIT's ICONIC 2026` : 'Chưa nhập tiêu đề bài viết...'}
                         </h3>
                         <p className="text-xs text-slate-600 mt-1 leading-normal max-w-[600px] line-clamp-2">
                           {formSummary || 'Chưa nhập tóm tắt mô tả ngắn. Nội dung tóm tắt mô tả bài viết sẽ xuất hiện ở đây khi hiển thị kết quả tìm kiếm trên Google.'}
@@ -1001,7 +1001,7 @@ export default function NewsAdminPage() {
                           />
                         </div>
                         <div className="p-3 bg-slate-50 border-t border-slate-100 flex flex-col">
-                          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">huit.startup.edu.vn</span>
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">iconic2026.huitmedia.edu.vn</span>
                           <span className="text-sm font-bold text-[#1d2129] mt-0.5 line-clamp-1">
                             {formTitle || 'Chưa nhập tiêu đề bài viết...'}
                           </span>

@@ -42,8 +42,8 @@ export default function VoteLogsAdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [candidateFilter, setCandidateFilter] = useState('ALL');
-  const [projectSearch, setProjectSearch] = useState('');
-  const [appliedProjectSearch, setAppliedProjectSearch] = useState('');
+  const [projectSearch, setCandidateSearch] = useState('');
+  const [appliedCandidateSearch, setAppliedCandidateSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [hidePublicVoteHistory, setHidePublicVoteHistory] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
@@ -181,7 +181,7 @@ export default function VoteLogsAdminPage() {
 
   const filteredLogs = useMemo(() => {
     const keyword = search.trim().toLowerCase();
-    const projectKeyword = appliedProjectSearch.trim().toLowerCase();
+    const projectKeyword = appliedCandidateSearch.trim().toLowerCase();
     return logs
       .filter((log) => candidateFilter === 'ALL' || log.candidateSbd === candidateFilter)
       .filter((log) => {
@@ -201,7 +201,7 @@ export default function VoteLogsAdminPage() {
         log.candidateName.toLowerCase().includes(keyword) ||
         log.candidateSbd.toLowerCase().includes(keyword)
       );
-  }, [appliedProjectSearch, candidateFilter, search, logs]);
+  }, [appliedCandidateSearch, candidateFilter, search, logs]);
 
   const toggleSelectAll = () => {
     if (selectedIds.size === filteredLogs.length && filteredLogs.length > 0) {
@@ -230,15 +230,15 @@ export default function VoteLogsAdminPage() {
     return list.sort((a, b) => a.sbd.localeCompare(b.sbd));
   }, [logs]);
 
-  const applyProjectSearch = () => {
-    setAppliedProjectSearch(projectSearch.trim());
+  const applyCandidateSearch = () => {
+    setAppliedCandidateSearch(projectSearch.trim());
     setCandidateFilter('ALL');
     setSelectedIds(new Set());
   };
 
-  const clearProjectSearch = () => {
-    setProjectSearch('');
-    setAppliedProjectSearch('');
+  const clearCandidateSearch = () => {
+    setCandidateSearch('');
+    setAppliedCandidateSearch('');
     setCandidateFilter('ALL');
     setSelectedIds(new Set());
   };
@@ -249,7 +249,7 @@ export default function VoteLogsAdminPage() {
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Nhật ký cử tri</p>
           <h2 className="mt-0.5 text-lg font-black text-[#123c34]">Lịch sử bình chọn chi tiết</h2>
-          <p className="text-xs text-[#6b7773] mt-0.5">Theo dõi thời gian, thông tin cử tri và mã dự án nhận bình chọn. Dữ liệu thời gian thực từ cơ sở dữ liệu.</p>
+          <p className="text-xs text-[#6b7773] mt-0.5">Theo dõi thời gian, thông tin cử tri và mã thí sinh nhận bình chọn. Dữ liệu thời gian thực từ cơ sở dữ liệu.</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -284,7 +284,7 @@ export default function VoteLogsAdminPage() {
         {[
           ['Tổng số phiếu bầu', logs.length.toLocaleString()],
           ['Kết quả bộ lọc', filteredLogs.length.toLocaleString()],
-          ['Số dự án nhận vote', uniqueCandidates.length.toLocaleString()],
+            ['Số thí sinh nhận vote', uniqueCandidates.length.toLocaleString()],
         ].map(([label, value]) => (
           <div key={label} className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm">
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7a8b85]">{label}</p>
@@ -302,21 +302,21 @@ export default function VoteLogsAdminPage() {
               setSearch(event.target.value);
               setSelectedIds(new Set());
             }}
-            placeholder="Tìm theo số điện thoại, tên, email cử tri hoặc tên dự án..."
+            placeholder="Tìm theo số điện thoại, tên, email cử tri hoặc tên thí sinh..."
             className="h-10 rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none focus:border-[#0f766e] focus:bg-white"
           />
           <div className="flex min-w-0 gap-2">
             <input
               value={projectSearch}
-              onChange={(event) => setProjectSearch(event.target.value)}
+              onChange={(event) => setCandidateSearch(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
                   event.preventDefault();
-                  applyProjectSearch();
+                  applyCandidateSearch();
                 }
               }}
               list="vote-project-filter-options"
-              placeholder="Tìm dự án theo tên hoặc SBD..."
+              placeholder="Tìm thí sinh theo tên hoặc SBD..."
               className="h-10 min-w-0 flex-1 rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none focus:border-[#0f766e] focus:bg-white"
             />
             <datalist id="vote-project-filter-options">
@@ -326,40 +326,40 @@ export default function VoteLogsAdminPage() {
             </datalist>
             <button
               type="button"
-              onClick={applyProjectSearch}
+              onClick={applyCandidateSearch}
               className="h-10 shrink-0 rounded-lg bg-[#0f766e] px-3.5 text-xs font-bold text-white shadow transition hover:bg-[#0b5f59] active:scale-[0.98]"
             >
-              Tìm dự án
+              Tìm thí sinh
             </button>
           </div>
           <select
             value={candidateFilter}
             onChange={(event) => {
               setCandidateFilter(event.target.value);
-              setProjectSearch('');
-              setAppliedProjectSearch('');
+              setCandidateSearch('');
+              setAppliedCandidateSearch('');
               setSelectedIds(new Set());
             }}
             className="h-10 rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-bold text-[#52605b] outline-none focus:border-[#0f766e]"
           >
-            <option value="ALL">Tất cả dự án</option>
+            <option value="ALL">Tất cả thí sinh</option>
             {uniqueCandidates.map((c) => (
               <option key={c.sbd} value={c.sbd}>
                 SBD {c.sbd} - {c.name.slice(0, 24)}...
               </option>
             ))}
           </select>
-          {(appliedProjectSearch || candidateFilter !== 'ALL') && (
+          {(appliedCandidateSearch || candidateFilter !== 'ALL') && (
             <div className="flex flex-wrap items-center gap-2 xl:col-span-3">
               <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700">
-                Đang lọc dự án: {candidateFilter !== 'ALL' ? `SBD ${candidateFilter}` : appliedProjectSearch}
+                Đang lọc thí sinh: {candidateFilter !== 'ALL' ? `SBD ${candidateFilter}` : appliedCandidateSearch}
               </span>
               <button
                 type="button"
-                onClick={clearProjectSearch}
+                onClick={clearCandidateSearch}
                 className="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-bold text-slate-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
               >
-                Xóa lọc dự án
+                Xóa lọc thí sinh
               </button>
             </div>
           )}
@@ -405,7 +405,7 @@ export default function VoteLogsAdminPage() {
                   />
                 </th>
                 <th className="px-5 py-3 w-1/3">Cử tri (Người bình chọn)</th>
-                <th className="px-5 py-3">Dự án được bình chọn</th>
+                <th className="px-5 py-3">Thí sinh được bình chọn</th>
                 <th className="px-5 py-3">Thời gian</th>
                 <th className="px-5 py-3 text-center w-32 whitespace-nowrap">Hành động</th>
               </tr>

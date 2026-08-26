@@ -262,7 +262,7 @@ function OverviewVoteChart({
   );
 }
 
-function TopProjectsCard({
+function TopCandidatesCard({
   loading,
   candidates,
 }: {
@@ -272,7 +272,7 @@ function TopProjectsCard({
   return (
     <article className="admin-card !p-0">
       <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 px-4 py-3.5">
-        <h2 className="text-[20px] font-bold tracking-[-0.03em] text-slate-950">Top dự án nổi bật</h2>
+        <h2 className="text-[20px] font-bold tracking-[-0.03em] text-slate-950">Top thí sinh nổi bật</h2>
         <button type="button" className="text-[14px] font-semibold text-blue-600 transition hover:text-blue-700">
           Xem tất cả
         </button>
@@ -281,8 +281,8 @@ function TopProjectsCard({
       <div className="px-4 py-3">
         <div className="grid grid-cols-[28px_minmax(0,1.65fr)_90px_86px_108px] items-center gap-3 px-2 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-400">
           <div>#</div>
-          <div>Dự án</div>
-          <div>Mã dự án</div>
+          <div>Thí sinh</div>
+          <div>Mã SBD</div>
           <div>Lượt vote</div>
           <div>Trạng thái</div>
         </div>
@@ -391,7 +391,7 @@ function VoteHistoryCard({
             <p className="py-6 text-center text-[13px] text-slate-400">Chưa có lượt vote nào</p>
           ) : votes.map((vote) => {
             const userName = vote.userName || vote.voterPhone || 'Người dùng';
-            const candidateName = vote.candidateName || vote.candidateSbd || vote.candidateId || 'Dự án';
+            const candidateName = vote.candidateName || vote.candidateSbd || vote.candidateId || 'Thí sinh';
             const score = vote.score || vote.points || 1;
             const dateVal = vote.createdAt || vote.voteTime;
             return (
@@ -524,7 +524,7 @@ export default function OverviewPage() {
   return (
     <div className="space-y-4">
       <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-7">
-        <KPIBlock label="Dự án" value={isLoading ? '--' : <AnimatedMetric value={candidates.length} />} icon={<FolderIcon />} tone="blue" loading={isLoading} />
+        <KPIBlock label="Thí sinh" value={isLoading ? '--' : <AnimatedMetric value={candidates.length} />} icon={<FolderIcon />} tone="blue" loading={isLoading} />
         <KPIBlock label="Tổng vote" value={isLoading ? '--' : <AnimatedMetric value={totalVotes} />} icon={<VoteIcon />} tone="violet" loading={isLoading} />
         <KPIBlock label="Dẫn đầu" value={leadingCandidate?.sbd || '001'} icon={<TrophyIcon />} tone="amber" loading={isLoading} />
         <KPIBlock label="Thời gian còn lại" value={formatRemaining(endDate)} icon={<CalendarIcon />} tone="emerald" loading={isLoading} />
@@ -535,7 +535,7 @@ export default function OverviewPage() {
 
       <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
         <OverviewVoteChart data={chartData} totalVotes={totalVotes} loading={isLoading} />
-        <TopProjectsCard loading={isLoading} candidates={rankedCandidates} />
+        <TopCandidatesCard loading={isLoading} candidates={rankedCandidates} />
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">

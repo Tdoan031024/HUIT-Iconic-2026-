@@ -9,10 +9,10 @@ const STATIC_CACHE = `huit-iconic-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `huit-iconic-dynamic-${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
+  '/',
   '/manifest.json',
+  '/offline',
   '/favicon.png',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
   '/images/og-default.png',
   '/css/82aef30d151230ac.css',
   '/css/be16ba848ed13f21.css',
@@ -22,11 +22,11 @@ const STATIC_ASSETS = [
 // ─── Install ──────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) =>
-      cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('[SW] Failed to cache some static assets:', err);
-      })
-    )
+    caches.open(STATIC_CACHE).then((cache) => Promise.all(
+      STATIC_ASSETS.map((asset) => cache.add(asset).catch((err) => {
+        console.warn(`[SW] Failed to cache ${asset}:`, err);
+      }))
+    ))
   );
   self.skipWaiting();
 });
@@ -101,6 +101,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request))
+      .catch(() => caches.match(request).then((cached) => cached || caches.match('/offline')))
   );
 });
