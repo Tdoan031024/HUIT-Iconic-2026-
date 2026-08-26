@@ -3,6 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '../api';
+import { useLanguage } from '../../src/i18n/use-language';
+import { translate } from '../../src/i18n';
+import { localizedText } from '../../src/i18n/content';
 
 interface Step {
   number: string;
@@ -77,7 +80,7 @@ function normalizeRates(rawRates: any[]): ExchangeRate[] {
     .map((rate) => {
       const pointsNumber = extractDigits(rate.points || rate.label);
       const priceNumber = extractDigits(rate.price || rate.priceLabel);
-      const points = pointsNumber !== '' ? `${Number(pointsNumber).toLocaleString('vi-VN')} điểm` : '';
+      const points = pointsNumber !== '' ? `${Number(pointsNumber).toLocaleString('vi-VN')} lượt bình chọn` : '';
       const price =
         priceNumber !== ''
           ? Number(priceNumber) > 0
@@ -120,6 +123,8 @@ const sectionColors = [
 ];
 
 export default function TheLePage() {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const [sections, setSections] = useState<SectionConfig[]>([]);
   const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
   const [faqList, setFaqList] = useState<any[]>([]);
@@ -169,11 +174,11 @@ export default function TheLePage() {
           <div className="subpage-hero-bg" />
           <div className="subpage-hero-content">
             <div className="subpage-breadcrumb">
-              <Link href="/">Trang chủ</Link>
+              <Link href="/">{t('home')}</Link>
               <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-              <span>Hướng dẫn & Thể lệ</span>
+              <span>{t('guide')}</span>
             </div>
 
             <div
@@ -184,16 +189,20 @@ export default function TheLePage() {
                 border: '1px solid color-mix(in srgb, var(--site-primary) 25%, transparent)',
               }}
             >
-              📖 Cẩm nang bình chọn
+              📖 {language === 'en' ? 'Voting Handbook' : 'Cẩm nang bình chọn'}
             </div>
 
-            <h1 className={heroSection.visible ? 'fade-up fade-up-d1' : 'opacity-0'}>Hướng dẫn & Thể lệ</h1>
+            <h1 className={heroSection.visible ? 'fade-up fade-up-d1' : 'opacity-0'}>
+              {language === 'en' ? 'Guidelines & Rules' : 'Hướng dẫn & Thể lệ'}
+            </h1>
             <p className={heroSection.visible ? 'fade-up fade-up-d2' : 'opacity-0'}>
-              Tất cả thông tin về cách bình chọn miễn phí, quy định sử dụng lượt vote và các câu hỏi thường gặp đều được tổng hợp tại đây.
+              {language === 'en'
+                ? 'All official details on free daily voting and frequently asked questions are summarized below.'
+                : 'Tất cả thông tin về cách bình chọn miễn phí, quy định sử dụng lượt vote và các câu hỏi thường gặp đều được tổng hợp tại đây.'}
             </p>
 
             <div className={`flex flex-wrap gap-3 justify-center mt-6 ${heroSection.visible ? 'fade-up fade-up-d3' : 'opacity-0'}`}>
-              {['Bình chọn miễn phí ↓', 'Bảng điểm ↓', 'FAQ ↓'].map((label, index) => (
+              {[language === 'en' ? 'Free Daily Votes ↓' : 'Bình chọn miễn phí ↓', language === 'en' ? 'Voting process ↓' : 'Cơ chế bình chọn ↓', 'FAQ ↓'].map((label, index) => (
                 <a
                   key={index}
                   href={['#free-vote', '#bang-diem', '#faq'][index]}
@@ -362,17 +371,19 @@ export default function TheLePage() {
           >
             <div style={{ fontSize: 40, marginBottom: 12 }}>🚀</div>
             <h3 style={{ fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 900, color: '#fff', margin: '0 0 8px' }}>
-              Sẵn sàng bình chọn?
+              {language === 'en' ? 'Ready to vote?' : 'Sẵn sàng bình chọn?'}
             </h3>
             <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 15, maxWidth: 480, margin: '0 auto 24px' }}>
-              Đăng nhập để sử dụng 2 lượt bình chọn miễn phí mỗi ngày và ủng hộ thí sinh bạn yêu thích.
+              {language === 'en'
+                ? 'Sign in to use your 2 free daily votes and support your favorite startup candidate.'
+                : 'Đăng nhập để sử dụng 2 lượt bình chọn miễn phí mỗi ngày và ủng hộ thí sinh bạn yêu thích.'}
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/bang-xep-hang" className="hero-btn-primary">
-                🏆 Xem Bảng Xếp Hạng
+                🏆 {t('ranking')}
               </Link>
               <Link href="/dang-nhap" className="rules-login-cta">
-                Đăng nhập bình chọn →
+                {t('login')} →
               </Link>
             </div>
           </div>

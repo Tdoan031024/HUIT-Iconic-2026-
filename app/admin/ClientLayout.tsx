@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { apiUrl } from './api';
+import { useLanguage } from '@/src/i18n/use-language';
 
 const dashboardIcon = (
   <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -111,7 +112,7 @@ const monitoringIcon = (
   </svg>
 );
 
-const navGroups = [
+const navGroupsVi = [
   {
     title: 'Quản lý',
     items: [
@@ -137,10 +138,35 @@ const navGroups = [
   },
 ];
 
-const navItems = navGroups.flatMap((group) => group.items);
+const navGroupsEn = [
+  {
+    title: 'Management',
+    items: [
+      { href: '/admin', label: 'Overview', icon: dashboardIcon },
+      { href: '/admin/candidates', label: 'Candidates', icon: candidatesIcon },
+      { href: '/admin/votes', label: 'Vote History', icon: votesIcon },
+      { href: '/admin/users', label: 'Users', icon: usersIcon },
+      { href: '/admin/sponsors', label: 'Sponsors', icon: sponsorsIcon },
+      { href: '/admin/news', label: 'News', icon: newsIcon },
+      { href: '/admin/trash', label: 'Trash Bin', icon: trashIcon },
+      { href: '/admin/monitoring', label: 'System Logs', icon: monitoringIcon },
+    ],
+  },
+  {
+    title: 'Content',
+    items: [
+      { href: '/admin/banners', label: 'Banners', icon: bannerIcon },
+      { href: '/admin/introduction', label: 'Introduction', icon: introIcon },
+      { href: '/admin/timeline', label: 'Timeline', icon: timelineIcon },
+      { href: '/admin/guides', label: 'Guidelines', icon: guidesIcon },
+      { href: '/admin/settings', label: 'Settings', icon: settingsIcon },
+    ],
+  },
+];
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-const pageMeta: Record<string, { title: string; description: string }> = {
+const pageMetaVi: Record<string, { title: string; description: string }> = {
   '/admin': { title: 'Tổng quan', description: 'Theo dõi trạng thái nền tảng và dữ liệu vận hành.' },
   '/admin/candidates': { title: 'Thí sinh', description: 'Quản lý danh sách thí sinh, điểm bình chọn và hồ sơ hiển thị.' },
   '/admin/votes': { title: 'Lịch sử bình chọn', description: 'Theo dõi nhật ký phiếu bầu chi tiết và xuất dữ liệu đối soát.' },
@@ -156,11 +182,28 @@ const pageMeta: Record<string, { title: string; description: string }> = {
   '/admin/settings': { title: 'Cài đặt', description: 'Thiết lập hệ thống, promotion và trạng thái hoạt động.' },
 };
 
-function getPageMeta(pathname: string) {
-  const matched = Object.keys(pageMeta)
-    .filter((key) => (key === '/' ? pathname === '/' : pathname.startsWith(key)))
+const pageMetaEn: Record<string, { title: string; description: string }> = {
+  '/admin': { title: 'Overview', description: 'Monitor platform status and live operational metrics.' },
+  '/admin/candidates': { title: 'Candidates', description: 'Manage contestant entries, scores, and public profiles.' },
+  '/admin/votes': { title: 'Vote History', description: 'Track audit trails of votes and export financial records.' },
+  '/admin/users': { title: 'Users', description: 'Control administrative accounts and role permissions.' },
+  '/admin/sponsors': { title: 'Sponsors', description: 'Update official partner profiles and brand assets.' },
+  '/admin/news': { title: 'News & Updates', description: 'Publish articles, announcements, and press releases.' },
+  '/admin/trash': { title: 'Trash Bin', description: 'View, restore or permanently remove discarded entities.' },
+  '/admin/monitoring': { title: 'System Logs', description: 'Monitor system events, audit logs, and API status.' },
+  '/admin/banners': { title: 'Banners', description: 'Customize hero carousel banners and call-to-actions.' },
+  '/admin/introduction': { title: 'Introduction', description: 'Manage competition info, sectors, and homepage sections.' },
+  '/admin/timeline': { title: 'Timeline', description: 'Configure contest stages, milestones, and active rounds.' },
+  '/admin/guides': { title: 'Guidelines', description: 'Voting rules, step-by-step guides, and point calculation.' },
+  '/admin/settings': { title: 'Settings', description: 'System configuration, promotion banners, and operational toggle.' },
+};
+
+function getPageMeta(pathname: string, language: 'vi' | 'en' = 'vi') {
+  const metaDict = language === 'en' ? pageMetaEn : pageMetaVi;
+  const matched = Object.keys(metaDict)
+    .filter((key) => (key === '/' || key === '/admin' ? pathname === key : pathname.startsWith(key)))
     .sort((a, b) => b.length - a.length)[0];
-  return pageMeta[matched || '/'];
+  return metaDict[matched || '/admin'] || metaDict['/admin'];
 }
 
 function BellButton() {
@@ -520,12 +563,123 @@ function BellButton() {
   );
 }
 
+type AdminHistoryItem = { href: string; label: string; visitedAt: number };
+
+function HistoryButton({ language }: { language: 'vi' | 'en' }) {
+  const pathname = usePathname() || '/admin';
+  const router = useRouter();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [history, setHistory] = React.useState<AdminHistoryItem[]>([]);
+  const historyRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('admin_navigation_history') || '[]');
+      if (Array.isArray(saved)) setHistory(saved.slice(0, 12));
+    } catch {
+      setHistory([]);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const meta = getPageMeta(pathname, language);
+    setHistory((previous) => {
+      const next = [{ href: pathname, label: meta.title, visitedAt: Date.now() }, ...previous.filter((item) => item.href !== pathname)].slice(0, 12);
+      localStorage.setItem('admin_navigation_history', JSON.stringify(next));
+      return next;
+    });
+  }, [pathname, language]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!historyRef.current?.contains(event.target as Node)) setIsOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const clearHistory = () => {
+    localStorage.removeItem('admin_navigation_history');
+    setHistory([]);
+  };
+
+  return (
+    <div ref={historyRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        className="grid h-10 w-10 place-items-center rounded-[14px] border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-[var(--primary)] hover:text-[var(--primary-strong)]"
+        aria-label={language === 'en' ? 'Open navigation history' : 'Mở lịch sử truy cập'}
+        aria-expanded={isOpen}
+        title={language === 'en' ? 'Navigation history' : 'Lịch sử truy cập'}
+      >
+        <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7" />
+          <path d="M3 4v5h5" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 top-12 z-[100] w-[300px] rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h3 className="text-sm font-black text-slate-900">{language === 'en' ? 'Recent history' : 'Lịch sử truy cập'}</h3>
+            <button type="button" onClick={clearHistory} className="text-[11px] font-bold text-rose-600 hover:underline">
+              {language === 'en' ? 'Clear' : 'Xóa lịch sử'}
+            </button>
+          </div>
+          <div className="mt-2 max-h-[320px] space-y-1 overflow-y-auto">
+            {history.length === 0 ? (
+              <p className="px-2 py-6 text-center text-xs font-semibold text-slate-400">{language === 'en' ? 'No history yet' : 'Chưa có lịch sử truy cập'}</p>
+            ) : history.map((item) => (
+              <button
+                key={item.href}
+                type="button"
+                onClick={() => {
+                  router.push(item.href);
+                  setIsOpen(false);
+                }}
+                className={`flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-left transition ${item.href === pathname ? 'bg-blue-50 text-blue-800' : 'text-slate-700 hover:bg-slate-50'}`}
+              >
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-slate-100 text-slate-500">
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h8M8 16h5" />
+                  </svg>
+                </span>
+                <span className="min-w-0 flex-1 truncate text-xs font-bold">{item.label}</span>
+                <span className="text-[10px] text-slate-400">{new Date(item.visitedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const language = useLanguage();
+  const setLang = (newLang: 'vi' | 'en') => {
+    localStorage.setItem('iconic_language', newLang);
+    window.dispatchEvent(new CustomEvent('iconic-language-change'));
+  };
+
+  const navGroups = language === 'en' ? navGroupsEn : navGroupsVi;
+  const navItems = navGroups.flatMap((group) => group.items);
+
   const pathname = usePathname();
   const router = useRouter();
   const safePathname = pathname || '/';
-  const currentMeta = getPageMeta(safePathname);
+  const currentMeta = getPageMeta(safePathname, language);
   const [sidebarWidth, setSidebarWidth] = React.useState(238);
   const [isResizing, setIsResizing] = React.useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -544,18 +698,24 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const tabSwitcherRef = React.useRef<HTMLDivElement>(null);
   const tabButtonRef = React.useRef<HTMLButtonElement>(null);
   const [openTabs, setOpenTabs] = React.useState<Array<{ href: string; label: string; icon?: React.ReactNode }>>([
-    { href: '/', label: 'Tổng quan', icon: dashboardIcon },
+    { href: '/admin', label: language === 'en' ? 'Overview' : 'Tổng quan', icon: dashboardIcon },
   ]);
 
   React.useEffect(() => {
-    const matched = navItems.find((item) => (item.href === '/' ? safePathname === '/' : safePathname.startsWith(item.href)));
+    const matched = navItems
+      .filter((item) => item.href === '/' || item.href === '/admin'
+        ? safePathname === item.href
+        : safePathname === item.href || safePathname.startsWith(`${item.href}/`))
+      .sort((a, b) => b.href.length - a.href.length)[0];
     if (matched) {
       setOpenTabs((prev) => {
-        if (prev.some((tab) => tab.href === matched.href)) return prev;
+        if (prev.some((tab) => tab.href === matched.href)) {
+          return prev.map((t) => (t.href === matched.href ? { ...t, label: matched.label } : t));
+        }
         return [...prev, { href: matched.href, label: matched.label, icon: matched.icon }];
       });
     }
-  }, [safePathname]);
+  }, [safePathname, language]);
 
   const handleTabClick = (href: string) => {
     if (pathname !== href) {
@@ -573,13 +733,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     setOpenTabs(nextTabs);
 
     if (pathname === hrefToClose) {
-      const fallbackTab = nextTabs[nextTabs.length - 1] || { href: '/' };
+      const fallbackTab = nextTabs[nextTabs.length - 1] || { href: '/admin' };
       router.push(fallbackTab.href);
     }
   };
 
   const closeOtherTabs = () => {
-    const currentTab = openTabs.find((t) => isActive(t.href)) || { href: '/', label: 'Tổng quan', icon: dashboardIcon };
+    const currentTab = openTabs.find((t) => isActive(t.href)) || { href: '/admin', label: language === 'en' ? 'Overview' : 'Tổng quan', icon: dashboardIcon };
     setOpenTabs([currentTab]);
     setIsTabModalOpen(false);
   };
@@ -836,7 +996,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 {!isCollapsed && (
                   <div className="min-w-0">
                     <p className="truncate text-[13px] font-extrabold text-slate-900">Administrator</p>
-                    <p className="truncate text-[11px] font-medium text-slate-500">Quản trị viên hệ thống</p>
+                    <p className="truncate text-[11px] font-medium text-slate-500">
+                      {language === 'en' ? 'System Administrator' : 'Quản trị viên hệ thống'}
+                    </p>
                   </div>
                 )}
               </div>
@@ -870,7 +1032,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       <circle cx="12" cy="7" r="4" />
                     </svg>
                   </span>
-                  Hồ sơ admin
+                  {language === 'en' ? 'Admin Profile' : 'Hồ sơ admin'}
                 </button>
                 <button
                   type="button"
@@ -886,7 +1048,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
                   </span>
-                  Đổi mật khẩu
+                  {language === 'en' ? 'Change Password' : 'Đổi mật khẩu'}
                 </button>
                 <Link
                   href="/settings"
@@ -899,7 +1061,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1A2 2 0 1 1 4.2 17l.1-.1A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.3 7A2 2 0 1 1 7.1 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.1a2 2 0 1 1 0 4H21a1.7 1.7 0 0 0-1.6 1Z" />
                     </svg>
                   </span>
-                  Cài đặt tài khoản
+                  {language === 'en' ? 'Account Settings' : 'Cài đặt tài khoản'}
                 </Link>
                 <div className="my-1 h-px bg-slate-100" />
                 <button
@@ -914,7 +1076,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       <path d="M21 12H9" />
                     </svg>
                   </span>
-                  Đăng xuất
+                  {language === 'en' ? 'Logout' : 'Đăng xuất'}
                 </button>
               </div>
             )}
@@ -939,13 +1101,36 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
+                {/* Language Switcher */}
+                <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => setLang('vi')}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                      language === 'vi' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    VI
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLang('en')}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                      language === 'en' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                  >
+                    EN
+                  </button>
+                </div>
+
                 <Link href={SITE_URL} target="_blank" className="admin-btn admin-btn-secondary">
-                  Xem trang chủ
+                  {language === 'en' ? 'Visit Homepage' : 'Xem trang chủ'}
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M7 17 17 7" />
                     <path d="M8 7h9v9" />
                   </svg>
                 </Link>
+                <HistoryButton language={language} />
                 <BellButton />
               </div>
             </div>
@@ -977,7 +1162,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                           type="button"
                           onClick={(e) => closeTab(e, tab.href)}
                           className="grid h-4 w-4 place-items-center rounded-full text-slate-400 hover:bg-rose-100 hover:text-rose-600 transition ml-0.5 text-[10px] font-bold"
-                          title="Đóng tab"
+                          title={language === 'en' ? 'Close tab' : 'Đóng tab'}
                         >
                           ✕
                         </button>
@@ -1000,7 +1185,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   <rect x="14" y="14" width="7" height="7" rx="1.5" />
                   <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
-                Quản lý Tabs <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[10px] font-black text-blue-700">{openTabs.length}</span>
+                {language === 'en' ? 'Manage Tabs' : 'Quản lý Tabs'} <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[10px] font-black text-blue-700">{openTabs.length}</span>
               </button>
             </div>
           </div>
@@ -1010,8 +1195,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           <div ref={tabSwitcherRef} className="fixed right-6 top-[118px] z-[80] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <div>
-                <h3 className="text-xs font-extrabold text-slate-900">Danh sách tab đang mở</h3>
-                <p className="text-[11px] font-medium text-slate-500">Chuyển nhanh hoặc đóng bớt trang</p>
+                <h3 className="text-xs font-extrabold text-slate-900">{language === 'en' ? 'Open Tabs' : 'Danh sách tab đang mở'}</h3>
+                <p className="text-[11px] font-medium text-slate-500">{language === 'en' ? 'Switch quickly or close tabs' : 'Chuyển nhanh hoặc đóng bớt trang'}</p>
               </div>
               <button
                 type="button"
@@ -1043,7 +1228,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                       <span className="truncate text-xs font-bold">{tab.label}</span>
                       {active && (
                         <span className="rounded-md bg-blue-600 px-1.5 py-0.5 text-[9px] font-black text-white uppercase">
-                          Đang xem
+                          {language === 'en' ? 'Active' : 'Đang xem'}
                         </span>
                       )}
                     </div>
@@ -1052,7 +1237,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                         type="button"
                         onClick={(e) => closeTab(e, tab.href)}
                         className="grid h-6 w-6 shrink-0 place-items-center rounded-lg text-slate-400 hover:bg-rose-100 hover:text-rose-600 transition"
-                        title="Đóng tab này"
+                        title={language === 'en' ? 'Close this tab' : 'Đóng tab này'}
                       >
                         x
                       </button>
@@ -1065,17 +1250,17 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2 text-xs">
               {openTabs.length > 1 ? (
                 <button type="button" onClick={closeOtherTabs} className="font-bold text-rose-600 hover:underline">
-                  Đóng các tab khác
+                  {language === 'en' ? 'Close other tabs' : 'Đóng các tab khác'}
                 </button>
               ) : (
-                <span className="text-[11px] text-slate-400">Đang chỉ mở 1 tab</span>
+                <span className="text-[11px] text-slate-400">{language === 'en' ? 'Only 1 tab open' : 'Đang chỉ mở 1 tab'}</span>
               )}
               <button
                 type="button"
                 onClick={() => setIsTabModalOpen(false)}
                 className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 transition"
               >
-                Đóng
+                {language === 'en' ? 'Close' : 'Đóng'}
               </button>
             </div>
           </div>
@@ -1089,8 +1274,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </div>
 
       {accountModal && (
-        <div className="fixed inset-0 z-[99990] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-[420px] rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+        <div className="fixed inset-0 z-[99990] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && setAccountModal(null)}>
+          <div onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-[420px] rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
             <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-blue-600">Tài khoản quản trị</p>

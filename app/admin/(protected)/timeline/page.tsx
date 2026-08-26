@@ -9,7 +9,9 @@ function emptyForm() {
   return {
     date: '',
     title: '',
+    titleEn: '',
     description: '',
+    descriptionEn: '',
     isActive: false,
     round: 'Vòng loại',
     isImportant: false,
@@ -50,7 +52,9 @@ export default function TimelineAdminPage() {
     setForm({
       date: event.date,
       title: event.title,
+      titleEn: event.titleEn || '',
       description: event.description,
+      descriptionEn: event.descriptionEn || '',
       isActive: event.isActive,
       round: event.round || 'Vòng loại',
       isImportant: event.isImportant || false,
@@ -135,8 +139,8 @@ export default function TimelineAdminPage() {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm">
-        <form onSubmit={onSubmit} className="w-full max-w-[560px] rounded-[24px] border border-[rgba(0,106,209,0.14)] bg-white p-6 shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+        <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-[560px] rounded-[24px] border border-[rgba(0,106,209,0.14)] bg-white p-6 shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
           <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-4">
             <h3 className="text-lg font-black text-slate-900">{title}</h3>
             <button type="button" onClick={onClose} className="admin-btn admin-btn-secondary !h-10 !px-4">Đóng</button>
@@ -144,8 +148,12 @@ export default function TimelineAdminPage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
-              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Tên mốc thời gian</label>
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Tên mốc thời gian (Tiếng Việt) <span className="text-red-500 font-bold">*</span></label>
               <input className="admin-input w-full" value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} required />
+            </div>
+            <div className="md:col-span-2">
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Tên mốc thời gian tiếng Anh (English Title)</label>
+              <input className="admin-input w-full" value={form.titleEn} onChange={(e) => setForm((prev) => ({ ...prev, titleEn: e.target.value }))} placeholder="e.g. Preliminary Round Submission..." />
             </div>
             <div>
               <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Phân loại vòng thi</label>
@@ -160,8 +168,12 @@ export default function TimelineAdminPage() {
               <input className="admin-input w-full" value={form.date} onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))} required />
             </div>
             <div className="md:col-span-2">
-              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Mô tả chi tiết</label>
-              <textarea className="admin-textarea h-28 w-full resize-none" value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} required />
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Mô tả chi tiết (Tiếng Việt) <span className="text-red-500 font-bold">*</span></label>
+              <textarea className="admin-textarea h-24 w-full resize-none" value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} required />
+            </div>
+            <div className="md:col-span-2">
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Mô tả chi tiết tiếng Anh (English Description)</label>
+              <textarea className="admin-textarea h-24 w-full resize-none" value={form.descriptionEn} onChange={(e) => setForm((prev) => ({ ...prev, descriptionEn: e.target.value }))} placeholder="English details about this event..." />
             </div>
           </div>
 

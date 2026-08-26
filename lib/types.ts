@@ -5,7 +5,9 @@ export interface Candidate {
   votes: number;
   imageUrl: string;
   description: string;
+  descriptionEn?: string;
   biography?: string;
+  biographyEn?: string;
   detailsUrl?: string;
   contestTable?: 'MALE' | 'FEMALE' | 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE' | string;
   contestTableLabel?: string;

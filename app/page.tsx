@@ -117,7 +117,7 @@ function VoteToastNotification({ toast, onClose }: { toast: VoteToastItem; onClo
           <strong>{toast.userName || 'Ai đó'}</strong> vừa bình chọn cho{' '}
           <strong>{toast.candidateName}</strong>
         </p>
-        <span className="vote-toast-badge">+{toast.score} điểm 🔥</span>
+        <span className="vote-toast-badge">+{toast.score} lượt bình chọn</span>
       </div>
       <button onClick={onClose} className="vote-toast-close" aria-label="Đóng">×</button>
     </div>
@@ -286,6 +286,8 @@ export default function HomePage() {
   const [settings, setSettings] = useState<any>(null);
   const [homepageNewsPosts, setHomepageNewsPosts] = useState<any[]>([]);
   const totalVotes = useMemo(() => candidates.reduce((sum, c) => sum + c.votes, 0), [candidates]);
+  const totalTracks = useMemo(() => new Set(candidates.map((candidate) => candidate.contestTable).filter(Boolean)).size, [candidates]);
+  const totalSchools = useMemo(() => new Set(candidates.map((candidate) => candidate.representativeSchool).filter(Boolean)).size, [candidates]);
   const aboutTitleText = text(settings?.aboutTitle, settings?.aboutTitleEn).replace(/\s+(NĂM|YEAR)\s+/i, ' ');
   const hasAboutContent = !!(settings?.aboutTitle || settings?.aboutDescription || settings?.aboutImageUrl);
 
@@ -770,7 +772,7 @@ export default function HomePage() {
                     className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                       }`}
                   >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">244</p>
+                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{candidates.length || '—'}</p>
                     <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Thí sinh</p>
                   </div>
 
@@ -782,8 +784,8 @@ export default function HomePage() {
                     className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                       }`}
                   >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">03</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Bảng thi</p>
+                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{totalTracks || '—'}</p>
+                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Hạng mục</p>
                   </div>
 
                   <div
@@ -794,7 +796,7 @@ export default function HomePage() {
                     className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                       }`}
                   >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">70+</p>
+                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{totalSchools || '—'}</p>
                     <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Trường</p>
                   </div>
 
@@ -806,8 +808,8 @@ export default function HomePage() {
                     className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                       }`}
                   >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">20</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">DN / Tổ chức</p>
+                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{sponsors.length || '—'}</p>
+                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Nhà tài trợ</p>
                   </div>
                 </div>
 
@@ -946,10 +948,10 @@ export default function HomePage() {
                   </span>
                   <div className="flex items-center gap-2 sm:gap-3">
                     {[
-                      { val: gateCountdown.days, label: 'Ngày' },
-                      { val: gateCountdown.hours, label: 'Giờ' },
-                      { val: gateCountdown.mins, label: 'Phút' },
-                      { val: gateCountdown.secs, label: 'Giây' }
+                      { val: gateCountdown.days, label: language === 'en' ? 'Days' : 'Ngày' },
+                      { val: gateCountdown.hours, label: language === 'en' ? 'Hours' : 'Giờ' },
+                      { val: gateCountdown.mins, label: language === 'en' ? 'Mins' : 'Phút' },
+                      { val: gateCountdown.secs, label: language === 'en' ? 'Secs' : 'Giây' }
                     ].map((item, i) => (
                       <div key={i} className="flex flex-col items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 sm:px-4 py-2 min-w-[58px] sm:min-w-[68px] shadow-sm">
                         <span className="text-lg sm:text-2xl font-black text-[#0A2FFF] dark:text-[#79BCC2] font-mono leading-none">
@@ -967,9 +969,9 @@ export default function HomePage() {
               {/* Table Filter Tabs */}
               <div className="flex items-center gap-2 mt-5">
                 {[
-                  { key: 'ALL', label: '🌟 Tất cả thí sinh' },
-                  { key: 'FEMALE', label: '👑 Bảng Nữ (Queen)' },
-                  { key: 'MALE', label: '🤴 Bảng Nam (King)' },
+                  { key: 'ALL', label: language === 'en' ? '🌟 All Candidates' : '🌟 Tất cả thí sinh' },
+                  { key: 'FEMALE', label: language === 'en' ? '👑 Female Track (Queen)' : '👑 Bảng Nữ (Queen)' },
+                  { key: 'MALE', label: language === 'en' ? '🤴 Male Track (King)' : '🤴 Bảng Nam (King)' },
                 ].map((tab) => (
                   <button
                     key={tab.key}
@@ -1002,7 +1004,7 @@ export default function HomePage() {
                   </div>
                   <input
                     className="w-full bg-transparent focus:outline-none text-neutral-neutral1 dark:text-neutral-white placeholder:text-neutral-neutral1 dark:placeholder:text-neutral-white pl-2 text-[14px]"
-                    placeholder="Tìm kiếm thí sinh theo Tên, SBD, Khoa..."
+                    placeholder={language === 'en' ? 'Search candidate by Name, SBD, Track...' : 'Tìm kiếm thí sinh theo Tên, SBD, Khoa...'}
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
@@ -1029,7 +1031,7 @@ export default function HomePage() {
                 <span className="flex-shrink-0 text-[20px] sm:text-[24px] font-black text-blue-700 dark:text-[#79BCC2] leading-none transition-transform duration-300 scale-105">
                   ×{settings.activeVotingPromotion.multiplier}
                 </span>
-                <span className="flex-shrink-0 text-slate-800 dark:text-white text-[12px] sm:text-[13px] font-extrabold">điểm</span>
+                <span className="flex-shrink-0 text-slate-800 dark:text-white text-[12px] sm:text-[13px] font-extrabold">lượt</span>
                 
                 {/* Real-time Countdown Timer */}
                 {promoTimeLeft && (
@@ -1119,18 +1121,18 @@ export default function HomePage() {
 
                             <div className="project-vote-stat flex items-center justify-between">
                               <div>
-                                <p className="project-vote-stat-label">Lượt bình chọn</p>
+                                <p className="project-vote-stat-label">{language === 'en' ? 'Votes' : 'Lượt bình chọn'}</p>
                                 <p className="project-vote-stat-value">{c.votes.toLocaleString()}</p>
                               </div>
                               {settings?.activeVotingPromotion && (
                                 <span className="inline-flex items-center rounded-lg bg-amber-500/10 border border-amber-500/25 px-2 py-1 text-xs font-black text-amber-600 dark:text-amber-400 animate-pulse">
-                                  x{settings.activeVotingPromotion.multiplier} Điểm 🔥
+                                  x{settings.activeVotingPromotion.multiplier} {language === 'en' ? 'votes' : 'lượt'}
                                 </span>
                               )}
                             </div>
 
                             <p className="project-card-description mt-2 line-clamp-2 min-h-[34px] text-[11px] leading-relaxed text-neutral-600 dark:text-white/68 text-left">
-                              {c.description || 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.'}
+                              {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
                             </p>
 
                             <div className="project-card-actions flex items-center gap-2">
@@ -1146,7 +1148,7 @@ export default function HomePage() {
                                     ? 'text-neutral-white dark:text-primary'
                                     : 'text-slate-500 dark:text-slate-400'
                                   }`}>
-                                  {isGateCurrentlyOpen() ? 'Bình chọn' : 'Đã đóng'}
+                                  {isGateCurrentlyOpen() ? (language === 'en' ? 'Vote Now' : 'Bình chọn') : (language === 'en' ? 'Closed' : 'Đã đóng')}
                                 </p>
                               </button>
 
@@ -1175,14 +1177,14 @@ export default function HomePage() {
                     onClick={() => setShowAllCandidates(true)}
                     className="project-list-action active flex items-center justify-center rounded-full px-5 py-2.5 sm:px-6 sm:py-3 transition-all duration-200 text-[11px] sm:text-[13px] uppercase tracking-wider hover:-translate-y-0.5 active:scale-95"
                   >
-                    Xem thêm
+                    {language === 'en' ? 'Show more' : 'Xem thêm'}
                   </button>
                 ) : (
                   <Link
                     href="/bang-xep-hang#danh-sach-du-an"
                     className="project-list-action active flex items-center justify-center rounded-full px-5 py-2.5 sm:px-6 sm:py-3 transition-all duration-200 text-[11px] sm:text-[13px] uppercase tracking-wider hover:-translate-y-0.5 active:scale-95"
                   >
-                    Xem danh sách thí sinh
+                    {language === 'en' ? 'View all candidates' : 'Xem danh sách thí sinh'}
                   </Link>
                 )}
               </div>

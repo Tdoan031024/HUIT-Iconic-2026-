@@ -141,10 +141,10 @@ function KPIBlock({
   };
 
   return (
-    <div className="admin-card min-h-[118px] px-4 py-3.5">
+    <div className="admin-card min-h-[126px] px-4 py-3.5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-[14px] font-medium text-slate-500" title={label}>{label}</p>
+          <p className="min-h-[40px] text-[13px] font-semibold leading-5 text-slate-500" title={label}>{label}</p>
           {loading ? <Skeleton className="mt-4 h-8 w-24" /> : <p className="mt-4 whitespace-nowrap text-[28px] font-bold leading-none tracking-normal text-slate-950 2xl:text-[32px]">{value}</p>}
         </div>
         <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl border', toneClass[tone])}>{icon}</div>
@@ -204,7 +204,7 @@ function OverviewVoteChart({
         ) : (
           <>
             <div className="mb-3 flex flex-col gap-1.5">
-              <p className="text-[13px] font-medium text-slate-500">Tổng lượt vote</p>
+              <p className="text-[13px] font-medium text-slate-500">Lượt bình chọn theo ngày</p>
               <p className="text-[32px] font-bold leading-none tracking-[-0.05em] text-slate-950">{totalVotes.toLocaleString()}</p>
             </div>
 
@@ -242,7 +242,7 @@ function OverviewVoteChart({
                       {latest.label}
                     </text>
                     <text x={latest.x - 40} y={latest.y - 10} className="fill-slate-950 text-[14px] font-semibold">
-                      {latest.value} vote
+                      {latest.value} lượt
                     </text>
                   </g>
                 ) : null}
@@ -282,8 +282,8 @@ function TopCandidatesCard({
         <div className="grid grid-cols-[28px_minmax(0,1.65fr)_90px_86px_108px] items-center gap-3 px-2 py-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-400">
           <div>#</div>
           <div>Thí sinh</div>
-          <div>Mã SBD</div>
-          <div>Lượt vote</div>
+          <div>Mã dự thi</div>
+          <div>Lượt bình chọn</div>
           <div>Trạng thái</div>
         </div>
 
@@ -298,15 +298,15 @@ function TopCandidatesCard({
                     <div className="flex min-w-0 items-center gap-3">
                       <img src={formatAssetUrl(candidate.imageUrl)} alt={candidate.name} className="h-10 w-10 rounded-[12px] border border-slate-200 object-cover" />
                       <div className="min-w-0">
-                        <p className="truncate text-[14px] font-semibold text-slate-950">{candidate.name}</p>
+                        <p className="line-clamp-2 text-[14px] font-semibold leading-5 text-slate-950" title={candidate.name}>{candidate.name}</p>
                         {index === 0 ? <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">Dẫn đầu</span> : null}
                       </div>
                     </div>
                     <div className="text-[14px] font-semibold text-slate-900">{candidate.sbd}</div>
                     <div className="text-[14px] font-bold text-slate-950">{candidate.votes}</div>
-                    <div className="flex items-center gap-2 text-[13px] font-medium text-slate-600">
+                    <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-600">
                       <span className={cn('h-2.5 w-2.5 rounded-full', isActive ? 'bg-emerald-500' : 'bg-slate-400')} />
-                      {isActive ? 'Đang hoạt động' : 'Chưa có vote'}
+                      <span>{isActive ? 'Hoạt động' : 'Chưa có bình chọn'}</span>
                     </div>
                   </div>
                 );
@@ -329,14 +329,14 @@ function QuickStatsCard({
       <div className="border-b border-slate-200/80 px-4 py-3.5">
         <h2 className="text-[20px] font-bold tracking-[-0.03em] text-slate-950">Thống kê nhanh</h2>
       </div>
-      <div className="grid gap-0 px-4 py-3 md:grid-cols-4 md:divide-x md:divide-slate-200/80">
+      <div className="grid gap-0 px-4 py-3 md:grid-cols-2 xl:grid-cols-4 md:divide-x md:divide-slate-200/80">
         {loading
           ? Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} className="m-2 h-[140px] w-auto" />)
           : stats.map((stat) => (
               <div key={stat.label} className="px-3 py-2">
                 <p className="text-[14px] font-medium text-slate-500">{stat.label}</p>
                 <p className="mt-4 text-[32px] font-bold leading-none tracking-[-0.04em] text-slate-950">{stat.value}</p>
-                <div className="mt-8 h-10">
+                <div className="mt-6 h-10">
                   <svg viewBox="0 0 120 36" className="h-10 w-full">
                     <path d="M2 30C12 30 14 16 24 16C34 16 36 30 46 30C56 30 58 10 68 10C78 10 80 24 90 24C100 24 104 10 118 10" fill="none" stroke="#6aa5ff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -371,45 +371,45 @@ function VoteHistoryCard({
 
   return (
     <article className="admin-card !p-0">
-      <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 px-4 py-3.5">
-        <h2 className="text-[20px] font-bold tracking-[-0.03em] text-slate-950 flex items-center gap-2">
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200/80 px-4 py-2.5">
+        <h2 className="flex items-center gap-2 text-[17px] font-bold tracking-[-0.02em] text-slate-950">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-blue-50 text-blue-600">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </span>
-          Lịch sử vote
+          Lịch sử bình chọn
         </h2>
-        <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-600">
+          <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-600">
           Real-time
         </span>
       </div>
-      <div className="space-y-1 px-4 py-3">
+      <div className="space-y-0 px-3 py-2">
         {loading
-          ? Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} className="h-[60px] w-full" />)
+          ? Array.from({ length: 6 }).map((_, index) => <Skeleton key={index} className="h-[46px] w-full" />)
           : votes.length === 0 ? (
-            <p className="py-6 text-center text-[13px] text-slate-400">Chưa có lượt vote nào</p>
+            <p className="py-6 text-center text-[13px] text-slate-400">Chưa có lượt bình chọn nào</p>
           ) : votes.map((vote) => {
             const userName = vote.userName || vote.voterPhone || 'Người dùng';
             const candidateName = vote.candidateName || vote.candidateSbd || vote.candidateId || 'Thí sinh';
             const score = vote.score || vote.points || 1;
             const dateVal = vote.createdAt || vote.voteTime;
             return (
-              <div key={vote.id} className="flex gap-3 rounded-[12px] px-2 py-2.5 transition hover:bg-slate-50/80">
+              <div key={vote.id} className="flex gap-2.5 rounded-[10px] px-2 py-1.5 transition hover:bg-slate-50/80">
                 {/* Avatar */}
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-[#79BCC2] text-white text-[13px] font-bold shadow-sm">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-[#79BCC2] text-white text-[12px] font-bold shadow-sm">
                   {userName.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13.5px] font-semibold text-slate-900 leading-[1.4]">
+                  <p className="truncate text-[12.5px] font-semibold leading-[1.35] text-slate-900">
                     <span className="text-blue-600">{userName}</span>{' '}
                     bình chọn cho{' '}
                     <span className="font-bold text-slate-800">{candidateName}</span>
                   </p>
-                  <div className="mt-0.5 flex items-center gap-2">
-                    <span className="text-[11px] text-slate-400">{timeAgo(dateVal)}</span>
+                  <div className="mt-0.5 flex items-center gap-1.5">
+                    <span className="text-[10px] text-slate-400">{timeAgo(dateVal)}</span>
                     <span className="h-1 w-1 rounded-full bg-slate-300" />
-                    <span className="inline-flex items-center rounded-full bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-700">
+                    <span className="inline-flex items-center rounded-full bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-700">
                       +{score} điểm
                     </span>
                   </div>
@@ -461,10 +461,10 @@ export default function OverviewPage() {
     // Fetch recent votes (vote history)
     async function loadVotes() {
       try {
-        const res = await fetch(apiUrl('/api/admin/votes?limit=5'));
+        const res = await fetch(apiUrl('/api/admin/votes?limit=8'));
         if (res.ok) {
           const data = await res.json();
-          setRecentVotes(Array.isArray(data) ? data.slice(0, 5) : []);
+          setRecentVotes(Array.isArray(data) ? data.slice(0, 8) : []);
         }
       } catch (err) {
         console.error('Failed to load recent votes.', err);
@@ -512,7 +512,7 @@ export default function OverviewPage() {
   const quickStats = useMemo(
     () => [
       { label: 'Bài viết tin tức', value: (statsData?.totalPosts || 0).toLocaleString(), growth: '' },
-      { label: 'Lượt vote', value: (totalVotes || 0).toLocaleString(), growth: '' },
+      { label: 'Lượt bình chọn', value: (totalVotes || 0).toLocaleString(), growth: '' },
       { label: 'Người dùng', value: (statsData?.totalUsers || statsData?.totalWebUsers || 0).toLocaleString(), growth: '' },
       { label: 'Nhà tài trợ', value: (statsData?.totalSponsors || 0).toLocaleString(), growth: '' },
     ],
@@ -523,14 +523,13 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-4">
-      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-7">
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <KPIBlock label="Thí sinh" value={isLoading ? '--' : <AnimatedMetric value={candidates.length} />} icon={<FolderIcon />} tone="blue" loading={isLoading} />
-        <KPIBlock label="Tổng vote" value={isLoading ? '--' : <AnimatedMetric value={totalVotes} />} icon={<VoteIcon />} tone="violet" loading={isLoading} />
-        <KPIBlock label="Dẫn đầu" value={leadingCandidate?.sbd || '001'} icon={<TrophyIcon />} tone="amber" loading={isLoading} />
+        <KPIBlock label="Tổng lượt bình chọn" value={isLoading ? '--' : <AnimatedMetric value={totalVotes} />} icon={<VoteIcon />} tone="violet" loading={isLoading} />
+        <KPIBlock label="SBD dẫn đầu" value={leadingCandidate?.sbd || '001'} icon={<TrophyIcon />} tone="amber" loading={isLoading} />
         <KPIBlock label="Thời gian còn lại" value={formatRemaining(endDate)} icon={<CalendarIcon />} tone="emerald" loading={isLoading} />
         <KPIBlock label="Lượt truy cập" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.totalViews || 0} />} icon={<ActivityStackIcon />} tone="blue" loading={isLoading} />
-        <KPIBlock label="Khách 30 ngày" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.uniqueVisitors30Days || 0} />} icon={<ActivityCreateIcon />} tone="emerald" loading={isLoading} />
-        <KPIBlock label="Đang truy cập" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.activeVisitors || 0} />} icon={<ActivityCreateIcon />} tone="violet" loading={isLoading} />
+        <KPIBlock label="Người đang xem" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.activeVisitors || 0} />} icon={<ActivityCreateIcon />} tone="violet" loading={isLoading} />
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">

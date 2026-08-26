@@ -13,10 +13,12 @@ type AdminBanner = Banner & {
 type BannerFormProps = {
   title: string;
   formTitle: string;
+  formTitleEn: string;
   formImageUrl: string;
   formLink: string;
   formActive: boolean;
   setFormTitle: (value: string) => void;
+  setFormTitleEn: (value: string) => void;
   setFormImageUrl: (value: string) => void;
   setFormLink: (value: string) => void;
   setFormActive: (value: boolean) => void;
@@ -27,10 +29,12 @@ type BannerFormProps = {
 function BannerModal({
   title,
   formTitle,
+  formTitleEn,
   formImageUrl,
   formLink,
   formActive,
   setFormTitle,
+  setFormTitleEn,
   setFormImageUrl,
   setFormLink,
   setFormActive,
@@ -38,8 +42,8 @@ function BannerModal({
   onSubmit,
 }: BannerFormProps) {
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-[#10211d]/60 p-4 backdrop-blur-sm transition-all duration-300">
-      <form onSubmit={onSubmit} className="w-full max-w-[850px] rounded-xl border border-[#dce5e1] bg-white p-5 shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#10211d]/60 p-4 backdrop-blur-sm transition-all duration-300" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-[850px] rounded-xl border border-[#dce5e1] bg-white p-5 shadow-2xl animate-in fade-in zoom-in duration-200">
         <div className="flex items-start justify-between gap-3 border-b border-[#edf2f0] pb-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Quản lý giao diện</p>
@@ -76,8 +80,13 @@ function BannerModal({
           {/* Right Column: Fields */}
           <div className="space-y-3.5">
             <label className="block space-y-1.5">
-              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề banner</span>
+              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề banner (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
               <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitle} onChange={(event) => setFormTitle(event.target.value)} required />
+            </label>
+
+            <label className="block space-y-1.5">
+              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề banner tiếng Anh (English Title)</span>
+              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitleEn} onChange={(event) => setFormTitleEn(event.target.value)} placeholder="e.g. HUIT ICONIC 2026 Grand Final..." />
             </label>
 
             <ImageDropzone
@@ -318,8 +327,8 @@ function ImportModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm flex items-center justify-center">
-      <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm flex items-center justify-center" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-700">Nhập dữ liệu banner</p>
@@ -425,11 +434,11 @@ export default function BannersAdminPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<AdminBanner | null>(null);
   const [formTitle, setFormTitle] = useState('');
+  const [formTitleEn, setFormTitleEn] = useState('');
   const [formImageUrl, setFormImageUrl] = useState('');
   const [formLink, setFormLink] = useState('');
   const [formActive, setFormActive] = useState(true);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-
 
   async function loadBanners() {
     try {
@@ -446,6 +455,7 @@ export default function BannersAdminPage() {
 
   const openAddModal = () => {
     setFormTitle('');
+    setFormTitleEn('');
     setFormImageUrl('');
     setFormLink('#');
     setFormActive(true);
@@ -455,6 +465,7 @@ export default function BannersAdminPage() {
   const openEditModal = (banner: AdminBanner) => {
     setSelectedBanner(banner);
     setFormTitle(banner.title);
+    setFormTitleEn(banner.titleEn || '');
     setFormImageUrl(banner.imageUrl);
     setFormLink(banner.link || '');
     setFormActive(banner.isActive ?? true);
@@ -467,11 +478,11 @@ export default function BannersAdminPage() {
       const res = await fetch(apiUrl('/api/admin/banners'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: formTitle, imageUrl: formImageUrl, link: formLink, isActive: formActive }),
+        body: JSON.stringify({ title: formTitle, titleEn: formTitleEn, imageUrl: formImageUrl, link: formLink, isActive: formActive }),
       });
       if (res.ok) {
         setIsAddModalOpen(false);
-        alert('Thêm banner thành công!');
+        showAlert('Thêm banner thành công!', 'success');
         loadBanners();
       }
     } catch (err) {
@@ -486,11 +497,11 @@ export default function BannersAdminPage() {
       const res = await fetch(apiUrl(`/api/admin/banners/${selectedBanner.id}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: formTitle, imageUrl: formImageUrl, link: formLink, isActive: formActive }),
+        body: JSON.stringify({ title: formTitle, titleEn: formTitleEn, imageUrl: formImageUrl, link: formLink, isActive: formActive }),
       });
       if (res.ok) {
         setIsEditModalOpen(false);
-        alert('Cập nhật banner thành công!');
+        showAlert('Cập nhật banner thành công!', 'success');
         loadBanners();
       }
     } catch (err) {
@@ -715,10 +726,12 @@ export default function BannersAdminPage() {
         <BannerModal
           title="Thêm banner mới"
           formTitle={formTitle}
+          formTitleEn={formTitleEn}
           formImageUrl={formImageUrl}
           formLink={formLink}
           formActive={formActive}
           setFormTitle={setFormTitle}
+          setFormTitleEn={setFormTitleEn}
           setFormImageUrl={setFormImageUrl}
           setFormLink={setFormLink}
           setFormActive={setFormActive}
@@ -731,10 +744,12 @@ export default function BannersAdminPage() {
         <BannerModal
           title="Chỉnh sửa banner"
           formTitle={formTitle}
+          formTitleEn={formTitleEn}
           formImageUrl={formImageUrl}
           formLink={formLink}
           formActive={formActive}
           setFormTitle={setFormTitle}
+          setFormTitleEn={setFormTitleEn}
           setFormImageUrl={setFormImageUrl}
           setFormLink={setFormLink}
           setFormActive={setFormActive}

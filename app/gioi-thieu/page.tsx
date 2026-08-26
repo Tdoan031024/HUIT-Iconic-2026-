@@ -3,6 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '../api';
+import { useLanguage } from '../../src/i18n/use-language';
+import { translate } from '../../src/i18n';
+import { localizedText } from '../../src/i18n/content';
 
 function useInView(threshold = 0.05) {
   const ref = useRef<HTMLDivElement>(null);
@@ -110,6 +113,8 @@ function formatDateTime(dStr: string | undefined | null) {
 }
 
 export default function GioiThieuPage() {
+  const language = useLanguage();
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const registerUrl = '';
 
   const [settings, setSettings] = useState<any>(null);
@@ -196,45 +201,40 @@ export default function GioiThieuPage() {
 
   const displayTimeline = timelineEvents && timelineEvents.length > 0
     ? timelineEvents.filter((e: any) => e.isActive && e.isImportant).map((event: any, idx: number) => ({
-        phase: event.title,
+        phase: localizedText(language, event.title, event.titleEn),
         date: event.date,
-        desc: event.description,
+        desc: localizedText(language, event.description, event.descriptionEn),
         icon: getTimelineIcon(idx % 3)
       }))
     : [];
 
-  const organizers = settings?.aboutOrganizerDetail
-    ? extractTextLines(settings.aboutOrganizerDetail)
-    : [];
+  const rawSectors = localizedText(language, settings?.aboutSectors, settings?.aboutSectorsEn);
+  const sectors = rawSectors ? extractTextLines(rawSectors) : [];
 
-  const sectors = settings?.aboutSectors
-    ? extractTextLines(settings.aboutSectors)
-    : [];
+  const rawBenefits = localizedText(language, settings?.aboutBenefits, settings?.aboutBenefitsEn);
+  const benefits = rawBenefits ? extractTextLines(rawBenefits) : [];
 
-  const benefits = settings?.aboutBenefits
-    ? extractTextLines(settings.aboutBenefits)
-    : [];
+  const prize = localizedText(language, settings?.aboutPrize, settings?.aboutPrizeEn) || "";
 
-  const prize = settings?.aboutPrize || "";
-
-  const parsedParticipants = settings?.aboutParticipants
-    ? extractTextLines(settings.aboutParticipants).map((line: string) => {
+  const rawParticipants = localizedText(language, settings?.aboutParticipants, settings?.aboutParticipantsEn);
+  const parsedParticipants = rawParticipants
+    ? extractTextLines(rawParticipants).map((line: string) => {
         const colonIndex = line.indexOf(':');
         if (colonIndex !== -1) {
           return [line.substring(0, colonIndex).trim(), line.substring(colonIndex + 1).trim()];
         }
-        return ['Đối tượng', line.trim()];
+        return [language === 'en' ? 'Target Group' : 'Đối tượng', line.trim()];
       })
     : [];
 
   const statsYear = settings?.statsYear || '';
   const stats = [
-    [settings?.statsCandidates, 'Thí sinh đăng ký'],
-    [settings?.statsVotes, 'Lượt bình chọn'],
-    [settings?.statsParticipants, 'Sinh viên tham gia'],
-    [settings?.statsViews, 'Lượt tiếp cận trên mạng xã hội'],
-    [settings?.statsMedia, 'Đơn vị truyền thông, đưa tin'],
-    [settings?.statsSchools, 'Trường đại học, cao đẳng, THPT, TT GDTX tham gia'],
+    [settings?.statsCandidates, language === 'en' ? 'Registered Projects' : 'Thí sinh đăng ký'],
+    [settings?.statsVotes, language === 'en' ? 'Total Votes Cast' : 'Lượt bình chọn'],
+    [settings?.statsParticipants, language === 'en' ? 'Participating Students' : 'Sinh viên tham gia'],
+    [settings?.statsViews, language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận trên mạng xã hội'],
+    [settings?.statsMedia, language === 'en' ? 'Media Outlets' : 'Đơn vị truyền thông, đưa tin'],
+    [settings?.statsSchools, language === 'en' ? 'Universities & High Schools' : 'Trường đại học, cao đẳng, THPT tham gia'],
   ].filter(([number]) => !!number);
 
   const registrationDeadline = settings?.registrationDeadline
@@ -248,11 +248,11 @@ export default function GioiThieuPage() {
     ? (settings?.registrationUrl || registerUrl || '#timeline-section')
     : '#timeline-section';
   const quickLinks = [
-    { href: '#tong-quan', label: 'Tổng quan', icon: '01' },
-    { href: '#quyen-loi', label: 'Quyền lợi', icon: '02' },
-    { href: '#timeline-section', label: 'Lộ trình', icon: '03' },
-    { href: '#quy-mo', label: 'Quy mô', icon: '04' },
-    { href: '#lien-he', label: 'Liên hệ', icon: '05' },
+    { href: '#tong-quan', label: language === 'en' ? 'Overview' : 'Tổng quan', icon: '01' },
+    { href: '#quyen-loi', label: language === 'en' ? 'Benefits' : 'Quyền lợi', icon: '02' },
+    { href: '#timeline-section', label: language === 'en' ? 'Timeline' : 'Lộ trình', icon: '03' },
+    { href: '#quy-mo', label: language === 'en' ? 'Scale' : 'Quy mô', icon: '04' },
+    { href: '#lien-he', label: language === 'en' ? 'Contact' : 'Liên hệ', icon: '05' },
   ];
 
   return (
@@ -710,7 +710,7 @@ export default function GioiThieuPage() {
               className={`about-hero flex flex-col items-center text-center mb-8 sm:mb-10 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
             >
               <div className="about-eyebrow mb-3">
-                Cuộc thi HUIT&apos;s ICONIC năm 2026
+                {localizedText(language, settings?.aboutTitle || "Cuộc thi HUIT's ICONIC năm 2026", settings?.aboutTitleEn)}
               </div>
               <h1 
                 className="relative font-black tracking-[-0.03em]"
@@ -724,12 +724,12 @@ export default function GioiThieuPage() {
                   color: 'var(--about-text-primary)'
                 }}
               >
-                Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững
+                {localizedText(language, settings?.aboutSubtitle || "Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững", settings?.aboutSubtitleEn)}
               </h1>
               <div className="about-hero-facts mt-3" aria-label="Thông tin nổi bật">
-                <span><b>03</b> bảng thi</span>
-                <span><b>05 tỷ</b> tổng giải thưởng</span>
-                <span><b>2026</b> cấp Thành phố</span>
+                <span><b>03</b> {language === 'en' ? 'Competition Tracks' : 'bảng thi'}</span>
+                <span><b>500M+</b> {language === 'en' ? 'Total Prize Pool' : 'tổng giải thưởng'}</span>
+                <span><b>2026</b> {language === 'en' ? 'City-wide Edition' : 'cấp Thành phố'}</span>
               </div>
             </div>
 
@@ -780,14 +780,14 @@ export default function GioiThieuPage() {
               {/* Card Tổng quan */}
               <div>
                 <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-7">
-                  Tổng quan cuộc thi
+                  {language === 'en' ? 'Competition Overview' : 'Tổng quan cuộc thi'}
                 </h2>
                 <div className={`about-card about-card-feature w-full p-6 sm:p-9 relative overflow-hidden group ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && gridSection.visible ? 'visible' : ''}`}>
                   <div className="absolute -top-8 -right-8 w-24 h-24 bg-[color:var(--about-accent)]/10 rounded-full blur-xl group-hover:bg-[color:var(--about-accent)]/20 transition-all duration-500 pointer-events-none" />
 
                   <div className="w-full">
                     <RichContent
-                      value={settings?.aboutDescription}
+                      value={localizedText(language, settings?.aboutDescription, settings?.aboutDescriptionEn)}
                       className="rich-content text-[16px] sm:text-[18px] text-[color:var(--about-text-primary)] leading-[1.8] font-normal text-justify"
                     />
                   </div>

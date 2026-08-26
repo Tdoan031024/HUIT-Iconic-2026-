@@ -355,8 +355,22 @@ export async function voteCandidate(sbd: string, body: any, authHeader?: string,
     throw new Error(`Thao tác quá nhanh! Vui lòng chờ ${rateLimit.remainingSeconds || 2}s trước khi gửi tiếp.`);
   }
 
+  const settings = await getSettings();
+  const now = Date.now();
+  const start = settings.startDate ? new Date(settings.startDate).getTime() : NaN;
+  const end = settings.endDate ? new Date(settings.endDate).getTime() : NaN;
+  if (!settings.isGateOpen || (Number.isFinite(start) && now < start) || (Number.isFinite(end) && now > end)) {
+    throw new Error('Cổng bình chọn hiện đang đóng hoặc đã hết thời gian.');
+  }
+
+  if (body.userId) {
+    const quota = await getFreeVoteQuota(String(body.userId));
+    if (quota.remaining <= 0) throw new Error('Bạn đã dùng hết lượt bình chọn miễn phí trong hôm nay.');
+  }
+
   const candidate = await getCandidateBySbd(sbd);
-  const addPoints = body.points || 1;
+  // Never trust a client-provided score or multiplier.
+  const addPoints = 1;
   const signalSecret = process.env.JWT_SECRET || 'iconic-vote-signal-secret';
   const ipHash = clientIp ? crypto.createHash('sha256').update(`${signalSecret}:ip:${clientIp}`).digest('hex') : null;
   const deviceId = String(body.deviceId || '').trim();
@@ -399,7 +413,9 @@ export async function addCandidate(data: Partial<Candidate>, adminUser = 'admin'
       votes: data.votes || 0,
       imageUrl: data.imageUrl || '/original_assets/imageada2.png',
       description: data.description || '',
+      descriptionEn: data.descriptionEn,
       biography: data.biography,
+      biographyEn: data.biographyEn,
       advisorName: data.advisorName,
       contestTable: data.contestTable,
       contestTableLabel: data.contestTableLabel,
@@ -486,6 +502,7 @@ export async function addSponsor(data: Partial<Sponsor>, adminUser = 'admin'): P
       logoUrl: data.logoUrl || '/images/site-logo.png',
       tier: (data.tier as any) || 'PARTNER',
       description: data.description,
+      descriptionEn: data.descriptionEn,
       websiteUrl: data.websiteUrl,
       email: data.email,
       phone: data.phone,
@@ -541,7 +558,9 @@ export async function addTimelineEvent(data: Partial<TimelineEvent>, adminUser =
     data: {
       date: data.date || '',
       title: data.title || 'Sự kiện mới',
+      titleEn: data.titleEn,
       description: data.description || '',
+      descriptionEn: data.descriptionEn,
       isActive: data.isActive !== false,
       isImportant: !!data.isImportant,
       round: data.round || 'Vòng loại',
@@ -592,6 +611,7 @@ export async function addBanner(data: Partial<Banner>, adminUser = 'admin'): Pro
   const created = await prisma.banner.create({
     data: {
       title: data.title || 'Banner mới',
+      titleEn: data.titleEn,
       imageUrl: data.imageUrl || '/uploads/baner.jpg',
       link: data.link || '#',
       isActive: data.isActive !== false,
@@ -646,9 +666,12 @@ export async function addPost(data: any, adminUser = 'admin'): Promise<any> {
   const created = await prisma.post.create({
     data: {
       title: data.title || 'Tin tức mới',
+      titleEn: data.titleEn,
       slug: data.slug || `tin-tuc-${Date.now()}`,
       summary: data.summary || '',
+      summaryEn: data.summaryEn,
       content: data.content || '',
+      contentEn: data.contentEn,
       thumbnailUrl: data.thumbnailUrl || '/images/site-logo.png',
       category: data.category || 'Tin tức',
       isActive: data.isActive !== false,

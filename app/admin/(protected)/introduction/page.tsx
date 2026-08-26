@@ -54,8 +54,8 @@ function RichTextModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="w-full max-w-6xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-6xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-4">
         <div className="flex items-center justify-between border-b pb-3 border-slate-100">
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-[#123c34]/10 text-[#123c34] rounded-md">
@@ -189,8 +189,11 @@ function RichTextModal({
 export default function IntroductionAdminPage() {
   const { showAlert } = useAlert();
   const [aboutTitle, setAboutTitle] = useState('HUIT ICONIC LẦN THỨ VII 2026');
+  const [aboutTitleEn, setAboutTitleEn] = useState('HUIT ICONIC SEASON VII 2026');
   const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi HUIT ICONIC lần VII - Cấp Thành phố năm 2026');
+  const [aboutSubtitleEn, setAboutSubtitleEn] = useState('The 7th HUIT ICONIC Competition - City Level 2026');
   const [aboutDescription, setAboutDescription] = useState('');
+  const [aboutDescriptionEn, setAboutDescriptionEn] = useState('');
   const [statsCandidates, setStatsCandidates] = useState('20+');
   const [statsVotes, setStatsVotes] = useState('100K+');
   const [statsViews, setStatsViews] = useState('30M+');
@@ -202,11 +205,17 @@ export default function IntroductionAdminPage() {
   
   // New fields
   const [aboutTheme, setAboutTheme] = useState('Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững');
+  const [aboutThemeEn, setAboutThemeEn] = useState('Innovation Towards Sustainable Development Goals');
   const [aboutOrganizerDetail, setAboutOrganizerDetail] = useState('');
+  const [aboutOrganizerDetailEn, setAboutOrganizerDetailEn] = useState('');
   const [aboutSectors, setAboutSectors] = useState('');
+  const [aboutSectorsEn, setAboutSectorsEn] = useState('');
   const [aboutBenefits, setAboutBenefits] = useState('');
+  const [aboutBenefitsEn, setAboutBenefitsEn] = useState('');
   const [aboutParticipants, setAboutParticipants] = useState('');
+  const [aboutParticipantsEn, setAboutParticipantsEn] = useState('');
   const [aboutPrize, setAboutPrize] = useState('');
+  const [aboutPrizeEn, setAboutPrizeEn] = useState('');
   const [aboutContactName, setAboutContactName] = useState('');
   const [aboutContactRole, setAboutContactRole] = useState('');
   const [aboutContactPhone, setAboutContactPhone] = useState('');
@@ -224,9 +233,13 @@ export default function IntroductionAdminPage() {
         if (res.ok) {
           const data = await res.json();
           if (data.aboutTitle) setAboutTitle(data.aboutTitle);
+          if (data.aboutTitleEn) setAboutTitleEn(data.aboutTitleEn);
           if (data.aboutSubtitle) setAboutSubtitle(data.aboutSubtitle);
+          if (data.aboutSubtitleEn) setAboutSubtitleEn(data.aboutSubtitleEn);
           if (data.aboutTheme) setAboutTheme(data.aboutTheme);
+          if (data.aboutThemeEn) setAboutThemeEn(data.aboutThemeEn);
           if (data.aboutDescription) setAboutDescription(data.aboutDescription);
+          if (data.aboutDescriptionEn) setAboutDescriptionEn(data.aboutDescriptionEn);
           if (data.statsCandidates) setStatsCandidates(data.statsCandidates);
           if (data.statsVotes) setStatsVotes(data.statsVotes);
           if (data.statsViews) setStatsViews(data.statsViews);
@@ -237,10 +250,15 @@ export default function IntroductionAdminPage() {
           if (data.aboutImageUrl) setAboutImageUrl(data.aboutImageUrl);
           
           if (data.aboutOrganizerDetail) setAboutOrganizerDetail(data.aboutOrganizerDetail);
+          if (data.aboutOrganizerDetailEn) setAboutOrganizerDetailEn(data.aboutOrganizerDetailEn);
           if (data.aboutSectors) setAboutSectors(data.aboutSectors);
+          if (data.aboutSectorsEn) setAboutSectorsEn(data.aboutSectorsEn);
           if (data.aboutBenefits) setAboutBenefits(data.aboutBenefits);
+          if (data.aboutBenefitsEn) setAboutBenefitsEn(data.aboutBenefitsEn);
           if (data.aboutParticipants) setAboutParticipants(data.aboutParticipants);
+          if (data.aboutParticipantsEn) setAboutParticipantsEn(data.aboutParticipantsEn);
           if (data.aboutPrize) setAboutPrize(data.aboutPrize);
+          if (data.aboutPrizeEn) setAboutPrizeEn(data.aboutPrizeEn);
           if (data.aboutContactName) setAboutContactName(data.aboutContactName);
           if (data.aboutContactRole) setAboutContactRole(data.aboutContactRole);
           if (data.aboutContactPhone) setAboutContactPhone(data.aboutContactPhone);
@@ -264,9 +282,13 @@ export default function IntroductionAdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           aboutTitle,
+          aboutTitleEn,
           aboutSubtitle,
+          aboutSubtitleEn,
           aboutTheme,
+          aboutThemeEn,
           aboutDescription,
+          aboutDescriptionEn,
           statsCandidates,
           statsVotes,
           statsViews,
@@ -276,10 +298,15 @@ export default function IntroductionAdminPage() {
           statsSchools,
           aboutImageUrl,
           aboutOrganizerDetail,
+          aboutOrganizerDetailEn,
           aboutSectors,
+          aboutSectorsEn,
           aboutBenefits,
+          aboutBenefitsEn,
           aboutParticipants,
+          aboutParticipantsEn,
           aboutPrize,
+          aboutPrizeEn,
           aboutContactName,
           aboutContactRole,
           aboutContactPhone,
@@ -386,8 +413,8 @@ export default function IntroductionAdminPage() {
             {/* Cột phải: Tiêu đề & Mô tả */}
             <div className="lg:col-span-2 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <label className="block space-y-1.5 md:col-span-2">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề chính cuộc thi</span>
+                <label className="block space-y-1.5">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề chính (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
                   <input 
                     type="text" 
                     value={aboutTitle} 
@@ -398,7 +425,18 @@ export default function IntroductionAdminPage() {
                 </label>
 
                 <label className="block space-y-1.5">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề phụ cuộc thi</span>
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề chính tiếng Anh (English Main Title)</span>
+                  <input 
+                    type="text" 
+                    value={aboutTitleEn} 
+                    onChange={(e) => setAboutTitleEn(e.target.value)} 
+                    placeholder="e.g. HUIT ICONIC SEASON VII 2026"
+                    className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  />
+                </label>
+
+                <label className="block space-y-1.5">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề phụ (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
                   <input 
                     type="text" 
                     value={aboutSubtitle} 
@@ -409,7 +447,18 @@ export default function IntroductionAdminPage() {
                 </label>
 
                 <label className="block space-y-1.5">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Chủ đề cuộc thi</span>
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề phụ tiếng Anh (English Subtitle)</span>
+                  <input 
+                    type="text" 
+                    value={aboutSubtitleEn} 
+                    onChange={(e) => setAboutSubtitleEn(e.target.value)} 
+                    placeholder="e.g. The 7th HUIT ICONIC Competition..."
+                    className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  />
+                </label>
+
+                <label className="block space-y-1.5">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Chủ đề cuộc thi (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
                   <input 
                     type="text" 
                     value={aboutTheme} 
@@ -418,28 +467,63 @@ export default function IntroductionAdminPage() {
                     required 
                   />
                 </label>
+
+                <label className="block space-y-1.5">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Chủ đề tiếng Anh (English Theme)</span>
+                  <input 
+                    type="text" 
+                    value={aboutThemeEn} 
+                    onChange={(e) => setAboutThemeEn(e.target.value)} 
+                    placeholder="e.g. Innovation Towards Sustainable Development Goals"
+                    className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  />
+                </label>
               </div>
 
-              <div className="block space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mô tả tổng quan / Thể lệ sơ lược</span>
-                  <button
-                    type="button"
-                    onClick={() => setModalField({ id: 'aboutDescription', title: 'Mô tả tổng quan / Thể lệ sơ lược', value: aboutDescription })}
-                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                    </svg>
-                    Mở rộng
-                  </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="block space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mô tả tổng quan (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
+                    <button
+                      type="button"
+                      onClick={() => setModalField({ id: 'aboutDescription', title: 'Mô tả tổng quan (Tiếng Việt)', value: aboutDescription })}
+                      className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                      </svg>
+                      Mở rộng
+                    </button>
+                  </div>
+                  <textarea 
+                    value={aboutDescription} 
+                    onChange={(e) => setAboutDescription(e.target.value)} 
+                    className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                    required 
+                  />
                 </div>
-                <textarea 
-                  value={aboutDescription} 
-                  onChange={(e) => setAboutDescription(e.target.value)} 
-                  className="h-32 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                  required 
-                />
+
+                <div className="block space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mô tả tổng quan tiếng Anh (English Description)</span>
+                    <button
+                      type="button"
+                      onClick={() => setModalField({ id: 'aboutDescriptionEn', title: 'Mô tả tổng quan tiếng Anh', value: aboutDescriptionEn })}
+                      className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                      </svg>
+                      Mở rộng
+                    </button>
+                  </div>
+                  <textarea 
+                    value={aboutDescriptionEn} 
+                    onChange={(e) => setAboutDescriptionEn(e.target.value)} 
+                    placeholder="English description and overview..."
+                    className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -451,27 +535,51 @@ export default function IntroductionAdminPage() {
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">2</span>
             <h3 className="text-sm font-bold text-[#123c34] font-heading">Đơn vị tổ chức &amp; đồng hành</h3>
           </div>
-          <div className="block space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Nội dung chi tiết đối tác (Nhập cách dòng)</span>
-              <button
-                type="button"
-                onClick={() => setModalField({ id: 'aboutOrganizerDetail', title: 'Đơn vị tổ chức & đồng hành', value: aboutOrganizerDetail })}
-                className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                </svg>
-                Mở rộng
-              </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="block space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Nội dung đối tác (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
+                <button
+                  type="button"
+                  onClick={() => setModalField({ id: 'aboutOrganizerDetail', title: 'Đơn vị tổ chức & đồng hành (Tiếng Việt)', value: aboutOrganizerDetail })}
+                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                  </svg>
+                  Mở rộng
+                </button>
+              </div>
+              <textarea 
+                value={aboutOrganizerDetail} 
+                onChange={(e) => setAboutOrganizerDetail(e.target.value)} 
+                className="h-32 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                placeholder="Đơn vị tổ chức: ...&#10;Tài trợ kim cương: ...&#10;Đơn vị phối hợp: ..."
+                required 
+              />
             </div>
-            <textarea 
-              value={aboutOrganizerDetail} 
-              onChange={(e) => setAboutOrganizerDetail(e.target.value)} 
-              className="h-36 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-              placeholder="Đơn vị tổ chức: ...&#10;Tài trợ kim cương: ...&#10;Đơn vị phối hợp: ..."
-              required 
-            />
+
+            <div className="block space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Nội dung đối tác tiếng Anh (English Partners Detail)</span>
+                <button
+                  type="button"
+                  onClick={() => setModalField({ id: 'aboutOrganizerDetailEn', title: 'Đơn vị tổ chức & đồng hành tiếng Anh', value: aboutOrganizerDetailEn })}
+                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                  </svg>
+                  Mở rộng
+                </button>
+              </div>
+              <textarea 
+                value={aboutOrganizerDetailEn} 
+                onChange={(e) => setAboutOrganizerDetailEn(e.target.value)} 
+                className="h-32 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                placeholder="Organizers: ...&#10;Diamond Sponsor: ...&#10;Partners: ..."
+              />
+            </div>
           </div>
         </div>
 
@@ -482,27 +590,51 @@ export default function IntroductionAdminPage() {
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3A</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Lĩnh vực dự thi</h3>
             </div>
-            <div className="block space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mỗi lĩnh vực ghi trên 1 dòng riêng biệt</span>
-                <button
-                  type="button"
-                  onClick={() => setModalField({ id: 'aboutSectors', title: 'Lĩnh vực dự thi', value: aboutSectors })}
-                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                  </svg>
-                  Mở rộng
-                </button>
+            <div className="space-y-3">
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Việt <span className="text-red-500 font-bold">*</span></span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutSectors', title: 'Lĩnh vực dự thi (Tiếng Việt)', value: aboutSectors })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutSectors} 
+                  onChange={(e) => setAboutSectors(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Công nghiệp, AI, chuyển đổi số...&#10;Công nghệ thực phẩm, nông nghiệp..."
+                  required 
+                />
               </div>
-              <textarea 
-                value={aboutSectors} 
-                onChange={(e) => setAboutSectors(e.target.value)} 
-                className="h-44 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                placeholder="Công nghiệp, AI, chuyển đổi số...&#10;Công nghệ thực phẩm, nông nghiệp..."
-                required 
-              />
+
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Anh (English Sectors)</span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutSectorsEn', title: 'Lĩnh vực dự thi (Tiếng Anh)', value: aboutSectorsEn })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutSectorsEn} 
+                  onChange={(e) => setAboutSectorsEn(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Industry, AI, Digital Transformation...&#10;Food Tech, Agriculture..."
+                />
+              </div>
             </div>
           </div>
 
@@ -511,27 +643,51 @@ export default function IntroductionAdminPage() {
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3B</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Quyền lợi khi tham gia</h3>
             </div>
-            <div className="block space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mỗi quyền lợi ghi trên 1 dòng riêng biệt</span>
-                <button
-                  type="button"
-                  onClick={() => setModalField({ id: 'aboutBenefits', title: 'Quyền lợi khi tham gia', value: aboutBenefits })}
-                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                  </svg>
-                  Mở rộng
-                </button>
+            <div className="space-y-3">
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Việt <span className="text-red-500 font-bold">*</span></span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutBenefits', title: 'Quyền lợi khi tham gia (Tiếng Việt)', value: aboutBenefits })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutBenefits} 
+                  onChange={(e) => setAboutBenefits(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Đào tạo kỹ năng khởi nghiệp&#10;Mentor/cố vấn chuyên sâu..."
+                  required 
+                />
               </div>
-              <textarea 
-                value={aboutBenefits} 
-                onChange={(e) => setAboutBenefits(e.target.value)} 
-                className="h-44 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                placeholder="Đào tạo kỹ năng khởi nghiệp&#10;Mentor/cố vấn chuyên sâu..."
-                required 
-              />
+
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Anh (English Benefits)</span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutBenefitsEn', title: 'Quyền lợi khi tham gia (Tiếng Anh)', value: aboutBenefitsEn })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutBenefitsEn} 
+                  onChange={(e) => setAboutBenefitsEn(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Startup skill training&#10;In-depth mentoring..."
+                />
+              </div>
             </div>
           </div>
 
@@ -540,27 +696,51 @@ export default function IntroductionAdminPage() {
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3C</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Giải thưởng cuộc thi</h3>
             </div>
-            <div className="block space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Thông tin giải thưởng</span>
-                <button
-                  type="button"
-                  onClick={() => setModalField({ id: 'aboutPrize', title: 'Giải thưởng cuộc thi', value: aboutPrize })}
-                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                  </svg>
-                  Mở rộng
-                </button>
+            <div className="space-y-3">
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Việt <span className="text-red-500 font-bold">*</span></span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutPrize', title: 'Giải thưởng cuộc thi (Tiếng Việt)', value: aboutPrize })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutPrize} 
+                  onChange={(e) => setAboutPrize(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Tổng giá trị giải thưởng 05 Tỷ đồng gồm..."
+                  required 
+                />
               </div>
-              <textarea 
-                value={aboutPrize} 
-                onChange={(e) => setAboutPrize(e.target.value)} 
-                className="h-44 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                placeholder="Tổng giá trị giải thưởng 05 Tỷ đồng gồm..."
-                required 
-              />
+
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Anh (English Prize)</span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutPrizeEn', title: 'Giải thưởng cuộc thi (Tiếng Anh)', value: aboutPrizeEn })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutPrizeEn} 
+                  onChange={(e) => setAboutPrizeEn(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Total prize value of 5 Billion VND including..."
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -688,27 +868,51 @@ export default function IntroductionAdminPage() {
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">5B</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Đối tượng tham gia</h3>
             </div>
-            <div className="block space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Mỗi đối tượng ghi trên 1 dòng dạng (Tên đối tượng: Mô tả)</span>
-                <button
-                  type="button"
-                  onClick={() => setModalField({ id: 'aboutParticipants', title: 'Đối tượng tham gia', value: aboutParticipants })}
-                  className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                  </svg>
-                  Mở rộng
-                </button>
+            <div className="space-y-3">
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Việt <span className="text-red-500 font-bold">*</span></span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutParticipants', title: 'Đối tượng tham gia (Tiếng Việt)', value: aboutParticipants })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutParticipants} 
+                  onChange={(e) => setAboutParticipants(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="Học sinh: THPT, GDTX, trung cấp có ý tưởng...&#10;Sinh viên, học viên: Đang học tại các trường..."
+                  required 
+                />
               </div>
-              <textarea 
-                value={aboutParticipants} 
-                onChange={(e) => setAboutParticipants(e.target.value)} 
-                className="h-[218px] w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                placeholder="Học sinh: THPT, GDTX, trung cấp có ý tưởng...&#10;Sinh viên, học viên: Đang học tại các trường..."
-                required 
-              />
+
+              <div className="block space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiếng Anh (English Participants)</span>
+                  <button
+                    type="button"
+                    onClick={() => setModalField({ id: 'aboutParticipantsEn', title: 'Đối tượng tham gia (Tiếng Anh)', value: aboutParticipantsEn })}
+                    className="text-[#0f766e] hover:text-[#0d5c56] text-[10px] font-bold flex items-center gap-1 transition"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    Mở rộng
+                  </button>
+                </div>
+                <textarea 
+                  value={aboutParticipantsEn} 
+                  onChange={(e) => setAboutParticipantsEn(e.target.value)} 
+                  className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
+                  placeholder="High school students with ideas...&#10;College and university students..."
+                />
+              </div>
             </div>
           </div>
 
@@ -776,11 +980,17 @@ export default function IntroductionAdminPage() {
           onClose={() => setModalField(null)}
           onApply={(value) => {
             if (modalField.id === 'aboutDescription') setAboutDescription(value);
+            else if (modalField.id === 'aboutDescriptionEn') setAboutDescriptionEn(value);
             else if (modalField.id === 'aboutOrganizerDetail') setAboutOrganizerDetail(value);
+            else if (modalField.id === 'aboutOrganizerDetailEn') setAboutOrganizerDetailEn(value);
             else if (modalField.id === 'aboutSectors') setAboutSectors(value);
+            else if (modalField.id === 'aboutSectorsEn') setAboutSectorsEn(value);
             else if (modalField.id === 'aboutBenefits') setAboutBenefits(value);
+            else if (modalField.id === 'aboutBenefitsEn') setAboutBenefitsEn(value);
             else if (modalField.id === 'aboutPrize') setAboutPrize(value);
+            else if (modalField.id === 'aboutPrizeEn') setAboutPrizeEn(value);
             else if (modalField.id === 'aboutParticipants') setAboutParticipants(value);
+            else if (modalField.id === 'aboutParticipantsEn') setAboutParticipantsEn(value);
             setModalField(null);
           }}
         />
