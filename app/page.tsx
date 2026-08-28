@@ -373,10 +373,22 @@ export default function HomePage() {
           setBanners(activeBanners);
           setHasLoadedBanners(true);
           setCurrentBannerIndex(0);
+
+          const firstBanner = activeBanners[0];
+          if (!firstBanner || firstBanner.imageUrl.toLowerCase().endsWith('.mp4')) {
+            window.dispatchEvent(new Event('iconic:banner-ready'));
+          } else {
+            const preload = new window.Image();
+            const signalBannerReady = () => window.dispatchEvent(new Event('iconic:banner-ready'));
+            preload.onload = signalBannerReady;
+            preload.onerror = signalBannerReady;
+            preload.src = firstBanner.imageUrl;
+          }
         } else {
           setSlides([]);
           setBanners([]);
           setHasLoadedBanners(true);
+          window.dispatchEvent(new Event('iconic:banner-ready'));
         }
 
         if (sponRes.ok) {
@@ -403,6 +415,7 @@ export default function HomePage() {
         setSponsors([]);
         setHomepageNewsPosts([]);
         setHasLoadedBanners(true);
+        window.dispatchEvent(new Event('iconic:banner-ready'));
       } finally {
         setIsLoading(false);
       }
@@ -699,6 +712,8 @@ export default function HomePage() {
                             alt={slide.title}
                             className="w-full h-full object-cover object-center pointer-events-none"
                             src={slide.url}
+                            fetchPriority={idx === 0 ? 'high' : 'auto'}
+                            decoding={idx === 0 ? 'sync' : 'async'}
                             onDragStart={e => e.preventDefault()}
                           />
                         )}

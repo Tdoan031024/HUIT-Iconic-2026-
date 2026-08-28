@@ -16,9 +16,12 @@ export function CurtainReveal() {
     let openTimer: number | undefined;
     let hideTimer: number | undefined;
     let fallbackTimer: number | undefined;
+    let pageLoaded = document.readyState === 'complete';
+    let bannerLoaded = false;
 
-    const openCurtain = () => {
+    const openCurtain = (force = false) => {
       if (hasStarted.current) return;
+      if (!force && (!pageLoaded || !bannerLoaded)) return;
       hasStarted.current = true;
 
       const waitBeforeOpening = Math.max(0, 760 - (performance.now() - mountedAt));
@@ -31,17 +34,23 @@ export function CurtainReveal() {
       hideTimer = window.setTimeout(() => setVisible(false), waitBeforeOpening + 1120);
     };
 
-    const onLoad = () => openCurtain();
-    if (document.readyState === 'complete') {
-      window.setTimeout(onLoad, 0);
-    } else {
-      window.addEventListener('load', onLoad, { once: true });
-    }
+    const onLoad = () => {
+      pageLoaded = true;
+      openCurtain();
+    };
+    const onBannerReady = () => {
+      bannerLoaded = true;
+      openCurtain();
+    };
+    window.addEventListener('iconic:banner-ready', onBannerReady);
+    if (pageLoaded) window.setTimeout(onLoad, 0);
+    else window.addEventListener('load', onLoad, { once: true });
 
     // Never leave the visitor behind the curtain if a remote asset is slow.
-    fallbackTimer = window.setTimeout(openCurtain, 4500);
+    fallbackTimer = window.setTimeout(() => openCurtain(true), 4500);
     return () => {
       window.removeEventListener('load', onLoad);
+      window.removeEventListener('iconic:banner-ready', onBannerReady);
       if (openTimer) window.clearTimeout(openTimer);
       if (hideTimer) window.clearTimeout(hideTimer);
       if (fallbackTimer) window.clearTimeout(fallbackTimer);
