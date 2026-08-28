@@ -72,10 +72,13 @@ export async function POST(req: Request) {
     await logAdminAction(admin.username, 'LOGIN_SUCCESS', 'AUTH', admin.id, admin.username, 'Đăng nhập vào trang quản trị thành công', clientIp);
 
     const res = NextResponse.json({ ok: true, admin });
+    const forwardedProto = req.headers.get('x-forwarded-proto')?.split(',')[0]?.trim();
+    const isHttps = forwardedProto ? forwardedProto === 'https' : new URL(req.url).protocol === 'https:';
     res.cookies.set('admin_session', generateAdminSessionToken(admin.id, Boolean(rememberMe)), {
       path: '/',
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // Secure cookies must match the protocol seen by the browser. This also supports HTTP-only cPanel domains.
+      secure: isHttps,
       sameSite: 'lax',
       maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
     });
