@@ -13,6 +13,8 @@ import { usePageViewTracker } from '../src/hooks/usePageViewTracker';
 import StatusPage from '../src/components/StatusPage';
 import { getStatusPreset } from '../src/components/status-page-presets';
 import { Language, translate } from '../src/i18n';
+import { CookieConsent } from '../src/components/CookieConsent';
+import { CurtainReveal } from '../src/components/CurtainReveal';
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['vietnamese'],
@@ -558,7 +560,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             {/* Page Content */}
+            <CurtainReveal />
             <div id="page-content">{children}</div>
+
+            <CookieConsent />
 
             {/* Floating Action Buttons */}
             <aside className="site-floating-actions" aria-label="Liên hệ nhanh">
