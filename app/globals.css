@@ -130,6 +130,8 @@ select option {
 :root[data-theme='dark'] .site-theme-toggle { background: var(--site-card); border-color: var(--site-line); color: var(--site-text); }
 
 .site-floating-actions { position: fixed; z-index: 1000; right: 18px; bottom: 22px; display: flex; flex-direction: column; gap: 9px; }
+.modal-scrollbar-hidden { scrollbar-width: none; -ms-overflow-style: none; }
+.modal-scrollbar-hidden::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .cookie-consent { position: fixed; z-index: 1100; left: 18px; bottom: 18px; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px 11px; width: min(360px, calc(100vw - 36px)); padding: 14px; border: 1px solid rgba(37, 99, 217, .16); border-radius: 16px; background: rgba(255, 255, 255, .96); color: #172b46; box-shadow: 0 14px 38px rgba(15, 35, 65, .16); backdrop-filter: blur(16px); animation: cookieConsentIn .35s ease-out both; }
 .cookie-consent-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; color: #0b5bd3; background: #eaf2ff; }
 .cookie-consent-icon svg { width: 21px; height: 21px; }

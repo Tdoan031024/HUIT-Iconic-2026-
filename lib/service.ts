@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS: SystemSettings = {
   organizerEn: "Ho Chi Minh City University of Industry and Trade (HUIT)",
   contactEmail: "duongdx@huit.edu.vn",
   isMaintenanceMode: false,
+  headerHuitLogoUrl: "/images/huit_logo.png",
+  headerIconicLogoUrl: "/images/image.webp",
   sponsorBannerUrl: "/uploads/nhataitro.png",
   hideSponsorBanner: false,
   hidePublicVoteHistory: false,

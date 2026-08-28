@@ -78,7 +78,8 @@ export async function POST(req: Request) {
       }
       await image
         .rotate()
-        .webp({ quality: 85, effort: 4 })
+        // Keep small text and logo edges in event banners crisp after conversion.
+        .webp({ quality: 92, effort: 4 })
         .toFile(webpPath);
       return NextResponse.json({ url: `/uploads/${webpFilename}`, filename: webpFilename, size: file.size });
     } catch {

@@ -42,9 +42,9 @@ function BannerModal({
   onSubmit,
 }: BannerFormProps) {
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-[#10211d]/60 p-3 backdrop-blur-sm transition-all duration-300 sm:p-5" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="flex w-full max-w-[700px] flex-col overflow-visible rounded-2xl border border-[#dce5e1] bg-white shadow-2xl animate-in fade-in zoom-in duration-200 max-[639px]:max-h-[calc(100vh-1.5rem)] max-[639px]:overflow-y-auto">
-        <div className="flex items-center justify-between gap-3 border-b border-[#edf2f0] px-4 py-3.5 sm:px-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto modal-scrollbar-hidden bg-[#10211d]/60 p-3 backdrop-blur-sm transition-all duration-300 sm:p-5" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="flex max-h-[calc(100vh-1.5rem)] w-full max-w-[700px] flex-col overflow-hidden rounded-2xl border border-[#dce5e1] bg-white shadow-2xl animate-in fade-in zoom-in duration-200 sm:max-h-[calc(100vh-2.5rem)]">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#edf2f0] px-4 py-3.5 sm:px-6">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Quản lý giao diện</p>
             <h3 className="mt-0.5 text-base font-black text-[#123c34]">{title}</h3>
@@ -54,6 +54,7 @@ function BannerModal({
           </button>
         </div>
 
+        <div className="min-h-0 flex-1 overflow-y-auto modal-scrollbar-hidden overscroll-contain">
         <div className="grid grid-cols-1 gap-3 px-4 py-3 sm:px-6 sm:py-4 sm:gap-4">
           {/* Left Column: Preview Area */}
           <div className="mx-auto flex w-full max-w-[460px] flex-col space-y-1.5">
@@ -121,8 +122,9 @@ function BannerModal({
             </div>
           </div>
         </div>
+        </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-[#edf2f0] bg-[#fbfdfc] px-4 py-2.5 sm:px-6">
+        <div className="flex shrink-0 items-center justify-end gap-2 border-t border-[#edf2f0] bg-[#fbfdfc] px-4 py-2.5 sm:px-6">
           <button type="button" onClick={onClose} className="rounded-lg border border-[#dce5e1] bg-white px-3.5 py-2 text-[10px] font-bold text-[#52605b] hover:border-[#0f766e] hover:text-[#0f766e] transition-colors">
             Hủy bỏ
           </button>
@@ -329,7 +331,7 @@ function ImportModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/55 p-4 backdrop-blur-sm flex items-center justify-center" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <div className="fixed inset-0 z-50 overflow-y-auto modal-scrollbar-hidden bg-slate-950/55 p-4 backdrop-blur-sm flex items-center justify-center" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <div onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-5">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
