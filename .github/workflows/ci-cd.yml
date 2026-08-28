@@ -61,6 +61,17 @@ jobs:
             git pull --ff-only origin main
             npm install --include=dev
             npx prisma db push --skip-generate
-            npx next build
+            for attempt in 1 2 3; do
+              if npx next build; then
+                break
+              fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "next build failed on attempt $attempt (often transient on cPanel), retrying..."
+                sleep 10
+              else
+                echo "next build failed after 3 attempts"
+                exit 1
+              fi
+            done
             mkdir -p tmp
             touch tmp/restart.txt
