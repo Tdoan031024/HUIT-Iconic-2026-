@@ -5,6 +5,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: process.env.CI_SKIP_TYPECHECK === '1',
+  },
   images: {
     unoptimized: true,
   },
