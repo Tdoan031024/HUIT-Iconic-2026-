@@ -216,7 +216,7 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
             {rank === 1 && <div className="podium-crown">👑</div>}
             <img
               alt={candidate.name}
-              className="project-media-image object-cover object-center w-full h-full"
+              className="project-media-image object-contain object-center w-full h-full"
               src={getCandidateImageUrl(candidate.imageUrl)}
               loading="lazy"
               onError={(event) => {
@@ -341,7 +341,7 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
           <div className="project-media-shell m-2 mb-0 relative h-[calc(100%-8px)] overflow-hidden rounded-[13px] bg-black/15 border border-white/10">
             <img
               alt={c.name}
-              className="project-media-image object-cover object-center w-full h-full"
+              className="project-media-image object-contain object-center w-full h-full"
               src={candidateImage}
               loading="lazy"
               onError={(event) => {

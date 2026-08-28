@@ -142,7 +142,9 @@ export interface SystemSettings {
   endDate: string;
   maxVotesPerPhone: number;
   eventTitle: string;
+  eventTitleEn?: string;
   organizer: string;
+  organizerEn?: string;
   contactEmail: string;
   isMaintenanceMode: boolean;
   sponsorBannerUrl?: string;
@@ -168,12 +170,17 @@ export interface SystemSettings {
   aboutSubtitle?: string;
   aboutSubtitleEn?: string;
   aboutTheme?: string;
+  aboutThemeEn?: string;
   aboutOrganizerDetail?: string;
+  aboutOrganizerDetailEn?: string;
   aboutSectors?: string;
+  aboutSectorsEn?: string;
   aboutBenefits?: string;
   aboutBenefitsEn?: string;
   aboutParticipants?: string;
+  aboutParticipantsEn?: string;
   aboutPrize?: string;
+  aboutPrizeEn?: string;
   aboutContactName?: string;
   aboutContactRole?: string;
   aboutContactPhone?: string;

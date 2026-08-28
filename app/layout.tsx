@@ -89,6 +89,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // ─── Service Worker Registration (PWA) ────────────────────────────────
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      if (process.env.NODE_ENV !== 'production') {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((registration) => registration.unregister());
+        });
+        return;
+      }
+
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch((err) => {
           console.error('[SW] Registration failed:', err);
@@ -297,7 +304,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0A2FFF" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
         <link rel="icon" href="/favicon.png" type="image/png" />
 

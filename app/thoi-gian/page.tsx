@@ -106,17 +106,17 @@ export default function TimelinePage() {
   const roundsList = [
     {
       title: 'Vòng loại', eyebrow: 'Giai đoạn 01',
-      summary: 'Hoàn tất hồ sơ đăng ký, tập huấn định hướng và công bố kết quả vòng loại.',
+      summary: 'Phát động cuộc thi, buổi định hướng thí sinh, đo nhân trắc học và catwalk sơ khảo tuyển chọn Top 50.',
       color: '#FDE047', bg: 'from-[#FDE047]/14 to-[#0A2FFF]/8', steps: [] as any[]
     },
     {
       title: 'Vòng bán kết', eyebrow: 'Giai đoạn 02',
-      summary: "Tập huấn chuyên sâu, hoàn thiện hồ sơ và tham gia vòng bán kết HUIT's ICONIC 2026.",
+      summary: "4 chặng thử thách: Photoshoot chủ đề, Vòng thi Tài năng, HUIT Bridal Fashion Show (TOP Model) và Phỏng vấn kín kết hợp Hoạt động thiện nguyện.",
       color: '#79BCC2', bg: 'from-[#79BCC2]/16 to-[#0A2FFF]/8', steps: [] as any[]
     },
     {
       title: 'Vòng chung kết', eyebrow: 'Giai đoạn 03',
-      summary: 'Kiểm chứng thị trường, kết nối nguồn lực, bình chọn online và thuyết trình chung kết.',
+      summary: 'Đêm Gala Chung kết xếp hạng bùng nổ, phỏng vấn ứng xử 60 giây, vinh danh Quán quân và chuỗi hoạt động thiện nguyện sau Chung kết.',
       color: '#F97316', bg: 'from-[#F97316]/14 to-[#79BCC2]/8', steps: [] as any[]
     }
   ];
@@ -137,13 +137,8 @@ export default function TimelinePage() {
         let displayDate = e.date;
         if (displayDate.includes('/2026')) displayDate = displayDate.replace('/2026', '');
         let displayTitle = text(e.title, e.titleEn);
-        if (displayTitle.toLowerCase().includes('nhận hồ sơ')) displayTitle = 'Nhận hồ sơ đăng ký dự thi';
-        else if (displayTitle.toLowerCase().includes('hạn chót nộp') || displayTitle.toLowerCase().includes('hạn nộp')) displayTitle = 'Hạn chót nộp hồ sơ';
-        else if (displayTitle.toLowerCase().includes('bán kết')) displayTitle = 'Vòng Bán kết';
-        else if (displayTitle.toLowerCase().includes('chung kết')) displayTitle = 'Vòng Chung kết';
-
-        if (displayTitle.length > 45) {
-          displayTitle = displayTitle.substring(0, 42) + '...';
+        if (displayTitle.length > 50) {
+          displayTitle = displayTitle.substring(0, 48) + '...';
         }
         return [displayDate, displayTitle];
       })

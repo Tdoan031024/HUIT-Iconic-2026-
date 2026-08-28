@@ -272,13 +272,13 @@ export default function HomePage() {
       observer.disconnect();
     };
   }, []);
-  const ABOUT_REGISTER_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdlRmaBRgPAl_rbLjDOY__ROcyZsCOnoxec2izDhRVJTcHBfA/viewform';
+  const ABOUT_REGISTER_URL = '/dang-ky';
 
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [activeVoteCandidate, setActiveVoteCandidate] = useState<Candidate | null>(null);
   const [search, setSearch] = useState('');
   const [showAllCandidates, setShowAllCandidates] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [hasLoadedBanners, setHasLoadedBanners] = useState(false);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -294,10 +294,10 @@ export default function HomePage() {
   const [promoTimeLeft, setPromoTimeLeft] = useState<string>('');
 
   useEffect(() => {
-    if (!settings?.endDate) return;
+    if (!settings?.registrationDeadline) return;
 
     const updateGateTimer = () => {
-      const end = new Date(settings.endDate).getTime();
+      const end = new Date(settings.registrationDeadline).getTime();
       const now = new Date().getTime();
       const diff = end - now;
 
@@ -316,7 +316,7 @@ export default function HomePage() {
     updateGateTimer();
     const interval = setInterval(updateGateTimer, 1000);
     return () => clearInterval(interval);
-  }, [settings?.endDate]);
+  }, [settings?.registrationDeadline]);
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -462,7 +462,8 @@ export default function HomePage() {
 
   // Scroll animation states and refs
   const aboutRef = useRef<HTMLDivElement>(null);
-  const [aboutVisible, setAboutVisible] = useState(false);
+  // Keep the above-the-fold introduction visible as settings hydrate to avoid a late content jump.
+  const [aboutVisible, setAboutVisible] = useState(true);
 
   const candidatesRef = useRef<HTMLDivElement>(null);
   const [candidatesVisible, setCandidatesVisible] = useState(false);
@@ -474,7 +475,7 @@ export default function HomePage() {
     const aboutObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setAboutVisible(entry.isIntersecting);
+          if (entry.isIntersecting) setAboutVisible(true);
         });
       },
       { threshold: 0.15 }
@@ -622,21 +623,40 @@ export default function HomePage() {
     ? filteredCandidates
     : filteredCandidates.slice(0, 6);
 
+  // Keep the first server/client render identical before browser-only data hydrates.
+  if (!isMounted) {
+    return (
+      <>
+        <main className="min-h-screen bg-slate-50" aria-label="Đang tải trang chủ">
+        <div className="relative w-full aspect-[3241/1294] animate-pulse bg-[#07134d]" />
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto h-8 w-56 animate-pulse rounded-xl bg-slate-200" />
+            <div className="mx-auto mt-4 h-5 w-full max-w-xl animate-pulse rounded-lg bg-slate-200" />
+          </div>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                <div className="aspect-[16/9] animate-pulse bg-slate-200" />
+                <div className="space-y-3 p-4"><div className="h-5 w-3/4 animate-pulse rounded-lg bg-slate-200" /><div className="h-4 w-1/2 animate-pulse rounded-lg bg-slate-200" /><div className="h-10 w-full animate-pulse rounded-xl bg-slate-200" /></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
-      <style>{`
-        @media (min-width: 812px) {
-          .iUzfqH {
-            background: transparent;
-          }
-        }
-      `}</style>
-
-      <main className="sc-908a50-0 iUzfqH theme-page home-theme-page flex-1">
+      <main className="sc-908a50-0 iUzfqH theme-page home-theme-page flex-1 min-[812px]:bg-transparent">
 
 
-        {/* Banner Section with Slider & Video support */}
-        {slides.length > 0 && (
+        {/* Banner Section with Slider & Video support. Keep its aspect ratio while data loads. */}
+        {!hasLoadedBanners ? (
+          <div className="relative w-full aspect-[3241/1294] overflow-hidden bg-[#07134d] animate-pulse" aria-label="Đang tải banner" />
+        ) : slides.length > 0 ? (
           <div className="sc-1a037b37-0 fgDcug relative flex flex-col group select-none">
             <div
               className="relative w-full h-auto aspect-[3241/1294] overflow-hidden bg-[#07134d] cursor-grab active:cursor-grabbing"
@@ -667,7 +687,7 @@ export default function HomePage() {
                         {slide.type === 'video' ? (
                           <video
                             src={slide.url}
-                            className="w-full h-full object-contain object-center pointer-events-none"
+                            className="w-full h-full object-cover object-center pointer-events-none"
                             autoPlay
                             muted
                             loop
@@ -677,7 +697,7 @@ export default function HomePage() {
                         ) : (
                           <img
                             alt={slide.title}
-                            className="w-full h-full object-contain object-center pointer-events-none"
+                            className="w-full h-full object-cover object-center pointer-events-none"
                             src={slide.url}
                             onDragStart={e => e.preventDefault()}
                           />
@@ -687,7 +707,7 @@ export default function HomePage() {
                       slide.type === 'video' ? (
                         <video
                           src={slide.url}
-                          className="w-full h-full object-contain object-center pointer-events-none"
+                          className="w-full h-full object-cover object-center pointer-events-none"
                           autoPlay
                           muted
                           loop
@@ -697,7 +717,7 @@ export default function HomePage() {
                       ) : (
                         <img
                           alt={slide.title}
-                          className="w-full h-full object-contain object-center"
+                          className="w-full h-full object-cover object-center"
                           src={slide.url}
                           onDragStart={e => e.preventDefault()}
                         />
@@ -709,7 +729,7 @@ export default function HomePage() {
 
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* About Section */}
         {hasAboutContent && (
@@ -763,7 +783,7 @@ export default function HomePage() {
                 />
 
                 {/* Staggered Stats Counters */}
-                <div className="grid grid-cols-4 gap-2 sm:gap-3 pt-1">
+                <div className="hidden grid-cols-4 gap-2 sm:gap-3 pt-1">
                   <div
                     style={{
                       transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -821,21 +841,41 @@ export default function HomePage() {
                   }}
                   className={`about-actions flex w-full flex-wrap items-center justify-center gap-3 transform transition-all duration-[2800ms] ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                 >
+                  {gateCountdown && !gateCountdown.isEnded && (
+                    <div className="order-first flex w-full flex-col items-center gap-1.5">
+                      <span className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 sm:text-[13px]">
+                        ⏳ Thời gian đăng ký còn lại
+                      </span>
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        {[
+                          { val: gateCountdown.days, label: language === 'en' ? 'Days' : 'Ngày' },
+                          { val: gateCountdown.hours, label: language === 'en' ? 'Hours' : 'Giờ' },
+                          { val: gateCountdown.mins, label: language === 'en' ? 'Mins' : 'Phút' },
+                          { val: gateCountdown.secs, label: language === 'en' ? 'Secs' : 'Giây' }
+                        ].map((item, i) => (
+                          <div key={i} className="flex min-w-[58px] flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-2.5 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:min-w-[70px] sm:px-3">
+                            <span className="font-mono text-xl font-black leading-none text-[#0A2FFF] dark:text-[#79BCC2] sm:text-2xl">
+                              {String(item.val).padStart(2, '0')}
+                            </span>
+                            <span className="mt-1 text-[9px] font-bold uppercase text-slate-400 sm:text-[10px]">{item.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <Link
                     href="/the-le"
-                    className="about-action about-action-secondary"
+                    className="hidden about-action about-action-secondary"
                   >
                     <span>Xem thêm</span>
                   </Link>
                   {(!isMounted || isRegistrationOpen) && (
-                    <a
-                      href={settings?.registrationUrl || ABOUT_REGISTER_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href={ABOUT_REGISTER_URL}
                       className="about-action about-action-primary"
                     >
                       <span>Đăng ký</span>
-                    </a>
+                    </Link>
                   )}
                 </div>
               </div>
@@ -939,32 +979,6 @@ export default function HomePage() {
                   Khám phá các gương mặt tài năng &amp; nét đẹp sinh viên HUIT, theo dõi bảng xếp hạng và bình chọn cho thí sinh bạn yêu thích.
                 </p>
               </div>
-
-              {/* Live Countdown Timer Widget */}
-              {gateCountdown && !gateCountdown.isEnded && (
-                <div className="mt-6 mb-2 flex flex-col items-center">
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
-                    ⏳ Thời gian còn lại của Cổng bình chọn
-                  </span>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    {[
-                      { val: gateCountdown.days, label: language === 'en' ? 'Days' : 'Ngày' },
-                      { val: gateCountdown.hours, label: language === 'en' ? 'Hours' : 'Giờ' },
-                      { val: gateCountdown.mins, label: language === 'en' ? 'Mins' : 'Phút' },
-                      { val: gateCountdown.secs, label: language === 'en' ? 'Secs' : 'Giây' }
-                    ].map((item, i) => (
-                      <div key={i} className="flex flex-col items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 sm:px-4 py-2 min-w-[58px] sm:min-w-[68px] shadow-sm">
-                        <span className="text-lg sm:text-2xl font-black text-[#0A2FFF] dark:text-[#79BCC2] font-mono leading-none">
-                          {String(item.val).padStart(2, '0')}
-                        </span>
-                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase mt-1">
-                          {item.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Table Filter Tabs */}
               <div className="flex items-center gap-2 mt-5">
@@ -1085,7 +1099,7 @@ export default function HomePage() {
                             <div className="project-media-shell m-2 mb-0 relative h-[calc(100%-8px)] overflow-hidden rounded-[13px] bg-black/15 border border-white/10">
                               <img
                                 alt={c.name}
-                                className="project-media-image object-cover object-center w-full h-full"
+                                className="project-media-image object-contain object-center w-full h-full"
                                 src={candidateImage}
                                 loading="lazy"
                                 onError={(event) => {
@@ -1258,7 +1272,7 @@ export default function HomePage() {
               <div className={`flex flex-col space-y-1.5 text-center transform transition-all duration-700 ease-out ${sponsorsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <div className="flex flex-col space-y-1.5">
                   <h2 className="text-[19px] sm:text-[31px] tracking-[-0.5px] leading-[25px] sm:leading-[38px] font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-black to-black/70 dark:from-white dark:to-white/70">
-                    {language === 'en' ? 'SPONSORS &amp; PARTNERS' : 'NHÀ TÀI TRỢ &amp; ĐỐI TÁC'}
+                    {language === 'en' ? 'SPONSORS & PARTNERS' : 'NHÀ TÀI TRỢ & ĐỐI TÁC'}
                   </h2>
                   <h3 className="text-[13px] sm:text-[18px] py-0.5 leading-[22px] uppercase font-bold text-blue-600 dark:text-blue-400">
                     {settings?.eventTitle || ''}

@@ -115,7 +115,7 @@ function formatDateTime(dStr: string | undefined | null) {
 export default function GioiThieuPage() {
   const language = useLanguage();
   const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
-  const registerUrl = '';
+  const registerUrl = 'https://zalo.me/g/uxjmkq913';
 
   const [settings, setSettings] = useState<any>(null);
   const [timelineEvents, setTimelineEvents] = useState<any[]>([]);
@@ -151,26 +151,16 @@ export default function GioiThieuPage() {
         const res = await fetch(apiUrl('/api/settings'));
         if (res.ok) setSettings(await res.json());
       } catch {}
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
-
-  function formatImgUrl(url: string | undefined | null): string {
-    if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
-      return url;
-    }
-    const cleanPath = url.startsWith('/') ? url : `/${url}`;
-    return cleanPath;
-  }
 
   // Intersection observer triggers for smooth animations
   const titleSection = useInView(0.05);
   const gridSection = useInView(0.05);
   const theLeSection = useInView(0.05);
   const timelineSection = useInView(0.05);
-  const backBtnSection = useInView(0.05);
 
   const getTimelineIcon = (index: number) => {
     if (index === 0) {
@@ -200,7 +190,7 @@ export default function GioiThieuPage() {
   };
 
   const displayTimeline = timelineEvents && timelineEvents.length > 0
-    ? timelineEvents.filter((e: any) => e.isActive && e.isImportant).map((event: any, idx: number) => ({
+    ? timelineEvents.filter((e: any) => e.isActive).map((event: any, idx: number) => ({
         phase: localizedText(language, event.title, event.titleEn),
         date: event.date,
         desc: localizedText(language, event.description, event.descriptionEn),
@@ -227,14 +217,14 @@ export default function GioiThieuPage() {
       })
     : [];
 
-  const statsYear = settings?.statsYear || '';
+  const statsYear = settings?.statsYear || '2026';
   const stats = [
-    [settings?.statsCandidates, language === 'en' ? 'Registered Projects' : 'Thí sinh đăng ký'],
-    [settings?.statsVotes, language === 'en' ? 'Total Votes Cast' : 'Lượt bình chọn'],
-    [settings?.statsParticipants, language === 'en' ? 'Participating Students' : 'Sinh viên tham gia'],
-    [settings?.statsViews, language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận trên mạng xã hội'],
-    [settings?.statsMedia, language === 'en' ? 'Media Outlets' : 'Đơn vị truyền thông, đưa tin'],
-    [settings?.statsSchools, language === 'en' ? 'Universities & High Schools' : 'Trường đại học, cao đẳng, THPT tham gia'],
+    [settings?.statsCandidates || '40.000+', language === 'en' ? 'Enrolled Students' : 'Quy mô sinh viên HUIT'],
+    [settings?.statsVotes || '1.000.000+', language === 'en' ? 'Online Public Votes' : 'Lượt bình chọn trực tuyến'],
+    [settings?.statsParticipants || '50 Top', language === 'en' ? 'Top Finalists' : 'Thí sinh Top xuất sắc'],
+    [settings?.statsViews || '10 triệu+', language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận truyền thông'],
+    [settings?.statsMedia || '30+', language === 'en' ? 'Media Partners' : 'Đơn vị báo chí, truyền thông'],
+    [settings?.statsSchools || '16+ Khoa', language === 'en' ? 'HUIT Academic Faculties' : 'Khoa / Viện đào tạo HUIT'],
   ].filter(([number]) => !!number);
 
   const registrationDeadline = settings?.registrationDeadline
@@ -247,6 +237,7 @@ export default function GioiThieuPage() {
   const registrationHref = registrationOpen === true
     ? (settings?.registrationUrl || registerUrl || '#timeline-section')
     : '#timeline-section';
+
   const quickLinks = [
     { href: '#tong-quan', label: language === 'en' ? 'Overview' : 'Tổng quan', icon: '01' },
     { href: '#quyen-loi', label: language === 'en' ? 'Benefits' : 'Quyền lợi', icon: '02' },
@@ -277,7 +268,7 @@ export default function GioiThieuPage() {
               name: "Ai có thể tham gia cuộc thi HUIT's ICONIC 2026?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Cuộc thi mở cho học sinh THPT, sinh viên đại học/cao đẳng, cá nhân và tổ chức yêu thích khởi nghiệp, cũng như doanh nghiệp vừa và nhỏ tại TP.HCM và các tỉnh lân cận.',
+                text: 'Cuộc thi mở cho tất cả sinh viên đang theo học tại Trường Đại học Công Thương TP.HCM (HUIT), có chiều cao Nữ từ 1m60 và Nam từ 1m70 trở lên.',
               },
             },
             {
@@ -293,7 +284,7 @@ export default function GioiThieuPage() {
               name: "Giải thưởng của cuộc thi HUIT's ICONIC 2026 là gì?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'Các thí sinh xuất sắc sẽ nhận được giải thưởng tiền mặt, kết nối với nhà đầu tư, cơ hội ươm tạo khởi nghiệp và được hỗ trợ phát triển sản phẩm từ HUIT và các đối tác đồng hành.',
+                text: '02 Quán quân 10.000.000 VNĐ/giải, 02 Á quân 5.000.000 VNĐ/giải cùng 07 giải phụ xuất sắc, cúp, sash, vương miện và quà tặng từ các Nhà tài trợ đồng hành.',
               },
             },
             {
@@ -301,13 +292,13 @@ export default function GioiThieuPage() {
               name: "Cuộc thi HUIT's ICONIC 2026 diễn ra khi nào?",
               acceptedAnswer: {
                 '@type': 'Answer',
-                text: "Cuộc thi HUIT's ICONIC 2026 diễn ra trong năm 2026 với các vòng thi và hoạt động bình chọn theo lịch trình công bố trên website.",
+                text: "Cuộc thi HUIT's ICONIC 2026 diễn ra từ tháng 09/2026 đến đêm Gala Chung kết ngày 26/12/2026.",
               },
             },
           ],
         })}}
       />
-      <style>{`
+      <style suppressHydrationWarning>{`
         :root {
           --about-primary: #0A2FFF;
           --about-primary-hover: #0826CC;
@@ -409,25 +400,6 @@ export default function GioiThieuPage() {
             font-size: 15px !important;
           }
         }
-        .about-status-pill > span {
-          width: 7px;
-          height: 7px;
-          border-radius: 999px;
-          background: currentColor;
-          box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 12%, transparent);
-        }
-        .about-theme-pill {
-          max-width: 820px;
-          padding: 10px 18px;
-          border-radius: 999px;
-          background: var(--about-surface);
-          border: 1px solid var(--about-border);
-          box-shadow: var(--about-shadow);
-          color: var(--about-text-secondary);
-          font-size: 14px;
-          line-height: 1.5;
-        }
-        .about-theme-pill::before { content: 'Chủ đề · '; color: var(--about-primary); font-weight: 800; }
         .about-hero-facts {
           display: flex;
           justify-content: center;
@@ -453,6 +425,7 @@ export default function GioiThieuPage() {
           box-shadow: 0 18px 50px rgba(10,47,255,.09);
           backdrop-filter: blur(16px);
         }
+        .about-registration-card p { font-size: 15px; line-height: 1.65; }
         .about-status-pill {
           display: inline-flex;
           align-items: center;
@@ -462,29 +435,36 @@ export default function GioiThieuPage() {
           font-size: 12px;
           font-weight: 800;
         }
+        .about-status-pill > span {
+          width: 7px;
+          height: 7px;
+          border-radius: 999px;
+          background: currentColor;
+          box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 12%, transparent);
+        }
         .about-status-pill.open { color: #047857; background: rgba(16,185,129,.10); border: 1px solid rgba(16,185,129,.24); }
         .about-status-pill.closed { color: #b45309; background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.24); }
         .about-status-pill.pending { color: var(--about-primary); background: color-mix(in srgb, var(--about-primary) 9%, transparent); border: 1px solid color-mix(in srgb, var(--about-primary) 22%, transparent); }
-        :root[data-theme='dark'] .about-status-pill.open { color: #6ee7b7; }
-        :root[data-theme='dark'] .about-status-pill.closed { color: #fcd34d; }
+
         .about-primary-action {
-          min-height: 48px;
+          min-height: 52px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          padding: 0 26px;
+          padding: 0 30px;
           border-radius: 999px;
           background: linear-gradient(135deg, var(--about-primary), var(--about-accent));
           color: #fff !important;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 800;
           letter-spacing: .06em;
           text-transform: uppercase;
           box-shadow: 0 12px 28px color-mix(in srgb, var(--about-primary) 28%, transparent);
-          transition: transform .25s ease, box-shadow .25s ease;
+          transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
         }
-        .about-primary-action:hover { transform: translateY(-2px); box-shadow: 0 16px 36px color-mix(in srgb, var(--about-primary) 36%, transparent); }
+        .about-primary-action:hover { transform: translateY(-3px); filter: saturate(1.08); box-shadow: 0 16px 36px color-mix(in srgb, var(--about-primary) 36%, transparent); }
+        .about-primary-action:focus-visible { outline: 3px solid color-mix(in srgb, var(--about-primary) 28%, transparent); outline-offset: 4px; }
 
         .about-quick-nav {
           position: sticky;
@@ -498,7 +478,7 @@ export default function GioiThieuPage() {
           border: 1px solid var(--about-border);
           border-radius: 999px;
           background: color-mix(in srgb, var(--about-surface) 90%, transparent);
-          box-shadow: 0 12px 36px rgba(15,23,42,.10), 0 0 0 1px rgba(255,255,255,0.03);
+          box-shadow: 0 12px 36px rgba(15,23,42,.10);
           backdrop-filter: blur(18px);
         }
         .about-quick-nav a {
@@ -512,15 +492,13 @@ export default function GioiThieuPage() {
           color: var(--about-text-secondary);
           font-size: 12px;
           font-weight: 700;
-          transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+          transition: all 0.25s ease;
         }
         .about-quick-nav a:hover {
           background: color-mix(in srgb, var(--about-primary) 10%, var(--about-surface));
           color: var(--about-primary);
           transform: translateY(-1px);
-          box-shadow: 0 4px 14px color-mix(in srgb, var(--about-primary) 18%, transparent);
         }
-        .about-quick-nav a:hover .about-nav-num { background: var(--about-primary); color: #fff; }
         .about-nav-num {
           display: inline-flex;
           align-items: center;
@@ -532,27 +510,10 @@ export default function GioiThieuPage() {
           color: var(--about-primary);
           font-size: 9px;
           font-weight: 900;
-          letter-spacing: 0;
-          transition: background 0.25s ease, color 0.25s ease;
         }
         .about-nav-label { font-size: 11px; font-weight: 700; }
-          box-shadow: 0 12px 36px rgba(15,23,42,.10);
-          backdrop-filter: blur(18px);
-        }
-        .about-quick-nav a {
-          min-height: 40px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 0 15px;
-          border-radius: 999px;
-          color: var(--about-text-secondary);
-          font-size: 12px;
-          font-weight: 700;
-          transition: background .2s ease, color .2s ease;
-        }
-        .about-quick-nav a:hover { background: var(--about-surface-sec); color: var(--about-primary); }
-        .about-section-anchor { scroll-margin-top: 150px; }
+
+        .about-section-anchor { scroll-margin-top: 132px; }
         .about-section-title { letter-spacing: -.025em; }
         .about-section-title::after {
           content: '';
@@ -578,6 +539,10 @@ export default function GioiThieuPage() {
         .about-card-warning { border-top: 3px solid var(--about-warning); }
         .about-card-accent { border-top: 3px solid var(--about-accent); }
         .about-card-prize { border-top: 3px solid var(--about-prize); }
+        .about-prize-summary { min-height: 116px; display: flex; flex-direction: column; justify-content: center; }
+        .about-prize-copy { flex: 1; padding: 16px 18px; border: 1px solid var(--about-border); border-radius: 16px; background: color-mix(in srgb, var(--about-surface-sec) 30%, transparent); }
+        .about-prize-copy p { margin: 0 0 10px; }
+        .about-prize-copy p:last-child { margin-bottom: 0; }
         .about-prize-value {
           background: linear-gradient(100deg, #be123c, #db2777, #0e7490);
           -webkit-background-clip: text;
@@ -586,32 +551,48 @@ export default function GioiThieuPage() {
         }
         :root[data-theme='dark'] .about-prize-value { background-image: linear-gradient(100deg, #fda4af, #f9a8d4, #67e8f9); }
 
-        .about-timeline-shell { background: linear-gradient(145deg, var(--about-surface), color-mix(in srgb, var(--about-primary) 3%, var(--about-surface))); }
-        .about-timeline-event {
-          padding: 0 0 20px 4px;
-          border-bottom: 1px dashed var(--about-border);
-        }
-        .about-timeline-event:last-child { padding-bottom: 0; border-bottom: 0; }
         .about-stat-card .space-y-3 {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 10px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
         }
         .about-stat-card .space-y-3 > * { margin-top: 0 !important; }
         .about-stat-item {
-          min-height: 92px;
+          min-height: 112px;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          gap: 6px;
-          padding: 13px;
+          gap: 8px;
+          padding: 16px;
           border: 1px solid var(--about-border);
-          border-radius: 14px;
-          background: color-mix(in srgb, var(--about-surface-sec) 58%, transparent);
+          border-radius: 16px;
+          background: linear-gradient(145deg, color-mix(in srgb, var(--about-surface-sec) 64%, transparent), color-mix(in srgb, var(--about-primary) 3%, transparent));
+          transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
         }
-        .about-stat-item > span:first-child { color: var(--about-primary); font-size: 22px; font-weight: 900; letter-spacing: -.02em; }
+        .about-stat-item:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--about-primary) 28%, var(--about-border)); box-shadow: 0 12px 26px rgba(10,47,255,.08); }
+        .about-stat-item > span:first-child { color: var(--about-primary); font-size: 28px; line-height: 1.15; font-weight: 900; letter-spacing: -.02em; }
+        .about-stat-item > span:last-child { font-size: 13px; line-height: 1.45; }
 
-        /* Viewport entry transition classes */
+        .about-timeline-item { padding: 12px 16px 14px; border-radius: 16px; transition: background .25s ease, transform .25s ease; }
+        .about-timeline-item:hover { background: color-mix(in srgb, var(--about-primary) 4%, transparent); transform: translateX(3px); }
+        .about-timeline-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 6px; }
+        .about-timeline-date { font-size: 13px; line-height: 1.35; font-weight: 800; color: var(--about-primary); background: color-mix(in srgb, var(--about-primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--about-primary) 20%, transparent); padding: 5px 9px; border-radius: 8px; }
+        .about-timeline-phase { font-size: 19px; line-height: 1.35; font-weight: 800; color: var(--about-text-primary); }
+        .about-timeline-description { max-width: 920px; color: var(--about-text-secondary); font-size: 16px; line-height: 1.7; }
+        @media (max-width: 900px) { .about-stat-card .space-y-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .about-timeline-phase { font-size: 18px; } }
+        @media (max-width: 640px) {
+          .about-primary-action { min-height: 50px; padding: 0 24px; }
+          .about-quick-nav { position: static; width: 100%; overflow-x: auto; justify-content: flex-start; border-radius: 16px; }
+          .about-quick-nav a { flex: 0 0 auto; padding: 0 11px; }
+          .about-stat-card .space-y-3 { gap: 8px; }
+          .about-stat-item { min-height: 96px; padding: 13px; }
+          .about-stat-item > span:first-child { font-size: 24px; }
+          .about-stat-item > span:last-child { font-size: 12px; }
+          .about-timeline-item { padding: 10px 10px 12px; }
+          .about-timeline-phase { font-size: 17px; }
+          .about-timeline-description { font-size: 15px; line-height: 1.65; }
+        }
+
         .animate-on-scroll {
           opacity: 0;
           transform: translateY(20px);
@@ -622,79 +603,9 @@ export default function GioiThieuPage() {
           transform: translateY(0);
         }
         
-        .animate-slide-left {
-          opacity: 0;
-          transform: translateX(-30px);
-          transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .animate-slide-left.visible {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .animate-slide-right {
-          opacity: 0;
-          transform: translateX(30px);
-          transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .animate-slide-right.visible {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        /* Focus rings */
         .about-focusable:focus-visible {
           outline: 2px solid var(--about-primary) !important;
           outline-offset: 3px !important;
-        }
-
-        /* Hero title animated gradient */
-        @keyframes titleGradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .about-hero-title-gradient {
-          background-size: 200% 200%;
-        }
-        .about-hero h1 {
-          font-size: 42px !important;
-          font-weight: 900 !important;
-          line-height: 1.12 !important;
-          margin-top: 12px !important;
-          margin-bottom: 12px !important;
-          max-width: 960px !important;
-        }
-        @media (min-width: 640px) {
-          .about-hero h1 {
-            font-size: 64px !important;
-          }
-        }
-        @media (min-width: 768px) {
-          .about-hero h1 {
-            font-size: 80px !important;
-          }
-        }
-
-        @media (max-width: 700px) {
-          :root[data-theme='dark'] .about-page-premium { background-attachment: scroll !important; }
-          .about-ambient { display: none; }
-          .about-hero h1 { max-width: 560px; }
-          .about-theme-pill { border-radius: 16px; }
-          .about-hero-facts { display: grid; grid-template-columns: 1fr; width: 100%; max-width: 330px; }
-          .about-registration-card { border-radius: 20px; }
-          .about-quick-nav {
-            top: 88px;
-            width: calc(100vw - 24px);
-            overflow-x: auto;
-            justify-content: flex-start;
-            border-radius: 16px;
-            scrollbar-width: none;
-          }
-          .about-quick-nav::-webkit-scrollbar { display: none; }
-          .about-quick-nav a { flex: 0 0 auto; }
-          .about-card, .about-timeline-shell { border-radius: 20px; backdrop-filter: blur(7px); }
-          .about-card:hover { transform: none; }
-          .about-stat-card .space-y-3 { grid-template-columns: 1fr 1fr; }
         }
       `}</style>
 
@@ -702,15 +613,15 @@ export default function GioiThieuPage() {
         <div className="about-ambient about-ambient-one" aria-hidden="true" />
         <div className="about-ambient about-ambient-two" aria-hidden="true" />
         <div className="hfAPBN relative z-[1]">
-          <div className="mt-8 sm:mt-[56px] flex flex-col items-center">
+          <div className="mt-4 sm:mt-8 flex flex-col items-center">
             
             {/* Title Block */}
             <div
               ref={titleSection.ref} 
-              className={`about-hero flex flex-col items-center text-center mb-8 sm:mb-10 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
+              className={`about-hero flex flex-col items-center text-center mb-5 sm:mb-7 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
             >
               <div className="about-eyebrow mb-3">
-                {localizedText(language, settings?.aboutTitle || "Cuộc thi HUIT's ICONIC năm 2026", settings?.aboutTitleEn)}
+                {localizedText(language, settings?.aboutTitle || "HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT", settings?.aboutTitleEn)}
               </div>
               <h1 
                 className="relative font-black tracking-[-0.03em]"
@@ -724,18 +635,18 @@ export default function GioiThieuPage() {
                   color: 'var(--about-text-primary)'
                 }}
               >
-                {localizedText(language, settings?.aboutSubtitle || "Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững", settings?.aboutSubtitleEn)}
+                {localizedText(language, settings?.aboutSubtitle || "Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM", settings?.aboutSubtitleEn)}
               </h1>
               <div className="about-hero-facts mt-3" aria-label="Thông tin nổi bật">
-                <span><b>03</b> {language === 'en' ? 'Competition Tracks' : 'bảng thi'}</span>
-                <span><b>500M+</b> {language === 'en' ? 'Total Prize Pool' : 'tổng giải thưởng'}</span>
-                <span><b>2026</b> {language === 'en' ? 'City-wide Edition' : 'cấp Thành phố'}</span>
+                <span><b>40.000+</b> {language === 'en' ? 'HUIT Students' : 'Sinh viên HUIT'}</span>
+                <span><b>Top 50</b> {language === 'en' ? 'Excellent Finalists' : 'Thí sinh xuất sắc'}</span>
+                <span><b>2026</b> {language === 'en' ? 'New Season' : 'Mùa giải mới'}</span>
               </div>
             </div>
 
             {/* CTA đăng ký đầu trang */}
             <div
-              className={`about-registration-card w-full max-w-[920px] mb-6 p-5 sm:p-6 rounded-[24px] flex flex-col sm:flex-row items-center justify-between gap-6 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
+              className={`about-registration-card w-full max-w-[920px] mb-4 p-5 sm:p-6 rounded-[24px] flex flex-col sm:flex-row items-center justify-between gap-5 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && titleSection.visible ? 'visible' : ''}`}
               suppressHydrationWarning
             >
               <div className="text-center sm:text-left">
@@ -765,7 +676,7 @@ export default function GioiThieuPage() {
               </div>
             </div>
 
-            <nav className="about-quick-nav mb-16" aria-label="Điều hướng nhanh trang giới thiệu">
+            <nav className="about-quick-nav mb-10" aria-label="Điều hướng nhanh trang giới thiệu">
               {quickLinks.map((item) => (
                 <a key={item.href} href={item.href} className="about-focusable">
                   <span className="about-nav-num">{item.icon}</span>
@@ -775,8 +686,7 @@ export default function GioiThieuPage() {
             </nav>
 
             {/* Section 1: Tổng quan & Ban tổ chức */}
-            <section id="tong-quan" ref={gridSection.ref} className="about-section-anchor w-full max-w-[1200px] flex flex-col gap-8 mb-20">
-              
+            <section id="tong-quan" ref={gridSection.ref} className="about-section-anchor w-full max-w-[1200px] flex flex-col gap-8 mb-14 sm:mb-16">
               {/* Card Tổng quan */}
               <div>
                 <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-7">
@@ -788,7 +698,7 @@ export default function GioiThieuPage() {
                   <div className="w-full">
                     <RichContent
                       value={localizedText(language, settings?.aboutDescription, settings?.aboutDescriptionEn)}
-                      className="rich-content text-[16px] sm:text-[18px] text-[color:var(--about-text-primary)] leading-[1.8] font-normal text-justify"
+                      className="rich-content text-[17px] sm:text-[19px] text-[color:var(--about-text-primary)] leading-[1.9] font-normal text-justify"
                     />
                   </div>
                 </div>
@@ -799,17 +709,15 @@ export default function GioiThieuPage() {
             <section
               id="quyen-loi"
               ref={theLeSection.ref}
-              className="about-section-anchor w-full max-w-[1200px] mb-20"
+              className="about-section-anchor w-full max-w-[1200px] mb-14 sm:mb-16"
             >
               <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-9">
-                Lĩnh vực &amp; Quyền lợi
+                {language === 'en' ? 'Tracks & Privileges' : 'Nội dung thi & Quyền lợi thí sinh'}
               </h2>
               <div className={`grid grid-cols-1 lg:grid-cols-3 gap-8 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && theLeSection.visible ? 'visible' : ''}`}>
                 
                 {/* Lĩnh vực dự thi */}
                 <div className="about-card about-card-warning p-6 sm:p-8 flex flex-col space-y-6 relative overflow-hidden group">
-                  <div className="absolute -top-8 -right-8 w-24 h-24 bg-yellow-500/5 rounded-full blur-xl group-hover:bg-yellow-500/10 transition-all duration-500 pointer-events-none" />
-                  
                   <div className="flex items-center space-x-3 pb-4 border-b border-[color:var(--about-border)]">
                     <div className="p-2.5 bg-amber-500/10 rounded-xl text-[color:var(--about-warning)] border border-amber-500/20">
                       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -819,7 +727,7 @@ export default function GioiThieuPage() {
                       </svg>
                     </div>
                     <h3 className="text-[20px] sm:text-[22px] font-bold text-[color:var(--about-text-primary)] uppercase tracking-wide">
-                      Lĩnh vực dự thi
+                      {language === 'en' ? 'Competition Tracks' : 'Thử thách các vòng'}
                     </h3>
                   </div>
                   
@@ -834,7 +742,7 @@ export default function GioiThieuPage() {
                           <span className="text-[12px] font-bold text-[color:var(--about-warning)] bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md shrink-0">
                             {numberLabel}
                           </span>
-                          <p className="text-[15px] sm:text-[16px] text-[color:var(--about-text-primary)] leading-[1.7] font-normal text-left sm:text-justify">
+                          <p className="text-[15px] sm:text-[16px] text-[color:var(--about-text-primary)] leading-[1.7] font-normal text-left">
                             {sector}
                           </p>
                         </div>
@@ -845,8 +753,6 @@ export default function GioiThieuPage() {
 
                 {/* Quyền lợi khi tham gia */}
                 <div className="about-card about-card-accent p-6 sm:p-8 flex flex-col space-y-6 relative overflow-hidden group">
-                  <div className="absolute -top-8 -right-8 w-24 h-24 bg-[color:var(--about-accent)]/5 rounded-full blur-xl group-hover:bg-[color:var(--about-accent)]/10 transition-all duration-500 pointer-events-none" />
-                  
                   <div className="flex items-center space-x-3 pb-4 border-b border-[color:var(--about-border)]">
                     <div className="p-2.5 bg-[color:color-mix(in_srgb,_var(--about-accent)_10%,_transparent)] rounded-xl text-[color:var(--about-accent)] border border-[color:color-mix(in_srgb,_var(--about-accent)_20%,_transparent)]">
                       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -854,7 +760,7 @@ export default function GioiThieuPage() {
                       </svg>
                     </div>
                     <h3 className="text-[20px] sm:text-[22px] font-bold text-[color:var(--about-text-primary)] uppercase tracking-wide">
-                      Quyền lợi tham gia
+                      {language === 'en' ? 'Candidate Benefits' : 'Quyền lợi thí sinh'}
                     </h3>
                   </div>
                   
@@ -879,8 +785,6 @@ export default function GioiThieuPage() {
 
                 {/* Giải thưởng */}
                 <div className="about-card about-card-prize p-6 sm:p-8 flex flex-col space-y-6 relative overflow-hidden group">
-                  <div className="absolute -top-8 -right-8 w-24 h-24 bg-rose-500/5 rounded-full blur-xl group-hover:bg-rose-500/10 transition-all duration-500 pointer-events-none" />
-                  
                   <div className="flex items-center space-x-3 pb-4 border-b border-[color:var(--about-border)]">
                     <div className="p-2.5 bg-rose-500/10 rounded-xl text-[color:var(--about-prize)] border border-rose-500/20">
                       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -892,26 +796,24 @@ export default function GioiThieuPage() {
                       </svg>
                     </div>
                     <h3 className="text-[20px] sm:text-[22px] font-bold text-[color:var(--about-text-primary)] uppercase tracking-wide">
-                      Cơ cấu giải thưởng
+                      {language === 'en' ? 'Prizes & Awards' : 'Cơ cấu giải thưởng'}
                     </h3>
                   </div>
                   
                   <div className="flex-1 flex flex-col justify-start space-y-4">
-                    <div className="bg-gradient-to-br from-rose-500/15 via-[#79BCC2]/5 to-transparent border border-rose-500/20 rounded-2xl p-4 text-center shadow-lg relative overflow-hidden">
-                      <div className="absolute inset-0 bg-white/[0.01] pointer-events-none" />
-                      <p className="text-[12px] sm:text-[13px] font-black uppercase tracking-[0.2em] text-[color:var(--about-prize)]">Tổng giải thưởng lên tới</p>
-                      <h4 className="about-prize-value text-[30px] sm:text-[36px] font-black mt-1.5 leading-normal py-1.5">
-                        {(() => {
-                          const match = prize.match(/\d+\s*[T|t]ỷ\s*[Đ|đ]ồng/i);
-                          return match ? match[0].toUpperCase() : "";
-                        })()}
+                    <div className="about-prize-summary bg-gradient-to-br from-rose-500/15 via-[#79BCC2]/5 to-transparent border border-rose-500/20 rounded-2xl p-4 text-center shadow-lg relative overflow-hidden">
+                      <p className="text-[12px] sm:text-[13px] font-black uppercase tracking-[0.2em] text-[color:var(--about-prize)]">
+                        {language === 'en' ? 'Prize Structure' : 'Giải thưởng chính thức'}
+                      </p>
+                      <h4 className="about-prize-value text-[24px] sm:text-[28px] font-black mt-1.5 leading-normal py-1.5">
+                        {language === 'en' ? '02 Champions + 02 Runners-up' : '02 Quán quân & 02 Á quân'}
                       </h4>
                     </div>
 
                     <RichContent
                       value={prize}
                       fallback=""
-                      className="rich-content text-[15px] sm:text-[16px] text-[color:var(--about-text-secondary)] leading-[1.7] font-normal text-left sm:text-justify bg-[color:var(--about-surface-sec)]/30 border border-[color:var(--about-border)] rounded-xl p-4 shadow-inner"
+                      className="about-prize-copy rich-content text-[15px] sm:text-[16px] text-[color:var(--about-text-secondary)] leading-[1.75] font-normal text-left shadow-inner"
                     />
                   </div>
                 </div>
@@ -923,47 +825,32 @@ export default function GioiThieuPage() {
             <section
               id="timeline-section"
               ref={timelineSection.ref}
-              className={`about-section-anchor about-timeline-shell w-full max-w-[1200px] mb-20 p-6 sm:p-9 flex flex-col space-y-8 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && timelineSection.visible ? 'visible' : ''}`}
+              className={`about-section-anchor about-timeline-shell w-full max-w-[1200px] mb-14 sm:mb-16 p-5 sm:p-8 flex flex-col space-y-6 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && timelineSection.visible ? 'visible' : ''}`}
             >
               <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)]">
-                Lộ trình thực hiện
+                {language === 'en' ? 'Official Timeline & Roadmap' : 'Lộ trình thực hiện'}
               </h2>
 
-              <div className="flex items-center space-x-3 pb-3 border-b border-[color:var(--about-border)]">
-                <div className="p-2.5 bg-[color:color-mix(in_srgb,_var(--about-primary)_10%,_transparent)] rounded-lg text-[color:var(--about-primary)]">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                  </svg>
-                </div>
-                <h3 className="text-[20px] sm:text-[22px] font-bold text-[color:var(--about-text-primary)] uppercase">
-                  Các mốc quan trọng
-                </h3>
-              </div>
-
-              {/* Timeline Layout */}
-              <div className="relative border-l border-[color:var(--about-border)] ml-4 sm:ml-8 pl-6 sm:pl-10 space-y-8">
+              <div className="relative border-l border-[color:var(--about-border)] ml-4 sm:ml-8 pl-4 sm:pl-8 space-y-4 sm:space-y-5">
                 {displayTimeline.map((event: any, idx: number) => (
                   <div 
                     key={idx} 
-                    className={`about-timeline-event relative flex flex-col space-y-2 ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && timelineSection.visible ? 'visible' : ''}`}
-                    style={{ transitionDelay: isMounted ? `${idx * 100}ms` : '0ms' }}
+                    className="about-timeline-item relative group transition-all duration-300"
                   >
-                    
-                    {/* Circle Node */}
-                    <div className="absolute -left-[41px] sm:-left-[57px] top-0 w-[32px] h-[32px] rounded-full border-2 border-[color:var(--about-primary)] bg-[color:var(--about-surface-sec)] flex items-center justify-center shadow-lg text-[color:var(--about-primary)] [&>svg]:w-[17px] [&>svg]:h-[17px]">
-                      {event.icon}
+                    <div className="absolute -left-[35px] sm:-left-[51px] top-1 w-6 h-6 rounded-full bg-[color:var(--about-surface)] border-2 border-[color:var(--about-primary)] flex items-center justify-center shadow-md group-hover:scale-125 transition-transform duration-300">
+                      <div className="w-2 h-2 rounded-full bg-[color:var(--about-primary)]" />
                     </div>
-
-                    <span className="text-[13px] sm:text-[14px] font-bold text-[color:var(--about-accent)] tracking-wider uppercase">
-                      {event.date}
-                    </span>
-                    <h4 className="text-[18px] sm:text-[20px] font-bold text-[color:var(--about-text-primary)]">
-                      {event.phase}
-                    </h4>
-                    <p className="text-[15px] sm:text-[16px] text-[color:var(--about-text-secondary)] leading-[1.7] max-w-[900px] text-left sm:text-justify">
+                    
+                    <div className="about-timeline-heading">
+                      <span className="about-timeline-date">
+                        {event.date}
+                      </span>
+                      <h4 className="about-timeline-phase">
+                        {event.phase}
+                      </h4>
+                    </div>
+                    
+                    <p className="about-timeline-description text-left">
                       {event.desc}
                     </p>
                   </div>
@@ -971,112 +858,51 @@ export default function GioiThieuPage() {
               </div>
             </section>
 
-            {/* Section 4: Scale, participants and contact */}
-            <section id="quy-mo" className="about-section-anchor w-full max-w-[1200px] mb-16">
+            {/* Section 4: Quy mô & Thống kê */}
+            <section id="quy-mo" className="about-section-anchor w-full max-w-[1200px] mb-14 sm:mb-16">
               <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-9">
-                Quy mô &amp; Đối tượng
+                {language === 'en' ? 'Scale & Community' : 'Quy mô & Số liệu nổi bật'}
               </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                {/* Quy mô thống kê */}
-                <div className="about-card about-stat-card p-6 flex flex-col">
-                  <h3 className="text-[20px] font-bold text-[color:var(--about-text-primary)] uppercase mb-5 pb-3 border-b border-[color:var(--about-border)] text-center">
-                    Quy mô thống kê {statsYear}
-                  </h3>
-                  <div className="space-y-3 flex-1 flex flex-col justify-start">
-                    {stats.map(([number, label]) => (
-                      <div key={label} className="about-stat-item">
-                        <span>{number}</span>
-                        <span className="text-[15px] sm:text-[16px] leading-[1.55] text-[color:var(--about-text-secondary)] font-medium">{label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Đối tượng tham gia */}
-                <div className="about-card p-6 flex flex-col">
-                  <h3 className="text-[20px] font-bold text-[color:var(--about-text-primary)] uppercase mb-5 pb-3 border-b border-[color:var(--about-border)] text-center">
-                    Đối tượng tham gia
-                  </h3>
-                  <div className="space-y-3 flex-1 flex flex-col justify-start">
-                    {parsedParticipants.map(([title, desc]: string[]) => (
-                      <div key={title} className="rounded-xl border border-[color:var(--about-border)] bg-[color:var(--about-surface-sec)]/30 p-3.5 transition hover:border-[color:var(--about-accent)]/40 hover:bg-[color:var(--about-surface-sec)]/60">
-                        <div className="flex items-start gap-3">
-                          <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[color:var(--about-accent)] shadow-[0_0_8px_rgba(121,188,194,0.65)]"></span>
-                          <div>
-                            <p className="font-bold text-[16px] text-[color:var(--about-text-primary)]">{title}</p>
-                            <p className="mt-1 text-[15px] leading-[1.65] text-[color:var(--about-text-secondary)] text-left">{desc}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Thông tin liên hệ */}
-                <div id="lien-he" className="about-card about-section-anchor p-6 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-[20px] font-bold text-[color:var(--about-text-primary)] uppercase mb-5 pb-3 border-b border-[color:var(--about-border)] text-center">
-                      Thông tin liên hệ
-                    </h3>
-                    <div className="space-y-3.5 text-[15px] sm:text-[16px] leading-[1.6] text-[color:var(--about-text-secondary)] font-normal text-left pl-2 sm:pl-4">
-                      {settings?.aboutContactName && <p><b>Người liên hệ:</b> <span className="text-[color:var(--about-text-primary)]">{settings.aboutContactName}</span></p>}
-                      {settings?.aboutContactRole && <p><b>Chức vụ:</b> {settings.aboutContactRole}</p>}
-                      <p><b>Đơn vị:</b> Trường Đại học Công Thương TP. HCM</p>
-                      {settings?.aboutContactPhone && <p><b>Điện thoại:</b> <a href={`tel:${settings.aboutContactPhone}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactPhone}</a></p>}
-                      {settings?.aboutContactEmail && <p><b>Email:</b> <a href={`mailto:${settings.aboutContactEmail}`} className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactEmail}</a></p>}
-                      {settings?.aboutContactWebsite && <p><b>Website:</b> <a href={settings.aboutContactWebsite} target="_blank" rel="noopener noreferrer" className="text-[color:var(--about-primary)] hover:underline font-semibold about-focusable">{settings.aboutContactWebsite}</a></p>}
+              
+              <div className="about-card about-stat-card p-6 sm:p-8">
+                <div className="space-y-3">
+                  {stats.map(([num, label]: any, idx: number) => (
+                    <div key={idx} className="about-stat-item">
+                      <span>{num}</span>
+                      <span className="text-xs sm:text-sm font-bold text-[color:var(--about-text-secondary)]">{label}</span>
                     </div>
-                  </div>
-
-                  <div className="mt-6 rounded-xl border border-[color:var(--about-border)] bg-[color:var(--about-surface-sec)]/50 p-4 text-center">
-                    {!isMounted || registrationOpen === null ? (
-                      <div className="py-8" aria-live="polite">
-                        <div className="mx-auto h-10 w-10 rounded-full border-2 border-[color:var(--about-border)] border-t-[color:var(--about-primary)] animate-spin" />
-                        <p className="mt-3 text-[13px] text-[color:var(--about-text-secondary)]">Đang cập nhật thông tin đăng ký...</p>
-                      </div>
-                    ) : registrationOpen === true && settings?.aboutContactQrUrl ? (
-                      <>
-                        <p className="mb-3 text-[12px] font-bold uppercase tracking-wider text-[color:var(--about-accent)]">Quét mã để đăng ký nhanh</p>
-                        <img
-                          alt="QR đăng ký HUIT's ICONIC 2026"
-                          src={formatImgUrl(settings.aboutContactQrUrl)}
-                          className="mx-auto h-auto w-full max-w-[150px] rounded-lg bg-white p-2 shadow-md object-contain"
-                        />
-                      </>
-                    ) : (
-                      <div className="py-3">
-                        <span className="text-[28px]" aria-hidden="true">📅</span>
-                        <p className="mt-2 text-[14px] font-semibold text-[color:var(--about-text-primary)]">Đợt nhận hồ sơ đã kết thúc</p>
-                        <p className="mt-1 text-[13px] text-[color:var(--about-text-secondary)]">Theo dõi lộ trình để cập nhật các vòng thi tiếp theo.</p>
-                      </div>
-                    )}
-                    <a
-                      href={isMounted ? registrationHref : '#timeline-section'}
-                      target={isMounted && registrationOpen ? '_blank' : undefined}
-                      rel={isMounted && registrationOpen ? 'noopener noreferrer' : undefined}
-                      className="mt-4 about-primary-action w-full about-focusable"
-                    >
-                      {!isMounted ? 'Đang cập nhật' : registrationOpen === true ? 'Đăng ký ngay' : registrationOpen === false ? 'Xem lộ trình' : 'Đang cập nhật'} <span aria-hidden="true">→</span>
-                    </a>
-                  </div>
+                  ))}
                 </div>
-
               </div>
             </section>
 
-            {/* Back Button */}
-            <div 
-              ref={backBtnSection.ref}
-              className={`mt-6 flex justify-center ${isMounted ? 'animate-on-scroll' : ''} ${isMounted && backBtnSection.visible ? 'visible' : ''}`}
-            >
-              <Link 
-                href="/" 
-                className="flex items-center justify-center gap-2 border border-[color:var(--about-border)] bg-[color:var(--about-surface)] hover:bg-[color:var(--about-surface-sec)] text-[color:var(--about-text-primary)] font-bold rounded-full px-8 py-3.5 shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 text-[14px] uppercase tracking-wider about-focusable"
-              >
-                <span>Quay lại Trang chủ</span>
-              </Link>
-            </div>
+            {/* Section 5: Liên hệ */}
+            <section id="lien-he" className="about-section-anchor w-full max-w-[1200px] mb-12">
+              <div className="about-card p-6 sm:p-9 bg-gradient-to-br from-[#0A2FFF]/5 to-transparent flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="space-y-2 text-center sm:text-left">
+                  <h3 className="text-xl font-black text-[color:var(--about-text-primary)]">
+                    {language === 'en' ? 'HUIT’s ICONIC 2026 Organizing Committee' : 'Ban Tổ Chức HUIT’s ICONIC 2026'}
+                  </h3>
+                  <p className="text-sm text-[color:var(--about-text-secondary)]">
+                    <b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương &bull; <b>SĐT / Zalo:</b> 0974 331 499 &bull; <b>Email:</b> duongdx@huit.edu.vn
+                  </p>
+                  <p className="text-sm text-[color:var(--about-text-secondary)]">
+                    <b>Đơn vị chỉ đạo &amp; sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
+                  </p>
+                </div>
+
+                <div className="shrink-0 flex gap-3">
+                  <a
+                    href="https://zalo.me/g/uxjmkq913"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="about-primary-action"
+                  >
+                    Tham gia nhóm Zalo thí sinh →
+                  </a>
+                </div>
+              </div>
+            </section>
 
           </div>
         </div>
