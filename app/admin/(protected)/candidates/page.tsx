@@ -2130,7 +2130,7 @@ export default function CandidatesAdminPage() {
             </div>
           )}
           <div className="w-full overflow-x-auto">
-          <table className="dashboard-table min-w-[860px] text-left">
+          <table className="dashboard-table min-w-[1040px] text-left">
             <thead>
               <tr className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
                 <th className="px-4 py-3 w-10">
@@ -2148,9 +2148,10 @@ export default function CandidatesAdminPage() {
                   />
                 </th>
                 <th className="px-4 py-3">Thí sinh</th>
-                        <th className="px-4 py-3">Hạng mục dự thi</th>
-                <th className="px-4 py-3">Đại diện</th>
-                        <th className="px-4 py-3 text-right">Lượt bình chọn</th>
+                <th className="px-4 py-3">Bảng dự thi</th>
+                <th className="px-4 py-3">Thông tin học tập</th>
+                <th className="px-4 py-3">Tiến độ hồ sơ</th>
+                <th className="px-4 py-3 text-right">Lượt bình chọn</th>
                 <th className="px-4 py-3 text-right">Thao tác</th>
               </tr>
             </thead>
@@ -2193,9 +2194,18 @@ export default function CandidatesAdminPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
+                      <div className="max-w-[210px]">
+                        <p className="truncate text-[13px] font-bold text-slate-900">{project.sector || 'Chưa cập nhật ngành học'}</p>
+                        <p className="mt-0.5 truncate text-[12px] text-slate-500 font-medium">{project.representativeSchool || 'Đại học Công Thương TP.HCM'}</p>
+                        <p className="mt-0.5 truncate text-[11px] text-slate-400">{project.teamName || project.leaderName || 'Chưa cập nhật lớp / MSSV'}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
                       <div className="max-w-[180px]">
-                        <p className="truncate text-[13px] font-bold text-slate-900">{project.leaderName || 'Chưa có đại diện'}</p>
-                        <p className="mt-0.5 truncate text-[12px] text-slate-500 font-medium">{project.representativeSchool || 'Chưa cập nhật đơn vị'}</p>
+                        <span className={`inline-flex rounded-md border px-2.5 py-1 text-[11px] font-bold ${project.status === 'Đủ hồ sơ' || project.status === 'APPROVED' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-amber-200 bg-amber-50 text-amber-700'}`}>
+                          {project.status || 'Chờ kiểm tra'}
+                        </span>
+                        <p className="mt-1 truncate text-[12px] font-semibold text-slate-500">{project.currentRound || 'Vòng Sơ khảo'}</p>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -2233,7 +2243,7 @@ export default function CandidatesAdminPage() {
 
               {filteredCandidates.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-sm font-semibold text-slate-500">
+                  <td colSpan={7} className="px-5 py-12 text-center text-sm font-semibold text-slate-500">
                     Không có thí sinh phù hợp bộ lọc hiện tại.
                   </td>
                 </tr>

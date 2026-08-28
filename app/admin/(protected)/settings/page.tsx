@@ -42,26 +42,26 @@ export default function SettingsAdminPage() {
   const { showAlert, showConfirm } = useAlert();
   // Gate settings state
   const [isGateOpen, setIsGateOpen] = useState(true);
-  const [startDate, setStartDate] = useState('2024-10-20T00:00');
-  const [endDate, setEndDate] = useState('2024-11-24T23:59');
+  const [startDate, setStartDate] = useState('2026-09-05T00:00');
+  const [endDate, setEndDate] = useState('2026-12-31T23:59');
   const [maxVotesPerPhone, setMaxVotesPerPhone] = useState(5);
 
   // General settings state
-  const [eventTitle, setEventTitle] = useState("HUIT's Iconic 2024");
-  const [organizer, setOrganizer] = useState("Trường Đại học Công Thương TP.HCM (HUIT)");
-  const [contactEmail, setContactEmail] = useState("media@huit.edu.vn");
+  const [eventTitle, setEventTitle] = useState("HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT");
+  const [organizer, setOrganizer] = useState("Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)");
+  const [contactEmail, setContactEmail] = useState("duongdx@huit.edu.vn");
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
-  const [registrationDeadline, setRegistrationDeadline] = useState('2026-06-20T23:59');
-  const [registrationUrl, setRegistrationUrl] = useState('https://khoinghiep.huit.edu.vn');
-  const [detailUrl, setDetailUrl] = useState('https://khoinghiep.huit.edu.vn');
-  const [supportZaloUrl, setSupportZaloUrl] = useState('https://zalo.me/4418938306145458374');
+  const [registrationDeadline, setRegistrationDeadline] = useState('2026-10-01T23:59');
+  const [registrationUrl, setRegistrationUrl] = useState('https://zalo.me/g/uxjmkq913');
+  const [detailUrl, setDetailUrl] = useState('https://huit.edu.vn');
+  const [supportZaloUrl, setSupportZaloUrl] = useState('https://zalo.me/g/uxjmkq913');
   const [freeVotesPerAccountPerDay, setFreeVotesPerAccountPerDay] = useState(2);
-  const [sepayBankName, setSepayBankName] = useState('VietinBank');
-  const [sepayAccountNo, setSepayAccountNo] = useState('110632156888');
-  const [sepayAccountName, setSepayAccountName] = useState('TRUONG DAI HOC CONG THUONG TP.HCM');
-  const [sepayPrefix, setSepayPrefix] = useState('HUIT');
-  const [sepayApiKey, setSepayApiKey] = useState('sepay_api_key_placeholder');
-  const [sponsorBannerUrl, setSponsorBannerUrl] = useState('/original_assets/image4b12.png');
+  const [sepayBankName, setSepayBankName] = useState('KienLongBank');
+  const [sepayAccountNo, setSepayAccountNo] = useState('101499100004001667');
+  const [sepayAccountName, setSepayAccountName] = useState('DANG XUAN DUONG');
+  const [sepayPrefix, setSepayPrefix] = useState('MD');
+  const [sepayApiKey, setSepayApiKey] = useState('1dcd4e6cd52fde1e4bf0510a9b406476322d811f3bbae785');
+  const [sponsorBannerUrl, setSponsorBannerUrl] = useState('/uploads/nhataitro.png');
   const [isTestMode, setIsTestMode] = useState(true);
   const [votingPromotions, setVotingPromotions] = useState<VotingPromotion[]>([]);
 

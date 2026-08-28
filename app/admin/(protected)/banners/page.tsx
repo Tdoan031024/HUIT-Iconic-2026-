@@ -42,28 +42,28 @@ function BannerModal({
   onSubmit,
 }: BannerFormProps) {
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-[#10211d]/60 p-4 backdrop-blur-sm transition-all duration-300" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="w-full max-w-[850px] rounded-xl border border-[#dce5e1] bg-white p-5 shadow-2xl animate-in fade-in zoom-in duration-200">
-        <div className="flex items-start justify-between gap-3 border-b border-[#edf2f0] pb-3">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#10211d]/60 p-3 backdrop-blur-sm transition-all duration-300 sm:p-5" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <form onSubmit={onSubmit} onMouseDown={(event) => event.stopPropagation()} className="flex w-full max-w-[700px] flex-col overflow-visible rounded-2xl border border-[#dce5e1] bg-white shadow-2xl animate-in fade-in zoom-in duration-200 max-[639px]:max-h-[calc(100vh-1.5rem)] max-[639px]:overflow-y-auto">
+        <div className="flex items-center justify-between gap-3 border-b border-[#edf2f0] px-4 py-3.5 sm:px-6">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Quản lý giao diện</p>
             <h3 className="mt-0.5 text-base font-black text-[#123c34]">{title}</h3>
           </div>
-          <button type="button" onClick={onClose} className="rounded border border-[#dce5e1] px-2.5 py-1 text-[10px] font-bold text-[#52605b] hover:border-[#0f766e] hover:text-[#0f766e] transition-colors">
-            Đóng
+          <button type="button" onClick={onClose} aria-label="Đóng modal" title="Đóng" className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dce5e1] text-xl font-normal leading-none text-[#52605b] transition-colors hover:border-[#0f766e] hover:bg-[#f4f8f6] hover:text-[#0f766e]">
+            ×
           </button>
         </div>
 
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-3 px-4 py-3 sm:px-6 sm:py-4 sm:gap-4">
           {/* Left Column: Preview Area */}
-          <div className="flex flex-col space-y-2">
-            <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider block">Xem trước hiển thị</span>
-            <div className="overflow-hidden rounded-lg border border-[#dce5e1] bg-[#f4f7f6] flex-1 flex items-center justify-center min-h-[220px] md:min-h-[280px] p-4 text-center">
+          <div className="mx-auto flex w-full max-w-[460px] flex-col space-y-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#52605b]">Xem trước banner</span>
+            <div className="aspect-[3241/1294] overflow-hidden rounded-lg border border-[#dce5e1] bg-[#07134d] flex items-center justify-center text-center">
               {formImageUrl ? (
                 formImageUrl.toLowerCase().endsWith('.mp4') ? (
-                  <video src={formatAssetUrl(formImageUrl)} controls className="max-h-[280px] w-full object-contain rounded-md shadow-sm" />
+                  <video src={formatAssetUrl(formImageUrl)} controls className="h-full w-full object-cover" />
                 ) : (
-                  <img src={formatAssetUrl(formImageUrl)} alt="Xem trước" className="max-h-[280px] w-full object-contain rounded-md shadow-sm" />
+                  <img src={formatAssetUrl(formImageUrl)} alt="Xem trước" className="h-full w-full object-cover" />
                 )
               ) : (
                 <div className="space-y-2">
@@ -78,35 +78,37 @@ function BannerModal({
           </div>
 
           {/* Right Column: Fields */}
-          <div className="space-y-3.5">
+          <div className="space-y-2.5">
             <label className="block space-y-1.5">
-              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề banner (Tiếng Việt) <span className="text-red-500 font-bold">*</span></span>
-              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitle} onChange={(event) => setFormTitle(event.target.value)} required />
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#52605b]">Tiêu đề banner <span className="text-red-500">*</span></span>
+              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitle} onChange={(event) => setFormTitle(event.target.value)} placeholder="Ví dụ: HUIT's ICONIC 2026" required />
             </label>
 
             <label className="block space-y-1.5">
-              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Tiêu đề banner tiếng Anh (English Title)</span>
-              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitleEn} onChange={(event) => setFormTitleEn(event.target.value)} placeholder="e.g. HUIT ICONIC 2026 Grand Final..." />
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#52605b]">Tiêu đề tiếng Anh <span className="font-medium normal-case text-[#8aa098]">(không bắt buộc)</span></span>
+              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formTitleEn} onChange={(event) => setFormTitleEn(event.target.value)} placeholder="HUIT ICONIC 2026 Grand Final" />
             </label>
 
             <ImageDropzone
-              label="Hình ảnh / Video banner *"
-              subLabel="Kéo &amp; thả hình ảnh banner từ thư mục máy tính vào đây hoặc click để chọn"
-              aspectRatioHint="Khuyên dùng: Tỷ lệ 16:9 hoặc 21:9 ngang chuẩn Hero"
+              label="Tệp banner *"
+              subLabel="JPG, PNG, WEBP hoặc MP4"
+              aspectRatioHint="Chuẩn trang chủ: 3241 x 1294 (tỷ lệ 2.5:1); ảnh khác tỷ lệ sẽ tự cắt phần thừa"
               value={formImageUrl}
               onChange={setFormImageUrl}
+              accept="image/*,video/mp4,video/webm"
+              isVideoAllowed
               required
             />
 
             <label className="block space-y-1.5">
-              <span className="text-[10px] font-bold text-[#52605b] uppercase tracking-wider">Liên kết điều hướng khi bấm</span>
-              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formLink} onChange={(event) => setFormLink(event.target.value)} />
+              <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#52605b]">Liên kết khi bấm <span className="font-medium normal-case text-[#8aa098]">(không bắt buộc)</span></span>
+              <input className="h-9 w-full rounded-lg border border-[#dce5e1] bg-[#fbfdfc] px-3 text-xs font-semibold text-[#18211f] outline-none transition focus:border-[#0f766e] focus:bg-white" value={formLink} onChange={(event) => setFormLink(event.target.value)} placeholder="https://... hoặc để trống" />
             </label>
    
             <div className="flex items-center justify-between rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 shadow-sm">
               <div>
-                <p className="text-xs font-bold text-[#123c34]">Trạng thái hiển thị banner</p>
-                <p className="mt-0.5 text-[9px] font-semibold text-[#6b7773]">Tắt để ẩn khỏi trang chủ nhưng vẫn lưu trong admin.</p>
+                <p className="text-xs font-bold text-[#123c34]">Hiển thị trên trang chủ</p>
+                <p className="mt-0.5 text-[9px] font-semibold text-[#6b7773]">Tắt để lưu banner nhưng không hiển thị công khai.</p>
               </div>
               <button
                 type="button"
@@ -120,11 +122,11 @@ function BannerModal({
           </div>
         </div>
 
-        <div className="mt-5 flex justify-end gap-2.5 border-t border-[#edf2f0] pt-3.5">
+        <div className="flex items-center justify-end gap-2 border-t border-[#edf2f0] bg-[#fbfdfc] px-4 py-2.5 sm:px-6">
           <button type="button" onClick={onClose} className="rounded-lg border border-[#dce5e1] bg-white px-3.5 py-2 text-[10px] font-bold text-[#52605b] hover:border-[#0f766e] hover:text-[#0f766e] transition-colors">
             Hủy bỏ
           </button>
-          <button type="submit" className="rounded-lg bg-[#123c34] px-3.5 py-2 text-[10px] font-bold text-white shadow transition hover:bg-[#0f766e]">
+          <button type="submit" className="rounded-lg bg-[#123c34] px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-[#0f766e] focus:outline-none focus:ring-2 focus:ring-[#0f766e]/30">
             Lưu banner
           </button>
         </div>

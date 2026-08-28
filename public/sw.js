@@ -4,7 +4,7 @@
  * and network-first strategy for dynamic API and page requests.
  */
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const STATIC_CACHE = `huit-iconic-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `huit-iconic-dynamic-${CACHE_VERSION}`;
 

@@ -188,24 +188,24 @@ function RichTextModal({
 
 export default function IntroductionAdminPage() {
   const { showAlert } = useAlert();
-  const [aboutTitle, setAboutTitle] = useState('HUIT ICONIC LẦN THỨ VII 2026');
-  const [aboutTitleEn, setAboutTitleEn] = useState('HUIT ICONIC SEASON VII 2026');
-  const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi HUIT ICONIC lần VII - Cấp Thành phố năm 2026');
-  const [aboutSubtitleEn, setAboutSubtitleEn] = useState('The 7th HUIT ICONIC Competition - City Level 2026');
+  const [aboutTitle, setAboutTitle] = useState("HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT");
+  const [aboutTitleEn, setAboutTitleEn] = useState("HUIT'S ICONIC 2026 - HUIT MEDIA AMBASSADOR");
+  const [aboutSubtitle, setAboutSubtitle] = useState('Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM');
+  const [aboutSubtitleEn, setAboutSubtitleEn] = useState('Ho Chi Minh City University of Industry and Trade Media Ambassador Search Contest');
   const [aboutDescription, setAboutDescription] = useState('');
   const [aboutDescriptionEn, setAboutDescriptionEn] = useState('');
-  const [statsCandidates, setStatsCandidates] = useState('20+');
-  const [statsVotes, setStatsVotes] = useState('100K+');
-  const [statsViews, setStatsViews] = useState('30M+');
-  const [statsYear, setStatsYear] = useState('2025');
-  const [statsParticipants, setStatsParticipants] = useState('650');
-  const [statsMedia, setStatsMedia] = useState('20+');
-  const [statsSchools, setStatsSchools] = useState('45+');
+  const [statsCandidates, setStatsCandidates] = useState('40.000+');
+  const [statsVotes, setStatsVotes] = useState('1.000.000+');
+  const [statsViews, setStatsViews] = useState('10 triệu+');
+  const [statsYear, setStatsYear] = useState('2026');
+  const [statsParticipants, setStatsParticipants] = useState('50 Top');
+  const [statsMedia, setStatsMedia] = useState('30+');
+  const [statsSchools, setStatsSchools] = useState('16+ Khoa');
   const [aboutImageUrl, setAboutImageUrl] = useState('/uploads/poster-khoi-nghiep.jpg');
   
   // New fields
-  const [aboutTheme, setAboutTheme] = useState('Đổi mới sáng tạo hướng tới mục tiêu phát triển bền vững');
-  const [aboutThemeEn, setAboutThemeEn] = useState('Innovation Towards Sustainable Development Goals');
+  const [aboutTheme, setAboutTheme] = useState('Vẻ đẹp - Trí tuệ - Tài năng - Bản lĩnh - Truyền cảm hứng');
+  const [aboutThemeEn, setAboutThemeEn] = useState('Beauty - Intellect - Talent - Confidence - Inspiration');
   const [aboutOrganizerDetail, setAboutOrganizerDetail] = useState('');
   const [aboutOrganizerDetailEn, setAboutOrganizerDetailEn] = useState('');
   const [aboutSectors, setAboutSectors] = useState('');
@@ -381,19 +381,26 @@ export default function IntroductionAdminPage() {
   return (
     <div className="space-y-5">
       {/* Page Header */}
-      <section className="flex flex-col gap-3 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+      <section className="flex flex-col gap-4 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-bold text-[#0f766e] font-heading">Quản lý giao diện</p>
           <h2 className="mt-0.5 text-lg font-bold text-[#123c34] font-heading">Cấu hình thông tin cuộc thi</h2>
           <p className="text-xs text-[#6b7773] mt-0.5">Chỉnh sửa chi tiết nội dung trang Giới thiệu hiển thị trên trang chủ của website bình chọn.</p>
         </div>
+        <div className="flex shrink-0 flex-wrap gap-2 text-[10px] font-bold text-[#52605b]">
+          <a href="#section-overview" className="rounded-full border border-[#dce5e1] bg-[#fbfdfc] px-3 py-1.5 transition hover:border-[#0f766e] hover:text-[#0f766e]">1. Tổng quan</a>
+          <a href="#section-organizer" className="rounded-full border border-[#dce5e1] bg-[#fbfdfc] px-3 py-1.5 transition hover:border-[#0f766e] hover:text-[#0f766e]">2. Đơn vị</a>
+          <a href="#section-content" className="rounded-full border border-[#dce5e1] bg-[#fbfdfc] px-3 py-1.5 transition hover:border-[#0f766e] hover:text-[#0f766e]">3. Nội dung</a>
+          <a href="#section-timeline" className="rounded-full border border-[#dce5e1] bg-[#fbfdfc] px-3 py-1.5 transition hover:border-[#2b6cb0] hover:text-[#2b6cb0]">4. Lộ trình</a>
+          <a href="#section-contact" className="rounded-full border border-[#dce5e1] bg-[#fbfdfc] px-3 py-1.5 transition hover:border-[#0f766e] hover:text-[#0f766e]">5. Liên hệ</a>
+        </div>
       </section>
 
       {/* Main Form */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* KHỐI 1: TIÊU ĐỀ & GIỚI THIỆU CHUNG */}
-        <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
+        <div id="section-overview" className="scroll-mt-24 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
           <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">1</span>
             <h3 className="text-sm font-bold text-[#123c34] font-heading">Tiêu đề &amp; Giới thiệu chung</h3>
@@ -530,7 +537,7 @@ export default function IntroductionAdminPage() {
         </div>
 
         {/* KHỐI 2: ĐƠN VỊ TỔ CHỨC & ĐỒNG HÀNH */}
-        <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
+        <div id="section-organizer" className="scroll-mt-24 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
           <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">2</span>
             <h3 className="text-sm font-bold text-[#123c34] font-heading">Đơn vị tổ chức &amp; đồng hành</h3>
@@ -584,8 +591,8 @@ export default function IntroductionAdminPage() {
         </div>
 
         {/* KHỐI 3: LĨNH VỰC, QUYỀN LỢI & GIẢI THƯỞNG */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
+        <div id="section-content" className="scroll-mt-24 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
             <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3A</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Lĩnh vực dự thi</h3>
@@ -638,7 +645,7 @@ export default function IntroductionAdminPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
+          <div className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
             <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3B</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Quyền lợi khi tham gia</h3>
@@ -691,7 +698,7 @@ export default function IntroductionAdminPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
+          <div className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
             <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">3C</span>
               <h3 className="text-sm font-bold text-[#123c34] font-heading">Giải thưởng cuộc thi</h3>
@@ -746,7 +753,7 @@ export default function IntroductionAdminPage() {
         </div>
 
         {/* KHỐI 4: LỘ TRÌNH THỜI GIAN THỰC HIỆN */}
-        <div className="rounded-xl border border-[#bee3f8] bg-[#ebf8ff] p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div id="section-timeline" className="scroll-mt-24 rounded-xl border border-[#bee3f8] bg-[#ebf8ff] p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 sm:p-5">
           <div className="flex items-start gap-3">
             <div className="p-2 bg-[#bee3f8] text-[#2b6cb0] rounded-lg shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -775,7 +782,7 @@ export default function IntroductionAdminPage() {
         </div>
 
         {/* KHỐI 5: QUY MÔ, ĐỐI TƯỢNG & LIÊN HỆ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div id="section-contact" className="scroll-mt-24 grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Cột 1: Quy mô */}
           <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
@@ -961,7 +968,7 @@ export default function IntroductionAdminPage() {
         </div>
 
         {/* Form Action Submit */}
-        <div className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm flex justify-end">
+        <div className="sticky bottom-0 z-20 rounded-xl border border-[#dce5e1] bg-white/95 p-3 shadow-lg backdrop-blur-sm flex justify-end sm:p-4">
           <button 
             type="submit" 
             disabled={isSubmitting}

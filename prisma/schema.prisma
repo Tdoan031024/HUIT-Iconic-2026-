@@ -70,6 +70,45 @@ model candidate {
   @@map("candidate")
 }
 
+model CandidateRegistration {
+  id                    String    @id @default(cuid())
+  fullName              String
+  gender                String
+  dateOfBirth           DateTime?
+  major                 String
+  className             String
+  studentId             String
+  placeOfBirth          String
+  identityNumber        String
+  identityIssuedDate    DateTime?
+  identityIssuedPlace   String
+  address               String    @db.Text
+  phone                 String
+  email                 String
+  facebookUrl           String?
+  talent                String?   @db.Text
+  selfIntroduction      String?   @db.Text
+  inspirationalMessage  String?   @db.Text
+  facultyIntroduction   String?   @db.Text
+  ambassadorPlan        String?   @db.Text
+  portraitImageUrl      String
+  fullBodyImageUrl      String
+  heightCm              Decimal?  @db.Decimal(5, 2)
+  weightKg              Decimal?  @db.Decimal(5, 2)
+  measurementBust       Decimal?  @db.Decimal(5, 2)
+  measurementWaist      Decimal?  @db.Decimal(5, 2)
+  measurementHip        Decimal?  @db.Decimal(5, 2)
+  status                String    @default("PENDING")
+  adminNote             String?   @db.Text
+  consentAccepted       Boolean   @default(false)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now()) @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
+  @@map("candidateregistration")
+}
+
 model post {
   id           String    @id @default(cuid())
   title        String
