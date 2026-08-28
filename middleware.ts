@@ -26,7 +26,20 @@ async function verifyAdminSessionEdge(token: string): Promise<boolean> {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (pathname.startsWith('/api/admin/') && !publicAdminApi.has(pathname)) {
+  const isAdminPage = pathname.startsWith('/admin') && pathname !== '/admin/login';
+  const isAdminApi = pathname.startsWith('/api/admin/') && !publicAdminApi.has(pathname);
+
+  if (isAdminPage) {
+    const session = request.cookies.get('admin_session')?.value;
+    if (!session || !(await verifyAdminSessionEdge(session))) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/admin/login';
+      loginUrl.search = `?redirect=${encodeURIComponent(`${pathname}${request.nextUrl.search}`)}`;
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  if (isAdminApi) {
     const session = request.cookies.get('admin_session')?.value;
     if (!session || !(await verifyAdminSessionEdge(session))) {
       return NextResponse.json({ message: 'Bạn cần đăng nhập quản trị.' }, { status: 401 });
@@ -35,4 +48,4 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/api/admin/:path*'] };
+export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };
