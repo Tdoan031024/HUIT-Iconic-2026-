@@ -32,6 +32,8 @@ export interface SystemSettings {
   organizer: string;
   contactEmail: string;
   isMaintenanceMode: boolean;
+  headerHuitLogoUrl?: string;
+  headerIconicLogoUrl?: string;
   hidePublicVoteHistory?: boolean;
 }
 
@@ -392,11 +394,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <div className="flex shrink-0 items-center h-full mobile-logo-wrap">
                       <div className="h-full flex items-center gap-2 md:gap-5 mobile-logo-row header-brand-shell">
                         <Link className="focus:outline-none flex items-center" href="/">
-                          <img alt="HUIT" width="120" height="32" className="header-logo header-logo-iec object-contain" src="/images/huit_logo.png" />
+                          <img alt="HUIT" width="120" height="32" className="header-logo header-logo-iec object-contain" src={settings?.headerHuitLogoUrl || '/images/huit_logo.png'} />
                         </Link>
                         <span className="header-logo-divider" aria-hidden="true" />
                         <Link className="focus:outline-none flex items-center" href="/">
-                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src="/images/image.webp" />
+                          <img alt="HUIT ICONIC" width="140" height="44" className="header-logo header-logo-startup object-contain" src={settings?.headerIconicLogoUrl || '/images/image.webp'} />
                         </Link>
                       </div>
                     </div>

@@ -50,6 +50,9 @@ export default function SettingsAdminPage() {
   const [eventTitle, setEventTitle] = useState("HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông HUIT");
   const [organizer, setOrganizer] = useState("Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)");
   const [contactEmail, setContactEmail] = useState("duongdx@huit.edu.vn");
+  const [headerHuitLogoUrl, setHeaderHuitLogoUrl] = useState('/images/huit_logo.png');
+  const [headerIconicLogoUrl, setHeaderIconicLogoUrl] = useState('/images/image.webp');
+  const [uploadingLogo, setUploadingLogo] = useState<'huit' | 'iconic' | null>(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
   const [registrationDeadline, setRegistrationDeadline] = useState('2026-10-01T23:59');
   const [registrationUrl, setRegistrationUrl] = useState('https://zalo.me/g/uxjmkq913');
@@ -81,6 +84,8 @@ export default function SettingsAdminPage() {
           setEventTitle(data.eventTitle);
           setOrganizer(data.organizer);
           setContactEmail(data.contactEmail);
+          setHeaderHuitLogoUrl(data.headerHuitLogoUrl || '/images/huit_logo.png');
+          setHeaderIconicLogoUrl(data.headerIconicLogoUrl || '/images/image.webp');
           setIsMaintenanceMode(data.isMaintenanceMode);
           setIsRegistrationOpen(data.isRegistrationOpen ?? true);
           setRegistrationDeadline(data.registrationDeadline || '2026-06-20T23:59');
@@ -128,6 +133,8 @@ export default function SettingsAdminPage() {
       eventTitle,
       organizer,
       contactEmail,
+      headerHuitLogoUrl,
+      headerIconicLogoUrl,
       isMaintenanceMode,
       isRegistrationOpen,
       registrationDeadline,
@@ -159,6 +166,25 @@ export default function SettingsAdminPage() {
       console.error('Failed to save settings to API.', err);
     }
     showAlert('Không thể kết nối đến backend API. Lưu cấu hình thất bại!', 'error');
+  };
+
+  const handleLogoUpload = async (file: File, type: 'huit' | 'iconic') => {
+    setUploadingLogo(type);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch(apiUrl('/api/admin/upload'), { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || 'Tải logo thất bại');
+      if (type === 'huit') setHeaderHuitLogoUrl(data.url);
+      else setHeaderIconicLogoUrl(data.url);
+      showAlert('Đã tải logo lên. Bấm “Lưu cấu hình” để áp dụng trên header.', 'success');
+    } catch (error) {
+      console.error('Failed to upload header logo.', error);
+      showAlert('Không thể tải logo lên. Vui lòng thử lại.', 'error');
+    } finally {
+      setUploadingLogo(null);
+    }
   };
 
   const handleResetVotes = async () => {
@@ -245,6 +271,50 @@ export default function SettingsAdminPage() {
               onChange={e => setContactEmail(e.target.value)} 
               required
             />
+          </div>
+        </div>
+
+        {/* Header logos block */}
+        <div className="bg-white border border-[#dce5e1] rounded-xl p-5 shadow-sm space-y-4">
+          <h3 className="text-sm font-bold text-[#123c34] border-b border-[#edf2f0] pb-2 flex items-center gap-2">
+            Logo trên header
+          </h3>
+          <p className="text-xs text-[#6b7773]">
+            Thay logo HUIT hoặc logo HUIT&apos;s ICONIC trên header website. Ảnh sẽ được tối ưu và lưu trong thư mục tải lên.
+          </p>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {([
+              { type: 'huit' as const, label: 'Logo HUIT', value: headerHuitLogoUrl, setValue: setHeaderHuitLogoUrl },
+              { type: 'iconic' as const, label: "Logo HUIT's ICONIC", value: headerIconicLogoUrl, setValue: setHeaderIconicLogoUrl },
+            ]).map((logo) => (
+              <div key={logo.type} className="rounded-xl border border-[#dce5e1] bg-[#fbfdfc] p-3 space-y-3">
+                <div className="flex h-20 items-center justify-center rounded-lg border border-[#edf2f0] bg-white p-2">
+                  <img src={formatAssetUrl(logo.value)} alt={logo.label} className="max-h-full max-w-full object-contain" />
+                </div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-[#52605b]">{logo.label}</label>
+                <input
+                  type="text"
+                  value={logo.value}
+                  onChange={(event) => logo.setValue(event.target.value)}
+                  className="h-9 w-full rounded-lg border border-[#dce5e1] bg-white px-3 text-xs font-semibold text-[#18211f] focus:border-[#0f766e] focus:outline-none"
+                  placeholder="/uploads/logo.webp"
+                />
+                <label className="inline-flex cursor-pointer items-center rounded-md bg-[#123c34] px-3 py-2 text-[10px] font-bold text-white transition hover:bg-[#0f766e]">
+                  {uploadingLogo === logo.type ? 'Đang tải...' : 'Tải logo mới'}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    className="sr-only"
+                    disabled={uploadingLogo !== null}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) void handleLogoUpload(file, logo.type);
+                      event.currentTarget.value = '';
+                    }}
+                  />
+                </label>
+              </div>
+            ))}
           </div>
         </div>
 

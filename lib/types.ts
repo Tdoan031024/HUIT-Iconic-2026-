@@ -147,6 +147,8 @@ export interface SystemSettings {
   organizerEn?: string;
   contactEmail: string;
   isMaintenanceMode: boolean;
+  headerHuitLogoUrl?: string;
+  headerIconicLogoUrl?: string;
   sponsorBannerUrl?: string;
   hideSponsorBanner?: boolean;
   hidePublicVoteHistory?: boolean;
