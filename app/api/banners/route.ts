@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getBanners } from '@/lib/service';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const banners = await getBanners();
     return NextResponse.json(banners, {
       headers: {
-        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
   } catch (error: any) {

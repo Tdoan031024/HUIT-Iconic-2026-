@@ -33,8 +33,8 @@ export default function TheLePage() {
     {
       q: language === 'en' ? 'How can I submit my candidate application?' : 'Làm thế nào để nộp hồ sơ đăng ký dự thi?',
       a: language === 'en'
-        ? 'Candidates can register directly through the official candidate Zalo group: https://zalo.me/g/uxjmkq913 or contact the Organizing Committee.'
-        : 'Thí sinh đăng ký trực tiếp và tham gia nhóm Zalo hỗ trợ của Ban Tổ chức tại địa chỉ: https://zalo.me/g/uxjmkq913 để được hướng dẫn hoàn thiện hồ sơ dự thi.'
+        ? 'Candidates can register directly through the official candidate Zalo group: https://zalo.me/g/myzijputivfgc1toua9z or contact the Organizing Committee.'
+        : 'Thí sinh đăng ký trực tiếp và tham gia nhóm Zalo hỗ trợ của Ban Tổ chức tại địa chỉ: https://zalo.me/g/myzijputivfgc1toua9z để được hướng dẫn hoàn thiện hồ sơ dự thi.'
     }
   ];
 
@@ -424,7 +424,7 @@ export default function TheLePage() {
                   Đăng ký dự thi ngay →
                 </Link>
                 <a
-                  href="https://zalo.me/g/uxjmkq913"
+                  href="https://zalo.me/g/myzijputivfgc1toua9z"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 border border-slate-300 dark:border-white/20 text-[color:var(--site-text)] text-xs font-black uppercase tracking-wider shadow-sm transition active:scale-95"

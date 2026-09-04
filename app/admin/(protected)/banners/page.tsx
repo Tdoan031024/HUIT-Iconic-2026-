@@ -488,9 +488,13 @@ export default function BannersAdminPage() {
         setIsAddModalOpen(false);
         showAlert('Thêm banner thành công!', 'success');
         loadBanners();
+      } else {
+        const data = await res.json().catch(() => null);
+        showAlert(data?.error || data?.message || 'Thêm banner thất bại!', 'error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showAlert(err.message || 'Lỗi kết nối khi thêm banner', 'error');
     }
   };
 
@@ -507,9 +511,13 @@ export default function BannersAdminPage() {
         setIsEditModalOpen(false);
         showAlert('Cập nhật banner thành công!', 'success');
         loadBanners();
+      } else {
+        const data = await res.json().catch(() => null);
+        showAlert(data?.error || data?.message || 'Cập nhật banner thất bại!', 'error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showAlert(err.message || 'Lỗi kết nối khi cập nhật banner', 'error');
     }
   };
 

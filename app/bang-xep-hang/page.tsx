@@ -444,7 +444,7 @@ export default function BangXepHangPage() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [activeVoteCandidate, setActiveVoteCandidate] = useState<Candidate | null>(null);
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<'ALL' | 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE'>('ALL');
+  const [category, setCategory] = useState<'ALL' | 'MALE' | 'FEMALE'>('ALL');
   const [sortBy, setSortBy] = useState<'votes' | 'sbd'>('votes');
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<any>(null);
@@ -515,11 +515,14 @@ export default function BangXepHangPage() {
 
   const sortedCandidates = [...candidates].sort((a, b) => b.votes - a.votes);
   const filteredCandidates = candidates
-    .filter(c => category === 'ALL' || c.contestTable === category)
-    .filter(c => c.name.toLowerCase().includes(search.trim().toLowerCase()) || c.sbd.includes(search.trim()))
-    .sort((a, b) => sortBy === 'votes'
-      ? b.votes - a.votes
-      : a.sbd.localeCompare(b.sbd, 'vi', { numeric: true }));
+    .filter((c) => {
+      if (category === 'ALL') return true;
+      if (category === 'MALE') return c.contestTable === 'MALE' || c.gender === 'Nam' || c.contestTable === 'KING';
+      if (category === 'FEMALE') return c.contestTable === 'FEMALE' || c.gender === 'Nữ' || c.contestTable === 'QUEEN';
+      return c.contestTable === category;
+    })
+    .filter((c) => c.name.toLowerCase().includes(search.trim().toLowerCase()) || c.sbd.includes(search.trim()))
+    .sort((a, b) => (sortBy === 'votes' ? b.votes - a.votes : a.sbd.localeCompare(b.sbd, 'vi', { numeric: true })));
   const top3 = sortedCandidates.slice(0, 3);
   const desktopPodiumOrder = [1, 0, 2].map(i => top3[i]).filter(Boolean);
   const mobilePodiumOrder = top3.filter(Boolean);
@@ -804,9 +807,8 @@ export default function BangXepHangPage() {
                   <div className="ranking-filter-pills" role="group" aria-label="Filter tracks">
                     {[
                       ['ALL', t('allTables')],
-                      ['HIGH_SCHOOL', t('tableHighSchool')],
-                      ['STUDENT', t('tableStudent')],
-                      ['ENTERPRISE', t('tableEnterprise')]
+                      ['MALE', language === 'en' ? "Men's Track" : 'Bảng Nam'],
+                      ['FEMALE', language === 'en' ? "Women's Track" : 'Bảng Nữ'],
                     ].map(([value, label]) => (
                       <button
                         key={value}

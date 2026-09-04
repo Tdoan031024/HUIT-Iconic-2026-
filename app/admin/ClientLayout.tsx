@@ -117,8 +117,8 @@ const navGroupsVi = [
     title: 'Quản lý',
     items: [
       { href: '/admin', label: 'Tổng quan', icon: dashboardIcon },
-      { href: '/admin/candidates', label: 'Thí sinh', icon: candidatesIcon },
-      { href: '/admin/registrations', label: 'Hồ sơ đăng ký', icon: candidatesIcon },
+      { href: '/admin/candidates', label: 'Thí sinh chính thức', icon: candidatesIcon },
+      { href: '/admin/registrations', label: 'Thí sinh đăng ký (Web)', icon: candidatesIcon },
       { href: '/admin/votes', label: 'Lịch sử bình chọn', icon: votesIcon },
       { href: '/admin/users', label: 'Người dùng', icon: usersIcon },
       { href: '/admin/sponsors', label: 'Nhà tài trợ', icon: sponsorsIcon },
@@ -144,8 +144,8 @@ const navGroupsEn = [
     title: 'Management',
     items: [
       { href: '/admin', label: 'Overview', icon: dashboardIcon },
-      { href: '/admin/candidates', label: 'Candidates', icon: candidatesIcon },
-      { href: '/admin/registrations', label: 'Registration forms', icon: candidatesIcon },
+      { href: '/admin/candidates', label: 'Official Candidates', icon: candidatesIcon },
+      { href: '/admin/registrations', label: 'Web Registrations', icon: candidatesIcon },
       { href: '/admin/votes', label: 'Vote History', icon: votesIcon },
       { href: '/admin/users', label: 'Users', icon: usersIcon },
       { href: '/admin/sponsors', label: 'Sponsors', icon: sponsorsIcon },
@@ -170,8 +170,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://iconic.huitmedia.e
 
 const pageMetaVi: Record<string, { title: string; description: string }> = {
   '/admin': { title: 'Tổng quan', description: 'Theo dõi trạng thái nền tảng và dữ liệu vận hành.' },
-  '/admin/candidates': { title: 'Thí sinh', description: 'Quản lý danh sách thí sinh, điểm bình chọn và hồ sơ hiển thị.' },
-  '/admin/registrations': { title: 'Hồ sơ đăng ký', description: 'Kiểm tra và duyệt thông tin đăng ký dự thi của thí sinh.' },
+  '/admin/candidates': { title: 'Thí sinh chính thức', description: 'Quản lý danh sách thí sinh chính thức, điểm bình chọn và hồ sơ hiển thị.' },
+  '/admin/registrations': { title: 'Thí sinh đăng ký qua Website', description: 'Danh sách hồ sơ thí sinh đăng ký dự thi trực tuyến qua website.' },
   '/admin/votes': { title: 'Lịch sử bình chọn', description: 'Theo dõi nhật ký phiếu bầu chi tiết và xuất dữ liệu đối soát.' },
   '/admin/users': { title: 'Người dùng', description: 'Kiểm soát tài khoản và phân quyền truy cập hệ thống.' },
   '/admin/sponsors': { title: 'Nhà tài trợ', description: 'Cập nhật đối tác đồng hành và tài nguyên thương hiệu.' },
@@ -187,8 +187,8 @@ const pageMetaVi: Record<string, { title: string; description: string }> = {
 
 const pageMetaEn: Record<string, { title: string; description: string }> = {
   '/admin': { title: 'Overview', description: 'Monitor platform status and live operational metrics.' },
-  '/admin/candidates': { title: 'Candidates', description: 'Manage contestant entries, scores, and public profiles.' },
-  '/admin/registrations': { title: 'Registration forms', description: 'Review and approve contestant registration information.' },
+  '/admin/candidates': { title: 'Official Candidates', description: 'Manage official candidates, scores, and public profiles.' },
+  '/admin/registrations': { title: 'Web Registrations', description: 'Manage contestant applications submitted via the website.' },
   '/admin/votes': { title: 'Vote History', description: 'Track audit trails of votes and export financial records.' },
   '/admin/users': { title: 'Users', description: 'Control administrative accounts and role permissions.' },
   '/admin/sponsors': { title: 'Sponsors', description: 'Update official partner profiles and brand assets.' },

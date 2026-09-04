@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Candidate } from '@/lib/types';
 import Link from 'next/link';
 import { useAlert } from './AlertProvider';
-import { apiUrl } from './api';
+import { apiUrl, formatAssetUrl } from './api';
 import VoteModal from './VoteModal';
 import { useLanguage } from '../src/i18n/use-language';
 import { localizedText } from '../src/i18n/content';
@@ -342,10 +342,10 @@ export default function HomePage() {
       setIsLoading(true);
       try {
         const [candRes, banRes, sponRes, postRes] = await Promise.all([
-          fetch(apiUrl('/api/candidates')),
-          fetch(apiUrl('/api/banners')),
-          fetch(apiUrl('/api/sponsors')),
-          fetch(apiUrl('/api/posts'))
+          fetch(apiUrl('/api/candidates'), { cache: 'no-store' }),
+          fetch(apiUrl('/api/banners'), { cache: 'no-store' }),
+          fetch(apiUrl('/api/sponsors'), { cache: 'no-store' }),
+          fetch(apiUrl('/api/posts'), { cache: 'no-store' })
         ]);
 
         if (candRes.ok) {
@@ -363,7 +363,7 @@ export default function HomePage() {
               const isVideo = b.imageUrl.toLowerCase().endsWith('.mp4');
               return {
                 type: isVideo ? 'video' : 'image',
-                url: b.imageUrl,
+                url: formatAssetUrl(b.imageUrl),
                 title: b.title,
                 titleEn: b.titleEn,
                 link: b.link || '#'
@@ -390,7 +390,7 @@ export default function HomePage() {
             };
             preload.onload = signalBannerReady;
             preload.onerror = signalBannerReady;
-            preload.src = firstBanner.imageUrl;
+            preload.src = formatAssetUrl(firstBanner.imageUrl);
           }
         } else {
           setSlides([]);

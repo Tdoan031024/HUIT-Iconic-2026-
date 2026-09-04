@@ -367,12 +367,13 @@ function CandidateModal({
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             <label className="space-y-1 sm:col-span-2">
-              <span className={labelText}>Khoa đào tạo HUIT</span>
-              <select className={inputClass} value={form.faculty || HUIT_FACULTIES[0]} onChange={(event) => update('faculty', event.target.value)}>
+              <span className={labelText}>Khoa/ Viện/ Phòng quản lý sinh viên:</span>
+              <input list="huit-faculties-admin" className={inputClass} value={form.faculty || ''} onChange={(event) => update('faculty', event.target.value)} placeholder="Nhập Khoa, Viện hoặc Phòng quản lý..." />
+              <datalist id="huit-faculties-admin">
                 {HUIT_FACULTIES.map((fac) => (
-                  <option key={fac} value={fac}>{fac}</option>
+                  <option key={fac} value={fac} />
                 ))}
-              </select>
+              </datalist>
             </label>
             <label className="space-y-1">
               <span className={labelText}>Lớp học</span>
@@ -383,12 +384,38 @@ function CandidateModal({
               <input className={inputClass} value={form.studentId || ''} onChange={(event) => update('studentId', event.target.value)} placeholder="Ví dụ: 2001211234" />
             </label>
             <label className="space-y-1">
-              <span className={labelText}>Số điện thoại liên hệ</span>
-              <input type="tel" className={inputClass} value={form.leaderPhone || ''} onChange={(event) => update('leaderPhone', event.target.value)} placeholder="Ví dụ: 0987654321" />
+              <span className={labelText}>Quê quán / Nơi sinh</span>
+              <input className={inputClass} value={form.implementationLocation || ''} onChange={(event) => update('implementationLocation', event.target.value)} placeholder="Ví dụ: TP. Hồ Chí Minh" />
             </label>
             <label className="space-y-1">
-              <span className={labelText}>Email sinh viên</span>
-              <input type="email" className={inputClass} value={form.leaderEmail || ''} onChange={(event) => update('leaderEmail', event.target.value)} placeholder="Ví dụ: sinhvien@huit.edu.vn" />
+              <span className={labelText}>Số điện thoại</span>
+              <input className={inputClass} value={form.leaderPhone || ''} onChange={(event) => update('leaderPhone', event.target.value)} placeholder="09xxxx..." />
+            </label>
+            <label className="space-y-1">
+              <span className={labelText}>Email</span>
+              <input className={inputClass} value={form.leaderEmail || ''} onChange={(event) => update('leaderEmail', event.target.value)} placeholder="email@gmail.com" />
+            </label>
+          </div>
+
+          <div className="border-b border-indigo-100 pb-1 text-[11px] font-black uppercase tracking-[0.16em] text-indigo-700 flex items-center gap-2">
+            <span>🌟</span> Giới thiệu & Định vị bản thân
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="space-y-1 sm:col-span-2">
+              <span className={labelText}>Tài năng / Năng khiếu</span>
+              <input className={inputClass} value={form.talent || ''} onChange={(event) => update('talent', event.target.value)} placeholder="Hát, nhảy hiện đại, MC song ngữ..." />
+            </label>
+            <label className="space-y-1 sm:col-span-2">
+              <span className={labelText}>Link Facebook cá nhân</span>
+              <input className={inputClass} value={form.advisorName || ''} onChange={(event) => update('advisorName', event.target.value)} placeholder="https://facebook.com/..." />
+            </label>
+            <label className="space-y-1 sm:col-span-2">
+              <span className={labelText}>Mô tả ngắn / Giới thiệu thí sinh <span className="text-red-500 font-bold">*</span></span>
+              <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs font-medium text-slate-800 outline-none transition focus:border-pink-500 focus:bg-white" value={form.description || ''} onChange={(event) => update('description', event.target.value)} placeholder="Tóm tắt về thí sinh, tính cách, đam mê..." required />
+            </label>
+            <label className="space-y-1 sm:col-span-2">
+              <span className={labelText}>Tiểu sử chi tiết / Bài viết tự sự</span>
+              <textarea className="h-24 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs font-medium text-slate-800 outline-none transition focus:border-pink-500 focus:bg-white" value={form.biography || ''} onChange={(event) => update('biography', event.target.value)} placeholder="Chia sẻ quá trình phát triển bản thân, hành trình đến với cuộc thi HUIT's ICONIC..." />
             </label>
           </div>
         </div>
@@ -422,38 +449,7 @@ function CandidateModal({
           </div>
         </div>
 
-        {/* Section 4: Năng khiếu & Video clip sơ loại */}
-        <div className="space-y-3">
-          <div className="border-b border-purple-100 pb-1 text-[11px] font-black uppercase tracking-[0.16em] text-purple-700 flex items-center gap-2">
-            <span>✨</span> Năng khiếu, Video sơ khảo & Thông điệp
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <label className="space-y-1">
-              <span className={labelText}>Năng khiếu / Tài năng sở trường</span>
-              <input className={inputClass} value={form.talent || ''} onChange={(event) => update('talent', event.target.value)} placeholder="Hát, Múa, Thuyết trình, MC, Nhảy..." />
-            </label>
-            <label className="space-y-1">
-              <span className={labelText}>Đường dẫn Video sơ khảo (Youtube / Drive / Tiktok)</span>
-              <input className={inputClass} value={form.videoUrl || ''} onChange={(event) => update('videoUrl', event.target.value)} placeholder="https://youtube.com/watch?v=..." />
-            </label>
-            <label className="space-y-1 sm:col-span-2">
-              <span className={labelText}>Thành tích Đoàn - Hội / Cá nhân nổi bật</span>
-              <input className={inputClass} value={form.achievements || ''} onChange={(event) => update('achievements', event.target.value)} placeholder="Bí thư chi đoàn giỏi, Giải thưởng học thuật, hoạt động tình nguyện..." />
-            </label>
-            <label className="space-y-1 sm:col-span-2">
-              <span className={labelText}>Thông điệp truyền cảm hứng</span>
-              <textarea className="h-16 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs font-medium text-slate-800 outline-none transition focus:border-pink-500 focus:bg-white" value={form.inspirationalMessage || ''} onChange={(event) => update('inspirationalMessage', event.target.value)} placeholder="Thông điệp gửi gắm tới sinh viên HUIT..." />
-            </label>
-            <label className="space-y-1 sm:col-span-2">
-              <span className={labelText}>Mô tả ngắn / Giới thiệu thí sinh <span className="text-red-500 font-bold">*</span></span>
-              <textarea className="h-20 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs font-medium text-slate-800 outline-none transition focus:border-pink-500 focus:bg-white" value={form.description || ''} onChange={(event) => update('description', event.target.value)} placeholder="Tóm tắt về thí sinh, tính cách, đam mê..." required />
-            </label>
-            <label className="space-y-1 sm:col-span-2">
-              <span className={labelText}>Tiểu sử chi tiết / Bài viết tự sự</span>
-              <textarea className="h-24 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs font-medium text-slate-800 outline-none transition focus:border-pink-500 focus:bg-white" value={form.biography || ''} onChange={(event) => update('biography', event.target.value)} placeholder="Chia sẻ quá trình phát triển bản thân, hành trình đến với cuộc thi HUIT's ICONIC..." />
-            </label>
-          </div>
-        </div>
+
 
         {/* Section 5: Hình ảnh & Bộ ảnh photoshoot */}
         <div className="space-y-4">
@@ -1112,19 +1108,27 @@ export default function CandidatesAdminPage() {
 
     try {
       if (modalMode === 'add') {
-        const res = await fetch(apiUrl('/api/candidates'), {
+        const res = await fetch(apiUrl('/api/admin/candidates'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         });
-        if (!res.ok) throw new Error('Không thể tạo thí sinh');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => null);
+          throw new Error(errData?.error || errData?.message || 'Không thể tạo thí sinh');
+        }
+        alert('Thêm thí sinh mới thành công!');
       } else if (modalMode === 'edit' && form.id) {
         const res = await fetch(apiUrl(`/api/admin/candidates/${form.id}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(form),
         });
-        if (!res.ok) throw new Error('Không thể cập nhật thí sinh');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => null);
+          throw new Error(errData?.error || errData?.message || 'Không thể cập nhật thí sinh');
+        }
+        alert('Cập nhật thông tin thí sinh thành công!');
       }
 
       setModalMode(null);
@@ -1243,7 +1247,7 @@ export default function CandidatesAdminPage() {
           <div className="min-w-0">
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-pink-600">Quản trị Cuộc thi</p>
             <h1 className="mt-0.5 text-xl font-extrabold tracking-tight text-slate-950">
-              Danh sách Thí sinh HUIT's ICONIC 2026
+              Danh sách Thí sinh Chính thức
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">

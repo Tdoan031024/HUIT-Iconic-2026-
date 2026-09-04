@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { updatePost, deletePost } from '@/lib/service';
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export const dynamic = 'force-dynamic';
+
+async function handleUpdate(req: Request, params: { id: string }) {
   try {
     const body = await req.json();
     const updated = await updatePost(params.id, body);
@@ -9,6 +11,18 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Lỗi cập nhật bài viết' }, { status: 500 });
   }
+}
+
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  return handleUpdate(req, params);
+}
+
+export async function POST(req: Request, { params }: { params: { id: string } }) {
+  return handleUpdate(req, params);
+}
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+  return handleUpdate(req, params);
 }
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {

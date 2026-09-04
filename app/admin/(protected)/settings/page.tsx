@@ -57,7 +57,7 @@ export default function SettingsAdminPage() {
   const [registrationDeadline, setRegistrationDeadline] = useState('2026-10-01T23:59');
   const [registrationUrl, setRegistrationUrl] = useState('/dang-ky');
   const [detailUrl, setDetailUrl] = useState('https://huit.edu.vn');
-  const [supportZaloUrl, setSupportZaloUrl] = useState('https://zalo.me/g/uxjmkq913');
+  const [supportZaloUrl, setSupportZaloUrl] = useState('https://zalo.me/g/myzijputivfgc1toua9z');
   const [freeVotesPerAccountPerDay, setFreeVotesPerAccountPerDay] = useState(2);
   const [sepayBankName, setSepayBankName] = useState('KienLongBank');
   const [sepayAccountNo, setSepayAccountNo] = useState('101499100004001667');
@@ -91,7 +91,7 @@ export default function SettingsAdminPage() {
           setRegistrationDeadline(data.registrationDeadline || '2026-10-01T23:59');
           setRegistrationUrl(data.registrationUrl || '/dang-ky');
           setDetailUrl(data.detailUrl || 'https://huit.edu.vn');
-          setSupportZaloUrl(data.supportZaloUrl || 'https://zalo.me/g/uxjmkq913');
+          setSupportZaloUrl(data.supportZaloUrl || 'https://zalo.me/g/myzijputivfgc1toua9z');
           setFreeVotesPerAccountPerDay(data.freeVotesPerAccountPerDay || 2);
           setSepayBankName(data.sepayBankName || 'VietinBank');
           setSepayAccountNo(data.sepayAccountNo || '110632156888');

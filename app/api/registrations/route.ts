@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 const requiredFields = [
   'fullName', 'gender', 'major', 'className', 'studentId', 'placeOfBirth',
   'identityNumber', 'identityIssuedPlace', 'address', 'phone', 'email',
-  'portraitImageUrl', 'fullBodyImageUrl',
+  'facebookUrl', 'portraitImageUrl', 'fullBodyImageUrl',
 ] as const;
 
 function text(value: unknown) {

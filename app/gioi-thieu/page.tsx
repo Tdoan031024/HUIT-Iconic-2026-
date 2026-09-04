@@ -115,7 +115,7 @@ function formatDateTime(dStr: string | undefined | null) {
 export default function GioiThieuPage() {
   const language = useLanguage();
   const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
-  const registerUrl = 'https://zalo.me/g/uxjmkq913';
+  const registerUrl = 'https://zalo.me/g/myzijputivfgc1toua9z';
 
   const [settings, setSettings] = useState<any>(null);
   const [timelineEvents, setTimelineEvents] = useState<any[]>([]);
@@ -228,9 +228,7 @@ export default function GioiThieuPage() {
   const registrationOpen: boolean | null = settings
     ? (!isManuallyClosed && !isDeadlinePassed)
     : null;
-  const registrationHref = registrationOpen === true
-    ? (settings?.registrationUrl && !settings.registrationUrl.includes('zalo.me') ? settings.registrationUrl : '/dang-ky')
-    : '#timeline-section';
+  const registrationHref = '/dang-ky';
 
   const quickLinks = [
     { href: '#tong-quan', label: language === 'en' ? 'Overview' : 'Tổng quan & Thư ngỏ', icon: '01' },
@@ -692,14 +690,12 @@ export default function GioiThieuPage() {
                 </p>
               </div>
               <div className="flex gap-3 w-full sm:w-auto shrink-0">
-                <a
-                  href={isMounted ? registrationHref : '#timeline-section'}
-                  target={isMounted && registrationOpen && registrationHref.startsWith('http') ? '_blank' : undefined}
-                  rel={isMounted && registrationOpen && registrationHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                <Link
+                  href="/dang-ky"
                   className="about-primary-action w-full sm:w-auto about-focusable"
                 >
-                  {!isMounted ? 'Đang cập nhật' : registrationOpen === true ? 'Đăng ký dự thi ngay' : 'Xem lộ trình'} <span aria-hidden="true">→</span>
-                </a>
+                  {language === 'en' ? 'Register now' : 'Đăng ký dự thi ngay'} <span aria-hidden="true">→</span>
+                </Link>
               </div>
             </div>
 
@@ -1109,7 +1105,7 @@ export default function GioiThieuPage() {
 
                 <div className="shrink-0 flex gap-3">
                   <a
-                    href="https://zalo.me/g/uxjmkq913"
+                    href="https://zalo.me/g/myzijputivfgc1toua9z"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="about-primary-action"

@@ -234,10 +234,19 @@ function CandidateEditModal({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <label className="space-y-1 sm:col-span-2">
-            <span className={labelText}>Khoa đào tạo HUIT</span>
-            <select className={inputClass} value={form.faculty || HUIT_FACULTIES[0]} onChange={(e) => update('faculty', e.target.value)}>
-              {HUIT_FACULTIES.map(fac => <option key={fac} value={fac}>{fac}</option>)}
-            </select>
+            <span className={labelText}>Khoa/ Viện/ Phòng quản lý sinh viên:</span>
+            <input
+              className={inputClass}
+              list="huit-faculties-detail-list"
+              value={form.faculty || ''}
+              onChange={(e) => update('faculty', e.target.value)}
+              placeholder="Nhập hoặc chọn Khoa / Viện / Phòng quản lý SV..."
+            />
+            <datalist id="huit-faculties-detail-list">
+              {HUIT_FACULTIES.map((fac) => (
+                <option key={fac} value={fac} />
+              ))}
+            </datalist>
           </label>
           <label className="space-y-1">
             <span className={labelText}>Lớp học</span>
@@ -284,14 +293,6 @@ function CandidateEditModal({
           <label className="block space-y-1">
             <span className={labelText}>Năng khiếu / Tài năng</span>
             <input className={inputClass} value={form.talent || ''} onChange={(e) => update('talent', e.target.value)} />
-          </label>
-          <label className="block space-y-1">
-            <span className={labelText}>Link Video sơ khảo</span>
-            <input className={inputClass} value={form.videoUrl || ''} onChange={(e) => update('videoUrl', e.target.value)} />
-          </label>
-          <label className="block space-y-1">
-            <span className={labelText}>Thành tích nổi bật</span>
-            <input className={inputClass} value={form.achievements || ''} onChange={(e) => update('achievements', e.target.value)} />
           </label>
           <label className="block space-y-1">
             <span className={labelText}>Thông điệp truyền cảm hứng</span>
@@ -505,7 +506,7 @@ export default function CandidateDetailPage() {
             </p>
 
             <div className="grid gap-3 sm:grid-cols-3">
-              <InfoItem label="Khoa đào tạo" value={candidate.faculty || 'Khoa HUIT'} />
+              <InfoItem label="Khoa / Viện / Phòng" value={candidate.faculty || 'HUIT'} />
               <InfoItem label="Lớp & MSSV" value={`${candidate.className || '--'} • ${candidate.studentId || '--'}`} />
               <InfoItem
                 label="Chỉ số hình thể"
@@ -520,7 +521,7 @@ export default function CandidateDetailPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <SectionCard title="Thông tin học tập & Liên hệ" description="Hồ sơ sinh viên tại Trường Đại học Công Thương TP.HCM">
           <div className="grid gap-3 sm:grid-cols-2">
-            <InfoItem label="Khoa" value={candidate.faculty} />
+            <InfoItem label="Khoa/ Viện/ Phòng quản lý sinh viên" value={candidate.faculty} />
             <InfoItem label="Lớp" value={candidate.className} />
             <InfoItem label="Mã số sinh viên (MSSV)" value={candidate.studentId} />
             <InfoItem label="Đơn vị trường" value={candidate.representativeSchool || 'Trường Đại học Công Thương TP.HCM'} />
@@ -540,12 +541,12 @@ export default function CandidateDetailPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Năng khiếu, Video sơ khảo & Thành tích" description="Kỹ năng nghệ thuật và tư liệu dự thi">
+        <SectionCard title="Năng khiếu & Thông tin bổ sung" description="Kỹ năng nghệ thuật và thông tin thí sinh">
           <div className="space-y-3">
             <InfoItem label="Năng khiếu sở trường" value={candidate.talent} />
-            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Video clip dự thi sơ khảo</p>
-              {candidate.videoUrl ? (
+            {candidate.videoUrl ? (
+              <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">Video clip</p>
                 <div className="mt-2 flex items-center gap-2">
                   <a
                     href={candidate.videoUrl}
@@ -553,15 +554,15 @@ export default function CandidateDetailPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-indigo-700 transition"
                   >
-                    <span>▶ Mở xem Video dự thi</span>
+                    <span>▶ Mở xem Video</span>
                   </a>
                   <span className="text-xs text-slate-500 truncate max-w-xs">{candidate.videoUrl}</span>
                 </div>
-              ) : (
-                <p className="mt-1 text-sm font-semibold text-slate-400 italic">Chưa cung cấp liên kết video clip.</p>
-              )}
-            </div>
-            <InfoItem label="Thành tích cá nhân / Đoàn - Hội" value={candidate.achievements} />
+              </div>
+            ) : null}
+            {candidate.achievements ? (
+              <InfoItem label="Thành tích cá nhân / Đoàn - Hội" value={candidate.achievements} />
+            ) : null}
           </div>
         </SectionCard>
 
