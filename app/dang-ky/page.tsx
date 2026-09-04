@@ -127,7 +127,7 @@ export default function RegistrationPage() {
             <label className="sm:col-span-2"><Label required>Họ và tên thí sinh</Label><input required className={inputClass} value={form.fullName} onChange={(e) => update('fullName', e.target.value)} /></label>
             <label><Label required>Giới tính</Label><select required className={inputClass} value={form.gender} onChange={(e) => update('gender', e.target.value)}><option value="">Chọn giới tính</option><option value="FEMALE">Nữ</option><option value="MALE">Nam</option></select></label>
             <label><Label required>Ngày sinh</Label><input required type="date" className={inputClass} value={form.dateOfBirth} onChange={(e) => update('dateOfBirth', e.target.value)} /></label>
-            <label><Label required>Khoa/ Viện/ Phòng quản lý sinh viên:</Label><input required list="huit-faculties-list" placeholder="Nhập Khoa, Viện hoặc Phòng quản lý..." className={inputClass} value={form.faculty} onChange={(e) => update('faculty', e.target.value)} /><datalist id="huit-faculties-list">{HUIT_FACULTIES.map((fac) => <option key={fac} value={fac} />)}</datalist></label>
+            <label><Label required>Khoa/ Viện/ Phòng quản lý sinh viên:</Label><input required type="text" placeholder="Nhập Khoa, Viện hoặc Phòng quản lý sinh viên..." className={inputClass} value={form.faculty} onChange={(e) => update('faculty', e.target.value)} /></label>
             <label><Label required>Ngành học</Label><input required placeholder="Ví dụ: Công nghệ thông tin" className={inputClass} value={form.major} onChange={(e) => update('major', e.target.value)} /></label>
             <label><Label required>Lớp</Label><input required placeholder="Ví dụ: 12DHTH01" className={inputClass} value={form.className} onChange={(e) => update('className', e.target.value)} /></label>
             <label><Label required>MSSV</Label><input required placeholder="Ví dụ: 200120xxxx" className={inputClass} value={form.studentId} onChange={(e) => update('studentId', e.target.value)} /></label>
@@ -143,16 +143,28 @@ export default function RegistrationPage() {
           </div>
         </Section>
 
-        <Section number="02" title="Câu chuyện và góc nhìn" description="Hãy chia sẻ ngắn gọn, chân thật để Ban tổ chức hiểu bạn hơn.">
-          <div className="space-y-5"><label><Label required>Giới thiệu về bản thân</Label><textarea required className={textareaClass} value={form.selfIntroduction} onChange={(e) => update('selfIntroduction', e.target.value)} /></label><label><Label required>Một câu nói truyền cảm hứng và phần diễn giải</Label><textarea required className={textareaClass} value={form.inspirationalMessage} onChange={(e) => update('inspirationalMessage', e.target.value)} /></label><label><Label required>Giới thiệu về ngành và khoa đang học tại HUIT</Label><textarea required className={textareaClass} value={form.facultyIntroduction} onChange={(e) => update('facultyIntroduction', e.target.value)} /></label><label><Label required>Nếu trở thành Đại sứ truyền thông, bạn sẽ làm điều gì đầu tiên?</Label><textarea required className={textareaClass} value={form.ambassadorPlan} onChange={(e) => update('ambassadorPlan', e.target.value)} /></label></div>
+        <Section number="02" title="Mong muốn/ câu chuyện của bạn khi đến với cuộc thi" description="Hãy chia sẻ ngắn gọn, chân thật về mong muốn hoặc câu chuyện của bạn khi đến với HUIT's ICONIC 2026.">
+          <div className="space-y-5">
+            <label>
+              <Label required>Mong muốn/ câu chuyện của bạn khi đến với cuộc thi</Label>
+              <textarea
+                required
+                rows={5}
+                placeholder="Chia sẻ lý do, mong muốn hoặc câu chuyện truyền cảm hứng của bạn khi tham gia cuộc thi..."
+                className={textareaClass}
+                value={form.selfIntroduction}
+                onChange={(e) => update('selfIntroduction', e.target.value)}
+              />
+            </label>
+          </div>
         </Section>
 
         <Section number="03" title="Ảnh hồ sơ" description="Ảnh chính diện, rõ mặt, trang phục lịch sự. Mỗi ảnh tối đa 15MB, định dạng JPG, PNG hoặc WEBP.">
           <div className="grid gap-5 sm:grid-cols-2"><label className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-5"><Label required>Ảnh chân dung</Label><input required type="file" accept="image/jpeg,image/png,image/webp" className="mt-4 block w-full text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-bold file:text-blue-700" onChange={(e) => setPortraitFile(e.target.files?.[0] || null)} />{portraitFile && <p className="mt-3 truncate text-xs text-emerald-600">Đã chọn: {portraitFile.name}</p>}</label><label className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-5"><Label required>Ảnh toàn thân nghệ thuật</Label><input required type="file" accept="image/jpeg,image/png,image/webp" className="mt-4 block w-full text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-bold file:text-blue-700" onChange={(e) => setFullBodyFile(e.target.files?.[0] || null)} />{fullBodyFile && <p className="mt-3 truncate text-xs text-emerald-600">Đã chọn: {fullBodyFile.name}</p>}</label></div>
         </Section>
 
-        <Section number="04" title="Chỉ số hình thể" description="Nhập theo đơn vị centimet và kilogram. Các số đo giúp BTC chuẩn bị phù hợp cho các phần thi trình diễn.">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <Section number="04" title="Chỉ số hình thể" description="Nhập theo đơn vị centimet và kilogram.">
+          <div className="grid gap-5 sm:grid-cols-2">
             <label>
               <div className="flex items-center justify-between">
                 <Label required>Chiều cao (cm)</Label>
@@ -161,9 +173,6 @@ export default function RegistrationPage() {
               <input required type="number" min="100" max="250" step="0.1" placeholder="Ví dụ: 168" className={inputClass} value={form.heightCm} onChange={(e) => update('heightCm', e.target.value)} />
             </label>
             <label><Label required>Cân nặng (kg)</Label><input required type="number" min="20" max="200" step="0.1" placeholder="Ví dụ: 52" className={inputClass} value={form.weightKg} onChange={(e) => update('weightKg', e.target.value)} /></label>
-            <label><Label required>Vòng 1 (cm)</Label><input required type="number" min="40" max="180" step="0.1" placeholder="Ví dụ: 86" className={inputClass} value={form.measurementBust} onChange={(e) => update('measurementBust', e.target.value)} /></label>
-            <label><Label required>Vòng 2 (cm)</Label><input required type="number" min="30" max="180" step="0.1" placeholder="Ví dụ: 62" className={inputClass} value={form.measurementWaist} onChange={(e) => update('measurementWaist', e.target.value)} /></label>
-            <label><Label required>Vòng 3 (cm)</Label><input required type="number" min="40" max="200" step="0.1" placeholder="Ví dụ: 92" className={inputClass} value={form.measurementHip} onChange={(e) => update('measurementHip', e.target.value)} /></label>
           </div>
         </Section>
 

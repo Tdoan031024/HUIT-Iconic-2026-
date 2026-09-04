@@ -281,17 +281,12 @@ function CandidateEditModal({
           <label className="space-y-1 sm:col-span-2">
             <span className={labelText}>Khoa/ Viện/ Phòng quản lý sinh viên:</span>
             <input
+              type="text"
               className={inputClass}
-              list="huit-faculties-detail-list"
               value={form.faculty || ''}
               onChange={(e) => update('faculty', e.target.value)}
-              placeholder="Nhập hoặc chọn Khoa / Viện / Phòng quản lý SV..."
+              placeholder="Nhập Khoa / Viện / Phòng quản lý SV..."
             />
-            <datalist id="huit-faculties-detail-list">
-              {HUIT_FACULTIES.map((fac) => (
-                <option key={fac} value={fac} />
-              ))}
-            </datalist>
           </label>
           <label className="space-y-1">
             <span className={labelText}>Lớp học</span>
@@ -311,7 +306,7 @@ function CandidateEditModal({
           </label>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
           <label className="space-y-1">
             <span className={labelText}>Chiều cao (cm)</span>
             <input type="number" step="0.5" className={inputClass} value={form.heightCm || ''} onChange={(e) => update('heightCm', e.target.value)} />
@@ -319,18 +314,6 @@ function CandidateEditModal({
           <label className="space-y-1">
             <span className={labelText}>Cân nặng (kg)</span>
             <input type="number" step="0.5" className={inputClass} value={form.weightKg || ''} onChange={(e) => update('weightKg', e.target.value)} />
-          </label>
-          <label className="space-y-1">
-            <span className={labelText}>Vòng 1 (cm)</span>
-            <input type="number" step="0.5" className={inputClass} value={form.measurementBust || ''} onChange={(e) => update('measurementBust', e.target.value)} />
-          </label>
-          <label className="space-y-1">
-            <span className={labelText}>Vòng 2 (cm)</span>
-            <input type="number" step="0.5" className={inputClass} value={form.measurementWaist || ''} onChange={(e) => update('measurementWaist', e.target.value)} />
-          </label>
-          <label className="space-y-1">
-            <span className={labelText}>Vòng 3 (cm)</span>
-            <input type="number" step="0.5" className={inputClass} value={form.measurementHip || ''} onChange={(e) => update('measurementHip', e.target.value)} />
           </label>
         </div>
 
@@ -557,7 +540,7 @@ export default function CandidateDetailPage() {
               <InfoItem label="Lớp & MSSV" value={`${candidate.className || '--'} • ${candidate.studentId || '--'}`} />
               <InfoItem
                 label="Chỉ số hình thể"
-                value={`${candidate.heightCm ? candidate.heightCm + 'cm' : '--'} / ${candidate.weightKg ? candidate.weightKg + 'kg' : '--'} (${candidate.measurementBust || '-'}/${candidate.measurementWaist || '-'}/${candidate.measurementHip || '-'})`}
+                value={`${candidate.heightCm ? candidate.heightCm + 'cm' : '--'} / ${candidate.weightKg ? candidate.weightKg + 'kg' : '--'}`}
               />
             </div>
           </div>
@@ -577,14 +560,10 @@ export default function CandidateDetailPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Chỉ số hình thể & Nhân trắc học" description="Các số đo nhân trắc học chính thức của thí sinh">
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
+        <SectionCard title="Chỉ số hình thể" description="Chiều cao và cân nặng chính thức của thí sinh">
+          <div className="grid gap-3 grid-cols-2">
             <InfoItem label="Chiều cao" value={candidate.heightCm ? `${candidate.heightCm} cm` : 'Chưa cập nhật'} />
             <InfoItem label="Cân nặng" value={candidate.weightKg ? `${candidate.weightKg} kg` : 'Chưa cập nhật'} />
-            <InfoItem label="Vòng 1 (Ngực)" value={candidate.measurementBust ? `${candidate.measurementBust} cm` : '--'} />
-            <InfoItem label="Vòng 2 (Eo)" value={candidate.measurementWaist ? `${candidate.measurementWaist} cm` : '--'} />
-            <InfoItem label="Vòng 3 (Mông)" value={candidate.measurementHip ? `${candidate.measurementHip} cm` : '--'} />
-            <InfoItem label="Tỷ lệ chuẩn" value={candidate.measurementWaist && candidate.measurementHip ? `${(candidate.measurementWaist / candidate.measurementHip).toFixed(2)} (Eo/Mông)` : '--'} />
           </div>
         </SectionCard>
 

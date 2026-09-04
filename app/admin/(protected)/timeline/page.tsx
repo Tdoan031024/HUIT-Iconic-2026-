@@ -23,7 +23,7 @@ function emptyForm(): TimelineFormState {
     titleEn: '',
     description: '',
     descriptionEn: '',
-    isActive: false,
+    isActive: true,
     round: 'Vòng loại',
     isImportant: false,
   };
@@ -234,7 +234,10 @@ export default function TimelineAdminPage() {
   async function loadTimeline() {
     setIsLoading(true);
     try {
-      const res = await fetch(apiUrl('/api/timeline'));
+      const res = await fetch(apiUrl(`/api/admin/timeline?_t=${Date.now()}`), {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' },
+      });
       if (res.ok) {
         const data = await res.json();
         setEvents(Array.isArray(data) ? data : []);
@@ -251,6 +254,7 @@ export default function TimelineAdminPage() {
   }, []);
 
   const openAddModal = () => {
+    setSelectedEvent(null);
     setForm(emptyForm());
     setIsAddModalOpen(true);
   };
@@ -271,12 +275,13 @@ export default function TimelineAdminPage() {
   };
 
   async function submitEvent(method: 'POST' | 'PUT') {
-    const url = method === 'POST'
-      ? apiUrl('/api/admin/timeline')
-      : apiUrl(`/api/admin/timeline/${selectedEvent?.id}`);
+    const isEdit = method === 'PUT' && !!selectedEvent?.id;
+    const url = isEdit
+      ? apiUrl(`/api/admin/timeline/${selectedEvent?.id}`)
+      : apiUrl('/api/admin/timeline');
 
     const res = await fetch(url, {
-      method,
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     });
@@ -294,7 +299,7 @@ export default function TimelineAdminPage() {
       await submitEvent('POST');
       showAlert('Thêm mốc thời gian thành công!', 'success');
       setIsAddModalOpen(false);
-      loadTimeline();
+      await loadTimeline();
     } catch (err: any) {
       console.error(err);
       showAlert(err.message || 'Thao tác thất bại, kiểm tra kết nối API.', 'error');
@@ -310,7 +315,7 @@ export default function TimelineAdminPage() {
       await submitEvent('PUT');
       showAlert('Cập nhật mốc thời gian thành công!', 'success');
       setIsEditModalOpen(false);
-      loadTimeline();
+      await loadTimeline();
     } catch (err: any) {
       console.error(err);
       showAlert(err.message || 'Thao tác thất bại, kiểm tra kết nối API.', 'error');
@@ -331,7 +336,7 @@ export default function TimelineAdminPage() {
       const res = await fetch(apiUrl(`/api/admin/timeline/${id}`), { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       showAlert('Xóa mốc thời gian thành công!', 'success');
-      loadTimeline();
+      await loadTimeline();
     } catch (err) {
       console.error(err);
       showAlert('Thao tác thất bại, kiểm tra kết nối API.', 'error');
@@ -341,13 +346,13 @@ export default function TimelineAdminPage() {
   const handleToggleActive = async (event: TimelineEvent) => {
     try {
       const res = await fetch(apiUrl(`/api/admin/timeline/${event.id}`), {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...event, isActive: !event.isActive }),
       });
       if (!res.ok) throw new Error('Cập nhật thất bại');
       showAlert(`Đã ${!event.isActive ? 'kích hoạt' : 'tắt'} mốc thời gian!`, 'success');
-      loadTimeline();
+      await loadTimeline();
     } catch (err: any) {
       showAlert(err.message || 'Thao tác thất bại', 'error');
     }
@@ -356,13 +361,13 @@ export default function TimelineAdminPage() {
   const handleToggleImportant = async (event: TimelineEvent) => {
     try {
       const res = await fetch(apiUrl(`/api/admin/timeline/${event.id}`), {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...event, isImportant: !event.isImportant }),
       });
       if (!res.ok) throw new Error('Cập nhật thất bại');
       showAlert(`Đã ${!event.isImportant ? 'đặt làm mốc quan trọng' : 'bỏ mốc quan trọng'}!`, 'success');
-      loadTimeline();
+      await loadTimeline();
     } catch (err: any) {
       showAlert(err.message || 'Thao tác thất bại', 'error');
     }

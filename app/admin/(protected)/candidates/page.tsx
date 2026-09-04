@@ -414,12 +414,7 @@ function CandidateModal({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             <label className="space-y-1 sm:col-span-2">
               <span className={labelText}>Khoa/ Viện/ Phòng quản lý sinh viên:</span>
-              <input list="huit-faculties-admin" className={inputClass} value={form.faculty || ''} onChange={(event) => update('faculty', event.target.value)} placeholder="Nhập Khoa, Viện hoặc Phòng quản lý..." />
-              <datalist id="huit-faculties-admin">
-                {HUIT_FACULTIES.map((fac) => (
-                  <option key={fac} value={fac} />
-                ))}
-              </datalist>
+              <input type="text" className={inputClass} value={form.faculty || ''} onChange={(event) => update('faculty', event.target.value)} placeholder="Nhập Khoa, Viện hoặc Phòng quản lý sinh viên..." />
             </label>
             <label className="space-y-1">
               <span className={labelText}>Lớp học</span>
@@ -469,9 +464,9 @@ function CandidateModal({
         {/* Section 3: Chỉ số hình thể */}
         <div className="space-y-3">
           <div className="border-b border-rose-100 pb-1 text-[11px] font-black uppercase tracking-[0.16em] text-rose-700 flex items-center gap-2">
-            <span>📏</span> Chỉ số hình thể & Nhân trắc học
+            <span>📏</span> Chỉ số hình thể
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2">
             <label className="space-y-1">
               <span className={labelText}>Chiều cao (cm)</span>
               <input type="number" step="0.5" className={inputClass} value={form.heightCm || ''} onChange={(event) => update('heightCm', event.target.value)} placeholder="170" />
@@ -479,18 +474,6 @@ function CandidateModal({
             <label className="space-y-1">
               <span className={labelText}>Cân nặng (kg)</span>
               <input type="number" step="0.5" className={inputClass} value={form.weightKg || ''} onChange={(event) => update('weightKg', event.target.value)} placeholder="52" />
-            </label>
-            <label className="space-y-1">
-              <span className={labelText}>Vòng 1 (cm)</span>
-              <input type="number" step="0.5" className={inputClass} value={form.measurementBust || ''} onChange={(event) => update('measurementBust', event.target.value)} placeholder="86" />
-            </label>
-            <label className="space-y-1">
-              <span className={labelText}>Vòng 2 (cm)</span>
-              <input type="number" step="0.5" className={inputClass} value={form.measurementWaist || ''} onChange={(event) => update('measurementWaist', event.target.value)} placeholder="60" />
-            </label>
-            <label className="space-y-1">
-              <span className={labelText}>Vòng 3 (cm)</span>
-              <input type="number" step="0.5" className={inputClass} value={form.measurementHip || ''} onChange={(event) => update('measurementHip', event.target.value)} placeholder="90" />
             </label>
           </div>
         </div>
@@ -1638,7 +1621,6 @@ export default function CandidatesAdminPage() {
                   <p className="text-[11px] font-semibold text-slate-500 line-clamp-1">{c.faculty || 'HUIT'}</p>
                   <p className="text-[10px] text-slate-400">
                     {c.heightCm ? `${c.heightCm}cm` : ''} {c.weightKg ? `• ${c.weightKg}kg` : ''}
-                    {c.measurementBust && c.measurementWaist && c.measurementHip ? ` • ${c.measurementBust}-${c.measurementWaist}-${c.measurementHip}` : ''}
                   </p>
                 </div>
 
@@ -1701,7 +1683,7 @@ export default function CandidatesAdminPage() {
                   <th className="px-3 py-3">Nguồn hồ sơ</th>
                   <th className="px-3 py-3">Bảng thi & Vòng</th>
                   <th className="px-3 py-3">Học tập HUIT</th>
-                  <th className="px-3 py-3">Hình thể (Cao/Nặng/3 vòng)</th>
+                  <th className="px-3 py-3">Hình thể (Cao/Nặng)</th>
                   <th className="px-3 py-3">Trạng thái</th>
                   <th className="px-3 py-3 text-right">Lượt vote</th>
                   <th className="px-3 py-3 text-right">Thao tác</th>
@@ -1766,9 +1748,6 @@ export default function CandidatesAdminPage() {
                       <td className="px-4 py-3">
                         <div className="text-xs font-semibold text-slate-700">
                           {c.heightCm ? `${c.heightCm} cm` : '--'} • {c.weightKg ? `${c.weightKg} kg` : '--'}
-                          <p className="text-[11px] text-slate-400 font-normal mt-0.5">
-                            3 vòng: {c.measurementBust && c.measurementWaist && c.measurementHip ? `${c.measurementBust} - ${c.measurementWaist} - ${c.measurementHip}` : 'Chưa cập nhật'}
-                          </p>
                         </div>
                       </td>
                       <td className="px-4 py-3">
