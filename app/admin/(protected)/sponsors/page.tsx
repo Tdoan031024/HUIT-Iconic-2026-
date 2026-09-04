@@ -750,15 +750,15 @@ export default function SponsorsAdminPage() {
 
       {/* ADD SPONSOR MODAL */}
       {modalMode === 'add' && (
-        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
-          <form onSubmit={handleAddSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-2 sm:p-4 z-50 backdrop-blur-sm overflow-hidden" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
+          <form onSubmit={handleAddSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl max-h-[92vh] flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200 overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-3.5 shrink-0 bg-white">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider border border-emerald-200">
                   THÊM MỚI ĐỐI TÁC
                 </span>
-                <h3 className="text-base font-black text-slate-900 mt-1">Thêm nhà tài trợ mới</h3>
+                <h3 className="text-base font-black text-slate-900 mt-0.5">Thêm nhà tài trợ mới</h3>
               </div>
               <button
                 type="button"
@@ -769,68 +769,73 @@ export default function SponsorsAdminPage() {
               </button>
             </div>
 
-            {/* Image Dropzone Component */}
-            <ImageDropzone
-              label="Logo nhà tài trợ / Đối tác"
-              subLabel="Kéo & thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
-              aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
-              value={formLogoUrl}
-              onChange={setFormLogoUrl}
-              required
-            />
+            {/* Modal Body (Scrollable) */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3.5 text-xs">
+              {/* Image Dropzone Component */}
+              <ImageDropzone
+                label="Logo nhà tài trợ / Đối tác"
+                subLabel="Kéo & thả logo trực tiếp từ máy tính hoặc click để chọn"
+                aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
+                value={formLogoUrl}
+                onChange={setFormLogoUrl}
+                compact
+                required
+              />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs pt-1">
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
-                <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} placeholder="Nhập tên nhà tài trợ / thương hiệu" required />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
+                  <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} placeholder="Nhập tên nhà tài trợ / thương hiệu" required />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Phân hạng (Tier) *</label>
-                <select
-                  className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold cursor-pointer transition"
-                  value={formTier}
-                  onChange={e => setFormTier(e.target.value as Sponsor['tier'])}
-                >
-                  <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
-                  <option value="GOLD">GOLD (Vàng)</option>
-                  <option value="SILVER">SILVER (Bạc)</option>
-                  <option value="PARTNER">PARTNER (Đối tác)</option>
-                </select>
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Phân hạng (Tier) *</label>
+                  <select
+                    className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold cursor-pointer transition"
+                    value={formTier}
+                    onChange={e => setFormTier(e.target.value as Sponsor['tier'])}
+                  >
+                    <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
+                    <option value="GOLD">GOLD (Vàng)</option>
+                    <option value="SILVER">SILVER (Bạc)</option>
+                    <option value="PARTNER">PARTNER (Đối tác)</option>
+                  </select>
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Người liên hệ đại diện</label>
-                <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formContactPerson} onChange={e => setFormContactPerson(e.target.value)} placeholder="Họ và tên người đại diện" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Người liên hệ đại diện</label>
+                  <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formContactPerson} onChange={e => setFormContactPerson(e.target.value)} placeholder="Họ và tên người đại diện" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Số điện thoại liên hệ</label>
-                <input type="tel" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formPhone} onChange={e => setFormPhone(e.target.value)} placeholder="VD: 0912345678" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Số điện thoại liên hệ</label>
+                  <input type="tel" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formPhone} onChange={e => setFormPhone(e.target.value)} placeholder="VD: 0912345678" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Email liên hệ</label>
-                <input type="email" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formEmail} onChange={e => setFormEmail(e.target.value)} placeholder="email@domain.com" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Email liên hệ</label>
+                  <input type="email" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formEmail} onChange={e => setFormEmail(e.target.value)} placeholder="email@domain.com" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Website liên kết (URL)</label>
-                <input type="url" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formWebsiteUrl} onChange={e => setFormWebsiteUrl(e.target.value)} placeholder="https://example.com" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Website liên kết (URL)</label>
+                  <input type="url" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formWebsiteUrl} onChange={e => setFormWebsiteUrl(e.target.value)} placeholder="https://example.com" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
-                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
-              </div>
+                <div className="flex flex-col space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
+                  <textarea rows={2} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
-                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
+                <div className="flex flex-col space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
+                  <textarea rows={2} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end gap-2.5 px-6 py-3 border-t border-slate-100 bg-slate-50/80 shrink-0">
               <button type="button" onClick={() => setModalMode(null)} className="px-4 py-2 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-600 text-xs font-bold transition">Hủy bỏ</button>
               <button type="submit" className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 rounded-xl text-white text-xs font-extrabold shadow transition">Thêm đối tác</button>
             </div>
@@ -840,15 +845,15 @@ export default function SponsorsAdminPage() {
 
       {/* EDIT SPONSOR MODAL */}
       {modalMode === 'edit' && (
-        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
-          <form onSubmit={handleEditSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 p-6 rounded-2xl w-full max-w-xl flex flex-col space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-slate-950/60 flex items-center justify-center p-2 sm:p-4 z-50 backdrop-blur-sm overflow-hidden" onMouseDown={(event) => event.target === event.currentTarget && setModalMode(null)}>
+          <form onSubmit={handleEditSubmit} onMouseDown={(event) => event.stopPropagation()} className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl max-h-[92vh] flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200 overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-3.5 shrink-0 bg-white">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[10px] font-black uppercase tracking-wider border border-sky-200">
                   CẬP NHẬT ĐỐI TÁC
                 </span>
-                <h3 className="text-base font-black text-slate-900 mt-1">Chỉnh sửa nhà tài trợ</h3>
+                <h3 className="text-base font-black text-slate-900 mt-0.5">Chỉnh sửa nhà tài trợ</h3>
               </div>
               <button
                 type="button"
@@ -859,68 +864,73 @@ export default function SponsorsAdminPage() {
               </button>
             </div>
 
-            {/* Image Dropzone Component */}
-            <ImageDropzone
-              label="Logo nhà tài trợ / Đối tác"
-              subLabel="Kéo & thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
-              aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
-              value={formLogoUrl}
-              onChange={setFormLogoUrl}
-              required
-            />
+            {/* Modal Body (Scrollable) */}
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3.5 text-xs">
+              {/* Image Dropzone Component */}
+              <ImageDropzone
+                label="Logo nhà tài trợ / Đối tác"
+                subLabel="Kéo & thả logo trực tiếp từ máy tính hoặc click để chọn"
+                aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
+                value={formLogoUrl}
+                onChange={setFormLogoUrl}
+                compact
+                required
+              />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs pt-1">
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
-                <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} required />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Tên nhà tài trợ *</label>
+                  <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formName} onChange={e => setFormName(e.target.value)} required />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Phân hạng (Tier) *</label>
-                <select
-                  className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold cursor-pointer transition"
-                  value={formTier}
-                  onChange={e => setFormTier(e.target.value as Sponsor['tier'])}
-                >
-                  <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
-                  <option value="GOLD">GOLD (Vàng)</option>
-                  <option value="SILVER">SILVER (Bạc)</option>
-                  <option value="PARTNER">PARTNER (Đối tác)</option>
-                </select>
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Phân hạng (Tier) *</label>
+                  <select
+                    className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold cursor-pointer transition"
+                    value={formTier}
+                    onChange={e => setFormTier(e.target.value as Sponsor['tier'])}
+                  >
+                    <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
+                    <option value="GOLD">GOLD (Vàng)</option>
+                    <option value="SILVER">SILVER (Bạc)</option>
+                    <option value="PARTNER">PARTNER (Đối tác)</option>
+                  </select>
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Người liên hệ đại diện</label>
-                <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formContactPerson} onChange={e => setFormContactPerson(e.target.value)} placeholder="Họ và tên người đại diện" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Người liên hệ đại diện</label>
+                  <input type="text" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formContactPerson} onChange={e => setFormContactPerson(e.target.value)} placeholder="Họ và tên người đại diện" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Số điện thoại liên hệ</label>
-                <input type="tel" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formPhone} onChange={e => setFormPhone(e.target.value)} placeholder="VD: 0912345678" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Số điện thoại liên hệ</label>
+                  <input type="tel" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formPhone} onChange={e => setFormPhone(e.target.value)} placeholder="VD: 0912345678" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Email liên hệ</label>
-                <input type="email" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formEmail} onChange={e => setFormEmail(e.target.value)} placeholder="email@domain.com" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Email liên hệ</label>
+                  <input type="email" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formEmail} onChange={e => setFormEmail(e.target.value)} placeholder="email@domain.com" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Website liên kết (URL)</label>
-                <input type="url" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formWebsiteUrl} onChange={e => setFormWebsiteUrl(e.target.value)} placeholder="https://example.com" />
-              </div>
+                <div className="flex flex-col space-y-1">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Website liên kết (URL)</label>
+                  <input type="url" className="h-9 px-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold transition" value={formWebsiteUrl} onChange={e => setFormWebsiteUrl(e.target.value)} placeholder="https://example.com" />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
-                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
-              </div>
+                <div className="flex flex-col space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác (Tiếng Việt)</label>
+                  <textarea rows={2} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescription} onChange={e => setFormDescription(e.target.value)} placeholder="Nhập thông tin giới thiệu ngắn về nhà tài trợ..." />
+                </div>
 
-              <div className="flex flex-col space-y-1.5 md:col-span-2">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
-                <textarea rows={3} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
+                <div className="flex flex-col space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Mô tả / Giới thiệu đối tác tiếng Anh (English Description)</label>
+                  <textarea rows={2} className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white text-xs font-semibold resize-none transition" value={formDescriptionEn} onChange={e => setFormDescriptionEn(e.target.value)} placeholder="English introduction about the sponsor..." />
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+            {/* Modal Footer */}
+            <div className="flex items-center justify-end gap-2.5 px-6 py-3 border-t border-slate-100 bg-slate-50/80 shrink-0">
               <button type="button" onClick={() => setModalMode(null)} className="px-4 py-2 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-600 text-xs font-bold transition">Hủy bỏ</button>
               <button type="submit" className="px-5 py-2 bg-slate-900 hover:bg-emerald-700 rounded-xl text-white text-xs font-extrabold shadow transition">Lưu thay đổi</button>
             </div>

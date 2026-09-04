@@ -14,6 +14,7 @@ interface ImageDropzoneProps {
   accept?: string;
   required?: boolean;
   isVideoAllowed?: boolean;
+  compact?: boolean;
 }
 
 // Compress image on client side if > 1.5MB to save bandwidth and speed up upload
@@ -89,6 +90,7 @@ export default function ImageDropzone({
   accept = 'image/*,video/mp4,video/webm',
   required = false,
   isVideoAllowed = false,
+  compact = false,
 }: ImageDropzoneProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -270,8 +272,8 @@ export default function ImageDropzone({
 
         {/* CONTENT STATE 1: HAS PREVIEW */}
         {value ? (
-          <div className="p-4 flex flex-col sm:flex-row items-center gap-4">
-            <div className="relative h-24 w-36 shrink-0 rounded-xl border border-slate-200 bg-white p-2 shadow-sm flex items-center justify-center overflow-hidden group/preview">
+          <div className={`${compact ? 'p-2.5 gap-3' : 'p-4 gap-4'} flex flex-col sm:flex-row items-center`}>
+            <div className={`relative ${compact ? 'h-20 w-32' : 'h-24 w-36'} shrink-0 rounded-xl border border-slate-200 bg-white p-2 shadow-sm flex items-center justify-center overflow-hidden group/preview`}>
               {isCurrentVideo ? (
                 <video
                   src={displayUrl}
@@ -307,7 +309,7 @@ export default function ImageDropzone({
                 Kéo file từ máy tính thả vào đây hoặc bấm đổi file
               </p>
 
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-2.5 flex items-center gap-2">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -336,17 +338,17 @@ export default function ImageDropzone({
           </div>
         ) : (
           /* CONTENT STATE 2: EMPTY DROPZONE */
-          <div className="py-7 px-4 flex flex-col items-center justify-center text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-sm text-slate-400 group-hover:text-[#0A2FFF] group-hover:border-blue-300 group-hover:scale-110 transition duration-200">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <div className={`${compact ? 'py-4 px-3' : 'py-7 px-4'} flex flex-col items-center justify-center text-center`}>
+            <div className={`flex ${compact ? 'h-9 w-9 rounded-xl' : 'h-12 w-12 rounded-2xl'} items-center justify-center bg-white border border-slate-200 shadow-sm text-slate-400 group-hover:text-[#0A2FFF] group-hover:border-blue-300 group-hover:scale-105 transition duration-200`}>
+              <svg className={`${compact ? 'h-5 w-5' : 'h-6 w-6'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>
 
-            <p className="mt-2.5 text-xs font-bold text-slate-700">
+            <p className={`${compact ? 'mt-1.5' : 'mt-2.5'} text-xs font-bold text-slate-700`}>
               <span className="text-[#0A2FFF] hover:underline">Nhấp để chọn tệp từ máy tính</span> hoặc kéo thả file vào đây
             </p>
-            <p className="mt-1 text-[11px] text-slate-400 max-w-sm">
+            <p className="mt-0.5 text-[11px] text-slate-400 max-w-sm">
               {subLabel}
             </p>
           </div>
