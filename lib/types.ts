@@ -12,13 +12,22 @@ export interface Candidate {
   contestTable?: 'MALE' | 'FEMALE' | 'HIGH_SCHOOL' | 'STUDENT' | 'ENTERPRISE' | string;
   contestTableLabel?: string;
   faculty?: string;
+  className?: string;
+  studentId?: string;
   dob?: string;
   gender?: 'MALE' | 'FEMALE' | string;
   height?: string | number;
   weight?: string | number;
+  heightCm?: number;
+  weightKg?: number;
+  measurementBust?: number;
+  measurementWaist?: number;
+  measurementHip?: number;
   measurements?: string;
   talent?: string;
   motto?: string;
+  inspirationalMessage?: string;
+  videoUrl?: string;
   achievements?: string;
   hobbies?: string;
   sector?: string;
@@ -37,6 +46,7 @@ export interface Candidate {
   implementationLocation?: string;
   intellectualPropertyCommitment?: boolean;
   showcaseImages?: string;
+  registrationId?: string;
 }
 
 export interface Sponsor {

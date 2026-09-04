@@ -5,19 +5,39 @@ import { apiUrl } from '../api';
 import { useAlert } from '../AlertProvider';
 
 type RegistrationForm = {
-  fullName: string; gender: string; dateOfBirth: string; major: string; className: string;
+  fullName: string; gender: string; dateOfBirth: string; faculty: string; major: string; className: string;
   studentId: string; placeOfBirth: string; identityNumber: string; identityIssuedDate: string;
   identityIssuedPlace: string; address: string; phone: string; email: string; facebookUrl: string;
-  talent: string; selfIntroduction: string; inspirationalMessage: string; facultyIntroduction: string;
-  ambassadorPlan: string; heightCm: string; weightKg: string; measurementBust: string;
+  videoUrl: string; talent: string; achievements: string; selfIntroduction: string; inspirationalMessage: string;
+  facultyIntroduction: string; ambassadorPlan: string; heightCm: string; weightKg: string; measurementBust: string;
   measurementWaist: string; measurementHip: string; portraitImageUrl: string; fullBodyImageUrl: string;
   consentAccepted: boolean;
 };
 
+const HUIT_FACULTIES = [
+  'Khoa Công nghệ Thông tin',
+  'Khoa Công nghệ Thực phẩm',
+  'Khoa Quản trị Kinh doanh',
+  'Khoa Tài chính - Kế toán',
+  'Khoa Ngoại ngữ',
+  'Khoa Du lịch & Ẩm thực',
+  'Khoa May & Thời trang',
+  'Khoa Công nghệ Hóa học',
+  'Khoa Công nghệ Sinh học & Kỹ thuật Môi trường',
+  'Khoa Điện - Điện tử',
+  'Khoa Cơ khí',
+  'Khoa Luật',
+  'Khoa Khoa học Ứng dụng',
+  'Khoa Chính trị - Luật',
+  'Khoa Giáo dục Thể chất & Quốc phòng',
+  'Viện Đào tạo Quốc tế',
+  'Khoa / Viện khác',
+];
+
 const initialForm: RegistrationForm = {
-  fullName: '', gender: '', dateOfBirth: '', major: '', className: '', studentId: '', placeOfBirth: '',
+  fullName: '', gender: '', dateOfBirth: '', faculty: '', major: '', className: '', studentId: '', placeOfBirth: '',
   identityNumber: '', identityIssuedDate: '', identityIssuedPlace: '', address: '', phone: '', email: '',
-  facebookUrl: '', talent: '', selfIntroduction: '', inspirationalMessage: '', facultyIntroduction: '',
+  facebookUrl: '', videoUrl: '', talent: '', achievements: '', selfIntroduction: '', inspirationalMessage: '', facultyIntroduction: '',
   ambassadorPlan: '', heightCm: '', weightKg: '', measurementBust: '', measurementWaist: '', measurementHip: '',
   portraitImageUrl: '', fullBodyImageUrl: '', consentAccepted: false,
 };
@@ -85,25 +105,43 @@ export default function RegistrationPage() {
 
   return <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 sm:py-16">
     <div className="mx-auto max-w-5xl">
-      <header className="mb-10 max-w-3xl"><p className="text-xs font-black uppercase tracking-[.18em] text-[#0A2FFF]">HUIT&apos;s ICONIC 2026</p><h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Đăng ký dự thi</h1><p className="mt-4 text-base leading-7 text-slate-600">Hãy hoàn thành hồ sơ để Ban tổ chức tìm hiểu câu chuyện, cá tính và thế mạnh của bạn.</p><p className="mt-3 text-sm text-slate-500"><b className="text-red-500">*</b> Trường bắt buộc. Hồ sơ được tiếp nhận để kiểm tra trước khi công bố chính thức.</p></header>
+      <header className="mb-10 max-w-3xl">
+        <p className="text-xs font-black uppercase tracking-[.18em] text-[#0A2FFF]">HUIT&apos;s ICONIC 2026</p>
+        <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Đăng ký dự thi</h1>
+        <p className="mt-4 text-base leading-7 text-slate-600">Hãy hoàn thành hồ sơ để Ban tổ chức tìm hiểu câu chuyện, cá tính và thế mạnh của bạn.</p>
+        <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/70 p-4 text-xs sm:text-sm text-blue-900 leading-relaxed">
+          <p className="font-bold flex items-center gap-1.5 text-blue-950">
+            <span>📌</span> Tiêu chuẩn thí sinh tham gia HUIT&apos;s ICONIC 2026 (Mục 04 Đề án):
+          </p>
+          <ul className="mt-1.5 list-disc list-inside space-y-1 text-blue-800">
+            <li>Là sinh viên đang theo học hệ chính quy tại Trường Đại học Công Thương TP.HCM (HUIT).</li>
+            <li>Tiêu chuẩn chiều cao chính thức: <b>Nữ từ 1m60 trở lên</b>, <b>Nam từ 1m70 trở lên</b>.</li>
+            <li>Ngoại hình cân đối, gương mặt khả ái, có phẩm chất đạo đức tốt và lối sống lành mạnh.</li>
+          </ul>
+        </div>
+        <p className="mt-3 text-sm text-slate-500"><b className="text-red-500">*</b> Trường bắt buộc. Hồ sơ được tiếp nhận để kiểm tra trước khi công bố chính thức.</p>
+      </header>
       <form onSubmit={submit} className="space-y-6">
         <Section number="01" title="Thông tin cá nhân" description="Thông tin dùng để xác minh tư cách tham gia cuộc thi.">
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="sm:col-span-2"><Label required>Họ và tên thí sinh</Label><input required className={inputClass} value={form.fullName} onChange={(e) => update('fullName', e.target.value)} /></label>
             <label><Label required>Giới tính</Label><select required className={inputClass} value={form.gender} onChange={(e) => update('gender', e.target.value)}><option value="">Chọn giới tính</option><option value="FEMALE">Nữ</option><option value="MALE">Nam</option></select></label>
             <label><Label required>Ngày sinh</Label><input required type="date" className={inputClass} value={form.dateOfBirth} onChange={(e) => update('dateOfBirth', e.target.value)} /></label>
-            <label><Label required>Ngành học</Label><input required className={inputClass} value={form.major} onChange={(e) => update('major', e.target.value)} /></label>
-            <label><Label required>Lớp</Label><input required className={inputClass} value={form.className} onChange={(e) => update('className', e.target.value)} /></label>
-            <label><Label required>MSSV</Label><input required className={inputClass} value={form.studentId} onChange={(e) => update('studentId', e.target.value)} /></label>
+            <label><Label required>Khoa đào tạo tại HUIT</Label><select required className={inputClass} value={form.faculty} onChange={(e) => update('faculty', e.target.value)}><option value="">Chọn khoa</option>{HUIT_FACULTIES.map((fac) => <option key={fac} value={fac}>{fac}</option>)}</select></label>
+            <label><Label required>Ngành học</Label><input required placeholder="Ví dụ: Công nghệ thông tin" className={inputClass} value={form.major} onChange={(e) => update('major', e.target.value)} /></label>
+            <label><Label required>Lớp</Label><input required placeholder="Ví dụ: 12DHTH01" className={inputClass} value={form.className} onChange={(e) => update('className', e.target.value)} /></label>
+            <label><Label required>MSSV</Label><input required placeholder="Ví dụ: 200120xxxx" className={inputClass} value={form.studentId} onChange={(e) => update('studentId', e.target.value)} /></label>
             <label><Label required>Nơi sinh</Label><input required className={inputClass} value={form.placeOfBirth} onChange={(e) => update('placeOfBirth', e.target.value)} /></label>
             <label><Label required>Số CMND/CCCD</Label><input required inputMode="numeric" className={inputClass} value={form.identityNumber} onChange={(e) => update('identityNumber', e.target.value)} /></label>
             <label><Label required>Ngày cấp</Label><input required type="date" className={inputClass} value={form.identityIssuedDate} onChange={(e) => update('identityIssuedDate', e.target.value)} /></label>
             <label><Label required>Nơi cấp</Label><input required className={inputClass} value={form.identityIssuedPlace} onChange={(e) => update('identityIssuedPlace', e.target.value)} /></label>
             <label className="sm:col-span-2"><Label required>Địa chỉ liên lạc</Label><input required className={inputClass} value={form.address} onChange={(e) => update('address', e.target.value)} /></label>
             <label><Label required>Điện thoại di động</Label><input required type="tel" inputMode="tel" placeholder="09xxxxxxxx" className={inputClass} value={form.phone} onChange={(e) => update('phone', e.target.value)} /></label>
-            <label><Label required>Địa chỉ email</Label><input required type="email" className={inputClass} value={form.email} onChange={(e) => update('email', e.target.value)} /></label>
-            <label className="sm:col-span-2"><Label>Facebook cá nhân</Label><input type="url" placeholder="https://facebook.com/..." className={inputClass} value={form.facebookUrl} onChange={(e) => update('facebookUrl', e.target.value)} /></label>
+            <label><Label required>Địa chỉ email</Label><input required type="email" placeholder="example@gmail.com" className={inputClass} value={form.email} onChange={(e) => update('email', e.target.value)} /></label>
+            <label><Label>Facebook cá nhân</Label><input type="url" placeholder="https://facebook.com/..." className={inputClass} value={form.facebookUrl} onChange={(e) => update('facebookUrl', e.target.value)} /></label>
+            <label><Label>Link Video sơ loại / tự giới thiệu (YouTube / TikTok / Drive)</Label><input type="url" placeholder="https://youtube.com/... hoặc https://drive.google.com/..." className={inputClass} value={form.videoUrl} onChange={(e) => update('videoUrl', e.target.value)} /></label>
             <label className="sm:col-span-2"><Label>Năng khiếu nổi bật</Label><textarea className={textareaClass} placeholder="Ví dụ: ca hát, nhảy, MC, nhiếp ảnh..." value={form.talent} onChange={(e) => update('talent', e.target.value)} /></label>
+            <label className="sm:col-span-2"><Label>Thành tích nổi bật & Hoạt động Đoàn - Hội / Link minh chứng</Label><textarea className={textareaClass} placeholder="Ví dụ: Sinh viên 5 tốt, Giải thưởng NCKH, Cán bộ Đoàn gương mẫu, hoặc dán link Google Drive chứa file minh chứng..." value={form.achievements} onChange={(e) => update('achievements', e.target.value)} /></label>
           </div>
         </Section>
 
@@ -116,7 +154,19 @@ export default function RegistrationPage() {
         </Section>
 
         <Section number="04" title="Chỉ số hình thể" description="Nhập theo đơn vị centimet và kilogram. Các số đo giúp BTC chuẩn bị phù hợp cho các phần thi trình diễn.">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5"><label><Label required>Chiều cao (cm)</Label><input required type="number" min="100" max="250" step="0.1" className={inputClass} value={form.heightCm} onChange={(e) => update('heightCm', e.target.value)} /></label><label><Label required>Cân nặng (kg)</Label><input required type="number" min="20" max="200" step="0.1" className={inputClass} value={form.weightKg} onChange={(e) => update('weightKg', e.target.value)} /></label><label><Label required>Vòng 1 (cm)</Label><input required type="number" min="40" max="180" step="0.1" className={inputClass} value={form.measurementBust} onChange={(e) => update('measurementBust', e.target.value)} /></label><label><Label required>Vòng 2 (cm)</Label><input required type="number" min="30" max="180" step="0.1" className={inputClass} value={form.measurementWaist} onChange={(e) => update('measurementWaist', e.target.value)} /></label><label><Label required>Vòng 3 (cm)</Label><input required type="number" min="40" max="200" step="0.1" className={inputClass} value={form.measurementHip} onChange={(e) => update('measurementHip', e.target.value)} /></label></div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            <label>
+              <div className="flex items-center justify-between">
+                <Label required>Chiều cao (cm)</Label>
+                <span className="text-[11px] font-semibold text-blue-600">Nữ ≥ 160, Nam ≥ 170</span>
+              </div>
+              <input required type="number" min="100" max="250" step="0.1" placeholder="Ví dụ: 168" className={inputClass} value={form.heightCm} onChange={(e) => update('heightCm', e.target.value)} />
+            </label>
+            <label><Label required>Cân nặng (kg)</Label><input required type="number" min="20" max="200" step="0.1" placeholder="Ví dụ: 52" className={inputClass} value={form.weightKg} onChange={(e) => update('weightKg', e.target.value)} /></label>
+            <label><Label required>Vòng 1 (cm)</Label><input required type="number" min="40" max="180" step="0.1" placeholder="Ví dụ: 86" className={inputClass} value={form.measurementBust} onChange={(e) => update('measurementBust', e.target.value)} /></label>
+            <label><Label required>Vòng 2 (cm)</Label><input required type="number" min="30" max="180" step="0.1" placeholder="Ví dụ: 62" className={inputClass} value={form.measurementWaist} onChange={(e) => update('measurementWaist', e.target.value)} /></label>
+            <label><Label required>Vòng 3 (cm)</Label><input required type="number" min="40" max="200" step="0.1" placeholder="Ví dụ: 92" className={inputClass} value={form.measurementHip} onChange={(e) => update('measurementHip', e.target.value)} /></label>
+          </div>
         </Section>
 
         <section className="rounded-3xl border border-amber-200 bg-amber-50 p-5 sm:p-8"><h2 className="text-xl font-black text-slate-950">05. Cam kết của thí sinh</h2><ul className="mt-5 list-disc space-y-3 pl-5 text-sm leading-6 text-slate-700"><li>Chịu trách nhiệm về tính chính xác và trung thực của nội dung đăng ký.</li><li>Thực hiện đúng quy định pháp luật Việt Nam và quy định của Ban tổ chức.</li><li>Hiểu rằng lịch thi là dự kiến và quyết định của Ban tổ chức là quyết định cuối cùng.</li><li>Đồng ý để Ban tổ chức sử dụng hình ảnh phục vụ truyền thông trong và ngoài cuộc thi.</li></ul><label className="mt-6 flex items-start gap-3 text-sm font-bold text-slate-800"><input required type="checkbox" className="mt-1 h-5 w-5 accent-[#0A2FFF]" checked={form.consentAccepted} onChange={(e) => update('consentAccepted', e.target.checked)} />Tôi đã đọc, hiểu và đồng ý với các cam kết trên cũng như thể lệ cuộc thi.</label></section>

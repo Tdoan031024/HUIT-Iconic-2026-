@@ -133,8 +133,9 @@ function VoteToastContainer() {
     let isMounted = true;
 
     async function pollLatestVote() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
-        const res = await fetch(apiUrl('/api/admin/votes?limit=1'));
+        const res = await fetch(apiUrl('/api/voting/recent'));
         if (!res.ok) return;
         const data = await res.json();
         const latestVote = Array.isArray(data) && data.length > 0 ? data[0] : null;
@@ -166,7 +167,7 @@ function VoteToastContainer() {
       }
     }
 
-    const interval = setInterval(pollLatestVote, 8000);
+    const interval = setInterval(pollLatestVote, 15000);
     pollLatestVote(); // Run immediately
     return () => {
       isMounted = false;
@@ -423,8 +424,9 @@ export default function HomePage() {
     }
     loadData();
 
-    // Polling realtime từ DB mỗi 3s
+    // Polling realtime khi tab đang mở
     const interval = setInterval(async () => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
         const res = await fetch(apiUrl('/api/candidates'));
         if (res.ok) {
@@ -436,12 +438,13 @@ export default function HomePage() {
       } catch {
         // DB offline
       }
-    }, 3000);
+    }, 20000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     async function loadSettings() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
         const res = await fetch(apiUrl('/api/settings'));
         if (res.ok) {
@@ -453,7 +456,7 @@ export default function HomePage() {
       }
     }
     loadSettings();
-    const interval = setInterval(loadSettings, 5000);
+    const interval = setInterval(loadSettings, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -1171,7 +1174,7 @@ export default function HomePage() {
                             </div>
 
                             <p className="project-card-description mt-2 line-clamp-2 min-h-[34px] text-[11px] leading-relaxed text-neutral-600 dark:text-white/68 text-left">
-                              {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
+                              {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Candidate profile is being updated.' : 'Hồ sơ thí sinh đang được cập nhật thông tin giới thiệu.')}
                             </p>
 
                             <div className="project-card-actions flex items-center gap-2">

@@ -67,6 +67,21 @@ model candidate {
   isDeleted                      Boolean   @default(false)
   deletedAt                      DateTime?
 
+  gender                         String?
+  faculty                        String?
+  className                      String?
+  studentId                      String?
+  heightCm                       Decimal?  @db.Decimal(5, 2)
+  weightKg                       Decimal?  @db.Decimal(5, 2)
+  measurementBust                Decimal?  @db.Decimal(5, 2)
+  measurementWaist               Decimal?  @db.Decimal(5, 2)
+  measurementHip                 Decimal?  @db.Decimal(5, 2)
+  inspirationalMessage           String?   @db.Text
+  videoUrl                       String?
+  talent                         String?   @db.Text
+  achievements                   String?   @db.Text
+  registrationId                 String?
+
   @@map("candidate")
 }
 
@@ -75,6 +90,7 @@ model CandidateRegistration {
   fullName              String
   gender                String
   dateOfBirth           DateTime?
+  faculty               String?
   major                 String
   className             String
   studentId             String
@@ -86,7 +102,9 @@ model CandidateRegistration {
   phone                 String
   email                 String
   facebookUrl           String?
+  videoUrl              String?
   talent                String?   @db.Text
+  achievements          String?   @db.Text
   selfIntroduction      String?   @db.Text
   inspirationalMessage  String?   @db.Text
   facultyIntroduction   String?   @db.Text
@@ -100,6 +118,8 @@ model CandidateRegistration {
   measurementHip        Decimal?  @db.Decimal(5, 2)
   status                String    @default("PENDING")
   adminNote             String?   @db.Text
+  assignedSbd           String?
+  candidateId           String?
   consentAccepted       Boolean   @default(false)
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @default(now()) @updatedAt

@@ -616,7 +616,7 @@ export default function IntroductionAdminPage() {
                   value={aboutSectors} 
                   onChange={(e) => setAboutSectors(e.target.value)} 
                   className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                  placeholder="Công nghiệp, AI, chuyển đổi số...&#10;Công nghệ thực phẩm, nông nghiệp..."
+                  placeholder="Đo chỉ số hình thể & Trình diễn Catwalk&#10;Thử thách Photoshoot & Xây dựng hình ảnh&#10;Phần thi Tài năng & Sân khấu hóa nghệ thuật..."
                   required 
                 />
               </div>
@@ -669,7 +669,7 @@ export default function IntroductionAdminPage() {
                   value={aboutBenefits} 
                   onChange={(e) => setAboutBenefits(e.target.value)} 
                   className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                  placeholder="Đào tạo kỹ năng khởi nghiệp&#10;Mentor/cố vấn chuyên sâu..."
+                  placeholder="Đào tạo kỹ năng catwalk, phong thái sân khấu&#10;Kỹ năng giao tiếp và xây dựng thương hiệu cá nhân..."
                   required 
                 />
               </div>

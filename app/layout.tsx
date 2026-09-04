@@ -121,8 +121,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
     };
     readUser();
-    const interval = setInterval(readUser, 2000);
-    return () => clearInterval(interval);
+    window.addEventListener('storage', readUser);
+    window.addEventListener('focus', readUser);
+    const interval = setInterval(readUser, 10000);
+    return () => {
+      window.removeEventListener('storage', readUser);
+      window.removeEventListener('focus', readUser);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -148,7 +154,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       }
     }
     fetchSettings();
-    const interval = setInterval(fetchSettings, 30000);
+    const interval = setInterval(fetchSettings, 60000);
     return () => clearInterval(interval);
   }, [isAdminRoute]);
 
@@ -157,24 +163,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       setCurrentHash(window.location.hash);
       const handleHashChange = () => setCurrentHash(window.location.hash);
       window.addEventListener('hashchange', handleHashChange);
-      const interval = setInterval(() => {
-        if (window.location.hash !== currentHash) setCurrentHash(window.location.hash);
-      }, 200);
+      window.addEventListener('popstate', handleHashChange);
       return () => {
         window.removeEventListener('hashchange', handleHashChange);
-        clearInterval(interval);
+        window.removeEventListener('popstate', handleHashChange);
       };
     }
-  }, [currentHash]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setLastScrollY(currentScrollY);
+      setLastScrollY(window.scrollY);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   if (isAdminRoute) {
     return (
@@ -572,10 +575,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="https://zalo.me/4418938306145458374" target="_blank" rel="noopener noreferrer" className="float-action zalo" data-label="Zalo" aria-label="Liên hệ qua Zalo">
                 <img src="/images/zalo.png" alt="Zalo" className="w-full h-full object-contain" />
               </a>
-              <a href="tel:0708765157" className="float-action phone" data-label="Gọi điện" aria-label="Gọi điện hỗ trợ">
+              <a href="tel:0974331499" className="float-action phone" data-label="Gọi điện" aria-label="Gọi điện hỗ trợ BTC">
                 <img src="/images/telephone.png" alt="Điện thoại" className="w-full h-full object-contain" />
               </a>
-              <a href="mailto:media@huit.edu.vn" className="float-action chat" data-label="Liên hệ" aria-label="Gửi email liên hệ">
+              <a href="mailto:duongdx@huit.edu.vn" className="float-action chat" data-label="Liên hệ" aria-label="Gửi email liên hệ">
                 <img src="/images/mail.png" alt="Email" className="w-full h-full object-contain" />
               </a>
               <button
@@ -617,24 +620,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <h3>{t('support')}</h3>
                   <Link href="/the-le">{t('votingGuide')}</Link>
                   <Link href="/the-le#faq">{t('faq')}</Link>
-                  <a href="mailto:media@huit.edu.vn">{t('contactOrganizers')}</a>
+                  <a href="mailto:duongdx@huit.edu.vn">{t('contactOrganizers')}</a>
                   <a href="https://huit.edu.vn" target="_blank" rel="noopener noreferrer">{t('huitPortal')}</a>
                 </div>
 
                 <div className="footer-contact-column">
                   <h3>{t('contactInfo')}</h3>
-                  <a href="mailto:media@huit.edu.vn" className="flex items-center gap-2 text-[13px] hover:text-[var(--site-primary)] transition">
+                  <p className="text-[12px] font-bold text-[var(--site-text)] opacity-90">
+                    Trưởng BTC: Thầy Đặng Xuân Dương
+                  </p>
+                  <a href="tel:0974331499" className="flex items-center gap-2 text-[13px] hover:text-[var(--site-primary)] transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" className="text-[var(--site-primary)] shrink-0">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.3 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z" />
+                    </svg>
+                    0974 331 499 (Hotline / Zalo)
+                  </a>
+                  <a href="mailto:duongdx@huit.edu.vn" className="flex items-center gap-2 text-[13px] hover:text-[var(--site-primary)] transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" className="text-[var(--site-primary)] shrink-0">
                       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                       <polyline points="22,6 12,13 2,6" />
                     </svg>
-                    media@huit.edu.vn
+                    duongdx@huit.edu.vn
                   </a>
-                  <a href="tel:0708765157" className="flex items-center gap-2 text-[13px] hover:text-[var(--site-primary)] transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" className="text-[var(--site-primary)] shrink-0">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.3 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z" />
-                    </svg>
-                    0708 765 157
+                  <a href="mailto:media@huit.edu.vn" className="flex items-center gap-2 text-[12px] hover:text-[var(--site-primary)] transition opacity-75">
+                    media@huit.edu.vn (HUIT Media)
                   </a>
                   <p className="flex items-start gap-2 text-[13px] text-left">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" className="text-[var(--site-primary)] mt-0.5 shrink-0">

@@ -145,15 +145,6 @@ export default function GioiThieuPage() {
       }
     }
     loadData();
-
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(apiUrl('/api/settings'));
-        if (res.ok) setSettings(await res.json());
-      } catch {}
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
   // Intersection observer triggers for smooth animations
@@ -239,11 +230,13 @@ export default function GioiThieuPage() {
     : '#timeline-section';
 
   const quickLinks = [
-    { href: '#tong-quan', label: language === 'en' ? 'Overview' : 'Tổng quan', icon: '01' },
-    { href: '#quyen-loi', label: language === 'en' ? 'Benefits' : 'Quyền lợi', icon: '02' },
-    { href: '#timeline-section', label: language === 'en' ? 'Timeline' : 'Lộ trình', icon: '03' },
-    { href: '#quy-mo', label: language === 'en' ? 'Scale' : 'Quy mô', icon: '04' },
-    { href: '#lien-he', label: language === 'en' ? 'Contact' : 'Liên hệ', icon: '05' },
+    { href: '#tong-quan', label: language === 'en' ? 'Overview' : 'Tổng quan & Thư ngỏ', icon: '01' },
+    { href: '#tieu-chuan', label: language === 'en' ? 'Eligibility' : 'Tiêu chuẩn dự thi', icon: '02' },
+    { href: '#quyen-loi', label: language === 'en' ? 'Tracks & Prizes' : 'Vòng thi & Giải thưởng', icon: '03' },
+    { href: '#timeline-section', label: language === 'en' ? 'Timeline' : 'Lộ trình', icon: '04' },
+    { href: '#tai-tro', label: language === 'en' ? 'Sponsors' : 'Gói tài trợ', icon: '05' },
+    { href: '#quy-mo', label: language === 'en' ? 'Scale' : 'Quy mô', icon: '06' },
+    { href: '#lien-he', label: language === 'en' ? 'Contact' : 'Liên hệ', icon: '07' },
   ];
 
   return (
@@ -702,6 +695,88 @@ export default function GioiThieuPage() {
                     />
                   </div>
                 </div>
+
+                {/* Thư ngỏ từ Đơn vị chỉ đạo & Nhà trường */}
+                <div className="mt-7 about-card p-6 sm:p-8 bg-gradient-to-br from-[#0A2FFF]/5 via-[color:var(--about-surface)] to-[#79BCC2]/5 border-l-4 border-l-[#0A2FFF]">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl">📜</span>
+                    <div>
+                      <span className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Đơn vị chỉ đạo &amp; sản xuất</span>
+                      <h3 className="text-lg sm:text-xl font-black text-[color:var(--about-text-primary)]">
+                        {language === 'en' ? 'Letter from University Leadership & Organizing Board' : 'Thư ngỏ từ Trường Đại học Công Thương TP.HCM (HUIT)'}
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="space-y-3.5 text-sm sm:text-base text-[color:var(--about-text-secondary)] leading-relaxed text-justify">
+                    <p>
+                      Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT) là cơ sở giáo dục đại học công lập trực thuộc Bộ Công Thương, với bề dày hơn 40 năm xây dựng và phát triển. Nhà trường kiên định triết lý giáo dục: <b className="text-[color:var(--about-text-primary)]">“Học tập chủ động, làm việc sáng tạo, sống có trách nhiệm”</b>, quy mô đào tạo trên 40.000 sinh viên tại các bậc đại học và sau đại học.
+                    </p>
+                    <p>
+                      Cuộc thi <b className="text-[color:var(--about-text-primary)]">HUIT’S ICONIC 2026</b> được tổ chức nhằm tôn vinh nét đẹp trí tuệ, tài năng, bản lĩnh và phong cách của sinh viên HUIT; tìm kiếm gương mặt Đại sứ Truyền thông đại diện cho hình ảnh thanh niên năng động, sáng tạo và sẵn sàng hội nhập. Đồng thời, đây là cầu nối hợp tác chiến lược giữa Nhà trường, sinh viên và Quý Doanh nghiệp, mang hình ảnh thương hiệu đồng hành tiếp cận sâu rộng đến thế hệ trẻ.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section: Tiêu chuẩn dự thi */}
+            <section id="tieu-chuan" className="about-section-anchor w-full max-w-[1200px] mb-14 sm:mb-16">
+              <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-9">
+                {language === 'en' ? 'Candidate Eligibility Criteria' : 'Tiêu chuẩn & Điều kiện dự thi'}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    icon: '🎓',
+                    title: language === 'en' ? 'Enrolled HUIT Students' : 'Đối tượng dự thi',
+                    desc: language === 'en'
+                      ? 'Currently enrolled full-time students at Ho Chi Minh City University of Industry and Trade (HUIT).'
+                      : 'Toàn thể sinh viên hệ chính quy đang theo học tại Trường Đại học Công Thương TP.HCM (HUIT) tại thời điểm đăng ký dự thi.'
+                  },
+                  {
+                    icon: '📏',
+                    title: language === 'en' ? 'Official Height Standard' : 'Tiêu chuẩn chiều cao 2026',
+                    desc: language === 'en'
+                      ? 'Female: From 1m60 and above. Male: From 1m70 and above. Balanced physique.'
+                      : 'Nữ: Chiều cao từ 1m60 trở lên.\nNam: Chiều cao từ 1m70 trở lên.\nChỉ số hình thể cân đối và phong thái tự tin.'
+                  },
+                  {
+                    icon: '✨',
+                    title: language === 'en' ? 'Poise & Confidence' : 'Ngoại hình & Thần thái',
+                    desc: language === 'en'
+                      ? 'Pleasant facial features, radiant smile, good posture, and confident camera presence.'
+                      : 'Gương mặt khả ái/sáng sân khấu, nụ cười rạng rỡ, thần thái tự tin trước ống kính và có khả năng thu hút công chúng.'
+                  },
+                  {
+                    icon: '🩺',
+                    title: language === 'en' ? 'Health & Stamina' : 'Sức khỏe & Thể lực',
+                    desc: language === 'en'
+                      ? 'Good physical and mental stamina to participate actively throughout all training camps and stages.'
+                      : 'Có sức khỏe thể chất và tinh thần tốt, bền bỉ để tham gia xuyên suốt các vòng thi, chuỗi workshop đào tạo và hoạt động thực tế.'
+                  },
+                  {
+                    icon: '🛡️',
+                    title: language === 'en' ? 'Ethics & Responsibility' : 'Phẩm chất đạo đức',
+                    desc: language === 'en'
+                      ? 'Exemplary personal conduct, healthy lifestyle, no criminal records or disciplinary measures.'
+                      : 'Có đạo đức tốt, lối sống văn minh lành mạnh, không vi phạm pháp luật và không chịu bất kỳ hình thức kỷ luật nào.'
+                  },
+                  {
+                    icon: '🌟',
+                    title: language === 'en' ? 'Talent & Privileges' : 'Kỹ năng & Đặc quyền đào tạo',
+                    desc: language === 'en'
+                      ? 'Exclusive training in runway catwalk, public speaking, interview mastery, and brand ambassador presence.'
+                      : 'Được huấn luyện chuyên sâu catwalk, phong thái sân khấu, kỹ năng ứng xử truyền thông và cơ hội trở thành gương mặt đại diện HUIT.'
+                  },
+                ].map((item, idx) => (
+                  <div key={idx} className="about-card p-6 flex flex-col justify-between">
+                    <div>
+                      <div className="text-3xl mb-3">{item.icon}</div>
+                      <h3 className="text-lg font-black text-[color:var(--about-text-primary)] mb-2">{item.title}</h3>
+                      <p className="text-sm text-[color:var(--about-text-secondary)] leading-relaxed whitespace-pre-line">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
@@ -858,7 +933,114 @@ export default function GioiThieuPage() {
               </div>
             </section>
 
-            {/* Section 4: Quy mô & Thống kê */}
+            {/* Section: Gói tài trợ & Quyền lợi Doanh nghiệp */}
+            <section id="tai-tro" className="about-section-anchor w-full max-w-[1200px] mb-14 sm:mb-16">
+              <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-3">
+                {language === 'en' ? 'Sponsorship Opportunities' : 'Cơ hội Đồng hành & Gói tài trợ Doanh nghiệp'}
+              </h2>
+              <p className="text-center text-sm sm:text-base text-[color:var(--about-text-secondary)] max-w-2xl mx-auto mb-9">
+                {language === 'en'
+                  ? 'Partner with HUIT’s ICONIC 2026 to connect directly with 40,000+ dynamic students and elevate your brand presence across multimedia channels.'
+                  : 'Đồng hành cùng HUIT’s ICONIC 2026 để lan tỏa thương hiệu trực tiếp tới hơn 40.000 sinh viên năng động và khẳng định uy tín doanh nghiệp.'}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  {
+                    tier: 'KIM CƯƠNG',
+                    border: 'border-cyan-400/60',
+                    badge: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-400/30',
+                    amount: '50.000.000 VNĐ',
+                    highlight: 'Đồng hành vị trí danh dự cao nhất',
+                    benefits: [
+                      'Logo vị trí Kim Cương trên toàn bộ backdrop, photobooth, banner sân khấu',
+                      'Đại diện tham gia Ban giám khảo hoặc trao giải Gala Chung kết',
+                      '04 bài PR chuyên sâu trên Fanpage & Website cuộc thi',
+                      'Gian hàng trưng bày & giới thiệu sản phẩm tại ngày hội lớn HUIT',
+                      'Phát video TVC doanh nghiệp trong đêm Gala Chung kết',
+                      'Nhận hoa, kỷ niệm chương tri ân từ Ban Giám hiệu HUIT'
+                    ]
+                  },
+                  {
+                    tier: 'VÀNG',
+                    border: 'border-amber-400/60',
+                    badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-400/30',
+                    amount: '30.000.000 VNĐ',
+                    highlight: 'Quyền lợi truyền thông đa kênh',
+                    benefits: [
+                      'Logo vị trí Vàng trên backdrop, banner và ấn phẩm truyền thông',
+                      'Đại diện trao giải thưởng phụ tại Gala Chung kết',
+                      '02 bài PR giới thiệu sản phẩm/dịch vụ trên Fanpage cuộc thi',
+                      'Đặt bàn tư vấn / giới thiệu sản phẩm tại sảnh Gala',
+                      'Nhận hoa và kỷ niệm chương tri ân Nhà tài trợ Vàng'
+                    ]
+                  },
+                  {
+                    tier: 'BẠC',
+                    border: 'border-slate-300 dark:border-slate-700',
+                    badge: 'bg-slate-500/10 text-slate-600 dark:text-slate-300 border-slate-400/30',
+                    amount: '10.000.000 VNĐ',
+                    highlight: 'Đồng hành nhận diện thương hiệu',
+                    benefits: [
+                      'Logo vị trí Bạc trên toàn bộ ấn phẩm online & offline',
+                      '01 bài PR cảm ơn Nhà tài trợ Bạc trên các kênh truyền thông',
+                      'Thư cảm ơn và kỷ niệm chương từ Ban Tổ chức cuộc thi',
+                      'Vé mời danh dự tham dự Đêm Gala Chung kết 26/12/2026'
+                    ]
+                  },
+                  {
+                    tier: 'ĐỒNG',
+                    border: 'border-orange-400/50',
+                    badge: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-400/30',
+                    amount: '5.000.000 VNĐ',
+                    highlight: 'Hỗ trợ sinh viên & gắn kết cộng đồng',
+                    benefits: [
+                      'Logo vị trí Đồng trên backdrop và các ấn phẩm truyền thông',
+                      'Lời cảm ơn trân trọng trên các kênh truyền thông chính thức',
+                      'Giấy chứng nhận tri ân Đơn vị đồng hành từ Ban Tổ chức',
+                      'Vé mời danh dự tham dự Đêm Gala Chung kết'
+                    ]
+                  }
+                ].map((item, idx) => (
+                  <div key={idx} className={`about-card p-6 flex flex-col justify-between border-2 ${item.border} relative overflow-hidden`}>
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className={`px-2.5 py-1 rounded-md text-xs font-black uppercase tracking-wider border ${item.badge}`}>
+                          Gói {item.tier}
+                        </span>
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black text-[color:var(--about-text-primary)] mb-1">
+                        {item.amount}
+                      </div>
+                      <p className="text-xs font-semibold text-[color:var(--about-primary)] mb-4">{item.highlight}</p>
+                      <ul className="space-y-2 text-xs text-[color:var(--about-text-secondary)]">
+                        {item.benefits.map((b, bIdx) => (
+                          <li key={bIdx} className="flex items-start gap-2">
+                            <span className="text-[color:var(--about-primary)] shrink-0 mt-0.5">✓</span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 p-5 sm:p-6 rounded-2xl bg-[color:var(--about-surface-sec)]/50 border border-[color:var(--about-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-xs sm:text-sm text-[color:var(--about-text-secondary)]">
+                  <p className="font-bold text-[color:var(--about-text-primary)]">Lưu ý về hình thức tài trợ (Mục 09 Đề án):</p>
+                  <p className="mt-1">Quyền lợi tài trợ tính theo mức tài trợ tối thiểu 60% hiện kim. Doanh nghiệp có thể tài trợ hiện vật/dịch vụ tương đương phù hợp nhu cầu của cuộc thi.</p>
+                </div>
+                <Link
+                  href="/the-le#tai-tro"
+                  className="shrink-0 px-5 py-2.5 rounded-xl bg-[color:var(--about-primary)] text-white text-xs font-bold hover:opacity-90 transition shadow-sm"
+                >
+                  Xem chi tiết quyền lợi →
+                </Link>
+              </div>
+            </section>
+
+            {/* Section: Quy mô & Thống kê */}
             <section id="quy-mo" className="about-section-anchor w-full max-w-[1200px] mb-14 sm:mb-16">
               <h2 className="about-section-title text-[24px] sm:text-[32px] font-bold text-center text-[color:var(--about-text-primary)] mb-9">
                 {language === 'en' ? 'Scale & Community' : 'Quy mô & Số liệu nổi bật'}

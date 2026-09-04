@@ -66,28 +66,71 @@ const DEFAULT_SETTINGS: SystemSettings = {
   isTestMode: true,
 };
 
-// --- SETTINGS (100% MySQL Prisma) ---
+// --- HIGH-PERFORMANCE IN-MEMORY CACHE ---
+interface CacheItem<T> {
+  data: T;
+  expiresAt: number;
+}
+const serviceCache = new Map<string, CacheItem<any>>();
+
+export function getCached<T>(key: string): T | null {
+  const item = serviceCache.get(key);
+  if (!item) return null;
+  if (Date.now() > item.expiresAt) {
+    serviceCache.delete(key);
+    return null;
+  }
+  return item.data as T;
+}
+
+export function setCached<T>(key: string, data: T, ttlMs = 15000): T {
+  serviceCache.set(key, { data, expiresAt: Date.now() + ttlMs });
+  return data;
+}
+
+export function clearCache(prefix?: string): void {
+  if (!prefix) {
+    serviceCache.clear();
+    return;
+  }
+  for (const key of Array.from(serviceCache.keys())) {
+    if (key.startsWith(prefix)) {
+      serviceCache.delete(key);
+    }
+  }
+}
+
+// --- SETTINGS (100% MySQL Prisma with In-Memory Caching) ---
 export async function getSettings(): Promise<SystemSettings> {
+  const cached = getCached<SystemSettings>('settings');
+  if (cached) return cached;
+
   const row = await prisma.systemSetting.findUnique({
     where: { id: 'default' },
   });
   if (!row || !row.data) {
-    return DEFAULT_SETTINGS;
+    return setCached('settings', DEFAULT_SETTINGS, 20000);
   }
   try {
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(row.data) };
+    const parsed = { ...DEFAULT_SETTINGS, ...JSON.parse(row.data) };
+    return setCached('settings', parsed, 20000);
   } catch {
-    return DEFAULT_SETTINGS;
+    return setCached('settings', DEFAULT_SETTINGS, 20000);
   }
 }
 
 export async function getPublicSettings(): Promise<Partial<SystemSettings>> {
+  const cached = getCached<Partial<SystemSettings>>('public_settings');
+  if (cached) return cached;
+
   const full = await getSettings();
   const { sepayApiKey, ...publicSettings } = full as any;
-  return publicSettings;
+  return setCached('public_settings', publicSettings, 20000);
 }
 
 export async function updateSettings(updatedFields: Partial<SystemSettings>): Promise<SystemSettings> {
+  clearCache('settings');
+  clearCache('public_settings');
   const current = await getSettings();
   const merged = { ...current, ...updatedFields };
   await prisma.systemSetting.upsert({
@@ -95,6 +138,9 @@ export async function updateSettings(updatedFields: Partial<SystemSettings>): Pr
     update: { data: JSON.stringify(merged) },
     create: { id: 'default', data: JSON.stringify(merged) },
   });
+  setCached('settings', merged, 20000);
+  const { sepayApiKey, ...pub } = merged as any;
+  setCached('public_settings', pub, 20000);
   return merged;
 }
 
@@ -263,41 +309,101 @@ export async function changeAdminPassword(adminId: string, currentPass: string, 
   return { success: true };
 }
 
-// --- CANDIDATES (100% MySQL Prisma with Soft Delete) ---
+function extractCandidateMeta(c: any) {
+  let meta: any = {};
+  if (c.biography && typeof c.biography === 'string' && c.biography.startsWith('{"__projectMeta":true')) {
+    try {
+      meta = JSON.parse(c.biography);
+    } catch {}
+  }
+
+  const contestTable = c.contestTable || meta.contestTable || (meta.contestTableLabel?.includes('Nữ') ? 'FEMALE' : meta.contestTableLabel?.includes('Nam') ? 'MALE' : 'FEMALE');
+  const contestTableLabel = c.contestTableLabel || meta.contestTableLabel || (contestTable === 'FEMALE' ? 'Bảng Nữ' : contestTable === 'MALE' ? 'Bảng Nam' : 'Bảng Sinh viên');
+  const gender = c.gender || (contestTable === 'FEMALE' ? 'Nữ' : contestTable === 'MALE' ? 'Nam' : 'Nữ');
+  
+  // Faculty extraction fallback from description or representativeSchool
+  let faculty = c.faculty;
+  if (!faculty) {
+    const text = `${c.description || ''} ${c.representativeSchool || ''} ${meta.representativeSchool || ''}`;
+    const matched = text.match(/Khoa\s+[^.,\n-]+/i);
+    if (matched) faculty = matched[0].trim();
+  }
+
+  const currentRound = c.currentRound || meta.currentRound || 'Vòng sơ khảo';
+  const status = c.status || meta.status || 'Đủ hồ sơ';
+  const bio = meta.longDescription || (c.biography?.startsWith('{"__projectMeta"') ? '' : c.biography);
+
+  return {
+    contestTable,
+    contestTableLabel,
+    gender,
+    faculty,
+    currentRound,
+    status,
+    biography: bio,
+  };
+}
+
+// --- CANDIDATES (100% MySQL Prisma with In-Memory Caching) ---
 export async function getCandidates(): Promise<Candidate[]> {
+  const cached = getCached<Candidate[]>('candidates');
+  if (cached) return cached;
+
   const list = await prisma.candidate.findMany({
     where: { isDeleted: false },
     orderBy: { votes: 'desc' },
   });
-  return list.map((c) => ({
-    id: c.id,
-    sbd: c.sbd,
-    name: c.name,
-    votes: c.votes,
-    imageUrl: c.imageUrl,
-    description: c.description,
-    biography: c.biography || undefined,
-    advisorName: c.advisorName || undefined,
-    contestTable: c.contestTable as any,
-    contestTableLabel: c.contestTableLabel || undefined,
-    currentRound: c.currentRound || undefined,
-    expectations: c.expectations || undefined,
-    implementationLocation: c.implementationLocation || undefined,
-    intellectualPropertyCommitment: c.intellectualPropertyCommitment || false,
-    leaderEmail: c.leaderEmail || undefined,
-    leaderName: c.leaderName || undefined,
-    leaderPhone: c.leaderPhone || undefined,
-    members: c.members || undefined,
-    representativeSchool: c.representativeSchool || undefined,
-    status: c.status || undefined,
-    supportNeeds: c.supportNeeds || undefined,
-    teamName: c.teamName || undefined,
-    sector: c.sector || undefined,
-    showcaseImages: c.showcaseImages || undefined,
-  }));
+  const mapped = list.map((c) => {
+    const fallback = extractCandidateMeta(c);
+    return {
+      id: c.id,
+      sbd: c.sbd,
+      name: c.name,
+      votes: c.votes,
+      imageUrl: c.imageUrl,
+      description: c.description,
+      biography: fallback.biography || undefined,
+      advisorName: c.advisorName || undefined,
+      contestTable: fallback.contestTable as any,
+      contestTableLabel: fallback.contestTableLabel,
+      currentRound: fallback.currentRound,
+      expectations: c.expectations || undefined,
+      implementationLocation: c.implementationLocation || undefined,
+      intellectualPropertyCommitment: c.intellectualPropertyCommitment || false,
+      leaderEmail: c.leaderEmail || undefined,
+      leaderName: c.leaderName || undefined,
+      leaderPhone: c.leaderPhone || undefined,
+      members: c.members || undefined,
+      representativeSchool: c.representativeSchool || undefined,
+      status: fallback.status,
+      supportNeeds: c.supportNeeds || undefined,
+      teamName: c.teamName || undefined,
+      sector: c.sector || fallback.faculty || undefined,
+      showcaseImages: c.showcaseImages || undefined,
+      gender: fallback.gender,
+      faculty: fallback.faculty || undefined,
+      className: (c as any).className || undefined,
+      studentId: (c as any).studentId || undefined,
+      heightCm: (c as any).heightCm ? Number((c as any).heightCm) : undefined,
+      weightKg: (c as any).weightKg ? Number((c as any).weightKg) : undefined,
+      measurementBust: (c as any).measurementBust ? Number((c as any).measurementBust) : undefined,
+      measurementWaist: (c as any).measurementWaist ? Number((c as any).measurementWaist) : undefined,
+      measurementHip: (c as any).measurementHip ? Number((c as any).measurementHip) : undefined,
+      inspirationalMessage: (c as any).inspirationalMessage || undefined,
+      videoUrl: (c as any).videoUrl || undefined,
+      talent: (c as any).talent || undefined,
+      achievements: (c as any).achievements || undefined,
+      registrationId: (c as any).registrationId || undefined,
+    };
+  });
+  return setCached('candidates', mapped, 8000);
 }
 
 export async function getCandidateBySbd(sbd: string): Promise<Candidate> {
+  const cacheKey = `cand_sbd_${String(sbd).toUpperCase()}`;
+  const cached = getCached<Candidate>(cacheKey);
+  if (cached) return cached;
+
   const candidate = await prisma.candidate.findFirst({
     where: {
       OR: [{ sbd }, { id: sbd }],
@@ -305,18 +411,19 @@ export async function getCandidateBySbd(sbd: string): Promise<Candidate> {
     },
   });
   if (!candidate) throw new Error('Không tìm thấy thí sinh.');
-  return {
+  const fallback = extractCandidateMeta(candidate);
+  const result: Candidate = {
     id: candidate.id,
     sbd: candidate.sbd,
     name: candidate.name,
     votes: candidate.votes,
     imageUrl: candidate.imageUrl,
     description: candidate.description,
-    biography: candidate.biography || undefined,
+    biography: fallback.biography || undefined,
     advisorName: candidate.advisorName || undefined,
-    contestTable: candidate.contestTable as any,
-    contestTableLabel: candidate.contestTableLabel || undefined,
-    currentRound: candidate.currentRound || undefined,
+    contestTable: fallback.contestTable as any,
+    contestTableLabel: fallback.contestTableLabel,
+    currentRound: fallback.currentRound,
     expectations: candidate.expectations || undefined,
     implementationLocation: candidate.implementationLocation || undefined,
     intellectualPropertyCommitment: candidate.intellectualPropertyCommitment || false,
@@ -325,12 +432,27 @@ export async function getCandidateBySbd(sbd: string): Promise<Candidate> {
     leaderPhone: candidate.leaderPhone || undefined,
     members: candidate.members || undefined,
     representativeSchool: candidate.representativeSchool || undefined,
-    status: candidate.status || undefined,
+    status: fallback.status,
     supportNeeds: candidate.supportNeeds || undefined,
     teamName: candidate.teamName || undefined,
-    sector: candidate.sector || undefined,
+    sector: candidate.sector || fallback.faculty || undefined,
     showcaseImages: candidate.showcaseImages || undefined,
+    gender: fallback.gender,
+    faculty: fallback.faculty || undefined,
+    className: (candidate as any).className || undefined,
+    studentId: (candidate as any).studentId || undefined,
+    heightCm: (candidate as any).heightCm ? Number((candidate as any).heightCm) : undefined,
+    weightKg: (candidate as any).weightKg ? Number((candidate as any).weightKg) : undefined,
+    measurementBust: (candidate as any).measurementBust ? Number((candidate as any).measurementBust) : undefined,
+    measurementWaist: (candidate as any).measurementWaist ? Number((candidate as any).measurementWaist) : undefined,
+    measurementHip: (candidate as any).measurementHip ? Number((candidate as any).measurementHip) : undefined,
+    inspirationalMessage: (candidate as any).inspirationalMessage || undefined,
+    videoUrl: (candidate as any).videoUrl || undefined,
+    talent: (candidate as any).talent || undefined,
+    achievements: (candidate as any).achievements || undefined,
+    registrationId: (candidate as any).registrationId || undefined,
   };
+  return setCached(cacheKey, result, 8000);
 }
 
 export async function getCandidateVotes(sbd: string) {
@@ -414,37 +536,51 @@ export async function voteCandidate(sbd: string, body: any, authHeader?: string,
       riskReason: riskReasons.length ? riskReasons.join(',') : null,
     },
   });
+  clearCache('candidates');
+  clearCache(`cand_sbd_${String(sbd).toUpperCase()}`);
   return { success: true, candidate: { ...candidate, votes: updated.votes } };
 }
 
 export async function addCandidate(data: Partial<Candidate>, adminUser = 'admin'): Promise<Candidate> {
+  clearCache('candidates');
+  clearCache('cand_sbd_');
   const sbd = data.sbd || `SBD-${Date.now()}`;
   const created = await prisma.candidate.create({
     data: {
       sbd,
       name: data.name || 'Thí sinh mới',
       votes: data.votes || 0,
-      imageUrl: data.imageUrl || '/original_assets/imageada2.png',
+      imageUrl: data.imageUrl || '/images/default-avatar.png',
       description: data.description || '',
       descriptionEn: data.descriptionEn,
       biography: data.biography,
       biographyEn: data.biographyEn,
-      advisorName: data.advisorName,
       contestTable: data.contestTable,
       contestTableLabel: data.contestTableLabel,
       currentRound: data.currentRound || 'Vòng loại',
-      expectations: data.expectations,
-      implementationLocation: data.implementationLocation,
-      intellectualPropertyCommitment: data.intellectualPropertyCommitment || false,
+      status: data.status || 'Đủ hồ sơ',
+      gender: data.gender,
+      faculty: data.faculty,
+      className: data.className,
+      studentId: data.studentId,
+      heightCm: data.heightCm ? Number(data.heightCm) : undefined,
+      weightKg: data.weightKg ? Number(data.weightKg) : undefined,
+      measurementBust: data.measurementBust ? Number(data.measurementBust) : undefined,
+      measurementWaist: data.measurementWaist ? Number(data.measurementWaist) : undefined,
+      measurementHip: data.measurementHip ? Number(data.measurementHip) : undefined,
+      inspirationalMessage: data.inspirationalMessage,
+      videoUrl: data.videoUrl,
+      talent: data.talent,
+      achievements: data.achievements,
       leaderEmail: data.leaderEmail,
       leaderName: data.leaderName,
       leaderPhone: data.leaderPhone,
+      representativeSchool: data.representativeSchool || 'Trường Đại học Công Thương TP.HCM (HUIT)',
+      advisorName: data.advisorName,
       members: data.members,
-      representativeSchool: data.representativeSchool,
-      status: data.status || 'Đủ hồ sơ',
       supportNeeds: data.supportNeeds,
       teamName: data.teamName,
-      sector: data.sector,
+      sector: data.sector || data.faculty,
       showcaseImages: data.showcaseImages,
       isDeleted: false,
     },
@@ -454,6 +590,8 @@ export async function addCandidate(data: Partial<Candidate>, adminUser = 'admin'
 }
 
 export async function bulkImportCandidates(payload: Partial<Candidate>[], adminUser = 'admin'): Promise<{ successCount: number; errors: string[] }> {
+  clearCache('candidates');
+  clearCache('cand_sbd_');
   let successCount = 0;
   const errors: string[] = [];
   for (const item of payload) {
@@ -469,9 +607,19 @@ export async function bulkImportCandidates(payload: Partial<Candidate>[], adminU
 }
 
 export async function updateCandidate(id: string, fields: Partial<Candidate>, adminUser = 'admin'): Promise<Candidate> {
+  clearCache('candidates');
+  clearCache('cand_sbd_');
+  const { heightCm, weightKg, measurementBust, measurementWaist, measurementHip, ...rest } = fields as any;
+  const updateData: any = { ...rest };
+  if (heightCm !== undefined) updateData.heightCm = heightCm ? Number(heightCm) : null;
+  if (weightKg !== undefined) updateData.weightKg = weightKg ? Number(weightKg) : null;
+  if (measurementBust !== undefined) updateData.measurementBust = measurementBust ? Number(measurementBust) : null;
+  if (measurementWaist !== undefined) updateData.measurementWaist = measurementWaist ? Number(measurementWaist) : null;
+  if (measurementHip !== undefined) updateData.measurementHip = measurementHip ? Number(measurementHip) : null;
+
   const updated = await prisma.candidate.update({
     where: { id },
-    data: { ...fields } as any,
+    data: updateData,
   });
   await logAdminAction(adminUser, 'UPDATE', 'CANDIDATE', id, updated.name, `Cập nhật thông tin thí sinh SBD: ${updated.sbd}`);
   return updated as any;
@@ -479,6 +627,8 @@ export async function updateCandidate(id: string, fields: Partial<Candidate>, ad
 
 // Soft delete to Trash
 export async function deleteCandidate(id: string, adminUser = 'admin'): Promise<{ success: boolean }> {
+  clearCache('candidates');
+  clearCache('cand_sbd_');
   const c = await prisma.candidate.findUnique({ where: { id } });
   await prisma.candidate.update({
     where: { id },
@@ -488,13 +638,16 @@ export async function deleteCandidate(id: string, adminUser = 'admin'): Promise<
   return { success: true };
 }
 
-// --- SPONSORS (100% MySQL Prisma with Soft Delete) ---
+// --- SPONSORS (100% MySQL Prisma with In-Memory Caching) ---
 export async function getSponsors(): Promise<Sponsor[]> {
+  const cached = getCached<Sponsor[]>('sponsors');
+  if (cached) return cached;
+
   const list = await prisma.sponsor.findMany({
     where: { isDeleted: false },
     orderBy: { createdAt: 'desc' },
   });
-  return list.map((s) => ({
+  const mapped = list.map((s) => ({
     id: s.id,
     name: s.name,
     logoUrl: s.logoUrl,
@@ -506,9 +659,11 @@ export async function getSponsors(): Promise<Sponsor[]> {
     phone: s.phone || undefined,
     contactPerson: s.contactPerson || undefined,
   }));
+  return setCached('sponsors', mapped, 30000);
 }
 
 export async function addSponsor(data: Partial<Sponsor>, adminUser = 'admin'): Promise<Sponsor> {
+  clearCache('sponsors');
   const created = await prisma.sponsor.create({
     data: {
       name: data.name || 'Nhà tài trợ mới',
@@ -528,6 +683,7 @@ export async function addSponsor(data: Partial<Sponsor>, adminUser = 'admin'): P
 }
 
 export async function updateSponsor(id: string, fields: Partial<Sponsor>, adminUser = 'admin'): Promise<Sponsor> {
+  clearCache('sponsors');
   const updated = await prisma.sponsor.update({
     where: { id },
     data: { ...fields } as any,
@@ -538,6 +694,7 @@ export async function updateSponsor(id: string, fields: Partial<Sponsor>, adminU
 
 // Soft delete to Trash
 export async function deleteSponsor(id: string, adminUser = 'admin'): Promise<{ success: boolean }> {
+  clearCache('sponsors');
   const s = await prisma.sponsor.findUnique({ where: { id } });
   await prisma.sponsor.update({
     where: { id },
@@ -547,13 +704,16 @@ export async function deleteSponsor(id: string, adminUser = 'admin'): Promise<{ 
   return { success: true };
 }
 
-// --- TIMELINE (100% MySQL Prisma with Soft Delete) ---
+// --- TIMELINE (100% MySQL Prisma with In-Memory Caching) ---
 export async function getTimeline(): Promise<TimelineEvent[]> {
+  const cached = getCached<TimelineEvent[]>('timeline');
+  if (cached) return cached;
+
   const list = await prisma.timelineEvent.findMany({
     where: { isDeleted: false },
     orderBy: { createdAt: 'asc' },
   });
-  return list.map((t) => ({
+  const mapped = list.map((t) => ({
     id: t.id,
     date: t.date,
     title: t.title,
@@ -564,9 +724,11 @@ export async function getTimeline(): Promise<TimelineEvent[]> {
     isImportant: t.isImportant,
     round: t.round,
   }));
+  return setCached('timeline', mapped, 30000);
 }
 
 export async function addTimelineEvent(data: Partial<TimelineEvent>, adminUser = 'admin'): Promise<TimelineEvent> {
+  clearCache('timeline');
   const created = await prisma.timelineEvent.create({
     data: {
       date: data.date || '',
@@ -585,6 +747,7 @@ export async function addTimelineEvent(data: Partial<TimelineEvent>, adminUser =
 }
 
 export async function updateTimelineEvent(id: string, fields: Partial<TimelineEvent>, adminUser = 'admin'): Promise<TimelineEvent> {
+  clearCache('timeline');
   const updated = await prisma.timelineEvent.update({
     where: { id },
     data: { ...fields },
@@ -595,6 +758,7 @@ export async function updateTimelineEvent(id: string, fields: Partial<TimelineEv
 
 // Soft delete to Trash
 export async function deleteTimelineEvent(id: string, adminUser = 'admin'): Promise<{ success: boolean }> {
+  clearCache('timeline');
   const t = await prisma.timelineEvent.findUnique({ where: { id } });
   await prisma.timelineEvent.update({
     where: { id },
@@ -604,13 +768,16 @@ export async function deleteTimelineEvent(id: string, adminUser = 'admin'): Prom
   return { success: true };
 }
 
-// --- BANNERS (100% MySQL Prisma with Soft Delete) ---
+// --- BANNERS (100% MySQL Prisma with In-Memory Caching) ---
 export async function getBanners(): Promise<Banner[]> {
+  const cached = getCached<Banner[]>('banners');
+  if (cached) return cached;
+
   const list = await prisma.banner.findMany({
     where: { isDeleted: false },
     orderBy: { createdAt: 'desc' },
   });
-  return list.map((b) => ({
+  const mapped = list.map((b) => ({
     id: b.id,
     title: b.title,
     titleEn: b.titleEn || undefined,
@@ -618,9 +785,11 @@ export async function getBanners(): Promise<Banner[]> {
     link: b.link || '',
     isActive: b.isActive,
   }));
+  return setCached('banners', mapped, 30000);
 }
 
 export async function addBanner(data: Partial<Banner>, adminUser = 'admin'): Promise<Banner> {
+  clearCache('banners');
   const created = await prisma.banner.create({
     data: {
       title: data.title || 'Banner mới',
@@ -636,6 +805,7 @@ export async function addBanner(data: Partial<Banner>, adminUser = 'admin'): Pro
 }
 
 export async function updateBanner(id: string, fields: Partial<Banner>, adminUser = 'admin'): Promise<Banner> {
+  clearCache('banners');
   const updated = await prisma.banner.update({
     where: { id },
     data: { ...fields },
@@ -646,6 +816,7 @@ export async function updateBanner(id: string, fields: Partial<Banner>, adminUse
 
 // Soft delete to Trash
 export async function deleteBanner(id: string, adminUser = 'admin'): Promise<{ success: boolean }> {
+  clearCache('banners');
   const b = await prisma.banner.findUnique({ where: { id } });
   await prisma.banner.update({
     where: { id },
@@ -655,9 +826,13 @@ export async function deleteBanner(id: string, adminUser = 'admin'): Promise<{ s
   return { success: true };
 }
 
-// --- POSTS / NEWS (100% MySQL Prisma with Soft Delete) ---
+// --- POSTS / NEWS (100% MySQL Prisma with In-Memory Caching) ---
 export async function getPosts(category?: string, search?: string): Promise<any[]> {
-  return await prisma.post.findMany({
+  const cacheKey = `posts_${category || 'all'}_${search || ''}`;
+  const cached = getCached<any[]>(cacheKey);
+  if (cached) return cached;
+
+  const list = await prisma.post.findMany({
     where: {
       isActive: true,
       isDeleted: false,
@@ -666,6 +841,7 @@ export async function getPosts(category?: string, search?: string): Promise<any[
     },
     orderBy: { createdAt: 'desc' },
   });
+  return setCached(cacheKey, list, 30000);
 }
 
 export async function getAllAdminPosts(): Promise<any[]> {
@@ -676,6 +852,7 @@ export async function getAllAdminPosts(): Promise<any[]> {
 }
 
 export async function addPost(data: any, adminUser = 'admin'): Promise<any> {
+  clearCache('posts');
   const created = await prisma.post.create({
     data: {
       title: data.title || 'Tin tức mới',
@@ -696,6 +873,7 @@ export async function addPost(data: any, adminUser = 'admin'): Promise<any> {
 }
 
 export async function updatePost(id: string, fields: any, adminUser = 'admin'): Promise<any> {
+  clearCache('posts');
   const updated = await prisma.post.update({
     where: { id },
     data: { ...fields },
@@ -706,6 +884,7 @@ export async function updatePost(id: string, fields: any, adminUser = 'admin'): 
 
 // Soft delete to Trash
 export async function deletePost(id: string, adminUser = 'admin'): Promise<{ success: boolean }> {
+  clearCache('posts');
   const p = await prisma.post.findUnique({ where: { id } });
   await prisma.post.update({
     where: { id },
@@ -1145,3 +1324,30 @@ export async function autoPurgeOldTrash(olderThanDays = 30) {
 
 export const getAdminVoteLogs = getVoteLogs;
 export const getPublicPosts = getPosts;
+
+export async function getLatestPublicVote(): Promise<any | null> {
+  const cached = getCached<any>('latest_public_vote');
+  if (cached) return cached;
+  const vote = await prisma.voteRecord.findFirst({
+    orderBy: { voteTime: 'desc' },
+    select: { id: true, voterPhone: true, candidateId: true, voteTime: true },
+  });
+  if (!vote) return null;
+  const candidate = await prisma.candidate.findUnique({
+    where: { id: vote.candidateId },
+    select: { name: true, sbd: true },
+  });
+  const rawPhone = vote.voterPhone || '';
+  const masked = rawPhone.length > 4
+    ? `${rawPhone.slice(0, 3)}***${rawPhone.slice(-2)}`
+    : 'Khán giả';
+  const result = {
+    id: vote.id,
+    userName: masked,
+    candidateName: candidate?.name || 'Thí sinh',
+    score: 1,
+    createdAt: vote.voteTime.toISOString(),
+  };
+  return setCached('latest_public_vote', result, 8000);
+}
+

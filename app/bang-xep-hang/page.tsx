@@ -107,8 +107,9 @@ function VoteToastContainer() {
     let isMounted = true;
 
     async function pollLatestVote() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
-        const res = await fetch(apiUrl('/api/admin/votes?limit=1'));
+        const res = await fetch(apiUrl('/api/voting/recent'));
         if (!res.ok) return;
         const data = await res.json();
         const latestVote = Array.isArray(data) && data.length > 0 ? data[0] : null;
@@ -139,7 +140,7 @@ function VoteToastContainer() {
       }
     }
 
-    const interval = setInterval(pollLatestVote, 8000);
+    const interval = setInterval(pollLatestVote, 15000);
     pollLatestVote();
     return () => {
       isMounted = false;
@@ -260,7 +261,7 @@ function PodiumItem({ candidate, rank, maxVotes, onVote, isGateOpen, activeVotin
           </div>
 
           <p className="project-card-description mt-2 line-clamp-2 min-h-[42px] text-left">
-            {localizedText(language, candidate.description, (candidate as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
+            {localizedText(language, candidate.description, (candidate as any).descriptionEn) || (language === 'en' ? 'Candidate profile is being updated.' : 'Hồ sơ thí sinh đang được cập nhật thông tin giới thiệu.')}
           </p>
 
           <div className="project-card-actions flex items-center gap-2">
@@ -385,7 +386,7 @@ function CandidateCard({ c, rank, maxVotes, visible, animationDelay, onVote, isG
           </div>
 
           <p className="project-card-description mt-2 line-clamp-2 min-h-[42px] text-left">
-            {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Startup project profile is being updated.' : 'Ý tưởng khởi nghiệp đang được cập nhật thông tin giới thiệu.')}
+            {localizedText(language, c.description, (c as any).descriptionEn) || (language === 'en' ? 'Candidate profile is being updated.' : 'Hồ sơ thí sinh đang được cập nhật thông tin giới thiệu.')}
           </p>
 
           <div className="project-card-actions flex items-center gap-2">
@@ -472,6 +473,7 @@ export default function BangXepHangPage() {
     loadCandidates();
 
     const interval = setInterval(async () => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
         const res = await fetch(apiUrl('/api/candidates'));
         if (res.ok) {
@@ -479,19 +481,20 @@ export default function BangXepHangPage() {
           if (Array.isArray(data)) setCandidates(data);
         }
       } catch { }
-    }, 3000);
+    }, 20000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     async function loadSettings() {
+      if (typeof document !== 'undefined' && document.hidden) return;
       try {
         const res = await fetch(apiUrl('/api/settings'));
         if (res.ok) { setSettings(await res.json()); }
       } catch { }
     }
     loadSettings();
-    const interval = setInterval(loadSettings, 5000);
+    const interval = setInterval(loadSettings, 60000);
     return () => clearInterval(interval);
   }, []);
 

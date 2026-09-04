@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-export function CurtainReveal() {
+export function CurtainReveal({ logoSrc }: { logoSrc?: string }) {
   const pathname = usePathname();
   const [visible, setVisible] = useState(pathname === '/');
   const [opening, setOpening] = useState(false);
@@ -64,7 +64,7 @@ export function CurtainReveal() {
       <div className="curtain-panel curtain-panel-left" />
       <div className="curtain-panel curtain-panel-right" />
       <div className="curtain-reveal-center">
-        <img src="/images/image.webp" alt="HUIT's ICONIC 2026" />
+        <img src={logoSrc || '/images/image.webp'} alt="HUIT's ICONIC 2026" />
         <span>HUIT's ICONIC 2026</span>
       </div>
     </div>

@@ -282,6 +282,9 @@ export default function SettingsAdminPage() {
           <p className="text-xs text-[#6b7773]">
             Thay logo HUIT hoặc logo HUIT&apos;s ICONIC trên header website. Ảnh sẽ được tối ưu và lưu trong thư mục tải lên.
           </p>
+          <div className="rounded-lg border border-blue-100 bg-blue-50 px-3 py-2.5 text-[11px] leading-relaxed text-blue-900">
+            <strong>Kích thước khuyến nghị:</strong> Logo HUIT&apos;s ICONIC tối thiểu <strong>512 × 176px</strong>, tốt nhất <strong>1024 × 352px</strong>; logo HUIT từ <strong>1400 × 388px</strong> trở lên. Nên dùng PNG nền trong suốt hoặc WebP chất lượng cao để logo hiển thị sắc nét trên header.
+          </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {([
               { type: 'huit' as const, label: 'Logo HUIT', value: headerHuitLogoUrl, setValue: setHeaderHuitLogoUrl },

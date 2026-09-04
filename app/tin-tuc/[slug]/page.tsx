@@ -104,7 +104,7 @@ export default async function PostDetailPage({ params }: { params: { slug: strin
     dateModified: post.updatedAt || post.createdAt || new Date().toISOString(),
     author: {
       '@type': 'Organization',
-      name: 'Trường Đại học Công nghiệp TP.HCM (HUIT)',
+      name: 'Trường Đại học Công Thương TP.HCM (HUIT)',
       url: 'https://www.huit.edu.vn',
     },
     publisher: {
