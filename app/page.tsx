@@ -1305,17 +1305,26 @@ export default function HomePage() {
               <p>{language === 'en' ? 'Follow milestones, activities and important announcements throughout the competition.' : 'Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.'}</p>
             </div>
             <div className="news-grid-modern">
-              {homepageNewsPosts.map((post, index) => (
-                <article key={post.id} className={`news-card-modern ${index === 0 ? 'featured' : ''}`}>
-                  <img src={post.thumbnailUrl || '/uploads/baner.jpg'} loading="lazy" alt={text(post.title, post.titleEn)} />
-                  <div className="news-card-body">
-                    <div className="news-meta">
-                      <strong>{post.category}</strong>
-                      <time>{formatDateTime(post.createdAt)}</time>
+              {homepageNewsPosts.map((post) => (
+                <article key={post.id} className="news-card-modern flex flex-col h-full">
+                  <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={post.thumbnailUrl || '/uploads/baner.jpg'}
+                      loading="lazy"
+                      alt={text(post.title, post.titleEn)}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </div>
+                  <div className="news-card-body flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="news-meta">
+                        <strong>{post.category}</strong>
+                        <time>{formatDateTime(post.createdAt)}</time>
+                      </div>
+                      <h3 className="line-clamp-2">{text(post.title, post.titleEn)}</h3>
+                      <p className="line-clamp-3">{text(post.summary, post.summaryEn)}</p>
                     </div>
-                    <h3>{text(post.title, post.titleEn)}</h3>
-                    <p>{text(post.summary, post.summaryEn)}</p>
-                    <Link className="news-link" href={`/tin-tuc/${post.slug}`}>{language === 'en' ? 'Read more →' : 'Xem chi tiết →'}</Link>
+                    <Link className="news-link mt-3" href={`/tin-tuc/${post.slug}`}>{language === 'en' ? 'Read more →' : 'Xem chi tiết →'}</Link>
                   </div>
                 </article>
               ))}
