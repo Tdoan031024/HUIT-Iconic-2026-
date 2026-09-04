@@ -1222,19 +1222,19 @@ export default function GioiThieuPage() {
                 {statItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 p-6 sm:p-7 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 py-6 px-5 sm:py-7 sm:px-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
                   >
-                    <div className={`grid h-12 w-12 place-items-center rounded-2xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110 mb-4`}>
+                    <div className={`grid h-12 w-12 place-items-center rounded-2xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110 mb-3`}>
                       {item.icon}
                     </div>
 
-                    <div className="text-3xl sm:text-4xl lg:text-[40px] font-black tracking-tight leading-none mb-2.5">
+                    <div className="text-3xl sm:text-4xl lg:text-[44px] font-black tracking-tight leading-tight my-1.5">
                       <span className={`bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
                         {item.num}
                       </span>
                     </div>
 
-                    <p className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-secondary)] leading-snug max-w-[240px]">
+                    <p className="text-[14px] sm:text-[15px] font-semibold text-[color:var(--about-text-secondary)] leading-snug max-w-[240px]">
                       {item.label}
                     </p>
                   </div>
