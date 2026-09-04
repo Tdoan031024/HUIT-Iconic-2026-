@@ -168,6 +168,10 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
       <style>{`
         .post-detail-page { background: var(--site-bg); }
 
+        .post-detail-headline {
+          line-height: 1.6 !important;
+        }
+
         .post-body-content {
           color: var(--site-text);
           font-size: 16px;
@@ -386,7 +390,10 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
             </div>
 
             {/* Article Headline */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black leading-[1.4] sm:leading-[1.45] text-[var(--site-text)] tracking-tight mb-6">
+            <h1
+              className="post-detail-headline text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black text-[var(--site-text)] tracking-tight mb-6"
+              style={{ lineHeight: 1.6 }}
+            >
               {text(post.title, post.titleEn)}
             </h1>
 
