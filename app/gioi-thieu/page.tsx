@@ -311,14 +311,97 @@ export default function GioiThieuPage() {
     : [];
 
   const statsYear = settings?.statsYear || '2026';
-  const stats = [
-    [settings?.statsCandidates || '40.000+', language === 'en' ? 'Enrolled Students' : 'Quy mô sinh viên HUIT'],
-    [settings?.statsVotes || '1.000.000+', language === 'en' ? 'Online Public Votes' : 'Lượt bình chọn trực tuyến'],
-    [settings?.statsParticipants || '50 Top', language === 'en' ? 'Top Finalists' : 'Thí sinh Top xuất sắc'],
-    [settings?.statsViews || '10 triệu+', language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận truyền thông'],
-    [settings?.statsMedia || '30+', language === 'en' ? 'Media Partners' : 'Đơn vị báo chí, truyền thông'],
-    [settings?.statsSchools || '16+ Khoa', language === 'en' ? 'HUIT Academic Faculties' : 'Khoa / Viện đào tạo HUIT'],
-  ].filter(([number]) => !!number);
+  const statItems = [
+    {
+      num: settings?.statsCandidates || '40.000+',
+      label: language === 'en' ? 'Enrolled Students' : 'Quy mô sinh viên HUIT',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      ),
+      gradient: 'from-blue-600 via-indigo-500 to-cyan-500',
+      badgeBg: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+      glow: 'hover:border-blue-500/40 hover:shadow-blue-500/10',
+    },
+    {
+      num: settings?.statsVotes || '1.000.000+',
+      label: language === 'en' ? 'Online Public Votes' : 'Lượt bình chọn trực tuyến',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      ),
+      gradient: 'from-emerald-600 via-teal-500 to-cyan-500',
+      badgeBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+      glow: 'hover:border-emerald-500/40 hover:shadow-emerald-500/10',
+    },
+    {
+      num: (settings?.statsParticipants === '50 Top' ? 'Top 50' : (settings?.statsParticipants || 'Top 50')),
+      label: language === 'en' ? 'Top Finalists' : 'Thí sinh Top xuất sắc',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="8" r="6"/>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+        </svg>
+      ),
+      gradient: 'from-amber-500 via-orange-500 to-yellow-500',
+      badgeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+      glow: 'hover:border-amber-500/40 hover:shadow-amber-500/10',
+    },
+    {
+      num: settings?.statsViews || '10 triệu+',
+      label: language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận truyền thông',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+      ),
+      gradient: 'from-rose-500 via-pink-500 to-red-500',
+      badgeBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+      glow: 'hover:border-rose-500/40 hover:shadow-rose-500/10',
+    },
+    {
+      num: settings?.statsMedia || '30+',
+      label: language === 'en' ? 'Media Partners' : 'Đơn vị báo chí, truyền thông',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
+          <path d="M18 14h-8"/>
+          <path d="M15 18h-5"/>
+          <path d="M10 6h8v4h-8V6Z"/>
+        </svg>
+      ),
+      gradient: 'from-purple-600 via-fuchsia-500 to-indigo-500',
+      badgeBg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+      glow: 'hover:border-purple-500/40 hover:shadow-purple-500/10',
+    },
+    {
+      num: settings?.statsSchools || '16+ Khoa',
+      label: language === 'en' ? 'HUIT Academic Faculties' : 'Khoa / Viện đào tạo HUIT',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
+          <path d="M9 22v-4h6v4"/>
+          <path d="M8 6h.01"/>
+          <path d="M16 6h.01"/>
+          <path d="M12 6h.01"/>
+          <path d="M12 10h.01"/>
+          <path d="M12 14h.01"/>
+          <path d="M16 10h.01"/>
+          <path d="M16 14h.01"/>
+          <path d="M8 10h.01"/>
+          <path d="M8 14h.01"/>
+        </svg>
+      ),
+      gradient: 'from-cyan-600 via-teal-500 to-blue-500',
+      badgeBg: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20',
+      glow: 'hover:border-cyan-500/40 hover:shadow-cyan-500/10',
+    },
+  ];
 
   const registrationDeadline = settings?.registrationDeadline
     ? parseVN(settings.registrationDeadline)
@@ -1161,15 +1244,29 @@ export default function GioiThieuPage() {
                 {language === 'en' ? 'Scale & Community' : 'Quy mô & Số liệu nổi bật'}
               </h2>
               
-              <div className="about-card about-stat-card p-6 sm:p-8">
-                <div className="space-y-3">
-                  {stats.map(([num, label]: any, idx: number) => (
-                    <div key={idx} className="about-stat-item">
-                      <span>{num}</span>
-                      <span className="text-xs sm:text-sm font-bold text-[color:var(--about-text-secondary)]">{label}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {statItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                  >
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className={`grid h-10 w-10 place-items-center rounded-xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110`}>
+                        {item.icon}
+                      </div>
                     </div>
-                  ))}
-                </div>
+
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight leading-none mb-2">
+                      <span className={`bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
+                        {item.num}
+                      </span>
+                    </div>
+
+                    <p className="text-xs sm:text-[13px] font-bold text-[color:var(--about-text-secondary)] leading-snug">
+                      {item.label}
+                    </p>
+                  </div>
+                ))}
               </div>
             </section>
 
