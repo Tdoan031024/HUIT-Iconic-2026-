@@ -25,6 +25,24 @@ export async function PATCH(request: Request) {
   const admin = await authorize();
   if (!admin) return NextResponse.json({ message: 'Chưa đăng nhập quản trị.' }, { status: 401 });
   const body = await request.json();
+
+  // Bulk status update
+  if (Array.isArray(body?.ids) && body.ids.length > 0 && ['PENDING', 'REVIEWING', 'APPROVED', 'REJECTED'].includes(body.status)) {
+    const result = await prisma.candidateRegistration.updateMany({
+      where: { id: { in: body.ids } },
+      data: { status: body.status },
+    });
+    await logAdminAction(
+      admin.username || 'admin',
+      'BULK_UPDATE_STATUS',
+      'CANDIDATE_REGISTRATION',
+      body.ids.join(','),
+      `${body.ids.length} hồ sơ`,
+      `Cập nhật trạng thái ${body.status} cho ${body.ids.length} hồ sơ đăng ký`
+    );
+    return NextResponse.json({ success: true, count: result.count });
+  }
+
   if (!body?.id || !['PENDING', 'REVIEWING', 'APPROVED', 'REJECTED'].includes(body.status)) {
     return NextResponse.json({ message: 'Thông tin cập nhật không hợp lệ.' }, { status: 400 });
   }
@@ -145,5 +163,54 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Admin registrations POST error:', error);
     return NextResponse.json({ message: error.message || 'Lỗi server xử lý hồ sơ.' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const admin = await authorize();
+  if (!admin) return NextResponse.json({ message: 'Chưa đăng nhập quản trị.' }, { status: 401 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    const idsBody = await request.json().catch(() => null);
+    const ids: string[] = Array.isArray(idsBody?.ids) ? idsBody.ids : id ? [id] : [];
+
+    if (ids.length === 0) {
+      return NextResponse.json({ message: 'Vui lòng cung cấp ID hồ sơ cần xóa.' }, { status: 400 });
+    }
+
+    const regs = await prisma.candidateRegistration.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, fullName: true, candidateId: true },
+    });
+
+    if (regs.length === 0) {
+      return NextResponse.json({ message: 'Không tìm thấy hồ sơ để xóa.' }, { status: 404 });
+    }
+
+    await prisma.candidateRegistration.deleteMany({
+      where: { id: { in: ids } },
+    });
+
+    for (const reg of regs) {
+      await logAdminAction(
+        admin.username || 'admin',
+        'DELETE',
+        'CANDIDATE_REGISTRATION',
+        reg.id,
+        reg.fullName,
+        `Xóa hồ sơ đăng ký của ứng viên ${reg.fullName} (ID: ${reg.id})`
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Đã xóa thành công ${regs.length} hồ sơ đăng ký.`,
+      count: regs.length,
+    });
+  } catch (error: any) {
+    console.error('Admin registrations DELETE error:', error);
+    return NextResponse.json({ message: error.message || 'Lỗi server khi xóa hồ sơ.' }, { status: 500 });
   }
 }
