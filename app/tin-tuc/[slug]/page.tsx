@@ -1,20 +1,31 @@
 import React from 'react';
 import ClientPostDetail from './ClientPostDetail';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+import { getPostBySlugOrId } from '@/lib/service';
+import prisma from '@/lib/prisma';
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 async function getPost(slug: string) {
-  if (!API_BASE_URL) return null;
   try {
-    const res = await fetch(`${API_BASE_URL}/api/posts/${slug}`, { 
-      cache: 'no-store' 
-    });
-    if (!res.ok) {
-      return null;
+    const post = await getPostBySlugOrId(slug);
+    if (!post) return null;
+
+    // Increment view count asynchronously
+    try {
+      await prisma.post.update({
+        where: { id: post.id },
+        data: { views: { increment: 1 } },
+      });
+    } catch {
+      // ignore non-critical view increment errors
     }
-    const data = await res.json();
-    return data || null;
+
+    return {
+      ...post,
+      createdAt: post.createdAt ? post.createdAt.toISOString() : new Date().toISOString(),
+      updatedAt: post.updatedAt ? post.updatedAt.toISOString() : undefined,
+    };
   } catch (err) {
     console.error(`Error fetching post details for slug: ${slug}`, err);
     return null;
@@ -22,19 +33,23 @@ async function getPost(slug: string) {
 }
 
 async function getRelatedPosts(category: string, currentPostId: string) {
-  if (!API_BASE_URL) return [];
   try {
-    const res = await fetch(`${API_BASE_URL}/api/posts`, { 
-      cache: 'no-store' 
+    const related = await prisma.post.findMany({
+      where: {
+        category,
+        id: { not: currentPostId },
+        isActive: true,
+        isDeleted: false,
+      },
+      take: 3,
+      orderBy: { createdAt: 'desc' },
     });
-    if (!res.ok) {
-      return [];
-    }
-    const allPosts = await res.json();
-    const source = Array.isArray(allPosts) ? allPosts : [];
-    return source
-      .filter((p: any) => p.id !== currentPostId && p.category === category)
-      .slice(0, 3);
+
+    return related.map(p => ({
+      ...p,
+      createdAt: p.createdAt ? p.createdAt.toISOString() : new Date().toISOString(),
+      updatedAt: p.updatedAt ? p.updatedAt.toISOString() : undefined,
+    }));
   } catch (err) {
     console.error('Error fetching related posts:', err);
     return [];
