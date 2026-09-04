@@ -130,7 +130,7 @@ export default function ImageDropzone({
     setUploadProgress(15);
 
     try {
-      const fileToUpload = isImage ? await compressImageIfNeeded(rawFile) : rawFile;
+      const fileToUpload = isImage ? await compressImageIfNeeded(rawFile).catch(() => rawFile) : rawFile;
       setUploadProgress(40);
 
       const formData = new FormData();
@@ -149,7 +149,7 @@ export default function ImageDropzone({
         setUploadProgress(100);
       } else {
         const errData = await res.json().catch(() => ({}));
-        setUploadError(errData.message || 'Tải tệp lên máy chủ thất bại.');
+        setUploadError(errData.error || errData.message || 'Tải tệp lên máy chủ thất bại.');
       }
     } catch (err: any) {
       console.error('Lỗi khi tải tệp:', err);

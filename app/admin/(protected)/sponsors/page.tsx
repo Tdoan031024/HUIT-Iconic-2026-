@@ -282,11 +282,16 @@ export default function SponsorsAdminPage() {
         showAlert('Thêm nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showAlert(data.error || 'Thêm nhà tài trợ thất bại.', 'error');
+        return;
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showAlert(err?.message || 'Không thể kết nối đến server để thêm nhà tài trợ.', 'error');
+      return;
     }
-    showAlert('Không thể kết nối đến server để thêm nhà tài trợ.', 'error');
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
@@ -306,21 +311,34 @@ export default function SponsorsAdminPage() {
     };
 
     try {
-      const res = await fetch(apiUrl(`/api/admin/sponsors/${selectedSponsor.id}`), {
+      let res = await fetch(apiUrl(`/api/admin/sponsors/${selectedSponsor.id}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fieldsToUpdate),
       });
+      // Fallback to POST if server/cPanel proxy rejects PUT
+      if (!res.ok && (res.status === 405 || res.status === 403)) {
+        res = await fetch(apiUrl(`/api/admin/sponsors/${selectedSponsor.id}`), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fieldsToUpdate),
+        });
+      }
       if (res.ok) {
         setModalMode(null);
         showAlert('Cập nhật nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showAlert(data.error || 'Cập nhật nhà tài trợ thất bại.', 'error');
+        return;
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showAlert(err?.message || 'Không thể kết nối đến server để cập nhật nhà tài trợ.', 'error');
+      return;
     }
-    showAlert('Không thể kết nối đến server để cập nhật nhà tài trợ.', 'error');
   };
 
   const handleDelete = async (id: string) => {
@@ -328,18 +346,29 @@ export default function SponsorsAdminPage() {
     if (!ok) return;
 
     try {
-      const res = await fetch(apiUrl(`/api/admin/sponsors/${id}`), {
+      let res = await fetch(apiUrl(`/api/admin/sponsors/${id}`), {
         method: 'DELETE',
       });
+      // Fallback to POST if server blocks DELETE
+      if (!res.ok && (res.status === 405 || res.status === 403)) {
+        res = await fetch(apiUrl(`/api/admin/sponsors/${id}?_method=DELETE`), {
+          method: 'POST',
+        });
+      }
       if (res.ok) {
         showAlert('Xóa nhà tài trợ thành công!', 'success');
         loadFromApi();
         return;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showAlert(data.error || 'Xóa nhà tài trợ thất bại.', 'error');
+        return;
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showAlert(err?.message || 'Không thể kết nối đến server để xóa nhà tài trợ.', 'error');
+      return;
     }
-    showAlert('Không thể kết nối đến server để xóa nhà tài trợ.', 'error');
   };
 
   const handleBulkDelete = async () => {

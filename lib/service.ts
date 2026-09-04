@@ -685,9 +685,16 @@ export async function addSponsor(data: Partial<Sponsor>, adminUser = 'admin'): P
 
 export async function updateSponsor(id: string, fields: Partial<Sponsor>, adminUser = 'admin'): Promise<Sponsor> {
   clearCache('sponsors');
+  const allowedFields = ['name', 'logoUrl', 'tier', 'contactPerson', 'description', 'descriptionEn', 'email', 'phone', 'websiteUrl', 'isDeleted', 'deletedAt'];
+  const sanitizedData: any = {};
+  for (const key of allowedFields) {
+    if (key in fields && (fields as any)[key] !== undefined) {
+      sanitizedData[key] = (fields as any)[key];
+    }
+  }
   const updated = await prisma.sponsor.update({
     where: { id },
-    data: { ...fields } as any,
+    data: sanitizedData,
   });
   await logAdminAction(adminUser, 'UPDATE', 'SPONSOR', id, updated.name, `Cập nhật thông tin nhà tài trợ: ${updated.name}`);
   return updated as any;

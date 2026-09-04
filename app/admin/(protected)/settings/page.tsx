@@ -153,11 +153,18 @@ export default function SettingsAdminPage() {
     };
 
     try {
-      const res = await fetch(apiUrl('/api/admin/settings'), {
+      let res = await fetch(apiUrl('/api/admin/settings'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
       });
+      if (!res.ok && (res.status === 405 || res.status === 403)) {
+        res = await fetch(apiUrl('/api/admin/settings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedSettings)
+        });
+      }
       if (res.ok) {
         showAlert('Đã lưu cấu hình hệ thống thành công!', 'success');
         return;
@@ -362,13 +369,27 @@ export default function SettingsAdminPage() {
                       if (res.ok) {
                         const data = await res.json();
                         setSponsorBannerUrl(data.url);
-                        alert('Tải ảnh banner lên thành công!');
+                        // Auto-save immediately to database
+                        let saveRes = await fetch(apiUrl('/api/admin/settings'), {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ sponsorBannerUrl: data.url }),
+                        });
+                        if (!saveRes.ok && (saveRes.status === 405 || saveRes.status === 403)) {
+                          saveRes = await fetch(apiUrl('/api/admin/settings'), {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ sponsorBannerUrl: data.url }),
+                          });
+                        }
+                        showAlert('Tải ảnh banner nhà tài trợ thành công và đã tự động lưu!', 'success');
                       } else {
-                        alert('Tải ảnh banner lên thất bại.');
+                        const errData = await res.json().catch(() => ({}));
+                        showAlert(errData.error || errData.message || 'Tải ảnh banner lên thất bại.', 'error');
                       }
-                    } catch (err) {
+                    } catch (err: any) {
                       console.error(err);
-                      alert('Có lỗi xảy ra khi tải ảnh banner.');
+                      showAlert(err?.message || 'Có lỗi xảy ra khi tải ảnh banner.', 'error');
                     }
                   }}
                 />

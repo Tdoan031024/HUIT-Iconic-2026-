@@ -57,7 +57,20 @@ export async function POST(req: Request) {
     }
 
     if (ext === '.svg') {
-      return NextResponse.json({ error: 'SVG không được phép tải lên vì lý do bảo mật.' }, { status: 400 });
+      const webpFilename = `${baseName}.webp`;
+      const webpPath = path.join(uploadDir, webpFilename);
+      try {
+        await sharp(buffer)
+          .webp({ quality: 95 })
+          .toFile(webpPath);
+        return NextResponse.json({ url: `/uploads/${webpFilename}`, filename: webpFilename, size: file.size });
+      } catch (svgErr) {
+        // If sharp cannot rasterize, save clean sanitized SVG
+        const cleanSvg = buffer.toString('utf-8').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        const filename = `${baseName}.svg`;
+        fs.writeFileSync(path.join(uploadDir, filename), Buffer.from(cleanSvg, 'utf-8'));
+        return NextResponse.json({ url: `/uploads/${filename}`, filename, size: file.size });
+      }
     }
 
     if (ext === '.gif') {
