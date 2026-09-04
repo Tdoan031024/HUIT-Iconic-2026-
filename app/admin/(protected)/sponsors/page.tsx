@@ -391,7 +391,7 @@ export default function SponsorsAdminPage() {
       <div className="flex flex-col gap-3 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Quản lý đối tác</p>
-          <h1 className="text-lg font-black text-[#123c34]">Nhà tài trợ &amp; Đối tác</h1>
+          <h1 className="text-lg font-black text-[#123c34]">Nhà tài trợ & Đối tác</h1>
           <p className="text-xs text-[#6b7773] mt-0.5">Danh sách nhà tài trợ và đối tác đồng hành cùng HUIT&apos;s ICONIC 2026.</p>
         </div>
         <button
@@ -410,7 +410,7 @@ export default function SponsorsAdminPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-extrabold text-slate-800">Hiển thị Banner &amp; Logo Nhà tài trợ trên Trang chủ</h3>
+              <h3 className="text-sm font-extrabold text-slate-800">Hiển thị Banner & Logo Nhà tài trợ trên Trang chủ</h3>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${hideSponsorBanner ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 }`}>
                 {hideSponsorBanner ? 'ĐANG ẨN' : 'ĐANG HIỂN THỊ'}
@@ -743,7 +743,7 @@ export default function SponsorsAdminPage() {
             {/* Image Dropzone Component */}
             <ImageDropzone
               label="Logo nhà tài trợ / Đối tác"
-              subLabel="Kéo &amp; thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
+              subLabel="Kéo & thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
               aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
               value={formLogoUrl}
               onChange={setFormLogoUrl}
@@ -833,7 +833,7 @@ export default function SponsorsAdminPage() {
             {/* Image Dropzone Component */}
             <ImageDropzone
               label="Logo nhà tài trợ / Đối tác"
-              subLabel="Kéo &amp; thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
+              subLabel="Kéo & thả logo trực tiếp từ thư mục máy tính vào đây hoặc click để chọn"
               aspectRatioHint="Khuyên dùng: Ảnh PNG nền trong suốt, SVG hoặc JPG sắc nét"
               value={formLogoUrl}
               onChange={setFormLogoUrl}

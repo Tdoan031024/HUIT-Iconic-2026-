@@ -403,7 +403,7 @@ export default function IntroductionAdminPage() {
         <div id="section-overview" className="scroll-mt-24 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
           <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">1</span>
-            <h3 className="text-sm font-bold text-[#123c34] font-heading">Tiêu đề &amp; Giới thiệu chung</h3>
+            <h3 className="text-sm font-bold text-[#123c34] font-heading">Tiêu đề & Giới thiệu chung</h3>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -540,7 +540,7 @@ export default function IntroductionAdminPage() {
         <div id="section-organizer" className="scroll-mt-24 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm space-y-4 sm:p-5">
           <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">2</span>
-            <h3 className="text-sm font-bold text-[#123c34] font-heading">Đơn vị tổ chức &amp; đồng hành</h3>
+            <h3 className="text-sm font-bold text-[#123c34] font-heading">Đơn vị tổ chức & đồng hành</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="block space-y-1.5">
@@ -766,7 +766,7 @@ export default function IntroductionAdminPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2b6cb0] text-[10px] font-bold text-white">4</span>
-                <h3 className="text-sm font-bold text-[#2b6cb0] font-heading">Thời gian &amp; Lộ trình thực hiện</h3>
+                <h3 className="text-sm font-bold text-[#2b6cb0] font-heading">Thời gian & Lộ trình thực hiện</h3>
               </div>
               <p className="text-xs text-[#2d3748] mt-1.5">
                 Các mốc lộ trình thời gian được đồng bộ tự động từ cơ sở dữ liệu. Để thay đổi hoặc thêm bớt các sự kiện lộ trình hiển thị trên website, vui lòng nhấn nút truy cập trang cấu hình Lộ trình bên cạnh.
@@ -927,7 +927,7 @@ export default function IntroductionAdminPage() {
           <div className="rounded-xl border border-[#dce5e1] bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-[#edf2f0]">
               <span className="flex h-5 min-w-[20px] px-1 items-center justify-center rounded-full bg-[#123c34] text-[10px] font-bold text-white">5C</span>
-              <h3 className="text-sm font-bold text-[#123c34] font-heading">Thông tin liên hệ &amp; Đăng ký</h3>
+              <h3 className="text-sm font-bold text-[#123c34] font-heading">Thông tin liên hệ & Đăng ký</h3>
             </div>
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

@@ -126,7 +126,7 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
               <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-              <Link href="/tin-tuc">Tin tức &amp; Thông báo</Link>
+              <Link href="/tin-tuc">Tin tức & Thông báo</Link>
               <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <polyline points="9 18 15 12 9 6" />
               </svg>

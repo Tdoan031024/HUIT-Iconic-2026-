@@ -177,7 +177,7 @@ export default function TinTucPage() {
               <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-              <span>Tin tức &amp; Thông báo</span>
+              <span>Tin tức & Thông báo</span>
             </div>
 
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-4 ${heroSection.visible ? 'fade-up' : 'opacity-0'}`}
@@ -186,7 +186,7 @@ export default function TinTucPage() {
             </div>
 
             <h1 className={heroSection.visible ? 'fade-up fade-up-d1' : 'opacity-0'}>
-              Tin tức &amp; Thông báo
+              Tin tức & Thông báo
             </h1>
             <p className={heroSection.visible ? 'fade-up fade-up-d2' : 'opacity-0'}>
               Cập nhật thông tin nhanh nhất, chính xác nhất về tiến trình cuộc thi, các sự kiện đồng hành và thông báo từ ban tổ chức.

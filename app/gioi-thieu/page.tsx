@@ -221,12 +221,15 @@ export default function GioiThieuPage() {
   const registrationDeadline = settings?.registrationDeadline
     ? parseVN(settings.registrationDeadline)
     : null;
+  const isDeadlinePassed = registrationDeadline
+    ? registrationDeadline.getTime() < Date.now()
+    : false;
+  const isManuallyClosed = settings?.isRegistrationOpen === false;
   const registrationOpen: boolean | null = settings
-    ? settings.isRegistrationOpen !== false
-      && (!registrationDeadline || registrationDeadline.getTime() >= Date.now())
+    ? (!isManuallyClosed && !isDeadlinePassed)
     : null;
   const registrationHref = registrationOpen === true
-    ? (settings?.registrationUrl || registerUrl || '#timeline-section')
+    ? (settings?.registrationUrl || '/dang-ky')
     : '#timeline-section';
 
   const quickLinks = [
@@ -436,7 +439,8 @@ export default function GioiThieuPage() {
           box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 12%, transparent);
         }
         .about-status-pill.open { color: #047857; background: rgba(16,185,129,.10); border: 1px solid rgba(16,185,129,.24); }
-        .about-status-pill.closed { color: #b45309; background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.24); }
+        .about-status-pill.closed { color: #dc2626; background: rgba(239,68,68,.10); border: 1px solid rgba(239,68,68,.24); }
+        .about-status-pill.paused { color: #d97706; background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.24); }
         .about-status-pill.pending { color: var(--about-primary); background: color-mix(in srgb, var(--about-primary) 9%, transparent); border: 1px solid color-mix(in srgb, var(--about-primary) 22%, transparent); }
 
         .about-primary-action {
@@ -461,31 +465,43 @@ export default function GioiThieuPage() {
 
         .about-quick-nav {
           position: sticky;
-          top: 92px;
+          top: 84px;
           z-index: 30;
           display: flex;
           align-items: center;
-          gap: 4px;
-          max-width: 780px;
-          padding: 5px;
+          gap: 6px;
+          width: 100%;
+          max-width: 1060px;
+          padding: 6px 10px;
+          margin-left: auto;
+          margin-right: auto;
           border: 1px solid var(--about-border);
           border-radius: 999px;
-          background: color-mix(in srgb, var(--about-surface) 90%, transparent);
-          box-shadow: 0 12px 36px rgba(15,23,42,.10);
-          backdrop-filter: blur(18px);
+          background: color-mix(in srgb, var(--about-surface) 92%, transparent);
+          box-shadow: 0 10px 30px rgba(15,23,42,.08);
+          backdrop-filter: blur(20px);
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        .about-quick-nav::-webkit-scrollbar {
+          display: none;
         }
         .about-quick-nav a {
           position: relative;
           min-height: 38px;
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 7px;
+          gap: 8px;
           padding: 0 14px;
           border-radius: 999px;
           color: var(--about-text-secondary);
           font-size: 12px;
           font-weight: 700;
-          transition: all 0.25s ease;
+          white-space: nowrap;
+          flex-shrink: 0;
+          transition: all 0.2s ease;
         }
         .about-quick-nav a:hover {
           background: color-mix(in srgb, var(--about-primary) 10%, var(--about-surface));
@@ -496,15 +512,20 @@ export default function GioiThieuPage() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 20px;
-          height: 20px;
-          border-radius: 6px;
-          background: color-mix(in srgb, var(--about-primary) 12%, transparent);
+          width: 22px;
+          height: 22px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--about-primary) 14%, transparent);
           color: var(--about-primary);
-          font-size: 9px;
+          font-size: 10px;
           font-weight: 900;
+          flex-shrink: 0;
         }
-        .about-nav-label { font-size: 11px; font-weight: 700; }
+        .about-nav-label {
+          font-size: 12px;
+          font-weight: 700;
+          white-space: nowrap;
+        }
 
         .about-section-anchor { scroll-margin-top: 132px; }
         .about-section-title { letter-spacing: -.025em; }
@@ -643,15 +664,28 @@ export default function GioiThieuPage() {
               suppressHydrationWarning
             >
               <div className="text-center sm:text-left">
-                <span className={`about-status-pill ${!isMounted || registrationOpen === null ? 'pending' : registrationOpen ? 'open' : 'closed'}`}>
+                <span className={`about-status-pill ${!isMounted || registrationOpen === null ? 'pending' : registrationOpen ? 'open' : isDeadlinePassed ? 'closed' : 'paused'}`}>
                   <span aria-hidden="true" />
-                  {!isMounted || registrationOpen === null ? 'Đang đồng bộ trạng thái' : registrationOpen ? "Đang nhận hồ sơ đăng ký" : "Đã kết thúc nhận hồ sơ"}
+                  {!isMounted || registrationOpen === null
+                    ? 'Đang đồng bộ trạng thái'
+                    : registrationOpen
+                    ? 'Đang nhận hồ sơ đăng ký'
+                    : isDeadlinePassed
+                    ? 'Đã kết thúc nhận hồ sơ'
+                    : 'Tạm đóng nhận hồ sơ'}
                 </span>
                 <p className="mt-3 text-[14px] sm:text-[15px] text-[color:var(--about-text-secondary)]">
                   {!isMounted || registrationOpen === null ? (
                     'Thông tin thời hạn đang được cập nhật từ hệ thống.'
                   ) : registrationDeadline ? (
-                    <>{registrationOpen ? 'Hạn chót nhận hồ sơ' : 'Thời hạn nhận hồ sơ đã kết thúc'}: <b className="text-[color:var(--about-text-primary)]">{formatDateTime(settings.registrationDeadline)}</b></>
+                    <>
+                      {registrationOpen
+                        ? 'Hạn chót nhận hồ sơ'
+                        : isDeadlinePassed
+                        ? 'Thời hạn nhận hồ sơ đã kết thúc lúc'
+                        : 'Cổng đăng ký tạm đóng (Hạn nộp dự kiến)'}
+                      : <b className="text-[color:var(--about-text-primary)]">{formatDateTime(settings.registrationDeadline)}</b>
+                    </>
                   ) : (
                     "Vui lòng theo dõi lịch trình chi tiết của các vòng thi bên dưới."
                   )}
@@ -660,11 +694,11 @@ export default function GioiThieuPage() {
               <div className="flex gap-3 w-full sm:w-auto shrink-0">
                 <a
                   href={isMounted ? registrationHref : '#timeline-section'}
-                  target={isMounted && registrationOpen ? '_blank' : undefined}
-                  rel={isMounted && registrationOpen ? 'noopener noreferrer' : undefined}
+                  target={isMounted && registrationOpen && registrationHref.startsWith('http') ? '_blank' : undefined}
+                  rel={isMounted && registrationOpen && registrationHref.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="about-primary-action w-full sm:w-auto about-focusable"
                 >
-                  {!isMounted ? 'Đang cập nhật' : registrationOpen === true ? 'Đăng ký ngay' : registrationOpen === false ? 'Xem lộ trình' : 'Đang cập nhật'} <span aria-hidden="true">→</span>
+                  {!isMounted ? 'Đang cập nhật' : registrationOpen === true ? 'Đăng ký dự thi ngay' : 'Xem lộ trình'} <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>
@@ -701,7 +735,7 @@ export default function GioiThieuPage() {
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-2xl">📜</span>
                     <div>
-                      <span className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Đơn vị chỉ đạo &amp; sản xuất</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Đơn vị chỉ đạo & sản xuất</span>
                       <h3 className="text-lg sm:text-xl font-black text-[color:var(--about-text-primary)]">
                         {language === 'en' ? 'Letter from University Leadership & Organizing Board' : 'Thư ngỏ từ Trường Đại học Công Thương TP.HCM (HUIT)'}
                       </h3>
@@ -1069,7 +1103,7 @@ export default function GioiThieuPage() {
                     <b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương &bull; <b>SĐT / Zalo:</b> 0974 331 499 &bull; <b>Email:</b> duongdx@huit.edu.vn
                   </p>
                   <p className="text-sm text-[color:var(--about-text-secondary)]">
-                    <b>Đơn vị chỉ đạo &amp; sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
+                    <b>Đơn vị chỉ đạo & sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
                   </p>
                 </div>
 

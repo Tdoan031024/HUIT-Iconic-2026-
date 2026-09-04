@@ -329,7 +329,7 @@ export default function SettingsAdminPage() {
               <line x1="3" y1="9" x2="21" y2="9" />
               <line x1="9" y1="21" x2="9" y2="9" />
             </svg>
-            Hình ảnh Banner Nhà tài trợ &amp; Đối tác
+            Hình ảnh Banner Nhà tài trợ & Đối tác
           </h3>
 
           <div className="flex flex-col space-y-1.5">

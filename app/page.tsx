@@ -955,7 +955,7 @@ export default function HomePage() {
                     ĐỒNG HÀNH CÙNG HUIT'S ICONIC 2026
                   </span>
                   <h2 className="text-[22px] sm:text-[34px] font-black uppercase tracking-tight text-slate-900 dark:text-white leading-tight">
-                    Nhà tài trợ &amp; Đối tác
+                    Nhà tài trợ & Đối tác
                   </h2>
                   <div className="h-1 w-16 bg-gradient-to-r from-blue-600 to-teal-400 rounded-full mt-1" />
                 </div>
@@ -1003,7 +1003,7 @@ export default function HomePage() {
                   style={{ width: candidatesVisible ? '80px' : '0px' }}
                 />
                 <p className="mx-auto max-w-[760px] text-[14px] sm:text-[16px] leading-relaxed text-neutral-600 dark:text-white/68">
-                  Khám phá các gương mặt tài năng &amp; nét đẹp sinh viên HUIT, theo dõi bảng xếp hạng và bình chọn cho thí sinh bạn yêu thích.
+                  Khám phá các gương mặt tài năng & nét đẹp sinh viên HUIT, theo dõi bảng xếp hạng và bình chọn cho thí sinh bạn yêu thích.
                 </p>
               </div>
 

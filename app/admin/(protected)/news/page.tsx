@@ -402,7 +402,7 @@ export default function NewsAdminPage() {
       <div className="flex flex-col gap-3 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Cổng thông tin</p>
-          <h1 className="text-lg font-black text-[#123c34]">Tin tức &amp; Thông báo</h1>
+          <h1 className="text-lg font-black text-[#123c34]">Tin tức & Thông báo</h1>
           <p className="text-xs text-[#6b7773] mt-0.5">Quản lý và soạn thảo tin tức, hoạt động, thông báo đăng tải lên website chính.</p>
         </div>
         <button 
@@ -633,7 +633,7 @@ export default function NewsAdminPage() {
                   }`}
                 >
                   <span className="text-sm">🔍</span>
-                  <span>SEO &amp; Xem trước chia sẻ</span>
+                  <span>SEO & Xem trước chia sẻ</span>
                 </button>
               </div>
 
@@ -1178,8 +1178,8 @@ export default function NewsAdminPage() {
                       >
                         <option value="Tin tức">Tin tức (Mặc định)</option>
                         <option value="Thông báo">Thông báo</option>
-                        <option value="Sự kiện">Sự kiện &amp; Hoạt động</option>
-                        <option value="Hướng dẫn">Hướng dẫn &amp; Thể lệ</option>
+                        <option value="Sự kiện">Sự kiện & Hoạt động</option>
+                        <option value="Hướng dẫn">Hướng dẫn & Thể lệ</option>
                       </select>
                     </div>
 

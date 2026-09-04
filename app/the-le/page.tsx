@@ -178,7 +178,7 @@ export default function TheLePage() {
                 02
               </div>
               <div>
-                <p className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Mục 05 &amp; 06 Đề án 2026</p>
+                <p className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Mục 05 & 06 Đề án 2026</p>
                 <h2 className="text-2xl sm:text-3xl font-black text-[color:var(--site-text)]">
                   {language === 'en' ? 'Competition Rounds & Roadmap' : 'Hình thức & Nội dung các vòng thi'}
                 </h2>
@@ -242,8 +242,8 @@ export default function TheLePage() {
                   </div>
                   <div className="p-4 rounded-xl bg-[color:var(--site-bg)] border border-[color:var(--site-line)] space-y-1">
                     <span className="text-xs font-bold text-teal-600 block">Bán kết 4 (19/12)</span>
-                    <b className="text-[color:var(--site-text)] block">Phỏng vấn kín &amp; Thiện nguyện</b>
-                    <p>Phỏng vấn kín với BGK đánh giá tư duy &amp; Thực hiện dự án thiện nguyện tại Tây Ninh/Bình Phước.</p>
+                    <b className="text-[color:var(--site-text)] block">Phỏng vấn kín & Thiện nguyện</b>
+                    <p>Phỏng vấn kín với BGK đánh giá tư duy & Thực hiện dự án thiện nguyện tại Tây Ninh/Bình Phước.</p>
                   </div>
                 </div>
               </div>
@@ -257,7 +257,7 @@ export default function TheLePage() {
                     </span>
                     <h3 className="text-xl font-black text-[color:var(--site-text)]">GALA CHUNG KẾT XẾP HẠNG (26/12/2026)</h3>
                   </div>
-                  <span className="text-xs font-black text-amber-600">Đêm Vinh Danh &amp; Trao Giải</span>
+                  <span className="text-xs font-black text-amber-600">Đêm Vinh Danh & Trao Giải</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-[color:var(--site-muted)]">
                   <div className="p-4 rounded-xl bg-[color:var(--site-bg)] border border-[color:var(--site-line)] space-y-1">
@@ -292,11 +292,11 @@ export default function TheLePage() {
               <div className="rule-card p-6 sm:p-8 relative overflow-hidden border-2 border-amber-400/60 bg-gradient-to-br from-amber-500/5 via-[color:var(--site-card)] to-amber-500/10">
                 <div className="text-4xl mb-2">👑</div>
                 <h3 className="text-xl font-black text-[color:var(--site-text)]">02 QUÁN QUÂN ĐẠI SỨ TRUYỀN THÔNG</h3>
-                <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-4">01 Nam &amp; 01 Nữ</p>
+                <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-4">01 Nam & 01 Nữ</p>
                 <div className="text-3xl font-black text-amber-600 mb-3">10.000.000 VNĐ / giải</div>
                 <ul className="text-xs text-[color:var(--site-muted)] space-y-1.5 list-disc list-inside">
                   <li>Vương miện Đại sứ truyền thông danh giá</li>
-                  <li>Cúp kỷ niệm chương &amp; Sash đeo chính thức</li>
+                  <li>Cúp kỷ niệm chương & Sash đeo chính thức</li>
                   <li>Giấy chứng nhận từ Trường Đại học Công Thương TP.HCM</li>
                   <li>Gói quà tặng cao cấp từ Nhà tài trợ chương trình</li>
                 </ul>
@@ -305,10 +305,10 @@ export default function TheLePage() {
               <div className="rule-card p-6 sm:p-8 relative overflow-hidden border border-blue-400/60 bg-gradient-to-br from-blue-500/5 via-[color:var(--site-card)] to-blue-500/10">
                 <div className="text-4xl mb-2">🥈</div>
                 <h3 className="text-xl font-black text-[color:var(--site-text)]">02 Á QUÂN ĐẠI SỨ TRUYỀN THÔNG</h3>
-                <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4">01 Nam &amp; 01 Nữ</p>
+                <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4">01 Nam & 01 Nữ</p>
                 <div className="text-3xl font-black text-blue-600 mb-3">5.000.000 VNĐ / giải</div>
                 <ul className="text-xs text-[color:var(--site-muted)] space-y-1.5 list-disc list-inside">
-                  <li>Cúp kỷ niệm chương &amp; Sash đeo Á quân</li>
+                  <li>Cúp kỷ niệm chương & Sash đeo Á quân</li>
                   <li>Giấy chứng nhận từ Trường Đại học Công Thương TP.HCM</li>
                   <li>Gói quà tặng giá trị từ Nhà tài trợ chương trình</li>
                 </ul>
@@ -379,7 +379,7 @@ export default function TheLePage() {
               <div>
                 <p className="text-xs font-black uppercase tracking-widest text-[#0A2FFF]">Mục 10 Đề án 2026</p>
                 <h2 className="text-2xl sm:text-3xl font-black text-[color:var(--site-text)]">
-                  {language === 'en' ? 'Frequently Asked Questions & Contact' : 'Giải đáp thắc mắc &amp; Thông tin Ban Tổ chức'}
+                  {language === 'en' ? 'Frequently Asked Questions & Contact' : 'Giải đáp thắc mắc & Thông tin Ban Tổ chức'}
                 </h2>
               </div>
             </div>
@@ -412,7 +412,7 @@ export default function TheLePage() {
                   <b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương &bull; <b>Điện thoại / Zalo:</b> 0974 331 499 &bull; <b>Email:</b> duongdx@huit.edu.vn
                 </p>
                 <p className="text-xs text-[color:var(--site-muted)]">
-                  <b>Đơn vị chỉ đạo &amp; sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
+                  <b>Đơn vị chỉ đạo & sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
                 </p>
               </div>
 
