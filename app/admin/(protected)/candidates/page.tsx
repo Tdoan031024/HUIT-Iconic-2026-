@@ -1528,21 +1528,48 @@ export default function CandidatesAdminPage() {
                     : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-pink-500 hover:bg-pink-50 hover:text-pink-600'
                 }`}
               >
-                {showPromotionManager ? '▲ Ẩn' : `▼ Quản lý${votingPromotions.length > 0 ? ` (${votingPromotions.length})` : ''}`}
+                {showPromotionManager ? '▲ Ẩn' : '▼ Quản lý'}
               </button>
             </div>
 
             <div className="mt-1 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
-                  {activePromotion ? `🔥 Đang x${activePromotion.multiplier}` : '⚪ Chưa kích hoạt'}
-                </p>
                 {activePromotion ? (
-                  <p className="text-[10px] text-emerald-700 font-medium mt-0.5 truncate">
-                    {activePromotion.name} · {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
-                  </p>
+                  <>
+                    <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+                      🔥 Đang x{activePromotion.multiplier}
+                    </p>
+                    <p className="text-[10.5px] text-emerald-700 font-bold mt-0.5 truncate">
+                      {activePromotion.name} · Còn {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
+                    </p>
+                  </>
+                ) : upcomingPromotion ? (
+                  <>
+                    <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+                      ⏰ Sắp tới: <span className="text-pink-600 font-black">x{upcomingPromotion.multiplier}</span>
+                    </p>
+                    <p className="text-[10.5px] text-slate-600 font-medium mt-0.5 truncate">
+                      {upcomingPromotion.name} ({formatTimeToStart(parsePromotionTime(upcomingPromotion.startAt), currentTime)})
+                    </p>
+                  </>
+                ) : votingPromotions.length > 0 ? (
+                  <>
+                    <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+                      ⚪ Chưa kích hoạt
+                    </p>
+                    <p className="text-[10.5px] text-slate-500 font-medium mt-0.5 truncate">
+                      {votingPromotions.length} khung giờ đã lên lịch
+                    </p>
+                  </>
                 ) : (
-                  <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
+                  <>
+                    <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
+                      ⚪ Chưa kích hoạt
+                    </p>
+                    <p className="text-[10.5px] text-slate-400 font-medium mt-0.5 truncate">
+                      Chưa có lịch nhân điểm
+                    </p>
+                  </>
                 )}
               </div>
 
