@@ -734,7 +734,7 @@ export default function RegistrationsPage() {
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-[1000px] w-full text-left">
-            <thead className="bg-slate-50 text-[10.5px] font-black uppercase tracking-wide text-slate-500 border-b border-slate-200">
+            <thead className="bg-slate-50 text-[12px] font-bold text-slate-700 border-b border-slate-200">
               <tr>
                 <th className="px-3 py-3 w-10 text-center">
                   <input

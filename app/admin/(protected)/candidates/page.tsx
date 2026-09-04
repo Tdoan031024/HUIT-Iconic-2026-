@@ -1687,7 +1687,7 @@ export default function CandidatesAdminPage() {
               <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <tr className="border-b border-slate-200 bg-slate-50 text-[12px] font-bold text-slate-700">
                       <th className="py-2.5 px-3 whitespace-nowrap">Trạng thái</th>
                       <th className="py-2.5 px-3 min-w-[170px]">Tên chương trình</th>
                       <th className="py-2.5 px-3 min-w-[170px]">Mô tả</th>
@@ -2005,7 +2005,7 @@ export default function CandidatesAdminPage() {
           <div className="w-full overflow-x-auto">
             <table className="dashboard-table min-w-[960px] text-left">
               <thead>
-                <tr className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 border-b border-slate-200/70 bg-slate-50/60">
+                <tr className="text-[12px] font-bold text-slate-700 border-b border-slate-200/70 bg-slate-50/60">
                   <th className="px-3 py-3 w-10">
                     <input
                       type="checkbox"

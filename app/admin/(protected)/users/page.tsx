@@ -586,7 +586,7 @@ export default function UsersAdminPage() {
           )}
           <table className="w-full min-w-[1100px] border-collapse text-left">
             <thead>
-              <tr className="border-b border-[#edf2f0] bg-[#fbfdfc] text-[10px] font-black uppercase tracking-[0.12em] text-[#7a8b85]">
+              <tr className="border-b border-[#edf2f0] bg-[#fbfdfc] text-[12px] font-bold text-slate-700">
                 <th className="px-5 py-3 w-10">
                   <input
                     type="checkbox"

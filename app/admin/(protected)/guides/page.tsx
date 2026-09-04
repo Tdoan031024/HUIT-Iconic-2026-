@@ -383,7 +383,7 @@ export default function GuidesAdminPage() {
               <div className="overflow-hidden rounded-2xl border border-slate-200">
                 <table className="w-full border-collapse text-left">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-50 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
+                    <tr className="border-b border-slate-200 bg-slate-50 text-[12px] font-bold text-slate-700">
                       <th className="px-5 py-3">Gói điểm bình chọn</th>
                       <th className="px-5 py-3">Giá trị quy đổi (VNĐ)</th>
                     </tr>

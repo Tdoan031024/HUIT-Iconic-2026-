@@ -433,7 +433,7 @@ export default function AdminTrashPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] border-collapse text-left text-xs">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/75 text-[10px] font-black uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-100 bg-slate-50/75 text-[12px] font-bold text-slate-700">
                   <th className="px-4 py-3.5 w-12 text-center">
                     <input
                       type="checkbox"

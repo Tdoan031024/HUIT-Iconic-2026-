@@ -599,7 +599,7 @@ export default function SponsorsAdminPage() {
             </div>
           )}
           <table className="w-full border-collapse text-left text-[#18211f]">
-            <thead className="bg-[#fbfdfc] text-[10px] font-black uppercase tracking-wider text-[#7a8b85] border-b border-[#edf2f0]">
+            <thead className="bg-[#fbfdfc] text-[12px] font-bold text-slate-700 border-b border-[#edf2f0]">
               <tr>
                 <th className="px-5 py-3 w-10">
                   <input

@@ -373,10 +373,20 @@
     padding: 10px 14px;
     font-size: var(--font-table-head-size);
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    text-transform: none;
+    letter-spacing: normal;
     color: var(--text-muted);
     background: rgba(248, 250, 252, 0.88);
+  }
+
+  /* Đảm bảo tiêu đề tất cả các bảng luôn là chữ thường (Sentence case), không ép in hoa */
+  table thead th,
+  table thead tr,
+  .dashboard-table thead th,
+  .dashboard-table thead tr,
+  th {
+    text-transform: none !important;
+    letter-spacing: normal !important;
   }
 
   .dashboard-table tbody td {
