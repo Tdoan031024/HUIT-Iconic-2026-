@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendRegistrationConfirmationEmail } from '@/lib/mailer';
 
 const requiredFields = [
   'fullName', 'gender', 'major', 'className', 'studentId', 'placeOfBirth',
@@ -92,11 +93,33 @@ export async function POST(request: Request) {
       select: { id: true, createdAt: true },
     });
 
+    try {
+      await sendRegistrationConfirmationEmail({
+        id: registration.id,
+        fullName: text(body.fullName),
+        email: text(body.email).toLowerCase(),
+        phone: text(body.phone),
+        studentId: text(body.studentId),
+        faculty: optionalText(body.faculty),
+        major: text(body.major),
+        className: text(body.className),
+        gender: text(body.gender),
+        heightCm: optionalNumber(body.heightCm),
+        weightKg: optionalNumber(body.weightKg),
+        measurementBust: optionalNumber(body.measurementBust),
+        measurementWaist: optionalNumber(body.measurementWaist),
+        measurementHip: optionalNumber(body.measurementHip),
+        createdAt: registration.createdAt,
+      });
+    } catch (emailErr) {
+      console.error('[REGISTRATION_EMAIL_ERROR] Không thể gửi email xác nhận:', emailErr);
+    }
+
     return NextResponse.json({
       success: true,
       registrationId: registration.id,
       createdAt: registration.createdAt,
-      message: 'Hồ sơ đã được gửi thành công. Ban tổ chức sẽ liên hệ để hướng dẫn hoàn thiện hồ sơ.',
+      message: 'Hồ sơ đã được gửi thành công. Ban tổ chức đã gửi email xác nhận đến hòm thư của bạn.',
     }, { status: 201 });
   } catch (error) {
     console.error('Candidate registration error:', error);
