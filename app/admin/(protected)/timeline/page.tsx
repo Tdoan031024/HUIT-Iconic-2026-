@@ -5,7 +5,18 @@ import { TimelineEvent } from '@/lib/types';
 import { apiUrl } from '../../api';
 import { useAlert } from '../../AlertProvider';
 
-function emptyForm() {
+type TimelineFormState = {
+  date: string;
+  title: string;
+  titleEn: string;
+  description: string;
+  descriptionEn: string;
+  isActive: boolean;
+  round: string;
+  isImportant: boolean;
+};
+
+function emptyForm(): TimelineFormState {
   return {
     date: '',
     title: '',
@@ -16,6 +27,197 @@ function emptyForm() {
     round: 'Vòng loại',
     isImportant: false,
   };
+}
+
+interface TimelineModalProps {
+  isOpen: boolean;
+  title: string;
+  form: TimelineFormState;
+  setForm: React.Dispatch<React.SetStateAction<TimelineFormState>>;
+  isSubmitting: boolean;
+  onClose: () => void;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+function TimelineModal({
+  isOpen,
+  title,
+  form,
+  setForm,
+  isSubmitting,
+  onClose,
+  onSubmit,
+}: TimelineModalProps) {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/60 p-3 sm:p-5 backdrop-blur-sm transition-all duration-200"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
+      <form
+        onSubmit={onSubmit}
+        onMouseDown={(event) => event.stopPropagation()}
+        className="relative my-auto flex max-h-[calc(100vh-2rem)] w-full max-w-[620px] flex-col overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-2xl transition-all duration-200 sm:max-h-[calc(100vh-3rem)]"
+      >
+        {/* Modal Header */}
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#006AD1]">Quản lý lộ trình</p>
+            <h3 className="text-lg font-black text-slate-900">{title}</h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+            aria-label="Đóng"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Modal Body - Scrollable */}
+        <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+              Tên mốc thời gian (Tiếng Việt) <span className="text-red-500 font-bold">*</span>
+            </label>
+            <input
+              className="admin-input w-full"
+              value={form.title}
+              onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+              placeholder="Ví dụ: VÒNG SƠ KHẢO"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+              Tên mốc thời gian tiếng Anh (English Title)
+            </label>
+            <input
+              className="admin-input w-full"
+              value={form.titleEn}
+              onChange={(e) => setForm((prev) => ({ ...prev, titleEn: e.target.value }))}
+              placeholder="e.g. Preliminary Round Submission..."
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+                Phân loại vòng thi
+              </label>
+              <select
+                className="admin-input w-full"
+                value={form.round}
+                onChange={(e) => setForm((prev) => ({ ...prev, round: e.target.value }))}
+              >
+                <option value="Vòng loại">Vòng loại</option>
+                <option value="Vòng bán kết">Vòng bán kết</option>
+                <option value="Vòng chung kết">Vòng chung kết</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+                Thời gian diễn ra <span className="text-red-500 font-bold">*</span>
+              </label>
+              <input
+                className="admin-input w-full"
+                value={form.date}
+                onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
+                placeholder="Ví dụ: 15/09/2026 - 15/10/2026"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+              Mô tả chi tiết (Tiếng Việt) <span className="text-red-500 font-bold">*</span>
+            </label>
+            <textarea
+              className="admin-textarea h-24 w-full resize-none"
+              value={form.description}
+              onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
+              placeholder="Nhập mô tả chi tiết nội dung sự kiện, địa điểm và hướng dẫn..."
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
+              Mô tả chi tiết tiếng Anh (English Description)
+            </label>
+            <textarea
+              className="admin-textarea h-24 w-full resize-none"
+              value={form.descriptionEn}
+              onChange={(e) => setForm((prev) => ({ ...prev, descriptionEn: e.target.value }))}
+              placeholder="English details about this event..."
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 pt-1">
+            <label className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 cursor-pointer hover:border-slate-300 transition">
+              <div>
+                <p className="text-sm font-bold text-slate-900">Đang hoạt động</p>
+                <p className="text-xs text-slate-500">Hiển thị nổi bật trên giao diện</p>
+              </div>
+              <input
+                type="checkbox"
+                className="h-5 w-5 rounded accent-[#006AD1] cursor-pointer"
+                checked={form.isActive}
+                onChange={(e) => setForm((prev) => ({ ...prev, isActive: e.target.checked }))}
+              />
+            </label>
+
+            <label className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 cursor-pointer hover:border-slate-300 transition">
+              <div>
+                <p className="text-sm font-bold text-slate-900">Mốc quan trọng</p>
+                <p className="text-xs text-slate-500">Ưu tiên hiển thị trong lộ trình</p>
+              </div>
+              <input
+                type="checkbox"
+                className="h-5 w-5 rounded accent-[#006AD1] cursor-pointer"
+                checked={form.isImportant}
+                onChange={(e) => setForm((prev) => ({ ...prev, isImportant: e.target.checked }))}
+              />
+            </label>
+          </div>
+        </div>
+
+        {/* Modal Footer - Fixed at bottom */}
+        <div className="flex shrink-0 items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/90 px-6 py-4">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="admin-btn admin-btn-secondary !h-11 !px-5"
+          >
+            Hủy
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="admin-btn admin-btn-primary !h-11 !px-6 inline-flex items-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="h-4 w-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                <span>Đang lưu...</span>
+              </>
+            ) : (
+              'Lưu thay đổi'
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default function TimelineAdminPage() {
@@ -172,189 +374,6 @@ export default function TimelineAdminPage() {
 
   const activeCount = filteredEvents.filter((event) => event.isActive).length;
   const importantCount = filteredEvents.filter((event) => event.isImportant).length;
-
-  const Modal = ({
-    isOpen,
-    title,
-    onClose,
-    onSubmit,
-  }: {
-    isOpen: boolean;
-    title: string;
-    onClose: () => void;
-    onSubmit: (e: React.FormEvent) => void;
-  }) => {
-    if (!isOpen) return null;
-
-    return (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/60 p-3 sm:p-5 backdrop-blur-sm transition-all duration-200"
-        onMouseDown={(event) => event.target === event.currentTarget && onClose()}
-      >
-        <form
-          onSubmit={onSubmit}
-          onMouseDown={(event) => event.stopPropagation()}
-          className="relative my-auto flex max-h-[calc(100vh-2rem)] w-full max-w-[620px] flex-col overflow-hidden rounded-[24px] border border-slate-200/80 bg-white shadow-2xl transition-all duration-200 sm:max-h-[calc(100vh-3rem)]"
-        >
-          {/* Modal Header */}
-          <div className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-white px-6 py-4">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#006AD1]">Quản lý lộ trình</p>
-              <h3 className="text-lg font-black text-slate-900">{title}</h3>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-              aria-label="Đóng"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Modal Body - Scrollable */}
-          <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-4">
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                Tên mốc thời gian (Tiếng Việt) <span className="text-red-500 font-bold">*</span>
-              </label>
-              <input
-                className="admin-input w-full"
-                value={form.title}
-                onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
-                placeholder="Ví dụ: VÒNG SƠ KHẢO"
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                Tên mốc thời gian tiếng Anh (English Title)
-              </label>
-              <input
-                className="admin-input w-full"
-                value={form.titleEn}
-                onChange={(e) => setForm((prev) => ({ ...prev, titleEn: e.target.value }))}
-                placeholder="e.g. Preliminary Round Submission..."
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                  Phân loại vòng thi
-                </label>
-                <select
-                  className="admin-input w-full"
-                  value={form.round}
-                  onChange={(e) => setForm((prev) => ({ ...prev, round: e.target.value }))}
-                >
-                  <option value="Vòng loại">Vòng loại</option>
-                  <option value="Vòng bán kết">Vòng bán kết</option>
-                  <option value="Vòng chung kết">Vòng chung kết</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                  Thời gian diễn ra <span className="text-red-500 font-bold">*</span>
-                </label>
-                <input
-                  className="admin-input w-full"
-                  value={form.date}
-                  onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
-                  placeholder="Ví dụ: 15/09/2026 - 15/10/2026"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                Mô tả chi tiết (Tiếng Việt) <span className="text-red-500 font-bold">*</span>
-              </label>
-              <textarea
-                className="admin-textarea h-24 w-full resize-none"
-                value={form.description}
-                onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Nhập mô tả chi tiết nội dung sự kiện, địa điểm và hướng dẫn..."
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">
-                Mô tả chi tiết tiếng Anh (English Description)
-              </label>
-              <textarea
-                className="admin-textarea h-24 w-full resize-none"
-                value={form.descriptionEn}
-                onChange={(e) => setForm((prev) => ({ ...prev, descriptionEn: e.target.value }))}
-                placeholder="English details about this event..."
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 pt-1">
-              <label className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 cursor-pointer hover:border-slate-300 transition">
-                <div>
-                  <p className="text-sm font-bold text-slate-900">Đang hoạt động</p>
-                  <p className="text-xs text-slate-500">Hiển thị nổi bật trên giao diện</p>
-                </div>
-                <input
-                  type="checkbox"
-                  className="h-5 w-5 rounded accent-[#006AD1] cursor-pointer"
-                  checked={form.isActive}
-                  onChange={(e) => setForm((prev) => ({ ...prev, isActive: e.target.checked }))}
-                />
-              </label>
-
-              <label className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 cursor-pointer hover:border-slate-300 transition">
-                <div>
-                  <p className="text-sm font-bold text-slate-900">Mốc quan trọng</p>
-                  <p className="text-xs text-slate-500">Ưu tiên hiển thị trong lộ trình</p>
-                </div>
-                <input
-                  type="checkbox"
-                  className="h-5 w-5 rounded accent-[#006AD1] cursor-pointer"
-                  checked={form.isImportant}
-                  onChange={(e) => setForm((prev) => ({ ...prev, isImportant: e.target.checked }))}
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* Modal Footer - Fixed at bottom */}
-          <div className="flex shrink-0 items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/90 px-6 py-4">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="admin-btn admin-btn-secondary !h-11 !px-5"
-            >
-              Hủy
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="admin-btn admin-btn-primary !h-11 !px-6 inline-flex items-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="h-4 w-4 animate-spin text-white" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  <span>Đang lưu...</span>
-                </>
-              ) : (
-                'Lưu thay đổi'
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  };
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
@@ -519,15 +538,21 @@ export default function TimelineAdminPage() {
       </section>
 
       {/* Modals */}
-      <Modal
+      <TimelineModal
         isOpen={isAddModalOpen}
         title="Thêm mốc thời gian mới"
+        form={form}
+        setForm={setForm}
+        isSubmitting={isSubmitting}
         onClose={() => !isSubmitting && setIsAddModalOpen(false)}
         onSubmit={handleAddSubmit}
       />
-      <Modal
+      <TimelineModal
         isOpen={isEditModalOpen}
         title="Chỉnh sửa mốc thời gian"
+        form={form}
+        setForm={setForm}
+        isSubmitting={isSubmitting}
         onClose={() => !isSubmitting && setIsEditModalOpen(false)}
         onSubmit={handleEditSubmit}
       />
