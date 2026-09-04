@@ -459,7 +459,16 @@ export default function NewsAdminPage() {
                       <img src={formatAssetUrl(p.thumbnailUrl || undefined) || '/uploads/baner.jpg'} className="w-full h-full object-cover" alt="Thumb" />
                     </div>
                   </td>
-                  <td className="px-5 py-2.5 font-bold text-[#123c34] max-w-sm truncate" title={p.title}>{p.title}</td>
+                  <td className="px-5 py-2.5 font-bold text-[#123c34] max-w-sm truncate" title={p.title}>
+                    <a
+                      href={`/tin-tuc/${p.slug || p.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-emerald-700 hover:underline transition"
+                    >
+                      {p.title}
+                    </a>
+                  </td>
                   <td className="px-5 py-2.5">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
                       p.category === 'Thông báo' 
@@ -483,6 +492,19 @@ export default function NewsAdminPage() {
                   <td className="px-5 py-2.5 text-slate-500 font-semibold">{formatDate(p.createdAt)}</td>
                   <td className="px-5 py-2.5">
                     <div className="flex items-center justify-center gap-1.5">
+                      <a
+                        href={`/tin-tuc/${p.slug || p.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="grid h-7 w-7 place-items-center rounded-md border border-sky-200 bg-sky-50 text-sky-700 hover:border-sky-400 hover:bg-sky-100 transition"
+                        title="Xem bài viết trên trang web"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                          <polyline points="15 3 21 3 21 9" />
+                          <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                      </a>
                       <button
                         type="button"
                         onClick={() => openEditModal(p)}

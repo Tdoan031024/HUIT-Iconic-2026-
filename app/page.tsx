@@ -1305,29 +1305,38 @@ export default function HomePage() {
               <p>{language === 'en' ? 'Follow milestones, activities and important announcements throughout the competition.' : 'Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.'}</p>
             </div>
             <div className="news-grid-modern">
-              {homepageNewsPosts.map((post) => (
-                <article key={post.id} className="news-card-modern flex flex-col h-full">
-                  <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    <img
-                      src={post.thumbnailUrl || '/uploads/baner.jpg'}
-                      loading="lazy"
-                      alt={text(post.title, post.titleEn)}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                  </div>
-                  <div className="news-card-body flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="news-meta">
-                        <strong>{post.category}</strong>
-                        <time>{formatDateTime(post.createdAt)}</time>
-                      </div>
-                      <h3 className="line-clamp-2">{text(post.title, post.titleEn)}</h3>
-                      <p className="line-clamp-3">{text(post.summary, post.summaryEn)}</p>
+              {homepageNewsPosts.map((post) => {
+                const postUrl = `/tin-tuc/${post.slug || post.id}`;
+                return (
+                  <Link
+                    key={post.id}
+                    href={postUrl}
+                    className="news-card-modern flex flex-col h-full group cursor-pointer block no-underline text-inherit transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <div className="relative w-full aspect-[16/10] overflow-hidden bg-slate-100 dark:bg-slate-800">
+                      <img
+                        src={post.thumbnailUrl || '/uploads/baner.jpg'}
+                        loading="lazy"
+                        alt={text(post.title, post.titleEn)}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </div>
-                    <Link className="news-link mt-3" href={`/tin-tuc/${post.slug}`}>{language === 'en' ? 'Read more →' : 'Xem chi tiết →'}</Link>
-                  </div>
-                </article>
-              ))}
+                    <div className="news-card-body flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="news-meta">
+                          <strong>{post.category}</strong>
+                          <time>{formatDateTime(post.createdAt)}</time>
+                        </div>
+                        <h3 className="line-clamp-2 group-hover:text-[var(--site-primary)] transition-colors">{text(post.title, post.titleEn)}</h3>
+                        <p className="line-clamp-3">{text(post.summary, post.summaryEn)}</p>
+                      </div>
+                      <span className="news-link mt-3 inline-flex items-center text-[var(--site-primary)] font-bold group-hover:underline">
+                        {language === 'en' ? 'Read more →' : 'Xem chi tiết →'}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
             <div className="mt-8 flex justify-center">
               <Link href="/tin-tuc" className="project-list-action active inline-flex items-center justify-center rounded-full px-6 py-3 text-[11px] sm:text-[13px] font-extrabold uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5 active:scale-95">

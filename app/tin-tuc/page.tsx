@@ -260,14 +260,14 @@ export default function TinTucPage() {
             <div className="space-y-12">
               {/* Featured Post Card */}
               {featuredPost && activeTab === 'Tất cả' && searchQuery === '' && (
-                <div className={`featured-card-wrap ${contentSection.visible ? 'fade-up fade-up-d1' : 'opacity-0'}`}>
-                  <div className="featured-img-box">
+                <div className={`featured-card-wrap group ${contentSection.visible ? 'fade-up fade-up-d1' : 'opacity-0'}`}>
+                  <Link href={`/tin-tuc/${featuredPost.slug || featuredPost.id}`} className="featured-img-box block cursor-pointer">
                     <img
                       src={featuredPost.thumbnailUrl || '/uploads/baner.jpg'}
                       alt={featuredPost.title}
                       loading="lazy"
                     />
-                  </div>
+                  </Link>
                   <div className="featured-body">
                     <div className="news-meta">
                       <strong>{featuredPost.category}</strong>
@@ -277,14 +277,14 @@ export default function TinTucPage() {
                       <span>👁️ {featuredPost.views.toLocaleString()} lượt xem</span>
                     </div>
                     <h3 className="text-xl sm:text-2xl font-black text-[var(--site-text)] mt-3 mb-2 leading-snug">
-                      <Link href={`/tin-tuc/${featuredPost.slug}`} className="hover:text-[var(--site-primary)] transition">
+                      <Link href={`/tin-tuc/${featuredPost.slug || featuredPost.id}`} className="hover:text-[var(--site-primary)] transition">
                         {featuredPost.title}
                       </Link>
                     </h3>
                     <p className="text-xs sm:text-sm text-[var(--site-muted)] leading-relaxed line-clamp-3">
                       {text(featuredPost.summary, featuredPost.summaryEn) || (language === 'en' ? 'No summary available.' : 'Không có mô tả tóm tắt.')}
                     </p>
-                    <Link href={`/tin-tuc/${featuredPost.slug}`} className="news-link items-center mt-4">
+                    <Link href={`/tin-tuc/${featuredPost.slug || featuredPost.id}`} className="news-link items-center mt-4">
                       Đọc chi tiết bài viết →
                     </Link>
                   </div>
@@ -294,41 +294,47 @@ export default function TinTucPage() {
               {/* Standard List Grid */}
               <div className={`news-grid-custom ${contentSection.visible ? 'fade-up fade-up-d2' : 'opacity-0'}`}>
                 {/* If tab is active or search is applied, we list everything in the grid */}
-                {(activeTab !== 'Tất cả' || searchQuery !== '' ? filteredPosts : listPosts).map((post, idx) => (
-                  <article key={post.id} className="news-card-modern flex flex-col h-full" style={{ animationDelay: `${idx * 80}ms` }}>
-                    <div className="relative overflow-hidden aspect-video">
-                      <img
-                        src={post.thumbnailUrl || '/uploads/baner.jpg'}
-                        alt={text(post.title, post.titleEn)}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition duration-500 hover:scale-105"
-                      />
-                    </div>
-                    <div className="news-card-body flex-1 flex flex-col justify-between">
-                      <div>
-                        <div className="news-meta">
-                          <strong>{post.category}</strong>
-                          <span>•</span>
-                          <time>{formatDate(post.createdAt)}</time>
-                        </div>
-                        <h3 className="text-[15px] sm:text-[17px] font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2">
-                          <Link href={`/tin-tuc/${post.slug}`} className="hover:text-[var(--site-primary)] transition">
+                {(activeTab !== 'Tất cả' || searchQuery !== '' ? filteredPosts : listPosts).map((post, idx) => {
+                  const postUrl = `/tin-tuc/${post.slug || post.id}`;
+                  return (
+                    <Link
+                      key={post.id}
+                      href={postUrl}
+                      className="news-card-modern flex flex-col h-full group cursor-pointer block no-underline text-inherit transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                      style={{ animationDelay: `${idx * 80}ms` }}
+                    >
+                      <div className="relative overflow-hidden aspect-video">
+                        <img
+                          src={post.thumbnailUrl || '/uploads/baner.jpg'}
+                          alt={text(post.title, post.titleEn)}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                      <div className="news-card-body flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="news-meta">
+                            <strong>{post.category}</strong>
+                            <span>•</span>
+                            <time>{formatDate(post.createdAt)}</time>
+                          </div>
+                          <h3 className="text-[15px] sm:text-[17px] font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2 group-hover:text-[var(--site-primary)] transition-colors">
                             {text(post.title, post.titleEn)}
-                          </Link>
-                        </h3>
-                        <p className="text-[12px] text-[var(--site-muted)] leading-relaxed line-clamp-2 mt-2">
-                          {text(post.summary, post.summaryEn) || (language === 'en' ? 'No summary available.' : 'Không có mô tả tóm tắt.')}
-                        </p>
+                          </h3>
+                          <p className="text-[12px] text-[var(--site-muted)] leading-relaxed line-clamp-2 mt-2">
+                            {text(post.summary, post.summaryEn) || (language === 'en' ? 'No summary available.' : 'Không có mô tả tóm tắt.')}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-[var(--site-line)] mt-4 pt-3">
+                          <span className="text-[10px] text-[var(--site-muted)]">👁️ {post.views.toLocaleString()} lượt xem</span>
+                          <span className="text-[11px] font-extrabold text-[var(--site-primary)] group-hover:underline">
+                            Đọc tiếp →
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between border-t border-[var(--site-line)] mt-4 pt-3">
-                        <span className="text-[10px] text-[var(--site-muted)]">👁️ {post.views.toLocaleString()} lượt xem</span>
-                        <Link href={`/tin-tuc/${post.slug}`} className="text-[11px] font-extrabold text-[var(--site-primary)] hover:underline">
-                          Đọc tiếp →
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
 
               <div className={`flex justify-center ${contentSection.visible ? 'fade-up fade-up-d3' : 'opacity-0'}`}>

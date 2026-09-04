@@ -199,35 +199,40 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
                   <span>📰</span> Tin tức liên quan khác
                 </h3>
                 <div className="related-news-grid">
-                  {relatedPosts.map((rp) => (
-                    <article key={rp.id} className="news-card-modern flex flex-col h-full">
-                      <div className="relative overflow-hidden aspect-video">
-                        <img
-                          src={rp.thumbnailUrl || '/uploads/baner.jpg'}
-                          alt={rp.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="news-card-body flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="news-meta">
-                            <strong>{rp.category}</strong>
-                            <span>•</span>
-                            <time>{formatDate(rp.createdAt)}</time>
-                          </div>
-                          <h4 className="text-sm font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2">
-                            <Link href={`/tin-tuc/${rp.slug}`} className="hover:text-[var(--site-primary)] transition">
-                              {text(rp.title, rp.titleEn)}
-                            </Link>
-                          </h4>
+                  {relatedPosts.map((rp) => {
+                    const rpUrl = `/tin-tuc/${rp.slug || rp.id}`;
+                    return (
+                      <Link
+                        key={rp.id}
+                        href={rpUrl}
+                        className="news-card-modern flex flex-col h-full group cursor-pointer block no-underline text-inherit transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                      >
+                        <div className="relative overflow-hidden aspect-video">
+                          <img
+                            src={rp.thumbnailUrl || '/uploads/baner.jpg'}
+                            alt={rp.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                          />
                         </div>
-                        <Link href={`/tin-tuc/${rp.slug}`} className="text-[11px] font-extrabold text-[var(--site-primary)] hover:underline mt-4">
-                          Xem chi tiết →
-                        </Link>
-                      </div>
-                    </article>
-                  ))}
+                        <div className="news-card-body flex-1 flex flex-col justify-between">
+                          <div>
+                            <div className="news-meta">
+                              <strong>{rp.category}</strong>
+                              <span>•</span>
+                              <time>{formatDate(rp.createdAt)}</time>
+                            </div>
+                            <h4 className="text-sm font-bold text-[var(--site-text)] leading-snug line-clamp-2 mt-2 group-hover:text-[var(--site-primary)] transition-colors">
+                              {text(rp.title, rp.titleEn)}
+                            </h4>
+                          </div>
+                          <span className="text-[11px] font-extrabold text-[var(--site-primary)] group-hover:underline mt-4 inline-block">
+                            Xem chi tiết →
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}
