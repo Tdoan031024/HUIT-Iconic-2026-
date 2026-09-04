@@ -6,6 +6,7 @@ import { Candidate } from '@/lib/types';
 import { apiUrl, formatAssetUrl } from '../../api';
 import DateTimeInput from '../../components/DateTimeInput';
 import ImageDropzone from '../../components/ImageDropzone';
+import { useAlert } from '../../AlertProvider';
 
 type VotingPromotion = {
   id: string;
@@ -982,6 +983,7 @@ function formatDateTimeDisplay(dateStr: string) {
 }
 
 export default function CandidatesAdminPage() {
+  const { showAlert, showConfirm } = useAlert();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [search, setSearch] = useState('');
   const [tableFilter, setTableFilter] = useState('ALL');
@@ -1168,7 +1170,7 @@ export default function CandidatesAdminPage() {
       setSavedIndicator(true);
       setTimeout(() => setSavedIndicator(false), 2000);
     } catch {
-      alert('Không thể lưu cài đặt bình chọn');
+      showAlert('Không thể lưu cài đặt bình chọn', 'error');
     } finally {
       setSettingsSaving(false);
     }
@@ -1191,10 +1193,10 @@ export default function CandidatesAdminPage() {
         });
       }
       if (res.ok) {
-        alert(nextVal ? 'Đã tạm ẩn mục Danh sách thí sinh trên trang chủ!' : 'Đã hiển thị mục Danh sách thí sinh trên trang chủ!');
+        showAlert(nextVal ? 'Đã tạm ẩn mục Danh sách thí sinh trên trang chủ!' : 'Đã hiển thị mục Danh sách thí sinh trên trang chủ!', 'success');
       }
     } catch {
-      alert('Không thể lưu cài đặt ẩn/hiện thí sinh');
+      showAlert('Không thể lưu cài đặt ẩn/hiện thí sinh', 'error');
     }
   };
 
@@ -1227,20 +1229,36 @@ export default function CandidatesAdminPage() {
   };
 
   const deletePromotion = async (id: string) => {
-    if (!confirm('Bạn có chắc muốn xóa khung giờ nhân điểm này?')) return;
+    const ok = await showConfirm(
+      'Bạn có chắc muốn xóa khung giờ nhân điểm này?',
+      'Xác nhận xóa khung giờ',
+      'warning',
+      'Xóa ngay',
+      'Hủy bỏ'
+    );
+    if (!ok) return;
     const nextList = votingPromotions.filter((p) => p.id !== id);
     setVotingPromotions(nextList);
     await saveVotingSettings(nextList);
+    showAlert('Đã xóa khung giờ nhân điểm', 'success');
   };
 
   const handleClearExpiredPromotions = async () => {
-    if (!confirm('Dọn dẹp tất cả các khung giờ đã kết thúc khỏi danh sách?')) return;
+    const ok = await showConfirm(
+      'Dọn dẹp tất cả các khung giờ đã kết thúc khỏi danh sách?',
+      'Dọn dẹp lịch cũ',
+      'info',
+      'Dọn dẹp',
+      'Hủy bỏ'
+    );
+    if (!ok) return;
     const nextList = votingPromotions.filter((p) => {
       const end = parsePromotionTime(p.endAt);
       return !Number.isFinite(end) || end >= currentTime;
     });
     setVotingPromotions(nextList);
     await saveVotingSettings(nextList);
+    showAlert('Đã dọn dẹp các khung giờ hết hạn', 'success');
   };
 
   const openAddModal = () => {
@@ -1260,7 +1278,7 @@ export default function CandidatesAdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.sbd) {
-      alert('Vui lòng điền Họ tên và SBD!');
+      showAlert('Vui lòng điền Họ tên và SBD!', 'warning');
       return;
     }
 
@@ -1275,7 +1293,7 @@ export default function CandidatesAdminPage() {
           const errData = await res.json().catch(() => null);
           throw new Error(errData?.error || errData?.message || 'Không thể tạo thí sinh');
         }
-        alert('Thêm thí sinh mới thành công!');
+        showAlert('Thêm thí sinh mới thành công!', 'success');
       } else if (modalMode === 'edit' && form.id) {
         const res = await fetch(apiUrl(`/api/admin/candidates/${form.id}`), {
           method: 'PUT',
@@ -1286,33 +1304,48 @@ export default function CandidatesAdminPage() {
           const errData = await res.json().catch(() => null);
           throw new Error(errData?.error || errData?.message || 'Không thể cập nhật thí sinh');
         }
-        alert('Cập nhật thông tin thí sinh thành công!');
+        showAlert('Cập nhật thông tin thí sinh thành công!', 'success');
       }
 
       setModalMode(null);
       loadCandidates();
     } catch (err: any) {
-      alert(err.message || 'Lỗi khi lưu dữ liệu');
+      showAlert(err.message || 'Lỗi khi lưu dữ liệu', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc muốn xóa thí sinh này vào thùng rác?')) return;
+    const ok = await showConfirm(
+      'Bạn có chắc muốn xóa thí sinh này vào thùng rác?',
+      'Xác nhận xóa thí sinh',
+      'error',
+      'Xóa ngay',
+      'Hủy bỏ'
+    );
+    if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/candidates/${id}`), { method: 'DELETE' });
       if (res.ok) {
         loadCandidates();
+        showAlert('Đã chuyển thí sinh vào thùng rác', 'success');
       } else {
-        alert('Xóa thí sinh thất bại.');
+        showAlert('Xóa thí sinh thất bại.', 'error');
       }
     } catch {
-      alert('Lỗi kết nối khi xóa thí sinh.');
+      showAlert('Lỗi kết nối khi xóa thí sinh.', 'error');
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Bạn có chắc muốn xóa ${selectedIds.length} thí sinh đã chọn?`)) return;
+    const ok = await showConfirm(
+      `Bạn có chắc muốn xóa ${selectedIds.length} thí sinh đã chọn?`,
+      'Xác nhận xóa hàng loạt',
+      'error',
+      `Xóa ${selectedIds.length} thí sinh`,
+      'Hủy bỏ'
+    );
+    if (!ok) return;
 
     try {
       for (const id of selectedIds) {
@@ -1320,8 +1353,9 @@ export default function CandidatesAdminPage() {
       }
       setSelectedIds([]);
       loadCandidates();
+      showAlert(`Đã xóa ${selectedIds.length} thí sinh thành công`, 'success');
     } catch {
-      alert('Lỗi khi xóa hàng loạt.');
+      showAlert('Lỗi khi xóa hàng loạt.', 'error');
     }
   };
 
