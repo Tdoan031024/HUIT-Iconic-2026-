@@ -1095,9 +1095,13 @@ export default function GioiThieuPage() {
                   <h3 className="text-xl font-black text-[color:var(--about-text-primary)]">
                     {language === 'en' ? 'HUIT’s ICONIC 2026 Organizing Committee' : 'Ban Tổ Chức HUIT’s ICONIC 2026'}
                   </h3>
-                  <p className="text-sm text-[color:var(--about-text-secondary)]">
-                    <b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương &bull; <b>SĐT / Zalo:</b> 0974 331 499 &bull; <b>Email:</b> duongdx@huit.edu.vn
-                  </p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[color:var(--about-text-secondary)] justify-center sm:justify-start">
+                    <span className="whitespace-nowrap"><b>{language === 'en' ? 'Head of OC:' : 'Trưởng Ban Tổ chức:'}</b> Thầy Đặng Xuân Dương</span>
+                    <span className="hidden sm:inline opacity-40">&bull;</span>
+                    <span className="whitespace-nowrap"><b>{language === 'en' ? 'Phone / Zalo:' : 'SĐT / Zalo:'}</b> <a href="tel:0974331499" className="hover:text-[var(--site-primary)] transition">0974 331 499</a></span>
+                    <span className="hidden sm:inline opacity-40">&bull;</span>
+                    <span className="whitespace-nowrap"><b>Email:</b> <a href="mailto:duongdx@huit.edu.vn" className="hover:text-[var(--site-primary)] transition">duongdx@huit.edu.vn</a></span>
+                  </div>
                   <p className="text-sm text-[color:var(--about-text-secondary)]">
                     <b>Đơn vị chỉ đạo & sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
                   </p>

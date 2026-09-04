@@ -408,9 +408,13 @@ export default function TheLePage() {
             <div className="rule-card p-6 sm:p-8 bg-gradient-to-br from-[#0A2FFF]/5 to-transparent flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="space-y-2 text-center sm:text-left">
                 <h3 className="text-lg font-black text-[color:var(--site-text)]">Ban Tổ Chức HUIT’s ICONIC 2026</h3>
-                <p className="text-xs text-[color:var(--site-muted)]">
-                  <b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương &bull; <b>Điện thoại / Zalo:</b> 0974 331 499 &bull; <b>Email:</b> duongdx@huit.edu.vn
-                </p>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[color:var(--site-muted)] justify-center sm:justify-start">
+                  <span className="whitespace-nowrap"><b>Trưởng Ban Tổ chức:</b> Thầy Đặng Xuân Dương</span>
+                  <span className="hidden sm:inline opacity-40">&bull;</span>
+                  <span className="whitespace-nowrap"><b>Điện thoại / Zalo:</b> <a href="tel:0974331499" className="hover:text-[var(--site-primary)] transition">0974 331 499</a></span>
+                  <span className="hidden sm:inline opacity-40">&bull;</span>
+                  <span className="whitespace-nowrap"><b>Email:</b> <a href="mailto:duongdx@huit.edu.vn" className="hover:text-[var(--site-primary)] transition">duongdx@huit.edu.vn</a></span>
+                </div>
                 <p className="text-xs text-[color:var(--site-muted)]">
                   <b>Đơn vị chỉ đạo & sản xuất:</b> Trường Đại học Công Thương TP. Hồ Chí Minh (HUIT)
                 </p>
