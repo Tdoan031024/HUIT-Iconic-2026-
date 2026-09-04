@@ -43,6 +43,39 @@ function displayValue(value?: string | number | boolean | null) {
   return value || 'Chưa cập nhật';
 }
 
+function formatCandidateSource(source?: string, registrationId?: string) {
+  const actualSource = source || (registrationId ? 'WEB' : 'MANUAL');
+  if (actualSource === 'WEB') return 'Đăng ký qua Web';
+  if (actualSource === 'IMPORT') return 'Nhập từ CSV';
+  return 'Thêm thủ công';
+}
+
+function getSourceBadge(source?: string, registrationId?: string) {
+  const actualSource = source || (registrationId ? 'WEB' : 'MANUAL');
+  if (actualSource === 'WEB') {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700 whitespace-nowrap shadow-2xs" title="Thí sinh gửi hồ sơ qua trang đăng ký trực tuyến của website">
+        <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+        Đăng ký qua Web
+      </span>
+    );
+  }
+  if (actualSource === 'IMPORT') {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700 whitespace-nowrap shadow-2xs" title="Dữ liệu thí sinh được nạp hàng loạt từ file Excel/CSV">
+        <span className="h-1.5 w-1.5 rounded-full bg-violet-500" />
+        Nhập từ CSV
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 whitespace-nowrap shadow-2xs" title="Thí sinh được tạo trực tiếp bằng tay trên giao diện admin">
+      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+      Thêm thủ công
+    </span>
+  );
+}
+
 function Badge({
   children,
   tone = 'slate',
@@ -215,6 +248,18 @@ function CandidateEditModal({
               <option value="Vòng sơ khảo">Vòng sơ khảo</option>
               <option value="Vòng bán kết">Vòng bán kết</option>
               <option value="Vòng chung kết">Vòng chung kết</option>
+            </select>
+          </label>
+          <label className="space-y-1">
+            <span className={labelText}>Nguồn hồ sơ</span>
+            <select
+              className={inputClass}
+              value={form.source || (form.registrationId ? 'WEB' : 'MANUAL')}
+              onChange={(e) => update('source', e.target.value)}
+            >
+              <option value="MANUAL">✍️ Thêm thủ công (Admin)</option>
+              <option value="WEB">🌐 Đăng ký qua Web</option>
+              <option value="IMPORT">📥 Nhập từ file CSV/Excel</option>
             </select>
           </label>
           <label className="space-y-1">
@@ -481,8 +526,9 @@ export default function CandidateDetailPage() {
               <div>
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-pink-600">Thí sinh Đại sứ Truyền thông HUIT 2026</p>
                 <h1 className="mt-1.5 text-2xl sm:text-3xl font-black text-slate-950">{candidate.name}</h1>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap items-center gap-2">
                   <Badge tone="slate">SBD: {candidate.sbd}</Badge>
+                  {getSourceBadge(candidate.source, candidate.registrationId)}
                   <Badge tone={isFemale ? 'pink' : 'blue'}>{tableLabel} ({candidate.gender || 'Nữ'})</Badge>
                   <Badge tone="green">{candidate.currentRound || 'Vòng sơ khảo'}</Badge>
                   <Badge tone="orange">{candidate.status || 'Đủ hồ sơ'}</Badge>
@@ -505,7 +551,8 @@ export default function CandidateDetailPage() {
               {candidate.description || 'Chưa cập nhật mô tả ngắn về thí sinh.'}
             </p>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <InfoItem label="Nguồn hồ sơ" value={formatCandidateSource(candidate.source, candidate.registrationId)} />
               <InfoItem label="Khoa / Viện / Phòng" value={candidate.faculty || 'HUIT'} />
               <InfoItem label="Lớp & MSSV" value={`${candidate.className || '--'} • ${candidate.studentId || '--'}`} />
               <InfoItem

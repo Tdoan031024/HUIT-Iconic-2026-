@@ -582,6 +582,7 @@ export async function addCandidate(data: Partial<Candidate>, adminUser = 'admin'
       teamName: data.teamName,
       sector: data.sector || data.faculty,
       showcaseImages: data.showcaseImages,
+      source: data.source || 'MANUAL',
       isDeleted: false,
     },
   });
@@ -596,7 +597,7 @@ export async function bulkImportCandidates(payload: Partial<Candidate>[], adminU
   const errors: string[] = [];
   for (const item of payload) {
     try {
-      await addCandidate(item, adminUser);
+      await addCandidate({ ...item, source: 'IMPORT' }, adminUser);
       successCount++;
     } catch (err: any) {
       errors.push(`Lỗi import [${item.sbd || item.name}]: ${err.message}`);

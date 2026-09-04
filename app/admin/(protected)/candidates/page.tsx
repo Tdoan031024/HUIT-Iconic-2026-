@@ -150,7 +150,41 @@ const emptyCandidate: Partial<Candidate> = {
   description: '',
   biography: '',
   showcaseImages: '',
+  source: 'MANUAL',
 };
+
+function formatCandidateSource(source?: string, registrationId?: string) {
+  const actualSource = source || (registrationId ? 'WEB' : 'MANUAL');
+  if (actualSource === 'WEB') return 'Đăng ký qua Web';
+  if (actualSource === 'IMPORT') return 'Nhập từ CSV';
+  return 'Thêm thủ công';
+}
+
+function getSourceBadge(source?: string, registrationId?: string) {
+  const actualSource = source || (registrationId ? 'WEB' : 'MANUAL');
+  if (actualSource === 'WEB') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-[10px] font-bold text-sky-700 whitespace-nowrap shadow-2xs" title="Thí sinh gửi hồ sơ qua trang đăng ký trực tuyến của website">
+        <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+        Đăng ký qua Web
+      </span>
+    );
+  }
+  if (actualSource === 'IMPORT') {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold text-violet-700 whitespace-nowrap shadow-2xs" title="Dữ liệu thí sinh được nạp hàng loạt từ file Excel/CSV">
+        <span className="h-1.5 w-1.5 rounded-full bg-violet-500" />
+        Nhập từ CSV
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 whitespace-nowrap shadow-2xs" title="Thí sinh được tạo trực tiếp bằng tay trên giao diện admin">
+      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+      Thêm thủ công
+    </span>
+  );
+}
 
 function ActionButton({
   title,
@@ -347,6 +381,18 @@ function CandidateModal({
                 <option value="Cần bổ sung ảnh">Cần bổ sung ảnh</option>
                 <option value="Đã vào vòng trong">Đã vào vòng trong</option>
                 <option value="Tạm dừng">Tạm dừng</option>
+              </select>
+            </label>
+            <label className="space-y-1">
+              <span className={labelText}>Nguồn hồ sơ</span>
+              <select
+                className={inputClass}
+                value={form.source || (form.registrationId ? 'WEB' : 'MANUAL')}
+                onChange={(event) => update('source', event.target.value)}
+              >
+                <option value="MANUAL">✍️ Tự thêm bằng tay</option>
+                <option value="WEB">🌐 Đăng ký qua Web</option>
+                <option value="IMPORT">📁 Nhập từ file CSV</option>
               </select>
             </label>
             {mode === 'edit' && (
@@ -915,6 +961,7 @@ export default function CandidatesAdminPage() {
   const [tableFilter, setTableFilter] = useState('ALL');
   const [roundFilter, setRoundFilter] = useState('ALL');
   const [genderFilter, setGenderFilter] = useState('ALL');
+  const [sourceFilter, setSourceFilter] = useState<'ALL' | 'WEB' | 'MANUAL' | 'IMPORT'>('ALL');
   const [modalMode, setModalMode] = useState<'add' | 'edit' | null>(null);
   const [form, setForm] = useState<Partial<Candidate>>(emptyCandidate);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -935,7 +982,7 @@ export default function CandidatesAdminPage() {
 
   useEffect(() => {
     setSelectedIds([]);
-  }, [search, tableFilter, roundFilter, genderFilter]);
+  }, [search, tableFilter, roundFilter, genderFilter, sourceFilter]);
 
   const [isTableFilterOpen, setIsTableFilterOpen] = useState(false);
   const [isRoundFilterOpen, setIsRoundFilterOpen] = useState(false);
@@ -1007,6 +1054,11 @@ export default function CandidatesAdminPage() {
       .filter((c) => tableFilter === 'ALL' || c.contestTable === tableFilter)
       .filter((c) => roundFilter === 'ALL' || c.currentRound === roundFilter)
       .filter((c) => genderFilter === 'ALL' || c.gender === genderFilter)
+      .filter((c) => {
+        if (sourceFilter === 'ALL') return true;
+        const actualSource = c.source || (c.registrationId ? 'WEB' : 'MANUAL');
+        return actualSource === sourceFilter;
+      })
       .filter((c) =>
         !keyword ||
         c.name.toLowerCase().includes(keyword) ||
@@ -1018,10 +1070,13 @@ export default function CandidatesAdminPage() {
         (c.leaderEmail || '').toLowerCase().includes(keyword) ||
         (c.talent || '').toLowerCase().includes(keyword)
       );
-  }, [rankedCandidates, roundFilter, search, tableFilter, genderFilter]);
+  }, [rankedCandidates, roundFilter, search, tableFilter, genderFilter, sourceFilter]);
 
   const femaleCount = useMemo(() => candidates.filter(c => c.gender === 'Nữ' || c.contestTable === 'FEMALE').length, [candidates]);
   const maleCount = useMemo(() => candidates.filter(c => c.gender === 'Nam' || c.contestTable === 'MALE').length, [candidates]);
+  const webCount = useMemo(() => candidates.filter(c => (c.source || (c.registrationId ? 'WEB' : 'MANUAL')) === 'WEB').length, [candidates]);
+  const manualCount = useMemo(() => candidates.filter(c => (c.source || (c.registrationId ? 'WEB' : 'MANUAL')) === 'MANUAL').length, [candidates]);
+  const importCount = useMemo(() => candidates.filter(c => (c.source || (c.registrationId ? 'WEB' : 'MANUAL')) === 'IMPORT').length, [candidates]);
 
   const activePromotion = useMemo(() => {
     const now = currentTime;
@@ -1171,6 +1226,7 @@ export default function CandidatesAdminPage() {
     const headers = [
       'SBD',
       'Tên thí sinh',
+      'Nguồn hồ sơ',
       'Giới tính',
       'Bảng thi',
       'Khoa',
@@ -1201,6 +1257,7 @@ export default function CandidatesAdminPage() {
       const row = [
         escapeCSVValue(c.sbd),
         escapeCSVValue(c.name),
+        escapeCSVValue(formatCandidateSource(c.source, c.registrationId)),
         escapeCSVValue(c.gender || 'Nữ'),
         escapeCSVValue(c.contestTableLabel || tableLabels[c.contestTable || ''] || c.contestTable),
         escapeCSVValue(c.faculty || ''),
@@ -1282,10 +1339,16 @@ export default function CandidatesAdminPage() {
           <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
             <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Tổng thí sinh</p>
             <p className="mt-1 text-2xl font-extrabold text-slate-900">{candidates.length}</p>
-            <div className="mt-1 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-              <span className="text-pink-600 font-bold">♀ {femaleCount} Nữ</span>
+            <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-semibold text-slate-500">
+              <span className="text-pink-600 font-bold">♀ {femaleCount}</span>
               <span>•</span>
-              <span className="text-blue-600 font-bold">♂ {maleCount} Nam</span>
+              <span className="text-blue-600 font-bold">♂ {maleCount}</span>
+              <span className="text-slate-300">|</span>
+              <span className="text-sky-600 font-bold" title="Đăng ký qua Web">🌐 {webCount}</span>
+              <span>•</span>
+              <span className="text-amber-600 font-bold" title="Thêm thủ công">✍️ {manualCount}</span>
+              <span>•</span>
+              <span className="text-violet-600 font-bold" title="Nhập từ CSV">📥 {importCount}</span>
             </div>
           </div>
 
@@ -1484,6 +1547,18 @@ export default function CandidatesAdminPage() {
               <option value="Nam">Nam ♂</option>
             </select>
 
+            {/* Lọc Nguồn hồ sơ */}
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value as any)}
+              className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
+            >
+              <option value="ALL">Tất cả nguồn ({candidates.length})</option>
+              <option value="WEB">🌐 Đăng ký Web ({webCount})</option>
+              <option value="MANUAL">✍️ Thêm thủ công ({manualCount})</option>
+              <option value="IMPORT">📥 Nhập CSV ({importCount})</option>
+            </select>
+
             {/* Lọc Vòng thi */}
             <select
               value={roundFilter}
@@ -1540,13 +1615,16 @@ export default function CandidatesAdminPage() {
 
             return (
               <div key={c.id} className="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-2.5 group">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-1">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-800 border border-slate-200">
                     {c.sbd}
                   </span>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${isFemale ? 'bg-pink-50 text-pink-700 border border-pink-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`}>
-                    {tableLabel}
-                  </span>
+                  <div className="flex items-center gap-1 flex-wrap justify-end">
+                    {getSourceBadge(c.source, c.registrationId)}
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${isFemale ? 'bg-pink-50 text-pink-700 border border-pink-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`}>
+                      {tableLabel}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex flex-col items-center text-center space-y-1.5 py-1">
@@ -1620,6 +1698,7 @@ export default function CandidatesAdminPage() {
                     />
                   </th>
                   <th className="px-3 py-3">Thí sinh</th>
+                  <th className="px-3 py-3">Nguồn hồ sơ</th>
                   <th className="px-3 py-3">Bảng thi & Vòng</th>
                   <th className="px-3 py-3">Học tập HUIT</th>
                   <th className="px-3 py-3">Hình thể (Cao/Nặng/3 vòng)</th>
@@ -1668,6 +1747,9 @@ export default function CandidatesAdminPage() {
                             </div>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {getSourceBadge(c.source, c.registrationId)}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex rounded-md border px-2.5 py-0.5 text-[11px] font-extrabold ${isFemale ? 'border-pink-200 bg-pink-50 text-pink-700' : 'border-blue-200 bg-blue-50 text-blue-700'}`}>
@@ -1736,7 +1818,7 @@ export default function CandidatesAdminPage() {
 
                 {filteredCandidates.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-5 py-12 text-center text-sm font-semibold text-slate-500">
+                    <td colSpan={9} className="px-5 py-12 text-center text-sm font-semibold text-slate-500">
                       Không có thí sinh nào phù hợp bộ lọc tìm kiếm.
                     </td>
                   </tr>

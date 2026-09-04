@@ -109,6 +109,7 @@ export async function POST(request: Request) {
           talent: reg.talent,
           achievements: reg.achievements,
           registrationId: reg.id,
+          source: 'WEB',
           isDeleted: false,
         },
       });

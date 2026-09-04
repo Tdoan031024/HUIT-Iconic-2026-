@@ -81,6 +81,7 @@ model candidate {
   talent                         String?   @db.Text
   achievements                   String?   @db.Text
   registrationId                 String?
+  source                         String?   @default("MANUAL")
 
   @@map("candidate")
 }

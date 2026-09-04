@@ -47,6 +47,7 @@ export interface Candidate {
   intellectualPropertyCommitment?: boolean;
   showcaseImages?: string;
   registrationId?: string;
+  source?: 'IMPORT' | 'MANUAL' | 'WEB' | string;
 }
 
 export interface Sponsor {
