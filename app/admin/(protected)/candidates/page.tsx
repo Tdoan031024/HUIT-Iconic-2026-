@@ -938,6 +938,711 @@ function ImportModal({
   );
 }
 
+function formatRemainingTime(endTimestamp: number, now: number) {
+  const diffMs = endTimestamp - now;
+  if (diffMs <= 0) return 'Vừa kết thúc';
+  const totalMins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  if (hours === 0) return `Còn ${mins} phút`;
+  if (mins === 0) return `Còn ${hours} giờ`;
+  return `Còn ${hours}h ${mins}p`;
+}
+
+function formatTimeToStart(startTimestamp: number, now: number) {
+  const diffMs = startTimestamp - now;
+  if (diffMs <= 0) return 'Đang bắt đầu';
+  const totalMins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(totalMins / 60);
+  const mins = totalMins % 60;
+  if (hours === 0) return `Sau ${mins} phút`;
+  if (hours < 24) return `Sau ${hours}h ${mins}p`;
+  const days = Math.floor(hours / 24);
+  return `Sau ${days} ngày`;
+}
+
+function formatDateTimeDisplay(dateStr: string) {
+  if (!dateStr) return '--:--';
+  try {
+    let normalized = dateStr.trim();
+    if (!normalized.includes('Z') && !/\+\d{2}:?\d{2}$/.test(normalized) && !/-\d{2}:?\d{2}$/.test(normalized)) {
+      normalized = `${normalized}+07:00`;
+    }
+    const d = new Date(normalized);
+    if (isNaN(d.getTime())) return dateStr;
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = d.getFullYear();
+    return `${hh}:${mm} · ${dd}/${mo}/${yy}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+function PromotionManagerModal({
+  isOpen,
+  onClose,
+  promotions,
+  onSave,
+  currentTime,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  promotions: VotingPromotion[];
+  onSave: (nextPromotions: VotingPromotion[]) => Promise<void>;
+  currentTime: number;
+}) {
+  const [activeTab, setActiveTab] = useState<'ALL' | 'ACTIVE' | 'UPCOMING' | 'EXPIRED'>('ALL');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<VotingPromotion>>({});
+  const [savedFeedback, setSavedFeedback] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const now = new Date(currentTime);
+  const defaultStart = toLocalInput(now);
+  const defaultEnd = toLocalInput(new Date(currentTime + 2 * 3600 * 1000));
+
+  const [newPromo, setNewPromo] = useState({
+    name: '',
+    multiplier: 2,
+    startAt: defaultStart,
+    endAt: defaultEnd,
+    appliesTo: 'ALL' as 'FREE' | 'PAID' | 'ALL',
+  });
+
+  const notifySaved = () => {
+    setSavedFeedback(true);
+    setTimeout(() => setSavedFeedback(false), 2500);
+  };
+
+  const handleApplySave = async (nextList: VotingPromotion[]) => {
+    setIsSaving(true);
+    try {
+      await onSave(nextList);
+      notifySaved();
+    } catch {
+      alert('Không thể lưu cài đặt!');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAddQuick = async (preset: PromotionQuickPreset, mult = 2) => {
+    const draft = createPromotionDraft(preset, mult);
+    const nextList = [draft, ...promotions];
+    await handleApplySave(nextList);
+  };
+
+  const handleCreateCustom = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+
+    const name = newPromo.name.trim() || `Khung giờ nhân x${newPromo.multiplier}`;
+    const startMs = parsePromotionTime(newPromo.startAt);
+    const endMs = parsePromotionTime(newPromo.endAt);
+
+    if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) {
+      setErrorMsg('Vui lòng chọn thời gian bắt đầu và kết thúc hợp lệ');
+      return;
+    }
+
+    if (endMs <= startMs) {
+      setErrorMsg('Thời gian kết thúc phải diễn ra sau thời gian bắt đầu');
+      return;
+    }
+
+    const item: VotingPromotion = {
+      id: `promo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name,
+      multiplier: Number(newPromo.multiplier) || 2,
+      startAt: newPromo.startAt,
+      endAt: newPromo.endAt,
+      isEnabled: true,
+      appliesTo: newPromo.appliesTo,
+    };
+
+    const nextList = [item, ...promotions];
+    await handleApplySave(nextList);
+
+    setNewPromo({
+      name: '',
+      multiplier: 2,
+      startAt: toLocalInput(new Date()),
+      endAt: toLocalInput(new Date(Date.now() + 2 * 3600 * 1000)),
+      appliesTo: 'ALL',
+    });
+  };
+
+  const handleToggleEnable = async (id: string) => {
+    const nextList = promotions.map((p) => (p.id === id ? { ...p, isEnabled: !p.isEnabled } : p));
+    await handleApplySave(nextList);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa khung giờ nhân điểm này?')) return;
+    const nextList = promotions.filter((p) => p.id !== id);
+    await handleApplySave(nextList);
+  };
+
+  const handleClearExpired = async () => {
+    if (!confirm('Xác nhận dọn dẹp tất cả các khung giờ đã kết thúc khỏi danh sách?')) return;
+    const nextList = promotions.filter((p) => {
+      const end = parsePromotionTime(p.endAt);
+      return !Number.isFinite(end) || end >= currentTime;
+    });
+    await handleApplySave(nextList);
+  };
+
+  const handleStartEdit = (p: VotingPromotion) => {
+    setEditingId(p.id);
+    setEditForm({ ...p });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingId) return;
+    const nextList = promotions.map((p) => (p.id === editingId ? ({ ...p, ...editForm } as VotingPromotion) : p));
+    setEditingId(null);
+    await handleApplySave(nextList);
+  };
+
+  const classifiedPromotions = useMemo(() => {
+    return promotions.map((p) => {
+      const status = getPromotionStatus(p, currentTime);
+      const start = parsePromotionTime(p.startAt);
+      const end = parsePromotionTime(p.endAt);
+      const isRunning = p.isEnabled && start <= currentTime && end >= currentTime;
+      const isUpcoming = p.isEnabled && start > currentTime;
+      const isExpired = end < currentTime;
+      return { ...p, status, isRunning, isUpcoming, isExpired, start, end };
+    });
+  }, [promotions, currentTime]);
+
+  const filteredPromotions = useMemo(() => {
+    if (activeTab === 'ACTIVE') return classifiedPromotions.filter((p) => p.isRunning);
+    if (activeTab === 'UPCOMING') return classifiedPromotions.filter((p) => p.isUpcoming);
+    if (activeTab === 'EXPIRED') return classifiedPromotions.filter((p) => p.isExpired);
+    return classifiedPromotions;
+  }, [classifiedPromotions, activeTab]);
+
+  const activeCount = classifiedPromotions.filter((p) => p.isRunning).length;
+  const upcomingCount = classifiedPromotions.filter((p) => p.isUpcoming).length;
+  const expiredCount = classifiedPromotions.filter((p) => p.isExpired).length;
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div
+        onMouseDown={(e) => e.stopPropagation()}
+        className="w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-slate-50 to-pink-50/40 px-5 py-3.5 shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-500 text-white shadow-sm">
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-black text-slate-900">Quản lý Khung giờ Nhân Điểm</h3>
+                {savedFeedback && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 animate-in fade-in">
+                    ✓ Đã lưu cài đặt
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Tạo giờ vàng nhân hệ số điểm vote (x2, x3, x5...) theo lịch trình tự động.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border border-slate-200 bg-white p-2 text-slate-400 hover:border-slate-300 hover:text-slate-700 transition"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+          {/* Quick presets row */}
+          <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <span>⚡</span> Tạo nhanh 1-chạm (Bấm kích hoạt ngay):
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium">Tự động lưu sau khi bấm</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleAddQuick('NOW', 2)}
+                className="flex flex-col items-start rounded-xl border border-pink-200 bg-white p-2.5 text-left hover:border-pink-400 hover:bg-pink-50/50 transition group shadow-2xs"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-black text-pink-600">⚡ Bật x2 ngay</span>
+                  <span className="rounded bg-pink-100 text-pink-700 text-[9px] font-extrabold px-1.5 py-0.5">2 tiếng</span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1">Từ bây giờ đến +2h</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleAddQuick('TONIGHT', 2)}
+                className="flex flex-col items-start rounded-xl border border-indigo-200 bg-white p-2.5 text-left hover:border-indigo-400 hover:bg-indigo-50/50 transition group shadow-2xs"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-black text-indigo-600">🌙 Tối nay x2</span>
+                  <span className="rounded bg-indigo-100 text-indigo-700 text-[9px] font-extrabold px-1.5 py-0.5">3 tiếng</span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1">19:00 - 22:00 hôm nay</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleAddQuick('TOMORROW', 3)}
+                className="flex flex-col items-start rounded-xl border border-amber-200 bg-white p-2.5 text-left hover:border-amber-400 hover:bg-amber-50/50 transition group shadow-2xs"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-black text-amber-600">☀️ Ngày mai x3</span>
+                  <span className="rounded bg-amber-100 text-amber-700 text-[9px] font-extrabold px-1.5 py-0.5">9 tiếng</span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1">08:00 - 17:00 ngày mai</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleAddQuick('WEEKEND', 3)}
+                className="flex flex-col items-start rounded-xl border border-purple-200 bg-white p-2.5 text-left hover:border-purple-400 hover:bg-purple-50/50 transition group shadow-2xs"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-xs font-black text-purple-600">🎉 Cuối tuần x3</span>
+                  <span className="rounded bg-purple-100 text-purple-700 text-[9px] font-extrabold px-1.5 py-0.5">T7 & CN</span>
+                </div>
+                <span className="text-[10px] text-slate-500 mt-1">Khung giờ cuối tuần</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Custom Promo Form */}
+          <form onSubmit={handleCreateCustom} className="rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <span>➕</span> Thiết lập khung giờ tùy chỉnh:
+              </h4>
+              {errorMsg && (
+                <span className="text-xs font-bold text-rose-600 animate-in fade-in">
+                  ⚠️ {errorMsg}
+                </span>
+              )}
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  Tên chương trình / Lý do nhân điểm
+                </label>
+                <input
+                  type="text"
+                  value={newPromo.name}
+                  onChange={(e) => setNewPromo({ ...newPromo, name: e.target.value })}
+                  placeholder="VD: Flash Vote Giờ Vàng, Bứt phá Vòng Chung kết..."
+                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-xs font-semibold text-slate-900 outline-none transition focus:border-pink-500 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  Hệ số nhân điểm
+                </label>
+                <div className="flex items-center gap-1.5">
+                  {[1.5, 2, 3, 5, 10].map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setNewPromo({ ...newPromo, multiplier: m })}
+                      className={`h-9 flex-1 rounded-xl text-xs font-black transition ${
+                        newPromo.multiplier === m
+                          ? 'bg-pink-600 text-white shadow-xs'
+                          : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      x{m}
+                    </button>
+                  ))}
+                  <div className="relative w-20 shrink-0">
+                    <input
+                      type="number"
+                      step="0.5"
+                      min="1.1"
+                      max="100"
+                      value={newPromo.multiplier}
+                      onChange={(e) => setNewPromo({ ...newPromo, multiplier: parseFloat(e.target.value) || 2 })}
+                      className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-2.5 text-center text-xs font-black text-slate-900 outline-none focus:border-pink-500 focus:bg-white"
+                      title="Nhập hệ số nhân tùy chỉnh"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  Áp dụng cho lượt bình chọn
+                </label>
+                <div className="grid grid-cols-2 gap-1.5 h-9">
+                  <button
+                    type="button"
+                    onClick={() => setNewPromo({ ...newPromo, appliesTo: 'ALL' })}
+                    className={`rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
+                      newPromo.appliesTo === 'ALL'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span>🌟 Tất cả vote</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewPromo({ ...newPromo, appliesTo: 'FREE' })}
+                    className={`rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
+                      newPromo.appliesTo === 'FREE'
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span>🎁 Chỉ vote Free</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  Thời gian Bắt đầu
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newPromo.startAt}
+                  onChange={(e) => setNewPromo({ ...newPromo, startAt: e.target.value })}
+                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-xs font-semibold text-slate-800 outline-none focus:border-pink-500 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                  Thời gian Kết thúc
+                </label>
+                <input
+                  type="datetime-local"
+                  value={newPromo.endAt}
+                  onChange={(e) => setNewPromo({ ...newPromo, endAt: e.target.value })}
+                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 text-xs font-semibold text-slate-800 outline-none focus:border-pink-500 focus:bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-slate-100">
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="flex items-center gap-1.5 rounded-xl bg-pink-600 px-4 py-2 text-xs font-black text-white hover:bg-pink-700 shadow-sm transition disabled:opacity-50"
+              >
+                <span>➕ Thêm vào lịch</span>
+              </button>
+            </div>
+          </form>
+
+          {/* List of Scheduled Promotions */}
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              {/* Filter Tabs */}
+              <div className="flex flex-wrap items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('ALL')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                    activeTab === 'ALL' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Tất cả ({classifiedPromotions.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('ACTIVE')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                    activeTab === 'ACTIVE' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Đang chạy ({activeCount})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('UPCOMING')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                    activeTab === 'UPCOMING' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Sắp tới ({upcomingCount})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('EXPIRED')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                    activeTab === 'EXPIRED' ? 'bg-white text-slate-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Đã kết thúc ({expiredCount})
+                </button>
+              </div>
+
+              {expiredCount > 0 && (
+                <button
+                  type="button"
+                  onClick={handleClearExpired}
+                  className="text-xs font-bold text-slate-500 hover:text-rose-600 transition flex items-center gap-1 self-end sm:self-auto"
+                  title="Xóa tất cả các chương trình đã kết thúc"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                  </svg>
+                  <span>Dọn dẹp lịch cũ</span>
+                </button>
+              )}
+            </div>
+
+            {filteredPromotions.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center bg-slate-50/50">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-400 mb-2 shadow-2xs">
+                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <p className="text-xs font-bold text-slate-700">Chưa có khung giờ nào trong mục này</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Hãy nhấn vào các nút tạo nhanh ở trên hoặc điền biểu mẫu để lên lịch nhân điểm.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {filteredPromotions.map((p) => {
+                  const isEditing = editingId === p.id;
+                  return (
+                    <div
+                      key={p.id}
+                      className={`rounded-2xl border transition-all p-3.5 ${
+                        p.isRunning
+                          ? 'border-emerald-200 bg-emerald-50/30 shadow-xs'
+                          : p.isUpcoming
+                          ? 'border-blue-200/90 bg-white shadow-2xs'
+                          : 'border-slate-200 bg-slate-50/60'
+                      }`}
+                    >
+                      {isEditing ? (
+                        /* Inline Edit Mode */
+                        <div className="space-y-3 bg-white p-3 rounded-xl border border-pink-200">
+                          <div className="grid gap-2 sm:grid-cols-3">
+                            <div className="sm:col-span-2">
+                              <label className="text-[10px] font-bold text-slate-500 block">Tên chương trình</label>
+                              <input
+                                value={editForm.name || ''}
+                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                className="w-full h-8 px-2 text-xs font-bold border rounded-lg"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block">Hệ số nhân</label>
+                              <input
+                                type="number"
+                                step="0.5"
+                                value={editForm.multiplier || 2}
+                                onChange={(e) => setEditForm({ ...editForm, multiplier: parseFloat(e.target.value) || 2 })}
+                                className="w-full h-8 px-2 text-xs font-black border rounded-lg"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block">Bắt đầu</label>
+                              <input
+                                type="datetime-local"
+                                value={editForm.startAt || ''}
+                                onChange={(e) => setEditForm({ ...editForm, startAt: e.target.value })}
+                                className="w-full h-8 px-2 text-xs border rounded-lg"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block">Kết thúc</label>
+                              <input
+                                type="datetime-local"
+                                value={editForm.endAt || ''}
+                                onChange={(e) => setEditForm({ ...editForm, endAt: e.target.value })}
+                                className="w-full h-8 px-2 text-xs border rounded-lg"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block">Áp dụng</label>
+                              <select
+                                value={editForm.appliesTo || 'ALL'}
+                                onChange={(e) => setEditForm({ ...editForm, appliesTo: e.target.value as any })}
+                                className="w-full h-8 px-2 text-xs font-bold border rounded-lg"
+                              >
+                                <option value="ALL">Tất cả vote</option>
+                                <option value="FREE">Chỉ vote Free</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="flex justify-end gap-2 pt-1 border-t border-slate-100">
+                            <button
+                              type="button"
+                              onClick={() => setEditingId(null)}
+                              className="px-3 py-1 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg"
+                            >
+                              Hủy
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleSaveEdit}
+                              className="px-3 py-1 text-xs font-bold bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                            >
+                              Lưu thay đổi
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Normal View Mode */
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="flex items-start gap-3 min-w-0">
+                            {/* Multiplier Badge */}
+                            <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-pink-600 text-white shadow-xs">
+                              <span className="text-xs font-black tracking-tight leading-none">x{p.multiplier}</span>
+                              <span className="text-[8px] font-bold opacity-80 uppercase leading-none mt-0.5">Vote</span>
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <h5 className="text-xs sm:text-sm font-extrabold text-slate-900 truncate">
+                                  {p.name}
+                                </h5>
+                                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${p.status.className}`}>
+                                  {p.status.label}
+                                </span>
+                                {p.isRunning && (
+                                  <span className="text-[10px] font-bold text-emerald-700">
+                                    ⏱️ {formatRemainingTime(p.end, currentTime)}
+                                  </span>
+                                )}
+                                {p.isUpcoming && (
+                                  <span className="text-[10px] font-bold text-blue-600">
+                                    ⏰ {formatTimeToStart(p.start, currentTime)}
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500 font-medium">
+                                <span>📅 {formatDateTimeDisplay(p.startAt)} → {formatDateTimeDisplay(p.endAt)}</span>
+                                <span>•</span>
+                                <span>{p.appliesTo === 'FREE' ? '🎁 Chỉ vote Free' : '🌟 Tất cả vote'}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Item Actions */}
+                          <div className="flex items-center justify-between sm:justify-end gap-2.5 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
+                            {/* Toggle Switch */}
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold text-slate-400">
+                                {p.isEnabled ? 'Đang bật' : 'Đang tắt'}
+                              </span>
+                              <button
+                                type="button"
+                                disabled={isSaving}
+                                onClick={() => handleToggleEnable(p.id)}
+                                className={`relative flex h-5 w-9 items-center rounded-full transition ${
+                                  p.isEnabled ? 'bg-emerald-500' : 'bg-slate-300'
+                                }`}
+                                title={p.isEnabled ? 'Bấm để tạm tắt' : 'Bấm để kích hoạt'}
+                              >
+                                <span
+                                  className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${
+                                    p.isEnabled ? 'translate-x-4' : 'translate-x-1'
+                                  }`}
+                                />
+                              </button>
+                            </div>
+
+                            {/* Edit Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleStartEdit(p)}
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-600 hover:border-pink-300 hover:text-pink-600 transition"
+                              title="Chỉnh sửa"
+                            >
+                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
+
+                            {/* Delete Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(p.id)}
+                              className="rounded-lg border border-slate-200 bg-white p-1.5 text-rose-500 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700 transition"
+                              title="Xóa khung giờ"
+                            >
+                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-5 py-3 shrink-0">
+          <span className="text-[11px] text-slate-500 font-medium">
+            💡 Mọi thay đổi đều được lưu tự động trên toàn hệ thống.
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 transition"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CandidatesAdminPage() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [search, setSearch] = useState('');
@@ -954,8 +1659,7 @@ export default function CandidatesAdminPage() {
   const [isGateOpen, setIsGateOpen] = useState(true);
   const [hideCandidatesSection, setHideCandidatesSection] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
-  const [showPromotionManager, setShowPromotionManager] = useState(false);
-  const [openPromotionApplyId, setOpenPromotionApplyId] = useState<string | null>(null);
+  const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState(() => Date.now());
 
@@ -1080,6 +1784,28 @@ export default function CandidatesAdminPage() {
       const end = parseVN(promotion.endAt);
       return Number.isFinite(start) && Number.isFinite(end) && start <= now && end >= now;
     }) || null;
+  }, [votingPromotions, currentTime]);
+
+  const upcomingPromotion = useMemo(() => {
+    const now = currentTime;
+    const parseVN = (dStr: string) => {
+      if (!dStr) return NaN;
+      let val = dStr.trim();
+      if (!val.includes('Z') && !/\+\d{2}:?\d{2}$/.test(val) && !/-\d{2}:?\d{2}$/.test(val)) {
+        val = `${val}+07:00`;
+      }
+      return new Date(val).getTime();
+    };
+
+    return (
+      votingPromotions
+        .filter((p) => {
+          if (!p.isEnabled) return false;
+          const start = parseVN(p.startAt);
+          return Number.isFinite(start) && start > now;
+        })
+        .sort((a, b) => parseVN(a.startAt) - parseVN(b.startAt))[0] || null
+    );
   }, [votingPromotions, currentTime]);
 
   const saveVotingSettings = async (
@@ -1417,116 +2143,115 @@ export default function CandidatesAdminPage() {
           </div>
 
           <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm sm:col-span-2 md:col-span-3 xl:col-span-3 flex flex-col justify-between">
-            <div className="flex items-start justify-between gap-2">
-              <div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className={`flex h-2 w-2 rounded-full ${activePromotion ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
                 <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Khung giờ nhân điểm</p>
-                <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900 truncate">
-                  {activePromotion ? `🔥 Đang x${activePromotion.multiplier} (${activePromotion.name})` : '⚪ Chưa kích hoạt'}
-                </p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowPromotionManager(!showPromotionManager)}
-                className="rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-bold text-slate-700 hover:border-pink-500 hover:text-pink-600 transition shrink-0"
+                onClick={() => setIsPromotionModalOpen(true)}
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-bold text-slate-700 hover:border-pink-400 hover:bg-pink-50 hover:text-pink-700 transition shrink-0 shadow-2xs"
               >
-                {showPromotionManager ? 'Ẩn cài đặt' : 'Quản lý giờ'}
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+                </svg>
+                <span>Quản lý lịch</span>
+                {votingPromotions.length > 0 && (
+                  <span className="ml-0.5 rounded-full bg-slate-200 px-1.5 py-0.2 text-[9px] font-black text-slate-700">
+                    {votingPromotions.length}
+                  </span>
+                )}
               </button>
             </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <button type="button" onClick={() => addQuickPromotion('NOW', 2)} className="rounded bg-pink-50 text-pink-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-pink-100 transition whitespace-nowrap">
-                + Ngay x2 (2h)
-              </button>
-              <button type="button" onClick={() => addQuickPromotion('TONIGHT', 2)} className="rounded bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-indigo-100 transition whitespace-nowrap">
-                + Tối nay x2
-              </button>
-              <button type="button" onClick={() => addQuickPromotion('TOMORROW', 3)} className="rounded bg-amber-50 text-amber-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-amber-100 transition whitespace-nowrap">
-                + Ngày mai x3
-              </button>
+
+            <div className="my-1.5 flex items-center justify-between gap-2">
+              {activePromotion ? (
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-pink-500 px-2 py-0.5 text-[11px] font-black text-white shadow-xs">
+                      🔥 Đang x{activePromotion.multiplier}
+                    </span>
+                    <span className="truncate text-xs font-extrabold text-slate-900">{activePromotion.name}</span>
+                  </div>
+                  <p className="mt-0.5 text-[11px] font-medium text-emerald-700">
+                    ⏱️ {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
+                  </p>
+                </div>
+              ) : upcomingPromotion ? (
+                <div className="min-w-0">
+                  <p className="text-xs sm:text-sm font-extrabold text-slate-800 truncate">
+                    ⏰ Sắp tới: <span className="font-black text-pink-600">x{upcomingPromotion.multiplier}</span>
+                  </p>
+                  <p className="mt-0.5 text-[10.5px] text-slate-500 truncate">
+                    {upcomingPromotion.name} ({formatTimeToStart(parsePromotionTime(upcomingPromotion.startAt), currentTime)})
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-xs sm:text-sm font-extrabold text-slate-700">⚪ Chưa kích hoạt</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Bình chọn tính điểm chuẩn (x1)</p>
+                </div>
+              )}
+
+              <div className="flex items-center gap-1 shrink-0">
+                {activePromotion ? (
+                  <button
+                    type="button"
+                    disabled={settingsSaving}
+                    onClick={async () => {
+                      const next = votingPromotions.map((p) => (p.id === activePromotion.id ? { ...p, isEnabled: false } : p));
+                      setVotingPromotions(next);
+                      await saveVotingSettings(next);
+                    }}
+                    className="rounded-lg border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-extrabold text-rose-700 hover:bg-rose-100 transition shadow-2xs"
+                    title="Tắt ngay chương trình nhân điểm hiện tại"
+                  >
+                    ⛔ Dừng ngay
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={settingsSaving}
+                    onClick={() => addQuickPromotion('NOW', 2)}
+                    className="rounded-lg border border-pink-200 bg-pink-50 px-2.5 py-1 text-[11px] font-extrabold text-pink-700 hover:bg-pink-100 transition shadow-2xs flex items-center gap-1"
+                    title="Bắt đầu ngay khung giờ nhân đôi điểm trong 2 tiếng"
+                  >
+                    <span>⚡ Bật x2 ngay</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 pt-1 border-t border-slate-100 text-[10.5px]">
+              <span className="text-slate-400 font-bold shrink-0">Gợi ý:</span>
+              <div className="flex flex-wrap items-center gap-1 w-full">
+                <button
+                  type="button"
+                  onClick={() => addQuickPromotion('TONIGHT', 2)}
+                  className="rounded bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 px-1.5 py-0.5 font-semibold transition"
+                >
+                  + Tối nay x2
+                </button>
+                <button
+                  type="button"
+                  onClick={() => addQuickPromotion('TOMORROW', 3)}
+                  className="rounded bg-slate-100 hover:bg-amber-50 hover:text-amber-700 text-slate-600 px-1.5 py-0.5 font-semibold transition"
+                >
+                  + Ngày mai x3
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsPromotionModalOpen(true)}
+                  className="text-pink-600 font-bold hover:underline ml-auto"
+                >
+                  + Tùy chỉnh...
+                </button>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* QUẢN LÝ PROMOTION DROPDOWN */}
-        {showPromotionManager && (
-          <div className="border-b border-slate-200 bg-slate-50 p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-black uppercase tracking-wider text-slate-700">Danh sách Khung giờ nhân điểm đã lên lịch</h4>
-              <button
-                type="button"
-                disabled={settingsSaving}
-                onClick={() => saveVotingSettings()}
-                className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-xs font-bold hover:bg-emerald-600 transition"
-              >
-                {settingsSaving ? 'Đang lưu...' : 'Lưu tất cả'}
-              </button>
-            </div>
-            {votingPromotions.length === 0 ? (
-              <p className="text-xs text-slate-400 italic">Chưa có chương trình nào. Nhấn các nút tạo nhanh ở trên.</p>
-            ) : (
-              <div className="grid gap-2 sm:grid-cols-2">
-                {votingPromotions.map((p) => {
-                  const st = getPromotionStatus(p, currentTime);
-                  return (
-                    <div key={p.id} className="rounded-xl border border-slate-200 bg-white p-3 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <input
-                          value={p.name}
-                          onChange={(e) => updatePromotion(p.id, 'name', e.target.value)}
-                          className="font-bold text-xs text-slate-800 border-b border-transparent hover:border-slate-300 focus:border-pink-500 outline-none w-2/3"
-                        />
-                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${st.className}`}>
-                          {st.label}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-bold block">Bắt đầu</span>
-                          <input
-                            type="datetime-local"
-                            value={p.startAt}
-                            onChange={(e) => updatePromotion(p.id, 'startAt', e.target.value)}
-                            className="w-full text-[11px] font-semibold border rounded px-1.5 py-1"
-                          />
-                        </div>
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-bold block">Kết thúc</span>
-                          <input
-                            type="datetime-local"
-                            value={p.endAt}
-                            onChange={(e) => updatePromotion(p.id, 'endAt', e.target.value)}
-                            className="w-full text-[11px] font-semibold border rounded px-1.5 py-1"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-bold text-slate-500">Nhân:</span>
-                          {[2, 3, 5].map((m) => (
-                            <button
-                              key={m}
-                              type="button"
-                              onClick={() => updatePromotion(p.id, 'multiplier', m)}
-                              className={`px-2 py-0.5 rounded text-[10px] font-bold ${p.multiplier === m ? 'bg-pink-600 text-white' : 'bg-slate-100 text-slate-600'}`}
-                            >
-                              x{m}
-                            </button>
-                          ))}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => deletePromotion(p.id)}
-                          className="text-xs text-red-500 hover:text-red-700 font-bold"
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
 
         {/* THANH TÌM KIẾM & BỘ LỌC */}
         <div className="flex flex-col gap-2.5 p-4 md:flex-row md:items-center md:justify-between">
@@ -1862,6 +2587,19 @@ export default function CandidatesAdminPage() {
           onSuccess={() => {
             loadCandidates();
           }}
+        />
+      )}
+
+      {isPromotionModalOpen && (
+        <PromotionManagerModal
+          isOpen={isPromotionModalOpen}
+          onClose={() => setIsPromotionModalOpen(false)}
+          promotions={votingPromotions}
+          onSave={async (nextPromos) => {
+            setVotingPromotions(nextPromos);
+            await saveVotingSettings(nextPromos);
+          }}
+          currentTime={currentTime}
         />
       )}
     </div>
