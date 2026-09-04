@@ -282,6 +282,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [hasLoadedBanners, setHasLoadedBanners] = useState(false);
+  const [bannerAspectRatio, setBannerAspectRatio] = useState<string>('3840 / 1316');
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [settings, setSettings] = useState<any>(null);
@@ -381,7 +382,12 @@ export default function HomePage() {
             window.dispatchEvent(new Event('iconic:banner-ready'));
           } else {
             const preload = new window.Image();
-            const signalBannerReady = () => window.dispatchEvent(new Event('iconic:banner-ready'));
+            const signalBannerReady = () => {
+              if (preload.naturalWidth && preload.naturalHeight) {
+                setBannerAspectRatio(`${preload.naturalWidth} / ${preload.naturalHeight}`);
+              }
+              window.dispatchEvent(new Event('iconic:banner-ready'));
+            };
             preload.onload = signalBannerReady;
             preload.onerror = signalBannerReady;
             preload.src = firstBanner.imageUrl;
@@ -672,11 +678,16 @@ export default function HomePage() {
 
         {/* Banner Section with Slider & Video support. Keep its aspect ratio while data loads. */}
         {!hasLoadedBanners ? (
-          <div className="relative w-full aspect-[3241/1294] overflow-hidden bg-[#07134d] animate-pulse" aria-label="Đang tải banner" />
+          <div
+            className="relative w-full overflow-hidden bg-[#07134d] animate-pulse"
+            style={{ aspectRatio: bannerAspectRatio }}
+            aria-label="Đang tải banner"
+          />
         ) : slides.length > 0 ? (
           <div className="sc-1a037b37-0 fgDcug relative flex flex-col group select-none">
             <div
-              className="relative w-full h-auto aspect-[3241/1294] overflow-hidden bg-[#07134d] cursor-grab active:cursor-grabbing"
+              className="relative w-full h-auto overflow-hidden bg-[#07134d] cursor-grab active:cursor-grabbing"
+              style={{ aspectRatio: bannerAspectRatio }}
               onMouseDown={handleDragStart}
               onMouseMove={handleDragMove}
               onMouseUp={handleDragEnd}
@@ -715,6 +726,7 @@ export default function HomePage() {
                           <img
                             alt={slide.title}
                             className="w-full h-full object-cover object-center pointer-events-none"
+                            style={{ imageRendering: '-webkit-optimize-contrast' }}
                             src={slide.url}
                             fetchPriority={idx === 0 ? 'high' : 'auto'}
                             decoding={idx === 0 ? 'sync' : 'async'}
@@ -737,6 +749,7 @@ export default function HomePage() {
                         <img
                           alt={slide.title}
                           className="w-full h-full object-cover object-center"
+                          style={{ imageRendering: '-webkit-optimize-contrast' }}
                           src={slide.url}
                           onDragStart={e => e.preventDefault()}
                         />
