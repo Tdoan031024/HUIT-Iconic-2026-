@@ -907,8 +907,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   };
 
   const isActive = (href: string) => {
-    if (href === '/') return safePathname === '/';
-    return safePathname.startsWith(href);
+    if (href === '/' || href === '/admin') return safePathname === href;
+    return safePathname === href || safePathname.startsWith(`${href}/`);
   };
 
   const startResizing = React.useCallback((event: React.MouseEvent) => {
