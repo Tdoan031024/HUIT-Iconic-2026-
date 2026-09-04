@@ -1153,19 +1153,6 @@ export default function GioiThieuPage() {
                   </div>
                 ))}
               </div>
-
-              <div className="mt-8 p-5 sm:p-6 rounded-2xl bg-[color:var(--about-surface-sec)]/50 border border-[color:var(--about-border)] flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="text-xs sm:text-sm text-[color:var(--about-text-secondary)]">
-                  <p className="font-bold text-[color:var(--about-text-primary)]">Lưu ý về hình thức tài trợ (Mục 09 Đề án):</p>
-                  <p className="mt-1">Quyền lợi tài trợ tính theo mức tài trợ tối thiểu 60% hiện kim. Doanh nghiệp có thể tài trợ hiện vật/dịch vụ tương đương phù hợp nhu cầu của cuộc thi.</p>
-                </div>
-                <Link
-                  href="/the-le#tai-tro"
-                  className="shrink-0 px-5 py-2.5 rounded-xl bg-[color:var(--about-primary)] text-white text-xs font-bold hover:opacity-90 transition shadow-sm"
-                >
-                  Xem chi tiết quyền lợi →
-                </Link>
-              </div>
             </section>
 
             {/* Section: Quy mô & Thống kê */}
