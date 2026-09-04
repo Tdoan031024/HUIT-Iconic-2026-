@@ -1218,23 +1218,23 @@ export default function GioiThieuPage() {
                 {language === 'en' ? 'Scale & Community' : 'Quy mô & Số liệu nổi bật'}
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
                 {statItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 py-6 px-5 sm:py-7 sm:px-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 py-5 px-4 sm:py-6 sm:px-5 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
                   >
-                    <div className={`grid h-12 w-12 place-items-center rounded-2xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110 mb-3`}>
+                    <div className={`grid h-12 w-12 place-items-center rounded-2xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110 mb-2`}>
                       {item.icon}
                     </div>
 
-                    <div className="text-3xl sm:text-4xl lg:text-[44px] font-black tracking-tight leading-tight my-1.5">
-                      <span className={`bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
+                    <div className="text-4xl sm:text-[44px] lg:text-[48px] font-black tracking-tight leading-none mb-1.5">
+                      <span className={`inline-block bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
                         {item.num}
                       </span>
                     </div>
 
-                    <p className="text-[14px] sm:text-[15px] font-semibold text-[color:var(--about-text-secondary)] leading-snug max-w-[240px]">
+                    <p className="text-[15px] sm:text-[16px] font-bold text-[color:var(--about-text-secondary)] leading-snug max-w-[260px]">
                       {item.label}
                     </p>
                   </div>
