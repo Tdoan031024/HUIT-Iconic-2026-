@@ -1594,19 +1594,19 @@ export default function CandidatesAdminPage() {
 
         {/* QUẢN LÝ KHUNG GIỜ NHÂN ĐIỂM INLINE - TINH GỌN, TỰ ĐỘNG LƯU */}
         {showPromotionManager && (
-          <div className="border-b border-slate-200 bg-slate-50/80 p-3.5 sm:p-4 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="border-b border-slate-200 bg-slate-50/60 p-3.5 sm:p-4 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                  <span>⚡</span> Danh sách Khung giờ nhân điểm
+                  <span className="text-amber-500">⚡</span> Danh sách Khung giờ nhân điểm
                 </span>
                 {savedIndicator && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10.5px] font-extrabold text-emerald-800 animate-in fade-in">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 animate-in fade-in">
                     ✓ Đã tự động lưu
                   </span>
                 )}
                 {settingsSaving && (
-                  <span className="text-[10.5px] font-bold text-slate-400">
+                  <span className="text-[11px] font-medium text-slate-400 italic">
                     Đang lưu...
                   </span>
                 )}
@@ -1617,7 +1617,7 @@ export default function CandidatesAdminPage() {
                   type="button"
                   onClick={handleAddNewPromotion}
                   disabled={settingsSaving}
-                  className="rounded-lg bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 text-xs font-bold transition flex items-center gap-1 shadow-2xs"
+                  className="cursor-pointer rounded-lg bg-pink-600 hover:bg-pink-700 active:scale-95 text-white px-3 py-1.5 text-xs font-bold transition flex items-center gap-1 shadow-2xs"
                 >
                   <span>+ Thêm khung giờ</span>
                 </button>
@@ -1626,7 +1626,7 @@ export default function CandidatesAdminPage() {
                     type="button"
                     onClick={handleClearExpiredPromotions}
                     disabled={settingsSaving}
-                    className="rounded-lg border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 text-slate-600 px-2.5 py-1 text-xs font-bold transition"
+                    className="cursor-pointer rounded-lg border border-slate-200 bg-white hover:bg-rose-50 hover:border-rose-200 hover:text-rose-600 text-slate-600 px-2.5 py-1.5 text-xs font-semibold transition"
                     title="Xóa tất cả các khung giờ đã kết thúc"
                   >
                     Dọn dẹp lịch cũ
@@ -1635,7 +1635,7 @@ export default function CandidatesAdminPage() {
                 <button
                   type="button"
                   onClick={() => setShowPromotionManager(false)}
-                  className="rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 px-2.5 py-1 text-xs font-bold transition"
+                  className="cursor-pointer rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 px-2.5 py-1.5 text-xs font-semibold transition"
                 >
                   ▲ Thu gọn
                 </button>
@@ -1644,23 +1644,23 @@ export default function CandidatesAdminPage() {
 
             {votingPromotions.length === 0 ? (
               <div className="rounded-xl border border-dashed border-slate-200 bg-white p-6 text-center text-xs text-slate-500">
-                Chưa có khung giờ nhân điểm nào. Hãy bấm các nút tạo nhanh ở trên hoặc{' '}
-                <button type="button" onClick={handleAddNewPromotion} className="text-pink-600 font-bold underline">
+                Chưa có khung giờ nhân điểm nào.{' '}
+                <button type="button" onClick={handleAddNewPromotion} className="text-pink-600 font-bold underline cursor-pointer">
                   + Thêm khung giờ
-                </button>.
+                </button>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
+              <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-200 bg-slate-100/70 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
-                      <th className="py-2.5 px-3">Trạng thái</th>
-                      <th className="py-2.5 px-3 min-w-[180px]">Tên chương trình</th>
-                      <th className="py-2.5 px-3 min-w-[130px]">Hệ số nhân</th>
-                      <th className="py-2.5 px-3 min-w-[160px]">Bắt đầu</th>
-                      <th className="py-2.5 px-3 min-w-[160px]">Kết thúc</th>
-                      <th className="py-2.5 px-3 text-center">Bật/Tắt</th>
-                      <th className="py-2.5 px-3 text-center">Xóa</th>
+                    <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                      <th className="py-2.5 px-3 whitespace-nowrap">Trạng thái</th>
+                      <th className="py-2.5 px-3 min-w-[200px]">Tên chương trình</th>
+                      <th className="py-2.5 px-3 min-w-[100px]">Hệ số nhân</th>
+                      <th className="py-2.5 px-3 min-w-[170px]">Bắt đầu</th>
+                      <th className="py-2.5 px-3 min-w-[170px]">Kết thúc</th>
+                      <th className="py-2.5 px-3 text-center whitespace-nowrap">Bật/Tắt</th>
+                      <th className="py-2.5 px-3 text-center whitespace-nowrap">Xóa</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1674,8 +1674,8 @@ export default function CandidatesAdminPage() {
                           key={p.id}
                           className={`hover:bg-slate-50/80 transition ${isRunning ? 'bg-emerald-50/40' : ''}`}
                         >
-                          <td className="py-2 px-3 whitespace-nowrap">
-                            <span className={`inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full border ${st.className}`}>
+                          <td className="py-2.5 px-3 whitespace-nowrap">
+                            <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${st.className}`}>
                               {isRunning && <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />}
                               {st.label}
                             </span>
@@ -1685,88 +1685,90 @@ export default function CandidatesAdminPage() {
                               </p>
                             )}
                           </td>
-                          <td className="py-2 px-3">
+                          <td className="py-2.5 px-3">
                             <input
                               type="text"
                               value={p.name}
                               onChange={(e) => updatePromotionField(p.id, 'name', e.target.value)}
                               onBlur={(e) => savePromotionField(p.id, 'name', e.target.value)}
-                              placeholder="Tên sự kiện..."
-                              className="h-8 w-full rounded-lg border border-slate-200 px-2.5 text-xs font-bold text-slate-800 focus:border-pink-500 focus:bg-white outline-none"
+                              placeholder="Tên sự kiện / chương trình..."
+                              className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-xs font-semibold text-slate-800 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
                             />
                           </td>
-                          <td className="py-2 px-3">
-                            <div className="flex items-center gap-1">
-                              {[2, 3, 5].map((m) => (
-                                <button
-                                  key={m}
-                                  type="button"
-                                  onClick={() => savePromotionField(p.id, 'multiplier', m)}
-                                  className={`h-7 px-2 rounded text-[10.5px] font-black transition ${
-                                    p.multiplier === m
-                                      ? 'bg-pink-600 text-white shadow-2xs'
-                                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                  }`}
-                                >
-                                  x{m}
-                                </button>
-                              ))}
+                          <td className="py-2.5 px-3">
+                            <div className="relative inline-flex items-center w-24">
+                              <span className="absolute left-2.5 text-xs font-black text-pink-600 select-none pointer-events-none">
+                                x
+                              </span>
                               <input
                                 type="number"
                                 step="0.5"
-                                min="1.1"
+                                min="1"
                                 max="100"
                                 value={p.multiplier}
-                                onChange={(e) => updatePromotionField(p.id, 'multiplier', parseFloat(e.target.value) || 2)}
-                                onBlur={(e) => savePromotionField(p.id, 'multiplier', parseFloat(e.target.value) || 2)}
-                                className="h-7 w-12 rounded border border-slate-200 px-1 text-center text-xs font-black text-slate-800 outline-none focus:border-pink-500"
-                                title="Nhập hệ số khác"
+                                onChange={(e) => updatePromotionField(p.id, 'multiplier', parseFloat(e.target.value) || 1)}
+                                onBlur={(e) => savePromotionField(p.id, 'multiplier', parseFloat(e.target.value) || 1)}
+                                className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 pl-6 pr-2 text-xs font-bold text-slate-800 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
+                                placeholder="2"
+                                title="Nhập hệ số nhân (VD: 2, 3, 5...)"
                               />
                             </div>
                           </td>
-                          <td className="py-2 px-3">
+                          <td className="py-2.5 px-3">
                             <input
                               type="datetime-local"
                               value={p.startAt}
+                              onClick={(e) => {
+                                try {
+                                  e.currentTarget.showPicker?.();
+                                } catch {}
+                              }}
                               onChange={(e) => {
                                 updatePromotionField(p.id, 'startAt', e.target.value);
                                 savePromotionField(p.id, 'startAt', e.target.value);
                               }}
-                              className="h-8 w-full rounded-lg border border-slate-200 px-2 text-[11px] font-semibold text-slate-700 outline-none focus:border-pink-500"
+                              className="h-8 w-full cursor-pointer rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-[11.5px] font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                              title="Bấm để chọn ngày giờ bắt đầu"
                             />
                           </td>
-                          <td className="py-2 px-3">
+                          <td className="py-2.5 px-3">
                             <input
                               type="datetime-local"
                               value={p.endAt}
+                              onClick={(e) => {
+                                try {
+                                  e.currentTarget.showPicker?.();
+                                } catch {}
+                              }}
                               onChange={(e) => {
                                 updatePromotionField(p.id, 'endAt', e.target.value);
                                 savePromotionField(p.id, 'endAt', e.target.value);
                               }}
-                              className="h-8 w-full rounded-lg border border-slate-200 px-2 text-[11px] font-semibold text-slate-700 outline-none focus:border-pink-500"
+                              className="h-8 w-full cursor-pointer rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-[11.5px] font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                              title="Bấm để chọn ngày giờ kết thúc"
                             />
                           </td>
-                          <td className="py-2 px-3 text-center">
+                          <td className="py-2.5 px-3 text-center">
                             <button
                               type="button"
                               onClick={() => savePromotionField(p.id, 'isEnabled', !p.isEnabled)}
-                              className={`relative inline-flex h-5 w-9 items-center rounded-full transition ${
-                                p.isEnabled ? 'bg-emerald-500' : 'bg-slate-300'
+                              className={`relative inline-flex h-5 w-9 cursor-pointer items-center rounded-full transition-colors ${
+                                p.isEnabled ? 'bg-pink-600' : 'bg-slate-300 hover:bg-slate-400'
                               }`}
                               title={p.isEnabled ? 'Đang bật. Bấm để tắt' : 'Đang tắt. Bấm để bật'}
                             >
                               <span
-                                className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${
+                                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-xs transition-transform ${
                                   p.isEnabled ? 'translate-x-4' : 'translate-x-1'
                                 }`}
                               />
                             </button>
                           </td>
-                          <td className="py-2 px-3 text-center">
+                          <td className="py-2.5 px-3 text-center">
                             <button
                               type="button"
                               onClick={() => deletePromotion(p.id)}
-                              className="rounded-lg p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                              className="cursor-pointer rounded-lg p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
                               title="Xóa khung giờ"
                             >
                               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
