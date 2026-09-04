@@ -54,13 +54,16 @@ jobs:
             set -e
             cd /home/uqqwmiabhosting/public_html/iconic2026.huitmedia.edu.vn
             export PATH=/opt/alt/alt-nodejs22/root/usr/bin:$PATH
-            export NODE_OPTIONS=--max-old-space-size=512
+            export NODE_OPTIONS=--max-old-space-size=640
             export NEXT_DISABLE_SWC_WORKER=1
+            export NEXT_TELEMETRY_DISABLED=1
+            export NEXT_CPU_COUNT=1
             export CI_SKIP_TYPECHECK=1
             git switch main
             git pull --ff-only origin main
-            npm install --include=dev
+            npm install --include=dev --no-audit --no-fund
             npx prisma db push --skip-generate
+            rm -rf .next/cache
             for attempt in 1 2 3; do
               if npx next build; then
                 break

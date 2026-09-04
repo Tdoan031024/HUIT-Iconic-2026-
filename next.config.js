@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
   compress: true,
+  outputFileTracing: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -11,6 +12,11 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+  },
+  experimental: {
+    cpus: 1,
+    workerThreads: false,
+    webpackBuildWorker: false,
   },
   async headers() {
     return [
