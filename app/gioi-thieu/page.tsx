@@ -95,6 +95,108 @@ function RichContent({ value, fallback = '', className }: { value?: string | nul
   return <div className={`${className} whitespace-pre-line`}>{content}</div>;
 }
 
+function PrizeStructureDisplay({ prizeText, language }: { prizeText?: string | null; language: string }) {
+  if (!prizeText) return null;
+
+  if (hasHtml(prizeText)) {
+    return (
+      <RichContent
+        value={prizeText}
+        fallback=""
+        className="about-prize-copy rich-content text-[14px] sm:text-[15px] text-[color:var(--about-text-secondary)] leading-[1.7] font-normal text-left"
+      />
+    );
+  }
+
+  const lines = prizeText.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length === 0) return null;
+
+  return (
+    <div className="space-y-3 flex-1 flex flex-col justify-start">
+      {lines.map((line, idx) => {
+        const colonIdx = line.indexOf(':');
+        let title = colonIdx !== -1 ? line.slice(0, colonIdx).trim() : '';
+        let rest = colonIdx !== -1 ? line.slice(colonIdx + 1).trim() : line;
+
+        let categories: string[] = [];
+        const parenMatch = title.match(/\((.*?)\)/);
+        if (parenMatch && parenMatch[1].includes(',')) {
+          categories = parenMatch[1].split(',').map(c => c.trim()).filter(Boolean);
+          title = title.replace(/\(.*?\)/, '').trim();
+        }
+
+        let value = '';
+        let perks = rest;
+        const plusIdx = rest.indexOf('+');
+        if (plusIdx !== -1) {
+          value = rest.slice(0, plusIdx).trim();
+          perks = rest.slice(plusIdx + 1).trim();
+        }
+
+        const isChampion = /quán quân|champion/i.test(title);
+        const isRunnerUp = /á quân|runner/i.test(title);
+
+        let icon = '🏆';
+        let badgeStyle = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25';
+        let borderHover = 'hover:border-rose-500/40';
+
+        if (isChampion) {
+          icon = '👑';
+          badgeStyle = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30';
+          borderHover = 'hover:border-amber-500/40';
+        } else if (isRunnerUp) {
+          icon = '🥈';
+          badgeStyle = 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30';
+          borderHover = 'hover:border-sky-500/40';
+        }
+
+        return (
+          <div
+            key={idx}
+            className={`flex flex-col gap-2 bg-[color:var(--about-surface-sec)]/30 hover:bg-[color:var(--about-surface-sec)]/75 border border-[color:var(--about-border)] ${borderHover} rounded-xl p-3.5 transition-all duration-300 shadow-sm`}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-base shrink-0">{icon}</span>
+                <h5 className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-primary)]">
+                  {title || line}
+                </h5>
+              </div>
+              {value && (
+                <span className={`text-[12px] sm:text-[13px] font-black px-2.5 py-0.5 rounded-md border ${badgeStyle} whitespace-nowrap`}>
+                  {value}
+                </span>
+              )}
+            </div>
+
+            {categories.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                {categories.map((cat, cIdx) => (
+                  <span
+                    key={cIdx}
+                    className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md bg-[color:var(--about-surface)] border border-[color:var(--about-border)] text-[color:var(--about-text-secondary)]"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {perks && (
+              <p className="text-[12.5px] sm:text-[13px] leading-relaxed text-[color:var(--about-text-secondary)] font-normal pt-1.5 border-t border-[color:var(--about-border)]/50">
+                <span className="font-semibold text-[color:var(--about-text-primary)]">
+                  {language === 'en' ? 'Includes:' : 'Bao gồm:'}{' '}
+                </span>
+                {perks}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function parseVN(dStr: string | undefined | null) {
   if (!dStr) return new Date();
   let val = dStr.trim();
@@ -551,7 +653,7 @@ export default function GioiThieuPage() {
         .about-card-warning { border-top: 3px solid var(--about-warning); }
         .about-card-accent { border-top: 3px solid var(--about-accent); }
         .about-card-prize { border-top: 3px solid var(--about-prize); }
-        .about-prize-summary { min-height: 116px; display: flex; flex-direction: column; justify-content: center; }
+        .about-prize-summary { min-height: 92px; display: flex; flex-direction: column; justify-content: center; }
         .about-prize-copy { flex: 1; padding: 16px 18px; border: 1px solid var(--about-border); border-radius: 16px; background: color-mix(in srgb, var(--about-surface-sec) 30%, transparent); }
         .about-prize-copy p { margin: 0 0 10px; }
         .about-prize-copy p:last-child { margin-bottom: 0; }
@@ -915,11 +1017,7 @@ export default function GioiThieuPage() {
                       </h4>
                     </div>
 
-                    <RichContent
-                      value={prize}
-                      fallback=""
-                      className="about-prize-copy rich-content text-[15px] sm:text-[16px] text-[color:var(--about-text-secondary)] leading-[1.75] font-normal text-left shadow-inner"
-                    />
+                    <PrizeStructureDisplay prizeText={prize} language={language} />
                   </div>
                 </div>
 
