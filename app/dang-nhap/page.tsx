@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { useAlert } from '../AlertProvider';
 import { apiUrl } from '../api';
 
@@ -11,13 +12,49 @@ declare global {
 }
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
+const AUDIENCE_TYPES = [
+  'Sinh viên HUIT',
+  'Cán bộ / Giảng viên HUIT',
+  'Cựu sinh viên HUIT',
+  'Khán giả tự do / Bạn bè, người thân thí sinh',
+];
+
+const HUIT_FACULTIES = [
+  'Khoa Công nghệ Thông tin',
+  'Khoa Quản trị Kinh doanh',
+  'Khoa Marketing và Truyền thông',
+  'Khoa Ngôn ngữ Anh',
+  'Khoa Công nghệ Thực phẩm',
+  'Khoa May và Thời trang',
+  'Khoa Tài chính - Ngân hàng',
+  'Khoa Kế toán - Kiểm toán',
+  'Khoa Du lịch và Ẩm thực',
+  'Khoa Công nghệ Hóa học',
+  'Khoa Công nghệ Điện - Điện tử',
+  'Khoa Cơ khí và Kỹ thuật Giao thông',
+  'Khoa Sinh học và Môi trường',
+  'Khoa Chính trị - Luật',
+  'Khoa Ngoại ngữ',
+  'Viện Đào tạo Quốc tế',
+  'Khác',
+];
+
+const CONTEST_TABLE_PREFERENCES = [
+  { value: 'ALL', label: 'Cả hai bảng (King & Queen)' },
+  { value: 'FEMALE', label: "Bảng Nữ (HUIT's Queen)" },
+  { value: 'MALE', label: "Bảng Nam (HUIT's King)" },
+];
+
 const defaultRegisterForm = {
   fullName: '',
   email: '',
   phone: '',
   password: '',
-  schoolOrCompany: '',
-  contestTable: 'Bảng sinh viên, học viên',
+  audienceType: 'Sinh viên HUIT',
+  faculty: 'Khoa Công nghệ Thông tin',
+  studentId: '',
+  schoolOrCompany: 'Trường Đại học Công Thương TP.HCM (HUIT)',
+  contestTable: 'ALL',
 };
 
 function saveSession(payload: any) {
@@ -233,6 +270,9 @@ export default function LoginPage() {
         body: JSON.stringify({
           accessToken,
           phone: registerForm.phone,
+          audienceType: registerForm.audienceType,
+          faculty: registerForm.faculty,
+          studentId: registerForm.studentId,
           schoolOrCompany: registerForm.schoolOrCompany,
           contestTable: registerForm.contestTable,
         }),
@@ -546,9 +586,9 @@ export default function LoginPage() {
           {/* Header */}
           <div className={`text-center mb-10 ${mounted ? 'anim-up anim-d100' : 'opacity-0'}`}>
             <h1 className="text-[28px] sm:text-[36px] font-extrabold text-white uppercase tracking-[0.06em] mb-1">
-              Đăng nhập
+              Đăng nhập khán giả
             </h1>
-            <p className="text-[13px] text-white/40 tracking-wider">HUIT&apos;s ICONIC 2026 — Cổng bình chọn chính thức</p>
+            <p className="text-[13px] text-white/60 tracking-wider">HUIT&apos;s ICONIC 2026 — Đăng nhập để nhận 02 lượt bình chọn miễn phí mỗi ngày</p>
             <div className="h-[2.5px] w-[50px] bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] mx-auto rounded-full mt-4 transition-all duration-[1000ms]" style={{ width: mounted ? '50px' : '0px' }} />
           </div>
 
@@ -714,6 +754,25 @@ export default function LoginPage() {
           </div>
         </div>
 
+        {/* Candidate registration callout */}
+        <div className={`mt-8 z-10 w-full max-w-[920px] flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white/10 dark:bg-white/5 border border-white/15 backdrop-blur-md shadow-lg ${mounted ? 'anim-up anim-d500' : 'opacity-0'}`}>
+          <div className="flex items-center gap-3.5 text-left">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-tr from-[#0A2FFF] to-[#79BCC2] text-xl shadow-md">
+              👑
+            </span>
+            <div>
+              <p className="text-sm font-extrabold text-white">Bạn là thí sinh muốn đăng ký dự thi HUIT&apos;s ICONIC 2026?</p>
+              <p className="text-xs text-white/70 mt-0.5">Nộp hồ sơ trực tuyến, tải ảnh chân dung và toàn thân để tham gia vòng sơ khảo tuyển chọn Top 50.</p>
+            </div>
+          </div>
+          <Link
+            href="/dang-ky"
+            className="shrink-0 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] text-white font-extrabold text-xs uppercase tracking-wider hover:opacity-95 transition shadow-md shadow-blue-500/20"
+          >
+            Đăng ký dự thi ngay →
+          </Link>
+        </div>
+
         {registerOpen && (
           <div
             className="fixed inset-0 z-[1100] flex items-start justify-center overflow-y-auto bg-black/65 px-4 pb-[calc(24px+env(safe-area-inset-bottom))] pt-[48px] sm:px-8 sm:pb-8 sm:pt-[72px] backdrop-blur-md"
@@ -733,13 +792,13 @@ export default function LoginPage() {
               <div className="flex items-start justify-between gap-4 border-b border-slate-200/80 dark:border-white/10 pb-4 flex-shrink-0">
                 <div>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0077b6]/10 text-[#0077b6] dark:text-[#79BCC2] dark:bg-[#79BCC2]/15 text-[11px] font-extrabold uppercase tracking-widest border border-[#0077b6]/20 dark:border-[#79BCC2]/20">
-                    TẠO TÀI KHOẢN KHÁN GIẢ
+                    TÀI KHOẢN KHÁN GIẢ BÌNH CHỌN
                   </span>
                   <h2 id="register-dialog-title" className="mt-2 text-[22px] sm:text-[25px] font-extrabold tracking-wide text-slate-900 dark:text-white">
-                    Đăng ký bình chọn khán giả
+                    Đăng ký tài khoản khán giả
                   </h2>
                   <p className="mt-1 text-[13px] sm:text-[14px] leading-relaxed text-slate-500 dark:text-white/65">
-                    Tài khoản khán giả dùng để nhận lượt miễn phí hằng ngày và lưu lịch sử bình chọn.
+                    Dành cho sinh viên, cán bộ giảng viên, người thân và khán giả ủng hộ thí sinh tại HUIT&apos;s ICONIC 2026.
                   </p>
                 </div>
                 <button
@@ -758,6 +817,18 @@ export default function LoginPage() {
 
               {/* Scrollable Form Body */}
               <div className="overflow-y-auto py-5 pr-1 space-y-5 flex-1 custom-scrollbar">
+
+                {/* Audience Benefit Banner */}
+                <div className="rounded-2xl bg-gradient-to-r from-[#0077b6]/15 via-[#0096c7]/10 to-[#79BCC2]/15 border border-[#0096c7]/25 p-4 flex items-center gap-3.5">
+                  <span className="text-2xl flex-shrink-0">🎁</span>
+                  <div>
+                    <p className="text-[13px] font-extrabold text-[#0077b6] dark:text-[#79BCC2]">Quyền lợi tài khoản khán giả</p>
+                    <p className="text-[12px] text-slate-600 dark:text-white/75 mt-0.5 leading-relaxed">
+                      Mỗi tài khoản được nhận <b>02 lượt bình chọn miễn phí</b> mỗi ngày cho thí sinh bạn yêu thích (làm mới lúc 00:00 hằng ngày).
+                    </p>
+                  </div>
+                </div>
+
                 <div className="grid gap-5 sm:grid-cols-2">
 
                   {/* Full Name */}
@@ -780,7 +851,7 @@ export default function LoginPage() {
                         updateRegisterForm('fullName', event.target.value);
                         if (regErrors.fullName) setRegErrors(prev => ({ ...prev, fullName: undefined }));
                       }}
-                      placeholder="Nhập họ và tên đầy đủ"
+                      placeholder="Nhập họ và tên đầy đủ của bạn"
                     />
                     {regErrors.fullName && (
                       <p className="text-[12.5px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1.5 mt-1">
@@ -828,7 +899,7 @@ export default function LoginPage() {
                         <circle cx="12" cy="12" r="4"></circle>
                         <path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-5.5 8.28"></path>
                       </svg>
-                      Email <span className="text-red-500 font-bold">*</span>
+                      Email đăng nhập <span className="text-red-500 font-bold">*</span>
                     </span>
                     <input
                       name="email"
@@ -843,7 +914,7 @@ export default function LoginPage() {
                         updateRegisterForm('email', event.target.value);
                         if (regErrors.email) setRegErrors(prev => ({ ...prev, email: undefined }));
                       }}
-                      placeholder="Nhập địa chỉ email"
+                      placeholder="VD: user@huit.edu.vn"
                     />
                     {regErrors.email && (
                       <p className="text-[12.5px] font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1.5 mt-1">
@@ -899,26 +970,42 @@ export default function LoginPage() {
                     )}
                   </label>
 
-                  {/* School/Company */}
+                  {/* Audience Type */}
                   <label className="space-y-1.5">
                     <span className="text-[13px] font-semibold text-slate-700 dark:text-white/80 flex items-center gap-1.5">
                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                       </svg>
-                      Trường học / Đơn vị
+                      Đối tượng khán giả <span className="text-red-500 font-bold">*</span>
                     </span>
-                    <input
-                      name="organization"
-                      autoComplete="organization"
-                      className="login-input h-[48px] w-full rounded-[14px] px-4 text-[14px]"
-                      value={registerForm.schoolOrCompany}
-                      onChange={(event) => updateRegisterForm('schoolOrCompany', event.target.value)}
-                      placeholder="Nhập tên trường/đơn vị"
-                    />
+                    <select
+                      name="audienceType"
+                      className="login-input h-[48px] w-full rounded-[14px] px-4 text-[14px] font-semibold cursor-pointer"
+                      value={registerForm.audienceType}
+                      onChange={(event) => {
+                        const val = event.target.value;
+                        updateRegisterForm('audienceType', val);
+                        if (val === 'Sinh viên HUIT' || val === 'Cán bộ / Giảng viên HUIT') {
+                          updateRegisterForm('schoolOrCompany', 'Trường Đại học Công Thương TP.HCM (HUIT)');
+                        } else if (val === 'Cựu sinh viên HUIT') {
+                          updateRegisterForm('schoolOrCompany', 'Cựu sinh viên HUIT');
+                        } else {
+                          updateRegisterForm('schoolOrCompany', '');
+                        }
+                      }}
+                    >
+                      {AUDIENCE_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
-                  {/* Contest Table */}
+                  {/* Contest Table Preference */}
                   <label className="space-y-1.5">
                     <span className="text-[13px] font-semibold text-slate-700 dark:text-white/80 flex items-center gap-1.5">
                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -932,12 +1019,104 @@ export default function LoginPage() {
                       value={registerForm.contestTable}
                       onChange={(event) => updateRegisterForm('contestTable', event.target.value)}
                     >
-                      <option value="Bảng học sinh">Bảng học sinh</option>
-                      <option value="Bảng sinh viên">Bảng sinh viên</option>
-                      <option value="Bảng doanh nghiệp">Bảng doanh nghiệp</option>
+                      {CONTEST_TABLE_PREFERENCES.map((table) => (
+                        <option key={table.value} value={table.value}>
+                          {table.label}
+                        </option>
+                      ))}
                     </select>
                   </label>
+
+                  {/* Dynamic Faculty Selection for HUIT students / staff / alumni */}
+                  {registerForm.audienceType !== 'Khán giả tự do / Bạn bè, người thân thí sinh' ? (
+                    <label className="space-y-1.5">
+                      <span className="text-[13px] font-semibold text-slate-700 dark:text-white/80 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                        Khoa / Viện trực thuộc
+                      </span>
+                      <select
+                        name="faculty"
+                        className="login-input h-[48px] w-full rounded-[14px] px-4 text-[14px] font-semibold cursor-pointer"
+                        value={registerForm.faculty}
+                        onChange={(event) => updateRegisterForm('faculty', event.target.value)}
+                      >
+                        {HUIT_FACULTIES.map((f) => (
+                          <option key={f} value={f}>
+                            {f}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : null}
+
+                  {/* Student ID if Student */}
+                  {registerForm.audienceType === 'Sinh viên HUIT' ? (
+                    <label className="space-y-1.5">
+                      <span className="text-[13px] font-semibold text-slate-700 dark:text-white/80 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                          <line x1="7" y1="8" x2="17" y2="8"></line>
+                          <line x1="7" y1="12" x2="17" y2="12"></line>
+                        </svg>
+                        Mã số sinh viên (MSSV) <span className="text-xs text-slate-400 font-normal">(tùy chọn)</span>
+                      </span>
+                      <input
+                        name="studentId"
+                        className="login-input h-[48px] w-full rounded-[14px] px-4 text-[14px]"
+                        value={registerForm.studentId}
+                        onChange={(event) => updateRegisterForm('studentId', event.target.value)}
+                        placeholder="VD: 2001210123"
+                      />
+                    </label>
+                  ) : null}
+
+                  {/* Organization / Company for Alumni / Guests */}
+                  {registerForm.audienceType === 'Khán giả tự do / Bạn bè, người thân thí sinh' || registerForm.audienceType === 'Cựu sinh viên HUIT' ? (
+                    <label className="space-y-1.5">
+                      <span className="text-[13px] font-semibold text-slate-700 dark:text-white/80 flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 21h18"></path>
+                          <path d="M9 8h1"></path>
+                          <path d="M9 12h1"></path>
+                          <path d="M9 16h1"></path>
+                          <path d="M14 8h1"></path>
+                          <path d="M14 12h1"></path>
+                          <path d="M14 16h1"></path>
+                          <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path>
+                        </svg>
+                        Trường học / Đơn vị công tác <span className="text-xs text-slate-400 font-normal">(tùy chọn)</span>
+                      </span>
+                      <input
+                        name="organization"
+                        autoComplete="organization"
+                        className="login-input h-[48px] w-full rounded-[14px] px-4 text-[14px]"
+                        value={registerForm.schoolOrCompany}
+                        onChange={(event) => updateRegisterForm('schoolOrCompany', event.target.value)}
+                        placeholder="VD: Doanh nghiệp, Trường THPT hoặc đối tác"
+                      />
+                    </label>
+                  ) : null}
+
                 </div>
+
+                {/* Candidate Redirection Banner */}
+                <div className="rounded-2xl border border-dashed border-sky-500/40 bg-sky-500/10 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm mt-2">
+                  <div className="flex items-center gap-2.5 text-slate-800 dark:text-slate-200">
+                    <span className="text-lg">👑</span>
+                    <span>Bạn muốn đăng ký tham gia với tư cách <b>Thí sinh</b>?</span>
+                  </div>
+                  <Link
+                    href="/dang-ky"
+                    onClick={() => setRegisterOpen(false)}
+                    className="font-extrabold text-[#0284c7] dark:text-[#79BCC2] hover:underline underline-offset-4 shrink-0 flex items-center gap-1"
+                  >
+                    Đăng ký dự thi thí sinh tại đây →
+                  </Link>
+                </div>
+
               </div>
 
               {/* Sticky Action Footer */}
@@ -955,7 +1134,7 @@ export default function LoginPage() {
                   className="btn-login text-white-force h-[46px] rounded-[14px] bg-gradient-to-r from-[#0077b6] via-[#0096c7] to-[#0284c7] hover:from-[#0284c7] hover:to-[#0369a1] px-7 text-[13.5px] font-extrabold uppercase tracking-wider text-white disabled:cursor-not-allowed disabled:opacity-60 shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2"
                 >
                   <span className="text-white-force text-white font-extrabold" style={{ color: '#ffffff !important' }}>
-                    {loading ? 'Đang xử lý...' : 'Tạo tài khoản'}
+                    {loading ? 'Đang xử lý...' : 'Tạo tài khoản khán giả'}
                   </span>
                 </button>
               </div>

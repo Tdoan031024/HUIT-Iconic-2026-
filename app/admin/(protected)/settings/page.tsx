@@ -55,7 +55,7 @@ export default function SettingsAdminPage() {
   const [uploadingLogo, setUploadingLogo] = useState<'huit' | 'iconic' | null>(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
   const [registrationDeadline, setRegistrationDeadline] = useState('2026-10-01T23:59');
-  const [registrationUrl, setRegistrationUrl] = useState('https://zalo.me/g/uxjmkq913');
+  const [registrationUrl, setRegistrationUrl] = useState('/dang-ky');
   const [detailUrl, setDetailUrl] = useState('https://huit.edu.vn');
   const [supportZaloUrl, setSupportZaloUrl] = useState('https://zalo.me/g/uxjmkq913');
   const [freeVotesPerAccountPerDay, setFreeVotesPerAccountPerDay] = useState(2);
@@ -88,10 +88,10 @@ export default function SettingsAdminPage() {
           setHeaderIconicLogoUrl(data.headerIconicLogoUrl || '/images/image.webp');
           setIsMaintenanceMode(data.isMaintenanceMode);
           setIsRegistrationOpen(data.isRegistrationOpen ?? true);
-          setRegistrationDeadline(data.registrationDeadline || '2026-06-20T23:59');
-          setRegistrationUrl(data.registrationUrl || 'https://khoinghiep.huit.edu.vn');
-          setDetailUrl(data.detailUrl || 'https://khoinghiep.huit.edu.vn');
-          setSupportZaloUrl(data.supportZaloUrl || 'https://zalo.me/4418938306145458374');
+          setRegistrationDeadline(data.registrationDeadline || '2026-10-01T23:59');
+          setRegistrationUrl(data.registrationUrl || '/dang-ky');
+          setDetailUrl(data.detailUrl || 'https://huit.edu.vn');
+          setSupportZaloUrl(data.supportZaloUrl || 'https://zalo.me/g/uxjmkq913');
           setFreeVotesPerAccountPerDay(data.freeVotesPerAccountPerDay || 2);
           setSepayBankName(data.sepayBankName || 'VietinBank');
           setSepayAccountNo(data.sepayAccountNo || '110632156888');

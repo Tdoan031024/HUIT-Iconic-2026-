@@ -228,6 +228,9 @@ model WebUser {
   provider        String    @default("email")
   role            String    @default("USER")
   status          String    @default("ACTIVE")
+  audienceType    String?
+  faculty         String?
+  studentId       String?
   schoolOrCompany String?
   contestTable    String?
   registeredAt    DateTime  @default(now())

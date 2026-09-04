@@ -54,7 +54,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   aboutContactQrUrl: "/images/qrdangky.png",
   isRegistrationOpen: true,
   registrationDeadline: "2026-10-01T23:59",
-  registrationUrl: "https://zalo.me/g/uxjmkq913",
+  registrationUrl: "/dang-ky",
   detailUrl: "https://huit.edu.vn",
   supportZaloUrl: "https://zalo.me/g/uxjmkq913",
   freeVotesPerAccountPerDay: 2,
@@ -935,7 +935,18 @@ export async function deleteWebUser(id: string) {
   return { success: true };
 }
 
-export async function registerWebUser(data: { fullName: string; email: string; phone?: string; password?: string; provider?: string }): Promise<WebUser> {
+export async function registerWebUser(data: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  password?: string;
+  provider?: string;
+  audienceType?: string;
+  faculty?: string;
+  studentId?: string;
+  schoolOrCompany?: string;
+  contestTable?: string;
+}): Promise<WebUser> {
   const email = normalizeEmail(data.email);
   const existing = await prisma.webUser.findUnique({ where: { email } });
   if (existing) throw new Error('Email này đã được đăng ký tài khoản.');
@@ -950,13 +961,29 @@ export async function registerWebUser(data: { fullName: string; email: string; p
       provider: data.provider || 'email',
       role: 'USER',
       status: 'ACTIVE',
+      audienceType: data.audienceType || null,
+      faculty: data.faculty || null,
+      studentId: data.studentId || null,
+      schoolOrCompany: data.schoolOrCompany || null,
+      contestTable: data.contestTable || null,
       isDeleted: false,
-    },
+    } as any,
   });
   return user as any;
 }
 
-export async function registerWebUserWithSession(data: { fullName: string; email: string; phone?: string; password?: string; provider?: string }) {
+export async function registerWebUserWithSession(data: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  password?: string;
+  provider?: string;
+  audienceType?: string;
+  faculty?: string;
+  studentId?: string;
+  schoolOrCompany?: string;
+  contestTable?: string;
+}) {
   const user = await registerWebUser(data);
   return { ok: true, user: publicWebUser(user), token: generateWebToken(user.id) };
 }
@@ -997,8 +1024,31 @@ export async function googleLogin(data: any) {
   const email = normalizeEmail(profile.email);
   const user = await prisma.webUser.upsert({
     where: { email },
-    update: { fullName: profile.name || undefined, lastLoginAt: new Date(), provider: 'google' },
-    create: { fullName: profile.name || email, email, phone: data.phone || null, provider: 'google', role: 'USER', status: 'ACTIVE', isDeleted: false },
+    update: {
+      fullName: profile.name || undefined,
+      lastLoginAt: new Date(),
+      provider: 'google',
+      ...(data.phone ? { phone: data.phone } : {}),
+      ...(data.audienceType ? { audienceType: data.audienceType } : {}),
+      ...(data.faculty ? { faculty: data.faculty } : {}),
+      ...(data.studentId ? { studentId: data.studentId } : {}),
+      ...(data.schoolOrCompany ? { schoolOrCompany: data.schoolOrCompany } : {}),
+      ...(data.contestTable ? { contestTable: data.contestTable } : {}),
+    } as any,
+    create: {
+      fullName: profile.name || email,
+      email,
+      phone: data.phone || null,
+      provider: 'google',
+      role: 'USER',
+      status: 'ACTIVE',
+      audienceType: data.audienceType || null,
+      faculty: data.faculty || null,
+      studentId: data.studentId || null,
+      schoolOrCompany: data.schoolOrCompany || null,
+      contestTable: data.contestTable || null,
+      isDeleted: false,
+    } as any,
   });
   return { ok: true, user: publicWebUser(user), token: generateWebToken(user.id) };
 }

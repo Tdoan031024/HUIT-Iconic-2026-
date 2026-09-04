@@ -102,18 +102,39 @@ function UserModal({
           </label>
 
           <label className="space-y-1.5 col-span-2 sm:col-span-1">
+            <span className={labelText}>Đối tượng khán giả</span>
+            <select className={inputClass} value={form.audienceType || ''} onChange={(event) => update('audienceType', event.target.value)}>
+              <option value="">Chưa chọn</option>
+              <option value="Sinh viên HUIT">Sinh viên HUIT</option>
+              <option value="Cán bộ / Giảng viên HUIT">Cán bộ / Giảng viên HUIT</option>
+              <option value="Cựu sinh viên HUIT">Cựu sinh viên HUIT</option>
+              <option value="Khán giả tự do / Bạn bè, người thân thí sinh">Khán giả tự do / Bạn bè, người thân</option>
+            </select>
+          </label>
+
+          <label className="space-y-1.5 col-span-2 sm:col-span-1">
             <span className={labelText}>Bảng quan tâm</span>
             <select className={inputClass} value={form.contestTable || ''} onChange={(event) => update('contestTable', event.target.value)}>
               <option value="">Chưa chọn bảng</option>
-              <option value="HIGH_SCHOOL">Bảng học sinh</option>
-              <option value="STUDENT">Bảng sinh viên, học viên</option>
-              <option value="ENTERPRISE">Bảng doanh nghiệp/tổ chức</option>
+              <option value="ALL">Cả hai bảng (King & Queen)</option>
+              <option value="FEMALE">Bảng Nữ (HUIT's Queen)</option>
+              <option value="MALE">Bảng Nam (HUIT's King)</option>
             </select>
+          </label>
+
+          <label className="space-y-1.5 col-span-2 sm:col-span-1">
+            <span className={labelText}>Khoa / Viện trực thuộc</span>
+            <input className={inputClass} value={form.faculty || ''} onChange={(event) => update('faculty', event.target.value)} placeholder="Ví dụ: Khoa Công nghệ Thông tin" />
+          </label>
+
+          <label className="space-y-1.5 col-span-2 sm:col-span-1">
+            <span className={labelText}>Mã số sinh viên (MSSV)</span>
+            <input className={inputClass} value={form.studentId || ''} onChange={(event) => update('studentId', event.target.value)} placeholder="Ví dụ: 2001210123" />
           </label>
 
           <label className="space-y-1.5 col-span-2">
             <span className={labelText}>Đơn vị công tác / Trường học</span>
-            <input className={inputClass} value={form.schoolOrCompany || ''} onChange={(event) => update('schoolOrCompany', event.target.value)} placeholder="Ví dụ: Đại học Công Thương" />
+            <input className={inputClass} value={form.schoolOrCompany || ''} onChange={(event) => update('schoolOrCompany', event.target.value)} placeholder="Ví dụ: Trường Đại học Công Thương TP.HCM" />
           </label>
         </div>
 
@@ -191,14 +212,33 @@ function DetailModal({
           </div>
 
           <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2 sm:col-span-1">
-            <p className={labelText}>Bảng đấu quan tâm</p>
+            <p className={labelText}>Đối tượng khán giả</p>
+            <p className={valText}>{user.audienceType || 'Chưa cập nhật'}</p>
+          </div>
+          <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2 sm:col-span-1">
+            <p className={labelText}>Bảng theo dõi bình chọn</p>
             <p className={valText}>
-              {user.contestTable === 'HIGH_SCHOOL' && 'Bảng học sinh'}
-              {user.contestTable === 'STUDENT' && 'Bảng sinh viên, học viên'}
-              {user.contestTable === 'ENTERPRISE' && 'Bảng doanh nghiệp/tổ chức'}
-              {!user.contestTable && 'Chưa chọn bảng'}
+              {user.contestTable === 'ALL' && 'Cả hai bảng (King & Queen)'}
+              {user.contestTable === 'FEMALE' && "Bảng Nữ (HUIT's Queen)"}
+              {user.contestTable === 'MALE' && "Bảng Nam (HUIT's King)"}
+              {(!user.contestTable || (user.contestTable !== 'ALL' && user.contestTable !== 'FEMALE' && user.contestTable !== 'MALE')) && (user.contestTable || 'Chưa chọn bảng')}
             </p>
           </div>
+
+          {user.faculty ? (
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2 sm:col-span-1">
+              <p className={labelText}>Khoa / Viện trực thuộc</p>
+              <p className={valText}>{user.faculty}</p>
+            </div>
+          ) : null}
+
+          {user.studentId ? (
+            <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2 sm:col-span-1">
+              <p className={labelText}>Mã số sinh viên (MSSV)</p>
+              <p className={valText}>{user.studentId}</p>
+            </div>
+          ) : null}
+
           <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 col-span-2 sm:col-span-1">
             <p className={labelText}>Đơn vị / Trường học</p>
             <p className={valText}>{user.schoolOrCompany || 'Chưa cập nhật'}</p>

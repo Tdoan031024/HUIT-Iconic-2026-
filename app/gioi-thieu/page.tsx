@@ -229,7 +229,7 @@ export default function GioiThieuPage() {
     ? (!isManuallyClosed && !isDeadlinePassed)
     : null;
   const registrationHref = registrationOpen === true
-    ? (settings?.registrationUrl || '/dang-ky')
+    ? (settings?.registrationUrl && !settings.registrationUrl.includes('zalo.me') ? settings.registrationUrl : '/dang-ky')
     : '#timeline-section';
 
   const quickLinks = [

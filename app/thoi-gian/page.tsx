@@ -75,7 +75,7 @@ function parseVN(dStr: string | undefined | null) {
 }
 
 export default function TimelinePage() {
-  const registerUrl = '';
+  const registerUrl = '/dang-ky';
   const language = useLanguage();
   const text = (vi?: string | null, en?: string | null) => localizedText(language, vi, en);
 
@@ -464,23 +464,19 @@ export default function TimelinePage() {
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {!isMounted ? (
-                <a
-                  href={registerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/dang-ky"
                   className="rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-white shadow-[0_10px_30px_rgba(10,47,255,0.35)] transition hover:scale-[1.03]"
                 >
-                  {language === 'en' ? 'Register Now' : 'Đăng ký ngay'}
-                </a>
+                  {language === 'en' ? 'Register Now' : 'Đăng ký dự thi ngay'}
+                </Link>
               ) : isRegistrationOpen ? (
-                <a
-                  href={settings?.registrationUrl || registerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/dang-ky"
                   className="rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] px-8 py-3.5 text-[14px] font-extrabold uppercase tracking-wider text-white shadow-[0_10px_30px_rgba(10,47,255,0.35)] transition hover:scale-[1.03]"
                 >
-                  {language === 'en' ? 'Register Now' : 'Đăng ký ngay'}
-                </a>
+                  {language === 'en' ? 'Register Now' : 'Đăng ký dự thi ngay'}
+                </Link>
               ) : (
                 <button
                   type="button"
@@ -621,27 +617,23 @@ export default function TimelinePage() {
             <CountdownTimer targetDate={settings.registrationDeadline} />
 
             <p className="countdown-desc">
-              Hãy chuẩn bị hồ sơ sớm để đội thi có đủ thời gian hoàn thiện ý tưởng, sản phẩm và kế hoạch triển khai.
+              Hãy chuẩn bị hồ sơ sớm để các bạn thí sinh có đủ thời gian hoàn thiện thông tin, ảnh dự thi và kế hoạch rèn luyện.
             </p>
 
             {!isMounted ? (
-              <a
-                href={registerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/dang-ky"
                 className="mt-8 inline-flex items-center justify-center rounded-full px-10 py-4 text-[14px] font-extrabold uppercase tracking-wider transition-all duration-300 countdown-cta-btn"
               >
-                Đăng ký ngay →
-              </a>
+                Đăng ký dự thi ngay →
+              </Link>
             ) : isRegistrationOpen ? (
-              <a
-                href={settings?.registrationUrl || registerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/dang-ky"
                 className="mt-8 inline-flex items-center justify-center rounded-full px-10 py-4 text-[14px] font-extrabold uppercase tracking-wider transition-all duration-300 countdown-cta-btn"
               >
-                Đăng ký ngay →
-              </a>
+                Đăng ký dự thi ngay →
+              </Link>
             ) : (
               <button
                 disabled

@@ -417,13 +417,19 @@ export default function TheLePage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/dang-ky"
+                  className="px-6 py-3 rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2] hover:opacity-95 text-white text-xs font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1.5"
+                >
+                  Đăng ký dự thi ngay →
+                </Link>
                 <a
                   href="https://zalo.me/g/uxjmkq913"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full bg-[#0A2FFF] hover:bg-[#0826CC] text-white text-xs font-black uppercase tracking-wider shadow-md transition active:scale-95"
+                  className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 border border-slate-300 dark:border-white/20 text-[color:var(--site-text)] text-xs font-black uppercase tracking-wider shadow-sm transition active:scale-95"
                 >
-                  Tham gia nhóm Zalo thí sinh →
+                  Nhóm Zalo thí sinh
                 </a>
               </div>
             </div>

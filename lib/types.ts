@@ -127,6 +127,9 @@ export interface WebUser {
   provider: 'email' | 'google' | 'quick';
   role: 'USER';
   status: 'ACTIVE' | 'LOCKED';
+  audienceType?: string;
+  faculty?: string;
+  studentId?: string;
   schoolOrCompany?: string;
   contestTable?: string;
   registeredAt: string;
