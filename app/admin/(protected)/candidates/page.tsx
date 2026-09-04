@@ -1655,10 +1655,11 @@ export default function CandidatesAdminPage() {
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                       <th className="py-2.5 px-3 whitespace-nowrap">Trạng thái</th>
-                      <th className="py-2.5 px-3 min-w-[200px]">Tên chương trình</th>
-                      <th className="py-2.5 px-3 min-w-[100px]">Hệ số nhân</th>
-                      <th className="py-2.5 px-3 min-w-[170px]">Bắt đầu</th>
-                      <th className="py-2.5 px-3 min-w-[170px]">Kết thúc</th>
+                      <th className="py-2.5 px-3 min-w-[170px]">Tên chương trình</th>
+                      <th className="py-2.5 px-3 min-w-[170px]">Mô tả</th>
+                      <th className="py-2.5 px-3 min-w-[90px]">Hệ số nhân</th>
+                      <th className="py-2.5 px-3 min-w-[160px]">Bắt đầu</th>
+                      <th className="py-2.5 px-3 min-w-[160px]">Kết thúc</th>
                       <th className="py-2.5 px-3 text-center whitespace-nowrap">Bật/Tắt</th>
                       <th className="py-2.5 px-3 text-center whitespace-nowrap">Xóa</th>
                     </tr>
@@ -1693,6 +1694,16 @@ export default function CandidatesAdminPage() {
                               onBlur={(e) => savePromotionField(p.id, 'name', e.target.value)}
                               placeholder="Tên sự kiện / chương trình..."
                               className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-xs font-semibold text-slate-800 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
+                            />
+                          </td>
+                          <td className="py-2.5 px-3">
+                            <input
+                              type="text"
+                              value={p.note || ''}
+                              onChange={(e) => updatePromotionField(p.id, 'note', e.target.value)}
+                              onBlur={(e) => savePromotionField(p.id, 'note', e.target.value)}
+                              placeholder="Ghi chú / mô tả ngắn..."
+                              className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-xs font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
                             />
                           </td>
                           <td className="py-2.5 px-3">
