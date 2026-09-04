@@ -108,91 +108,65 @@ function PrizeStructureDisplay({ prizeText, language }: { prizeText?: string | n
     );
   }
 
-  const lines = prizeText.split('\n').map(l => l.trim()).filter(Boolean);
-  if (lines.length === 0) return null;
+  const rawLines = prizeText.split('\n').map(l => l.trim()).filter(Boolean);
+  if (rawLines.length === 0) return null;
+
+  const subAwards: string[] = [];
+  const mainPrizes: string[] = [];
+
+  rawLines.forEach(line => {
+    const clean = line.replace(/^[-+*•]\s*/, '').trim();
+    if (!clean) return;
+    if (/^hệ thống giải thưởng phụ/i.test(clean) || /^sub[- ]awards/i.test(clean)) {
+      return;
+    }
+    if (/^best\b/i.test(clean) || /thí sinh được yêu thích/i.test(clean) || /truyền thông ấn tượng/i.test(clean) || line.startsWith('+')) {
+      subAwards.push(clean);
+    } else {
+      mainPrizes.push(clean);
+    }
+  });
 
   return (
     <div className="space-y-3 flex-1 flex flex-col justify-start">
-      {lines.map((line, idx) => {
-        const colonIdx = line.indexOf(':');
-        let title = colonIdx !== -1 ? line.slice(0, colonIdx).trim() : '';
-        let rest = colonIdx !== -1 ? line.slice(colonIdx + 1).trim() : line;
-
-        let categories: string[] = [];
-        const parenMatch = title.match(/\((.*?)\)/);
-        if (parenMatch && parenMatch[1].includes(',')) {
-          categories = parenMatch[1].split(',').map(c => c.trim()).filter(Boolean);
-          title = title.replace(/\(.*?\)/, '').trim();
-        }
-
-        let value = '';
-        let perks = rest;
-        const plusIdx = rest.indexOf('+');
-        if (plusIdx !== -1) {
-          value = rest.slice(0, plusIdx).trim();
-          perks = rest.slice(plusIdx + 1).trim();
-        }
-
-        const isChampion = /quán quân|champion/i.test(title);
-        const isRunnerUp = /á quân|runner/i.test(title);
-
-        let icon = '🏆';
-        let badgeStyle = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25';
-        let borderHover = 'hover:border-rose-500/40';
-
-        if (isChampion) {
-          icon = '👑';
-          badgeStyle = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30';
-          borderHover = 'hover:border-amber-500/40';
-        } else if (isRunnerUp) {
-          icon = '🥈';
-          badgeStyle = 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30';
-          borderHover = 'hover:border-sky-500/40';
-        }
-
-        return (
-          <div
-            key={idx}
-            className={`flex flex-col gap-2 bg-[color:var(--about-surface-sec)]/30 hover:bg-[color:var(--about-surface-sec)]/75 border border-[color:var(--about-border)] ${borderHover} rounded-xl p-3.5 transition-all duration-300 shadow-sm`}
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="text-base shrink-0">{icon}</span>
-                <h5 className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-primary)]">
-                  {title || line}
-                </h5>
-              </div>
-              {value && (
-                <span className={`text-[12px] sm:text-[13px] font-black px-2.5 py-0.5 rounded-md border ${badgeStyle} whitespace-nowrap`}>
-                  {value}
-                </span>
-              )}
-            </div>
-
-            {categories.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-0.5">
-                {categories.map((cat, cIdx) => (
-                  <span
-                    key={cIdx}
-                    className="text-[10.5px] font-semibold px-2 py-0.5 rounded-md bg-[color:var(--about-surface)] border border-[color:var(--about-border)] text-[color:var(--about-text-secondary)]"
-                  >
-                    {cat}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {perks && (
-              <p className="text-[12.5px] sm:text-[13px] leading-relaxed text-[color:var(--about-text-secondary)] font-normal pt-1.5 border-t border-[color:var(--about-border)]/50">
-                <span className="font-semibold text-[color:var(--about-text-primary)]">
-                  {language === 'en' ? 'Includes:' : 'Bao gồm:'}{' '}
-                </span>
-                {perks}
-              </p>
-            )}
+      {mainPrizes.map((line, idx) => (
+        <div
+          key={idx}
+          className="flex flex-col gap-2 bg-[color:var(--about-surface-sec)]/30 hover:bg-[color:var(--about-surface-sec)]/75 border border-[color:var(--about-border)] hover:border-amber-500/40 rounded-xl p-3.5 transition-all duration-300 shadow-sm"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-base shrink-0">👑</span>
+            <h5 className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-primary)]">
+              {language === 'en' ? 'Grand Awards' : 'Quyền lợi Quán quân & Á quân'}
+            </h5>
           </div>
-        );
-      })}
+          <p className="text-[13px] sm:text-[14px] leading-relaxed text-[color:var(--about-text-secondary)] font-normal pt-1 border-t border-[color:var(--about-border)]/50">
+            {line}
+          </p>
+        </div>
+      ))}
+
+      {subAwards.length > 0 && (
+        <div className="flex flex-col gap-2.5 bg-[color:var(--about-surface-sec)]/30 hover:bg-[color:var(--about-surface-sec)]/75 border border-[color:var(--about-border)] hover:border-rose-500/40 rounded-xl p-3.5 transition-all duration-300 shadow-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-base shrink-0">✨</span>
+            <h5 className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-primary)]">
+              {language === 'en' ? 'Special Sub-Awards' : 'Hệ thống giải thưởng phụ'}
+            </h5>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-[color:var(--about-border)]/50">
+            {subAwards.map((award, aIdx) => (
+              <div
+                key={aIdx}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[color:var(--about-surface)] border border-[color:var(--about-border)] text-[12px] sm:text-[12.5px] font-medium text-[color:var(--about-text-secondary)]"
+              >
+                <span className="text-rose-500 shrink-0 text-xs">★</span>
+                <span className="truncate">{award}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -316,7 +290,7 @@ export default function GioiThieuPage() {
       num: settings?.statsCandidates || '40.000+',
       label: language === 'en' ? 'Enrolled Students' : 'Quy mô sinh viên HUIT',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
           <path d="M6 12v5c3 3 9 3 12 0v-5"/>
         </svg>
@@ -329,7 +303,7 @@ export default function GioiThieuPage() {
       num: settings?.statsVotes || '1.000.000+',
       label: language === 'en' ? 'Online Public Votes' : 'Lượt bình chọn trực tuyến',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
           <polyline points="15 3 21 3 21 9"/>
           <line x1="10" y1="14" x2="21" y2="3"/>
@@ -343,7 +317,7 @@ export default function GioiThieuPage() {
       num: (settings?.statsParticipants === '50 Top' ? 'Top 50' : (settings?.statsParticipants || 'Top 50')),
       label: language === 'en' ? 'Top Finalists' : 'Thí sinh Top xuất sắc',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="8" r="6"/>
           <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
         </svg>
@@ -356,7 +330,7 @@ export default function GioiThieuPage() {
       num: settings?.statsViews || '10 triệu+',
       label: language === 'en' ? 'Social Media Reach' : 'Lượt tiếp cận truyền thông',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
         </svg>
       ),
@@ -368,7 +342,7 @@ export default function GioiThieuPage() {
       num: settings?.statsMedia || '30+',
       label: language === 'en' ? 'Media Partners' : 'Đơn vị báo chí, truyền thông',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
           <path d="M18 14h-8"/>
           <path d="M15 18h-5"/>
@@ -383,7 +357,7 @@ export default function GioiThieuPage() {
       num: settings?.statsSchools || '16+ Khoa',
       label: language === 'en' ? 'HUIT Academic Faculties' : 'Khoa / Viện đào tạo HUIT',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <rect width="16" height="20" x="4" y="2" rx="2" ry="2"/>
           <path d="M9 22v-4h6v4"/>
           <path d="M8 6h.01"/>
@@ -1244,25 +1218,23 @@ export default function GioiThieuPage() {
                 {language === 'en' ? 'Scale & Community' : 'Quy mô & Số liệu nổi bật'}
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
                 {statItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
+                    className={`group relative overflow-hidden rounded-2xl border border-[color:var(--about-border)] ${item.glow} bg-gradient-to-br from-[color:var(--about-surface-sec)]/50 via-[color:var(--about-surface)] to-[color:var(--about-surface-sec)]/20 p-6 sm:p-7 flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl`}
                   >
-                    <div className="flex items-center justify-between gap-3 mb-3">
-                      <div className={`grid h-10 w-10 place-items-center rounded-xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110`}>
-                        {item.icon}
-                      </div>
+                    <div className={`grid h-12 w-12 place-items-center rounded-2xl border ${item.badgeBg} shadow-xs transition-transform duration-300 group-hover:scale-110 mb-4`}>
+                      {item.icon}
                     </div>
 
-                    <div className="text-2xl sm:text-3xl font-black tracking-tight leading-none mb-2">
+                    <div className="text-3xl sm:text-4xl lg:text-[40px] font-black tracking-tight leading-none mb-2.5">
                       <span className={`bg-gradient-to-r ${item.gradient} bg-clip-text text-transparent`}>
                         {item.num}
                       </span>
                     </div>
 
-                    <p className="text-xs sm:text-[13px] font-bold text-[color:var(--about-text-secondary)] leading-snug">
+                    <p className="text-[14px] sm:text-[15px] font-bold text-[color:var(--about-text-secondary)] leading-snug max-w-[240px]">
                       {item.label}
                     </p>
                   </div>
