@@ -791,20 +791,153 @@ export default function HomePage() {
               />
             </div>
 
-            {/* 2 Columns Content */}
-            <div className="flex flex-col items-start gap-7 md:gap-10 w-full max-w-[1080px] px-4 sm:px-0 mx-auto">
+            {/* 2 Columns Content: Left = Beautiful Registration CTA Card (Red Outlined Box), Right = Competition Information */}
+            <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 xl:gap-12 items-center w-full max-w-[1120px] px-4 sm:px-6 mx-auto">
 
-              {/* Left Column: Information */}
+              {/* Left Column: Registration CTA Card */}
+              <div
+                style={{
+                  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                  transitionDelay: '350ms'
+                }}
+                className={`w-full max-w-[420px] mx-auto lg:max-w-none order-2 lg:order-1 transform transition-all duration-700 ${
+                  aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
+              >
+                <div className="relative overflow-hidden rounded-[26px] border border-[#0A2FFF]/20 bg-gradient-to-b from-white/95 via-[#f2f7ff]/90 to-white/90 p-6 sm:p-7 shadow-[0_16px_45px_-12px_rgba(10,47,255,0.18)] backdrop-blur-xl dark:border-white/15 dark:from-slate-900/95 dark:via-slate-900/85 dark:to-slate-950/95 dark:shadow-[0_16px_45px_-12px_rgba(0,0,0,0.6)]">
+                  {/* Subtle glowing ambient lights */}
+                  <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gradient-to-br from-[#0A2FFF]/20 to-[#79BCC2]/20 blur-2xl" />
+                  <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-[#79BCC2]/20 blur-2xl" />
+
+                  {/* Header Badge */}
+                  <div className="relative z-10 flex items-center justify-between gap-2">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+                      <span className="relative flex h-2 w-2">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                      </span>
+                      <span>{language === 'en' ? 'Registration Portal Open' : 'Cổng đăng ký đang mở'}</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">HUIT 2026</span>
+                  </div>
+
+                  {/* Card Title & Slogan */}
+                  <div className="relative z-10 mt-4 space-y-1.5">
+                    <div className="text-[11px] font-black uppercase tracking-[0.16em] text-[#0A2FFF] dark:text-[#79BCC2]">
+                      {language === 'en' ? 'Official Registration' : 'Đăng ký dự thi chính thức'}
+                    </div>
+                    <h4 className="text-[20px] sm:text-[22px] font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white">
+                      {language === 'en' ? "HUIT's ICONIC 2026" : "HUIT's ICONIC 2026"}
+                    </h4>
+                    <p className="text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
+                      {language === 'en'
+                        ? 'Unleash your confidence, shine on stage and represent HUIT.'
+                        : 'Tỏa sáng bản lĩnh, tự tin sải bước và khẳng định dấu ấn riêng.'}
+                    </p>
+                  </div>
+
+                  {/* Countdown Timer Block (if active) */}
+                  {gateCountdown && !gateCountdown.isEnded ? (
+                    <div className="relative z-10 my-4 rounded-2xl border border-[#0A2FFF]/15 bg-[#0A2FFF]/[0.03] p-3 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                      <div className="mb-2 flex items-center justify-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        <span>⏳</span>
+                        <span>{language === 'en' ? 'Registration deadline in' : 'Thời gian nhận hồ sơ còn'}</span>
+                      </div>
+                      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                        {[
+                          { val: gateCountdown.days, label: language === 'en' ? 'Days' : 'Ngày' },
+                          { val: gateCountdown.hours, label: language === 'en' ? 'Hours' : 'Giờ' },
+                          { val: gateCountdown.mins, label: language === 'en' ? 'Mins' : 'Phút' },
+                          { val: gateCountdown.secs, label: language === 'en' ? 'Secs' : 'Giây' }
+                        ].map((item, i) => (
+                          <div
+                            key={i}
+                            className="flex flex-col items-center justify-center rounded-xl border border-slate-200/80 bg-white/95 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900/90"
+                          >
+                            <span className="font-mono text-[18px] sm:text-[20px] font-black leading-none text-[#0A2FFF] dark:text-[#79BCC2]">
+                              {String(item.val).padStart(2, '0')}
+                            </span>
+                            <span className="mt-1 text-[9px] font-bold uppercase text-slate-400 sm:text-[10px]">
+                              {item.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative z-10 my-4 space-y-2 rounded-2xl border border-black/5 bg-black/[0.02] p-3 dark:border-white/10 dark:bg-white/[0.03]">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                        <span className="text-base">🎓</span>
+                        <span>Dành cho toàn thể sinh viên chính quy HUIT</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                        <span className="text-base">🏆</span>
+                        <span>Cơ hội trở thành Đại sứ & nhận giải thưởng danh giá</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Big Primary Registration Button */}
+                  <div className="relative z-10 mt-5 space-y-3">
+                    {(!isMounted || isRegistrationOpen) ? (
+                      <Link
+                        href={ABOUT_REGISTER_URL}
+                        className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-[#0A2FFF] via-[#1E60FF] to-[#79BCC2] px-6 py-3.5 text-center text-[15px] font-black uppercase tracking-wider text-white shadow-[0_10px_25px_-5px_rgba(10,47,255,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-6px_rgba(10,47,255,0.55)] active:translate-y-0"
+                      >
+                        <span className="absolute inset-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] transition-all duration-1000 group-hover:left-full" />
+                        <span className="relative flex items-center gap-2">
+                          <span>{language === 'en' ? 'Register Now' : 'Đăng ký dự thi ngay'}</span>
+                          <svg
+                            className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg>
+                        </span>
+                      </Link>
+                    ) : (
+                      <div className="w-full rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-xs font-bold text-amber-600 dark:text-amber-400">
+                        {language === 'en' ? 'Registration closed' : 'Cổng đăng ký đã đóng'}
+                      </div>
+                    )}
+
+                    {/* Secondary Links: Rules + Zalo Support */}
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <Link
+                        href="/the-le"
+                        className="font-bold text-slate-600 transition-colors hover:text-[#0A2FFF] dark:text-slate-300 dark:hover:text-[#79BCC2]"
+                      >
+                        {language === 'en' ? 'Rules & criteria →' : 'Thể lệ cuộc thi →'}
+                      </Link>
+                      <a
+                        href="https://zalo.me/g/myzijputivfgc1toua9z"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-bold text-sky-600 transition-colors hover:underline dark:text-sky-400"
+                      >
+                        <img src="/images/zalo.png" alt="Zalo" className="h-3.5 w-3.5 object-contain" />
+                        <span>{language === 'en' ? 'Zalo Group' : 'Nhóm Zalo hỗ trợ'}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Information */}
               <div
                 style={{
                   transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                   transitionDelay: '400ms'
                 }}
-                className={`w-full flex flex-col space-y-4 sm:space-y-5 text-left transform transition-all duration-700 ${aboutVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
+                className={`w-full flex flex-col space-y-4 sm:space-y-5 text-left order-1 lg:order-2 transform transition-all duration-700 ${
+                  aboutVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'
+                }`}
               >
                 <h3
                   suppressHydrationWarning
-                  className="w-full text-center uppercase leading-tight"
+                  className="w-full text-left uppercase leading-tight"
                   style={{
                     fontSize: 'clamp(18px, 2.2vw, 24px)',
                     fontWeight: 800,
@@ -821,120 +954,6 @@ export default function HomePage() {
                   value={text(settings?.aboutDescription, settings?.aboutDescriptionEn)}
                   className="rich-content about-description-copy text-[15px] sm:text-[18px] text-black dark:text-white leading-[1.95] font-normal text-justify"
                 />
-
-                {/* Staggered Stats Counters */}
-                <div className="hidden grid-cols-4 gap-2 sm:gap-3 pt-1">
-                  <div
-                    style={{
-                      transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      transitionDelay: '800ms'
-                    }}
-                    className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                      }`}
-                  >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{candidates.length || '—'}</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Thí sinh</p>
-                  </div>
-
-                  <div
-                    style={{
-                      transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      transitionDelay: '1100ms'
-                    }}
-                    className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                      }`}
-                  >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{totalTracks || '—'}</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Hạng mục</p>
-                  </div>
-
-                  <div
-                    style={{
-                      transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      transitionDelay: '1400ms'
-                    }}
-                    className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                      }`}
-                  >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{totalSchools || '—'}</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Trường</p>
-                  </div>
-
-                  <div
-                    style={{
-                      transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      transitionDelay: '1700ms'
-                    }}
-                    className={`bg-white/[0.04] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 rounded-xl p-2.5 sm:p-3 text-center transform transition-all duration-700 shadow-sm hover:border-[#79BCC2]/30 hover:bg-white/[0.08] dark:hover:bg-white/[0.04] transition-colors duration-300 ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                      }`}
-                  >
-                    <p className="text-[17px] sm:text-[22px] font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]">{sponsors.length || '—'}</p>
-                    <p className="text-[10px] sm:text-[12px] text-neutral-neutral1/60 dark:text-neutral-white/60 font-bold uppercase tracking-wider">Nhà tài trợ</p>
-                  </div>
-                </div>
-
-                {/* About Action Buttons */}
-                <div
-                  style={{
-                    transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    transitionDelay: '2200ms'
-                  }}
-                  className={`about-actions flex w-full flex-wrap items-center justify-center gap-3 transform transition-all duration-[2800ms] ${aboutVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-                >
-                  {gateCountdown && !gateCountdown.isEnded && (
-                    <div className="order-first flex w-full flex-col items-center gap-1.5">
-                      <span className="text-[12px] font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 sm:text-[13px]">
-                        ⏳ Thời gian đăng ký còn lại
-                      </span>
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        {[
-                          { val: gateCountdown.days, label: language === 'en' ? 'Days' : 'Ngày' },
-                          { val: gateCountdown.hours, label: language === 'en' ? 'Hours' : 'Giờ' },
-                          { val: gateCountdown.mins, label: language === 'en' ? 'Mins' : 'Phút' },
-                          { val: gateCountdown.secs, label: language === 'en' ? 'Secs' : 'Giây' }
-                        ].map((item, i) => (
-                          <div key={i} className="flex min-w-[58px] flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-2.5 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:min-w-[70px] sm:px-3">
-                            <span className="font-mono text-xl font-black leading-none text-[#0A2FFF] dark:text-[#79BCC2] sm:text-2xl">
-                              {String(item.val).padStart(2, '0')}
-                            </span>
-                            <span className="mt-1 text-[9px] font-bold uppercase text-slate-400 sm:text-[10px]">{item.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <Link
-                    href="/the-le"
-                    className="hidden about-action about-action-secondary"
-                  >
-                    <span>Xem thêm</span>
-                  </Link>
-                  {(!isMounted || isRegistrationOpen) && (
-                    <Link
-                      href={ABOUT_REGISTER_URL}
-                      className="about-action about-action-primary"
-                    >
-                      <span>Đăng ký</span>
-                    </Link>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column: Image with Glowing Floating Background & Shine Effect */}
-              <div
-                style={{
-                  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                  transitionDelay: '600ms'
-                }}
-                className="hidden"
-              >
-                <div className="relative aspect-[4/5] w-full max-w-[460px] mx-auto overflow-hidden rounded-[18px] group hover-shine-effect bg-transparent">
-                  <img
-                    alt="Poster HUIT ICONIC"
-                    className="w-full h-full object-contain object-center p-1 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                    src={settings.aboutImageUrl}
-                  />
-                </div>
               </div>
 
             </div>

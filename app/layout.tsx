@@ -565,7 +565,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             {/* Page Content */}
-            <CurtainReveal />
+            <CurtainReveal logoSrc={settings?.headerIconicLogoUrl || '/images/image.webp'} />
             <div id="page-content">{children}</div>
 
             <CookieConsent />
@@ -598,7 +598,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="site-footer-grid">
                 <div className="footer-brand-column">
                   <div className="footer-logos">
-                    <img alt="HUIT's ICONIC 2026" src="/images/image.webp" className="max-h-12 w-auto object-contain" />
+                    <img alt="HUIT's ICONIC 2026" src={settings?.headerIconicLogoUrl || '/images/image.webp'} className="max-h-12 w-auto object-contain" />
                   </div>
                   <p className="footer-justify">
                     HUIT's ICONIC 2026 - Cuộc thi Tìm kiếm Đại sứ Truyền thông Trường Đại học Công Thương TP.HCM, nơi tôn vinh nét đẹp tâm hồn, trí tuệ, thanh lịch và bản lĩnh sinh viên HUIT.
