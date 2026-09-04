@@ -692,7 +692,7 @@ export default function IntroductionAdminPage() {
                   value={aboutBenefitsEn} 
                   onChange={(e) => setAboutBenefitsEn(e.target.value)} 
                   className="h-28 w-full resize-y rounded-lg border border-[#dce5e1] bg-[#fbfdfc] p-3 text-xs font-semibold text-[#18211f] leading-relaxed outline-none transition focus:border-[#0f766e] focus:bg-white" 
-                  placeholder="Startup skill training&#10;In-depth mentoring..."
+                  placeholder="Catwalk & stage presence coaching&#10;Communication & public speaking skills..."
                 />
               </div>
             </div>

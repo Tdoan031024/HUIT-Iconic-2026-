@@ -52,15 +52,21 @@ function getReadableBiography(value: string | undefined | null, language: string
     const parsed = JSON.parse(text);
     if (!parsed || typeof parsed !== 'object') return text;
     const labels: Record<string, string> = language === 'en' ? {
-      teamName: 'Project / Team', representativeSchool: 'School / Unit', leaderName: 'Representative',
-      advisorName: 'Advisor', implementationLocation: 'Implementation location', supportNeeds: 'Support needs',
-      expectations: 'Expectations', talent: 'Field / focus', sector: 'Field / focus', motto: 'Motto',
-      achievements: 'Achievements', hobbies: 'Interests', longDescription: 'Project introduction'
+      fullName: 'Full name', candidateName: 'Candidate name', representativeSchool: 'Faculty / Institute', faculty: 'Faculty / Institute',
+      talent: 'Talent & Skills', sector: 'Field / Focus', motto: 'Message / Motto',
+      achievements: 'Key Achievements', hobbies: 'Interests & Hobbies', longDescription: 'Self-introduction',
+      supportNeeds: 'Preparation Needs', expectations: 'Goals & Aspirations',
+      studentId: 'Student ID', contestTable: 'Contest Table', height: 'Height', weight: 'Weight',
+      teamName: 'Candidate Name', leaderName: 'Candidate', advisorName: 'Mentor',
+      implementationLocation: 'Activity location'
     } : {
-      teamName: 'Tên dự án / nhóm', representativeSchool: 'Trường / đơn vị', leaderName: 'Đại diện',
-      advisorName: 'Cố vấn', implementationLocation: 'Địa điểm triển khai', supportNeeds: 'Nhu cầu hỗ trợ',
-      expectations: 'Kỳ vọng', talent: 'Lĩnh vực / định hướng', sector: 'Lĩnh vực / định hướng', motto: 'Thông điệp',
-      achievements: 'Thành tích', hobbies: 'Sở thích', longDescription: 'Giới thiệu dự án'
+      fullName: 'Họ và tên', candidateName: 'Tên thí sinh', representativeSchool: 'Khoa / Viện / Đơn vị', faculty: 'Khoa / Viện',
+      talent: 'Tài năng & Năng khiếu', sector: 'Lĩnh vực thế mạnh', motto: 'Thông điệp truyền cảm hứng',
+      achievements: 'Thành tích nổi bật', hobbies: 'Sở thích', longDescription: 'Giới thiệu bản thân',
+      supportNeeds: 'Nhu cầu hỗ trợ & rèn luyện', expectations: 'Kỳ vọng & Mục tiêu',
+      studentId: 'Mã số sinh viên', contestTable: 'Bảng thi đấu', height: 'Chiều cao', weight: 'Cân nặng',
+      teamName: 'Tên thí sinh', leaderName: 'Thí sinh', advisorName: 'Người hướng dẫn',
+      implementationLocation: 'Địa bàn hoạt động'
     };
     const allowedKeys = Object.keys(labels);
     return Object.entries(parsed)
@@ -211,21 +217,29 @@ export default function CandidateDetailPage() {
   }, [candidate, allCandidates]);
 
   const highlights = useMemo(() => {
-    if (candidate?.sbd === '001') {
-      return [
-        { title: 'Tận dụng phụ phẩm', desc: 'Giảm thiểu rác thải nông nghiệp', color: 'bg-emerald-50 text-emerald-800 border border-emerald-300/80 dark:bg-emerald-950/30 dark:text-emerald-400' },
-        { title: 'Lên men tự nhiên', desc: 'Giàu probiotics tốt cho sức khỏe', color: 'bg-blue-50 text-blue-800 border border-blue-300/80 dark:bg-blue-950/30 dark:text-blue-400' },
-        { title: 'Giàu chất chống oxy hóa', desc: 'Hỗ trợ tăng cường sức đề kháng', color: 'bg-amber-50 text-amber-800 border border-amber-300/80 dark:bg-amber-950/30 dark:text-amber-400' },
-        { title: 'An toàn & bền vững', desc: 'Đạt tiêu chuẩn vệ sinh an toàn thực phẩm', color: 'bg-teal-50 text-teal-800 border border-teal-300/80 dark:bg-teal-950/30 dark:text-teal-400' }
-      ];
-    }
     return [
-      { title: 'Đột phá & Sáng tạo', desc: 'Ý tưởng độc đáo, giải pháp công nghệ mới', color: 'bg-blue-50 text-blue-800 border border-blue-300/80 dark:bg-blue-950/30 dark:text-blue-400' },
-      { title: 'Tính khả thi cao', desc: 'Mô hình kinh doanh rõ ràng, thực tiễn', color: 'bg-teal-50 text-teal-800 border border-teal-300/80 dark:bg-teal-950/30 dark:text-teal-400' },
-      { title: 'Tác động cộng đồng', desc: 'Giải quyết các vấn đề xã hội cấp thiết', color: 'bg-emerald-50 text-emerald-800 border border-emerald-300/80 dark:bg-emerald-950/30 dark:text-emerald-400' },
-      { title: 'Phát triển bền vững', desc: 'Thân thiện môi trường, tiết kiệm tài nguyên', color: 'bg-amber-50 text-amber-800 border border-amber-300/80 dark:bg-amber-950/30 dark:text-amber-400' }
+      {
+        title: language === 'en' ? 'Stage Poise & Catwalk' : 'Phong thái & Sân khấu',
+        desc: language === 'en' ? 'Poised confidence, elegant runway presence & radiant charisma' : 'Bản lĩnh sân khấu, thần thái tự tin, nét đẹp thanh lịch & rạng ngời',
+        color: 'bg-blue-50 text-blue-800 border border-blue-300/80 dark:bg-blue-950/30 dark:text-blue-400'
+      },
+      {
+        title: language === 'en' ? 'Eloquence & Communication' : 'Ứng xử & Ngoại ngữ',
+        desc: language === 'en' ? 'Sharp eloquence, compelling storytelling & inspirational mindset' : 'Tư duy sắc bén, khả năng diễn thuyết truyền cảm hứng & tự tin giao tiếp',
+        color: 'bg-teal-50 text-teal-800 border border-teal-300/80 dark:bg-teal-950/30 dark:text-teal-400'
+      },
+      {
+        title: language === 'en' ? 'Philanthropy & Community' : 'Dự án Thiện nguyện',
+        desc: language === 'en' ? 'Compassionate spirit, volunteer projects & positive social dedication' : 'Trái tim nhân ái, dự án thiện nguyện lan tỏa giá trị nhân văn sâu sắc',
+        color: 'bg-emerald-50 text-emerald-800 border border-emerald-300/80 dark:bg-emerald-950/30 dark:text-emerald-400'
+      },
+      {
+        title: language === 'en' ? 'HUIT Brand Ambassador' : 'Đại sứ Truyền thông HUIT',
+        desc: language === 'en' ? 'Youth leadership, representing HUIT student pride and prestige' : 'Hình mẫu sinh viên Công Thương thế hệ mới năng động, sáng tạo & bản lĩnh',
+        color: 'bg-amber-50 text-amber-800 border border-amber-300/80 dark:bg-amber-950/30 dark:text-amber-400'
+      }
     ];
-  }, [candidate?.sbd]);
+  }, [language]);
 
   const handleOpenLightbox = (imgUrl: string) => {
     const idx = allImages.indexOf(imgUrl);
@@ -534,7 +548,7 @@ export default function CandidateDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
               </span>
-              {language === 'en' ? 'Project Proposal & Showcase' : 'Thuyết minh dự án & Thí sinh'}
+              {language === 'en' ? 'Candidate Profile & Presentation' : 'Hồ sơ thí sinh & Giới thiệu bản thân'}
             </h2>
 
             {/* Stylized Candidate Executive Summary Quote Box */}
@@ -549,7 +563,7 @@ export default function CandidateDetailPage() {
               {readableBiography}
             </div>
 
-            {/* Custom Startup Feature Cards */}
+            {/* Candidate Evaluation & Core Highlights */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {highlights.map((h, index) => (
                 <div key={index} className={`p-4 rounded-xl flex flex-col gap-1 transition-all duration-200 hover:-translate-y-0.5 ${h.color}`}>
@@ -572,7 +586,7 @@ export default function CandidateDetailPage() {
                 {t('supportNeeds')}
               </h3>
               <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">
-                {candidate.supportNeeds || (language === 'en' ? 'Mentorship, seed capital, and commercial partnership connections.' : 'Chưa cập nhật nhu cầu hỗ trợ.')}
+                {candidate.supportNeeds || (language === 'en' ? 'Training in runway catwalk, camera angles, and professional media communication.' : 'Rèn luyện thêm kỹ năng catwalk, giải phóng hình thể và kỹ năng ứng xử sân khấu.')}
               </p>
             </div>
             
@@ -586,7 +600,7 @@ export default function CandidateDetailPage() {
                 {t('expectations')}
               </h3>
               <p className="mt-3 text-base leading-relaxed text-slate-600 whitespace-pre-line font-medium">
-                {candidate.expectations || (language === 'en' ? 'Bring positive impact to the community and inspire youth entrepreneurship.' : 'Chưa cập nhật kỳ vọng.')}
+                {candidate.expectations || (language === 'en' ? 'Become the official Media Ambassador of HUIT 2026 and inspire the student youth community.' : 'Chinh phục ngôi vị cao nhất, trở thành Đại sứ Truyền thông HUIT 2026 và lan tỏa tinh thần nhiệt huyết thanh xuân.')}
               </p>
             </div>
           </div>

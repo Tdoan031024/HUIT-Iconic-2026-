@@ -769,8 +769,8 @@ export default function BangXepHangPage() {
 
                 <p className="mx-auto mt-5 max-w-[780px] text-[15px] sm:text-[17px] leading-relaxed text-neutral-700 dark:text-white/72 font-light">
                   {language === 'en'
-                    ? 'Real-time updated leaderboard of startup candidates, public reach and official voting scores from the Evaluation Board and Public Community.'
-                    : 'Cập nhật liên tục thứ hạng và số lượt bình chọn của các thí sinh ICONIC 2026 từ cộng đồng.'}
+                    ? "Real-time updated leaderboard of HUIT's ICONIC 2026 candidates, public reach and official voting scores from the Evaluation Board and Public Community."
+                    : "Cập nhật liên tục thứ hạng và số lượt bình chọn của các thí sinh HUIT's ICONIC 2026 từ cộng đồng."}
                 </p>
 
                 <div className="mx-auto mt-6 h-[3.5px] w-[82px] rounded-full bg-gradient-to-r from-[#0A2FFF] to-[#79BCC2]" />

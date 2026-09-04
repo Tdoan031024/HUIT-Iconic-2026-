@@ -30,15 +30,15 @@ const defaultSections: GuideSection[] = [
     title: 'Hướng dẫn bình chọn miễn phí',
     steps: [
       { number: '01', description: 'Tạo tài khoản mới hoặc đăng nhập nhanh bằng tài khoản Google.', image: '/original_assets/imagefca6.png' },
-      { number: '02', description: 'Đăng nhập tài khoản để nhận lượt bình chọn miễn phí hằng ngày.', image: '/original_assets/imagef1be.png' },
-      { number: '03', description: 'Tìm kiếm và lựa chọn dự án bạn muốn bình chọn.', image: '/original_assets/image81d3.png' },
-      { number: '04', description: 'Chọn gói 5 điểm miễn phí, hệ thống ghi nhận điểm sau khi xác nhận thành công.', image: '/original_assets/image20da.png' },
+      { number: '02', description: 'Đăng nhập tài khoản khán giả để nhận 02 lượt bình chọn miễn phí mỗi ngày.', image: '/original_assets/imagef1be.png' },
+      { number: '03', description: 'Tìm kiếm và lựa chọn thí sinh bạn muốn bình chọn.', image: '/original_assets/image81d3.png' },
+      { number: '04', description: 'Bấm nút bình chọn miễn phí, hệ thống ghi nhận lượt bình chọn ngay lập tức.', image: '/original_assets/image20da.png' },
     ],
   },
   {
     title: 'Thanh toán chuyển khoản tự động qua Sepay',
     steps: [
-      { number: '01', description: 'Truy cập danh sách dự án, chọn dự án bạn muốn ủng hộ.', image: '/original_assets/image17ae.png' },
+      { number: '01', description: 'Truy cập danh sách thí sinh, chọn thí sinh bạn muốn ủng hộ.', image: '/original_assets/image17ae.png' },
       { number: '02', description: 'Lựa chọn gói điểm mong muốn và bấm thanh toán.', image: '/original_assets/imageefc9.png' },
       { number: '03', description: 'Quét mã QR thanh toán hiển thị trên màn hình hoặc chuyển khoản đúng cú pháp, số tiền qua cổng Sepay.', image: '/original_assets/image837f.png' },
       { number: '04', description: 'Giao dịch hoàn tất, hệ thống Sepay tự động xác nhận và cộng điểm bình chọn sau vài giây.', image: '/original_assets/image20da.png' },
