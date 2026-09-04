@@ -1522,10 +1522,10 @@ export default function CandidatesAdminPage() {
               <button
                 type="button"
                 onClick={() => setShowPromotionManager(!showPromotionManager)}
-                className={`rounded-lg border px-2 py-0.5 text-[10.5px] font-bold transition shrink-0 shadow-2xs ${
+                className={`rounded-lg border px-3 py-1 text-xs font-extrabold transition shrink-0 shadow-xs ${
                   showPromotionManager
-                    ? 'border-pink-300 bg-pink-50 text-pink-700'
-                    : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-pink-400 hover:text-pink-600'
+                    ? 'border-pink-400 bg-pink-50 text-pink-700 hover:bg-pink-100'
+                    : 'border-slate-300 bg-slate-50 text-slate-800 hover:border-pink-500 hover:bg-pink-50 hover:text-pink-600'
                 }`}
               >
                 {showPromotionManager ? '▲ Ẩn' : `▼ Quản lý${votingPromotions.length > 0 ? ` (${votingPromotions.length})` : ''}`}
