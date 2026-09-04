@@ -3,6 +3,10 @@ name: ICONIC CI/CD
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
   workflow_dispatch:
 
 concurrency:
