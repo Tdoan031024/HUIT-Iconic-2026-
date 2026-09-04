@@ -1449,10 +1449,12 @@ export default function CandidatesAdminPage() {
         </div>
 
         {/* THỐNG KÊ NHANH */}
-        <div className="grid gap-2.5 p-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 border-b border-slate-100 bg-slate-50/50">
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Tổng thí sinh</p>
-            <p className="mt-1 text-2xl font-extrabold text-slate-900">{candidates.length}</p>
+        <div className="grid gap-2.5 p-3.5 sm:grid-cols-2 lg:grid-cols-4 border-b border-slate-100 bg-slate-50/50">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm flex flex-col justify-between">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Tổng thí sinh</p>
+              <p className="mt-1 text-2xl font-extrabold text-slate-900">{candidates.length}</p>
+            </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-semibold text-slate-500">
               <span className="text-pink-600 font-bold">♀ {femaleCount}</span>
               <span>•</span>
@@ -1466,7 +1468,7 @@ export default function CandidatesAdminPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Cổng Đăng ký</p>
               <button
@@ -1482,13 +1484,15 @@ export default function CandidatesAdminPage() {
                 <span className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${isRegistrationOpen ? 'translate-x-4' : 'translate-x-1'}`} />
               </button>
             </div>
-            <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
-              {isRegistrationOpen ? '🟢 Đang mở' : '🔴 Đã đóng'}
-            </p>
-            <p className="text-[10px] text-slate-400 mt-0.5 truncate">Hạn: {registrationDeadline.replace('T', ' ')}</p>
+            <div>
+              <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
+                {isRegistrationOpen ? '🟢 Đang mở' : '🔴 Đã đóng'}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5 truncate">Hạn: {registrationDeadline.replace('T', ' ')}</p>
+            </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Cổng Bình chọn</p>
               <button
@@ -1504,36 +1508,38 @@ export default function CandidatesAdminPage() {
                 <span className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${isGateOpen ? 'translate-x-4' : 'translate-x-1'}`} />
               </button>
             </div>
-            <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
-              {isGateOpen ? '🟢 Nhận vote' : '🔴 Đóng vote'}
-            </p>
-            <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
+            <div>
+              <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
+                {isGateOpen ? '🟢 Nhận vote' : '🔴 Đóng vote'}
+              </p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
+            </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm sm:col-span-2 md:col-span-3 xl:col-span-3">
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Khung giờ nhân điểm</p>
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-1">
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 truncate">Khung giờ nhân điểm</p>
               <button
                 type="button"
                 onClick={() => setShowPromotionManager(!showPromotionManager)}
-                className={`rounded-lg border px-2.5 py-1 text-[11px] font-bold transition shrink-0 shadow-2xs ${
+                className={`rounded-lg border px-2 py-0.5 text-[10.5px] font-bold transition shrink-0 shadow-2xs ${
                   showPromotionManager
                     ? 'border-pink-300 bg-pink-50 text-pink-700'
                     : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-pink-400 hover:text-pink-600'
                 }`}
               >
-                {showPromotionManager ? '▲ Ẩn cài đặt' : `▼ Quản lý giờ${votingPromotions.length > 0 ? ` (${votingPromotions.length})` : ''}`}
+                {showPromotionManager ? '▲ Ẩn' : `▼ Quản lý${votingPromotions.length > 0 ? ` (${votingPromotions.length})` : ''}`}
               </button>
             </div>
 
             <div className="mt-1 flex items-center justify-between gap-2">
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
-                  {activePromotion ? `🔥 Đang x${activePromotion.multiplier} (${activePromotion.name})` : '⚪ Chưa kích hoạt'}
+                  {activePromotion ? `🔥 Đang x${activePromotion.multiplier}` : '⚪ Chưa kích hoạt'}
                 </p>
                 {activePromotion ? (
-                  <p className="text-[10px] text-emerald-700 font-medium mt-0.5">
-                    Thời gian còn lại: {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
+                  <p className="text-[10px] text-emerald-700 font-medium mt-0.5 truncate">
+                    {activePromotion.name} · {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
                   </p>
                 ) : (
                   <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
@@ -1549,10 +1555,10 @@ export default function CandidatesAdminPage() {
                     setVotingPromotions(next);
                     await saveVotingSettings(next);
                   }}
-                  className="rounded-lg border border-rose-200 bg-rose-50 px-2 py-1 text-[11px] font-extrabold text-rose-700 hover:bg-rose-100 transition shrink-0"
+                  className="rounded-lg border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-extrabold text-rose-700 hover:bg-rose-100 transition shrink-0"
                   title="Tắt ngay chương trình nhân điểm hiện tại"
                 >
-                  ⛔ Dừng ngay
+                  Tắt
                 </button>
               )}
             </div>
