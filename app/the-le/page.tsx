@@ -79,7 +79,7 @@ export default function TheLePage() {
               📜 {language === 'en' ? 'Official 2026 Contest Regulation' : 'Đề án & Thể lệ chính thức 2026'}
             </div>
 
-            <h1>
+            <h1 style={{ lineHeight: 1.35 }}>
               {language === 'en' ? 'Rules & Guidelines HUIT’s ICONIC 2026' : 'Thể lệ & Điều kiện dự thi HUIT’s ICONIC 2026'}
             </h1>
             <p>

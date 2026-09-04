@@ -1301,7 +1301,7 @@ export default function HomePage() {
           <div className="modern-container">
             <div className="modern-section-head">
               <span className="modern-kicker">{language === 'en' ? 'News & announcements' : 'Tin tức & Thông báo'}</span>
-              <h2 id="news-title">{language === 'en' ? 'Latest ICONIC updates' : "Cập nhật mới nhất từ HUIT's ICONIC"}</h2>
+              <h2 id="news-title" style={{ lineHeight: 1.35 }}>{language === 'en' ? 'Latest ICONIC updates' : "Cập nhật mới nhất từ HUIT's ICONIC"}</h2>
               <p>{language === 'en' ? 'Follow milestones, activities and important announcements throughout the competition.' : 'Theo dõi các cột mốc, hoạt động huấn luyện và thông báo quan trọng trong suốt hành trình cuộc thi.'}</p>
             </div>
             <div className="news-grid-modern">
