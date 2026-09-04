@@ -175,47 +175,47 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
         }
 
         .post-body-content .post-h2 {
-          font-size: 1.55rem;
+          font-size: 1.75rem;
           font-weight: 900;
-          margin-top: 2.5rem;
+          margin-top: 2.75rem;
           margin-bottom: 1.25rem;
           color: var(--site-text);
           display: flex;
           align-items: center;
-          gap: 0.6rem;
-          padding-bottom: 0.65rem;
-          border-bottom: 1px solid var(--site-line);
-          line-height: 1.35;
+          gap: 0.65rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 2px solid var(--site-line);
+          line-height: 1.4;
         }
 
         .post-body-content .post-h3 {
-          font-size: 1.25rem;
+          font-size: 1.35rem;
           font-weight: 800;
-          margin-top: 2rem;
+          margin-top: 2.25rem;
           margin-bottom: 1rem;
           color: var(--site-primary);
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.55rem;
           line-height: 1.4;
         }
 
         .post-body-content .post-h4 {
-          font-size: 1.1rem;
+          font-size: 1.15rem;
           font-weight: 700;
-          margin-top: 1.5rem;
+          margin-top: 1.75rem;
           margin-bottom: 0.75rem;
           color: var(--site-text);
         }
 
         .post-body-content .post-h2-icon {
-          font-size: 1.35rem;
+          font-size: 1.45rem;
           flex-shrink: 0;
         }
 
         .post-body-content .post-h3-bullet {
           color: var(--site-primary);
-          font-size: 1rem;
+          font-size: 1.1rem;
           flex-shrink: 0;
         }
 
@@ -243,8 +243,8 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
           display: flex;
           align-items: flex-start;
           gap: 0.85rem;
-          background: color-mix(in srgb, var(--site-card) 90%, transparent);
-          padding: 0.9rem 1.15rem;
+          background: color-mix(in srgb, var(--site-card) 92%, transparent);
+          padding: 1rem 1.35rem;
           border-radius: 1rem;
           border: 1px solid var(--site-line);
           transition: all 0.25s ease;
@@ -260,12 +260,12 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
         .post-body-content .post-bullet {
           display: grid;
           place-items: center;
-          width: 1.45rem;
-          height: 1.45rem;
+          width: 1.5rem;
+          height: 1.5rem;
           border-radius: 0.5rem;
           background: color-mix(in srgb, var(--site-primary) 12%, transparent);
           color: var(--site-primary);
-          font-size: 0.8rem;
+          font-size: 0.85rem;
           font-weight: 900;
           flex-shrink: 0;
           margin-top: 0.15rem;
@@ -274,12 +274,12 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
         .post-body-content .post-ol-num {
           display: grid;
           place-items: center;
-          width: 1.45rem;
-          height: 1.45rem;
+          width: 1.5rem;
+          height: 1.5rem;
           border-radius: 0.5rem;
           background: color-mix(in srgb, var(--site-primary) 15%, transparent);
           color: var(--site-primary);
-          font-size: 0.75rem;
+          font-size: 0.8rem;
           font-weight: 900;
           flex-shrink: 0;
           margin-top: 0.15rem;
@@ -287,8 +287,8 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
 
         .post-body-content .post-li-body {
           flex: 1;
-          font-size: 0.96rem;
-          line-height: 1.7;
+          font-size: 1.02rem;
+          line-height: 1.75;
           color: var(--site-text);
         }
 
@@ -386,7 +386,7 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
             </div>
 
             {/* Article Headline */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black leading-[1.22] text-[var(--site-text)] tracking-tight mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-black leading-[1.4] sm:leading-[1.45] text-[var(--site-text)] tracking-tight mb-6">
               {text(post.title, post.titleEn)}
             </h1>
 
@@ -414,13 +414,13 @@ export default function ClientPostDetail({ post, relatedPosts }: ClientPostDetai
         {/* === MAIN CONTENT CONTAINER === */}
         <div className="max-w-[1040px] mx-auto px-4 sm:px-6 py-10">
           
-          {/* Featured Infographic / Banner Image (Full uncropped aspect) */}
+          {/* Featured Infographic / Banner Image (Snug fit to portrait poster) */}
           {post.thumbnailUrl && (
-            <div className="w-full rounded-3xl overflow-hidden mb-12 border border-[var(--site-line)] shadow-xl bg-gradient-to-b from-slate-900/5 to-slate-900/20 p-2 sm:p-3">
+            <div className="w-full max-w-[660px] mx-auto rounded-3xl overflow-hidden mb-12 border border-[var(--site-line)] shadow-xl bg-gradient-to-b from-slate-900/5 to-slate-900/15 p-2 sm:p-2.5">
               <img
                 src={post.thumbnailUrl}
                 alt={text(post.title, post.titleEn)}
-                className="w-full h-auto max-h-[680px] object-contain rounded-2xl mx-auto block shadow-sm"
+                className="w-full h-auto max-h-[720px] object-contain rounded-2xl mx-auto block shadow-sm"
               />
             </div>
           )}
