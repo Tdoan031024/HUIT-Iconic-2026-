@@ -1696,14 +1696,14 @@ export default function CandidatesAdminPage() {
                               className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-xs font-semibold text-slate-800 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
                             />
                           </td>
-                          <td className="py-2.5 px-3">
-                            <input
-                              type="text"
+                          <td className="py-2.5 px-3 align-middle">
+                            <textarea
+                              rows={1}
                               value={p.note || ''}
                               onChange={(e) => updatePromotionField(p.id, 'note', e.target.value)}
                               onBlur={(e) => savePromotionField(p.id, 'note', e.target.value)}
-                              placeholder="Ghi chú / mô tả ngắn..."
-                              className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 text-xs font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
+                              placeholder="Ghi chú / mô tả..."
+                              className="min-h-[32px] w-full rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 py-1.5 text-xs font-medium text-slate-700 outline-none transition resize hover:border-slate-300 focus:border-pink-500 focus:bg-white focus:ring-2 focus:ring-pink-500/10"
                             />
                           </td>
                           <td className="py-2.5 px-3">
