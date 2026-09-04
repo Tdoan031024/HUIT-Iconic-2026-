@@ -384,8 +384,8 @@ export default function GuidesAdminPage() {
                 <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
-                      <th className="px-5 py-3">Gói bình chọn (Điểm)</th>
-                      <th className="px-5 py-3">Giá trị quy đổi (VND - Nhập 0 nếu Miễn phí)</th>
+                      <th className="px-5 py-3">Gói điểm bình chọn</th>
+                      <th className="px-5 py-3">Giá trị quy đổi (VNĐ)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-xs">

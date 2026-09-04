@@ -431,11 +431,11 @@ export default function NewsAdminPage() {
             <tr>
               <th className="px-5 py-3 w-20">Ảnh bìa</th>
               <th className="px-5 py-3">Tiêu đề bài viết</th>
-              <th className="px-5 py-3 w-32">Danh mục</th>
+              <th className="px-5 py-3 w-32">Chuyên mục</th>
               <th className="px-5 py-3 w-24">Lượt xem</th>
               <th className="px-5 py-3 w-28">Trạng thái</th>
-              <th className="px-5 py-3 w-28">Ngày viết</th>
-              <th className="px-5 py-3 text-center w-24">Hành động</th>
+              <th className="px-5 py-3 w-28">Ngày đăng</th>
+              <th className="px-5 py-3 text-center w-24">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#edf2f0] text-xs">

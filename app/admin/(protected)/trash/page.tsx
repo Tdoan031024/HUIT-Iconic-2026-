@@ -442,10 +442,10 @@ export default function AdminTrashPage() {
                       className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
                     />
                   </th>
-                  <th className="px-4 py-3.5 w-28">Loại</th>
-                  <th className="px-4 py-3.5">Thông tin mục đã xóa</th>
-                  <th className="px-4 py-3.5">Thời gian xóa</th>
-                  <th className="px-4 py-3.5">Tự hủy sau</th>
+                  <th className="px-4 py-3.5 w-28">Phân loại</th>
+                  <th className="px-4 py-3.5">Tên mục đã xóa</th>
+                  <th className="px-4 py-3.5">Thời điểm xóa</th>
+                  <th className="px-4 py-3.5">Tự động dọn dẹp sau</th>
                   <th className="px-4 py-3.5 text-right w-44">Thao tác</th>
                 </tr>
               </thead>

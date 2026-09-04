@@ -52,7 +52,7 @@ export default function MonitoringPage() {
         <div className="border-b border-slate-200 px-5 py-4"><h2 className="text-sm font-black text-slate-900">Lỗi API</h2></div>
         <div className="overflow-x-auto">
           <table className="dashboard-table">
-            <thead><tr><th>Thời gian</th><th>Mã</th><th>Phương thức</th><th>Đường dẫn</th><th>Thông báo</th></tr></thead>
+            <thead><tr><th>Thời gian</th><th>Mã trạng thái</th><th>Phương thức</th><th>Đường dẫn API</th><th>Nội dung lỗi</th></tr></thead>
             <tbody>
               {(data?.errors.logs || []).map((item) => (
                 <tr key={item.id}><td>{new Date(item.createdAt).toLocaleString('vi-VN')}</td><td><span className="rounded-full bg-rose-50 px-2 py-1 text-xs font-bold text-rose-700">{item.statusCode}</span></td><td>{item.method}</td><td className="font-mono text-xs">{item.path}</td><td>{item.message}</td></tr>
@@ -67,7 +67,7 @@ export default function MonitoringPage() {
         <div className="border-b border-slate-200 px-5 py-4"><h2 className="text-sm font-black text-slate-900">Nhật ký bảo mật</h2></div>
         <div className="overflow-x-auto">
           <table className="dashboard-table">
-            <thead><tr><th>Thời gian</th><th>Tài khoản</th><th>Hành động</th><th>Đối tượng</th><th>Chi tiết</th></tr></thead>
+            <thead><tr><th>Thời gian</th><th>Tài khoản thực hiện</th><th>Hành động</th><th>Đối tượng</th><th>Chi tiết thao tác</th></tr></thead>
             <tbody>
               {(data?.audit || []).map((item) => <tr key={item.id}><td>{new Date(item.createdAt).toLocaleString('vi-VN')}</td><td>{item.adminUser}</td><td className="font-bold">{item.action}</td><td>{item.targetType}</td><td>{item.details || '--'}</td></tr>)}
               {!loading && !data?.audit.length && <tr><td colSpan={5} className="py-8 text-center text-slate-500">Chưa có hoạt động.</td></tr>}

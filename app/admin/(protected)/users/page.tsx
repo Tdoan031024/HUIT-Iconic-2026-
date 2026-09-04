@@ -601,13 +601,13 @@ export default function UsersAdminPage() {
                     className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
                   />
                 </th>
-                <th className="px-5 py-3 min-w-[220px]">Tên Người dùng</th>
-                <th className="px-5 py-3">Liên hệ</th>
-                <th className="px-5 py-3">Đơn vị / bảng</th>
-                <th className="px-5 py-3">Hình thức</th>
-                <th className="px-5 py-3 text-right">Đã bình chọn</th>
+                <th className="px-5 py-3 min-w-[220px]">Người dùng</th>
+                <th className="px-5 py-3">Thông tin liên hệ</th>
+                <th className="px-5 py-3">Đơn vị / Bảng thi</th>
+                <th className="px-5 py-3">Hình thức xác thực</th>
+                <th className="px-5 py-3 text-right">Lượt bình chọn</th>
                 <th className="px-5 py-3">Ngày đăng ký</th>
-                <th className="px-5 py-3 text-center">Hành động</th>
+                <th className="px-5 py-3 text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#edf2f0] text-xs">

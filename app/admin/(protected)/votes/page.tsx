@@ -404,10 +404,10 @@ export default function VoteLogsAdminPage() {
                     className="h-4 w-4 rounded border-[#dce5e1] text-[#0f766e] focus:ring-[#0f766e] cursor-pointer"
                   />
                 </th>
-                <th className="px-5 py-3 w-1/3">Cử tri (Người bình chọn)</th>
-                <th className="px-5 py-3">Thí sinh được bình chọn</th>
-                <th className="px-5 py-3">Thời gian</th>
-                <th className="px-5 py-3 text-center w-32 whitespace-nowrap">Hành động</th>
+                <th className="px-5 py-3 w-1/3">Người bình chọn</th>
+                <th className="px-5 py-3">Thí sinh nhận bình chọn</th>
+                <th className="px-5 py-3">Thời gian bình chọn</th>
+                <th className="px-5 py-3 text-center w-32 whitespace-nowrap">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#edf2f0] text-xs">

@@ -155,13 +155,13 @@ export default function RegistrationsPage() {
           <table className="min-w-[960px] w-full text-left">
             <thead className="bg-slate-50 text-[10.5px] font-black uppercase tracking-wide text-slate-500">
               <tr>
-                <th className="px-3.5 py-3">Ứng viên</th>
-                <th className="px-3.5 py-3">Khoa & Lớp</th>
-                <th className="px-3.5 py-3">Liên hệ</th>
-                <th className="px-3.5 py-3">Hình thể</th>
-                <th className="px-3.5 py-3">Video sơ loại</th>
+                <th className="px-3.5 py-3">Hồ sơ ứng viên</th>
+                <th className="px-3.5 py-3">Khoa / Lớp</th>
+                <th className="px-3.5 py-3">Thông tin liên hệ</th>
+                <th className="px-3.5 py-3">Chiều cao / Cân nặng</th>
+                <th className="px-3.5 py-3">Video giới thiệu</th>
                 <th className="px-3.5 py-3">Trạng thái / SBD</th>
-                <th className="px-3.5 py-3">Ngày gửi</th>
+                <th className="px-3.5 py-3">Ngày nộp hồ sơ</th>
                 <th className="px-3.5 py-3 text-right">Thao tác</th>
               </tr>
             </thead>

@@ -624,7 +624,7 @@ export default function SponsorsAdminPage() {
                       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
                     }}
                   >
-                    Tên Nhà Tài Trợ {sortBy === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                    Tên nhà tài trợ {sortBy === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
                 )}
                 {visibleColumns.tier && (
@@ -635,10 +635,10 @@ export default function SponsorsAdminPage() {
                       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
                     }}
                   >
-                    Phân hạng {sortBy === 'tier' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                    Hạng tài trợ {sortBy === 'tier' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                   </th>
                 )}
-                {visibleColumns.actions && <th className="px-5 py-3 text-center">Hành động</th>}
+                {visibleColumns.actions && <th className="px-5 py-3 text-center">Thao tác</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#edf2f0] text-xs">

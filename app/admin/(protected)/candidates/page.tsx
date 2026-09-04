@@ -2022,11 +2022,11 @@ export default function CandidatesAdminPage() {
                   </th>
                   <th className="px-3 py-3">Thí sinh</th>
                   <th className="px-3 py-3">Nguồn hồ sơ</th>
-                  <th className="px-3 py-3">Bảng thi & Vòng</th>
-                  <th className="px-3 py-3">Học tập HUIT</th>
-                  <th className="px-3 py-3">Hình thể (Cao/Nặng)</th>
+                  <th className="px-3 py-3">Bảng thi & Vòng thi</th>
+                  <th className="px-3 py-3">Khoa / Lớp</th>
+                  <th className="px-3 py-3">Chiều cao / Cân nặng</th>
                   <th className="px-3 py-3">Trạng thái</th>
-                  <th className="px-3 py-3 text-right">Lượt vote</th>
+                  <th className="px-3 py-3 text-right">Lượt bình chọn</th>
                   <th className="px-3 py-3 text-right">Thao tác</th>
                 </tr>
               </thead>
