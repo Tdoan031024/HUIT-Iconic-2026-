@@ -811,14 +811,14 @@ export default function HomePage() {
 
                   {/* Header Badge */}
                   <div className="relative z-10 flex items-center justify-between gap-2">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-                      <span className="relative flex h-2 w-2">
+                    <div className="inline-flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 sm:px-3 py-1 text-[10.5px] sm:text-[11px] font-extrabold uppercase tracking-wide text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+                      <span className="relative flex h-2 w-2 shrink-0">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                       </span>
-                      <span>{language === 'en' ? 'Registration Portal Open' : 'Cổng đăng ký đang mở'}</span>
+                      <span className="whitespace-nowrap">{language === 'en' ? 'Registration Open' : 'Cổng đăng ký đang mở'}</span>
                     </div>
-                    <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500">HUIT 2026</span>
+                    <span className="shrink-0 text-[11px] font-bold text-slate-400 dark:text-slate-500 whitespace-nowrap">HUIT 2026</span>
                   </div>
 
                   {/* Card Title & Slogan */}
