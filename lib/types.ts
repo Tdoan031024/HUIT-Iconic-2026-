@@ -165,6 +165,7 @@ export interface SystemSettings {
   headerIconicLogoUrl?: string;
   sponsorBannerUrl?: string;
   hideSponsorBanner?: boolean;
+  hideCandidatesSection?: boolean;
   hidePublicVoteHistory?: boolean;
   themeVideoEmbedUrl?: string;
   themeVideoTitle?: string;

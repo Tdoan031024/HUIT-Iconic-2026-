@@ -65,6 +65,7 @@ export default function SettingsAdminPage() {
   const [sepayPrefix, setSepayPrefix] = useState('MD');
   const [sepayApiKey, setSepayApiKey] = useState('1dcd4e6cd52fde1e4bf0510a9b406476322d811f3bbae785');
   const [sponsorBannerUrl, setSponsorBannerUrl] = useState('/uploads/nhataitro.png');
+  const [hideCandidatesSection, setHideCandidatesSection] = useState(false);
   const [isTestMode, setIsTestMode] = useState(true);
   const [votingPromotions, setVotingPromotions] = useState<VotingPromotion[]>([]);
 
@@ -99,6 +100,7 @@ export default function SettingsAdminPage() {
           setSepayPrefix(data.sepayPrefix || 'HUIT');
           setSepayApiKey(data.sepayApiKey || 'sepay_api_key_placeholder');
           setSponsorBannerUrl(data.sponsorBannerUrl || '/original_assets/image4b12.png');
+          setHideCandidatesSection(!!data.hideCandidatesSection);
           setIsTestMode(data.isTestMode !== false);
           setVotingPromotions(Array.isArray(data.votingPromotions) ? data.votingPromotions : []);
         }
@@ -149,6 +151,7 @@ export default function SettingsAdminPage() {
       sepayApiKey,
       isTestMode,
       sponsorBannerUrl,
+      hideCandidatesSection,
       votingPromotions,
     };
 
@@ -173,6 +176,31 @@ export default function SettingsAdminPage() {
       console.error('Failed to save settings to API.', err);
     }
     showAlert('Không thể kết nối đến backend API. Lưu cấu hình thất bại!', 'error');
+  };
+
+  const handleToggleHideCandidates = async () => {
+    const nextVal = !hideCandidatesSection;
+    setHideCandidatesSection(nextVal);
+    try {
+      let res = await fetch(apiUrl('/api/admin/settings'), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hideCandidatesSection: nextVal }),
+      });
+      if (!res.ok && (res.status === 405 || res.status === 403)) {
+        res = await fetch(apiUrl('/api/admin/settings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hideCandidatesSection: nextVal }),
+        });
+      }
+      if (res.ok) {
+        showAlert(nextVal ? 'Đã ẩn mục Danh sách thí sinh trên trang chủ!' : 'Đã hiển thị mục Danh sách thí sinh trên trang chủ!', 'success');
+      }
+    } catch (err) {
+      console.error(err);
+      showAlert('Lỗi khi lưu cài đặt ẩn/hiện thí sinh.', 'error');
+    }
   };
 
   const handleLogoUpload = async (file: File, type: 'huit' | 'iconic') => {
@@ -425,6 +453,29 @@ export default function SettingsAdminPage() {
               className={`w-12 h-6 rounded-full transition-colors duration-200 relative flex items-center ${isRegistrationOpen ? 'bg-emerald-600' : 'bg-slate-200'}`}
             >
               <span className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 absolute ${isRegistrationOpen ? 'translate-x-7' : 'translate-x-1'}`} />
+            </button>
+          </div>
+
+          {/* Toggle Hide/Show Candidates on Homepage */}
+          <div className="flex items-center justify-between p-3 bg-[#fbfdfc] rounded-xl border border-[#dce5e1] shadow-sm">
+            <div>
+              <p className="font-bold text-xs text-[#123c34] flex items-center gap-1.5">
+                <span>{hideCandidatesSection ? '👁️‍🗨️' : '👥'}</span>
+                <span>Ẩn mục "Danh sách thí sinh" trên trang chủ</span>
+              </p>
+              <p className="text-[10px] text-[#6b7773]">
+                {hideCandidatesSection 
+                  ? 'Trang chủ đang TẠM ẨN khu vực danh sách thí sinh & bảng bình chọn.'
+                  : 'Trang chủ đang HIỂN THỊ khu vực danh sách thí sinh & bảng bình chọn.'}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleToggleHideCandidates}
+              className={`w-12 h-6 rounded-full transition-colors duration-200 relative flex items-center ${hideCandidatesSection ? 'bg-amber-600' : 'bg-slate-200'}`}
+              title={hideCandidatesSection ? 'Bấm để hiển thị lại trên trang chủ' : 'Bấm để tạm ẩn khỏi trang chủ'}
+            >
+              <span className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 absolute ${hideCandidatesSection ? 'translate-x-7' : 'translate-x-1'}`} />
             </button>
           </div>
 

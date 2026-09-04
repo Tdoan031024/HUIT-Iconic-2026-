@@ -1017,6 +1017,8 @@ export default function HomePage() {
           })()}
 
 
+          {!settings?.hideCandidatesSection && (
+          <>
           <div className="sc-1a037b37-0 ekqPrV relative z-10">
             <div className="pt-3 sm:pt-2 flex flex-col items-center">
 
@@ -1265,6 +1267,8 @@ export default function HomePage() {
 
             </div>
           </div>
+          </>
+          )}
         </div>
 
 

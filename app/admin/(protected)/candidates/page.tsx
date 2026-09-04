@@ -952,6 +952,7 @@ export default function CandidatesAdminPage() {
   const [registrationDeadline, setRegistrationDeadline] = useState('2026-06-20T23:59');
   const [votingPromotions, setVotingPromotions] = useState<VotingPromotion[]>([]);
   const [isGateOpen, setIsGateOpen] = useState(true);
+  const [hideCandidatesSection, setHideCandidatesSection] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [showPromotionManager, setShowPromotionManager] = useState(false);
   const [openPromotionApplyId, setOpenPromotionApplyId] = useState<string | null>(null);
@@ -1023,6 +1024,7 @@ export default function CandidatesAdminPage() {
         setIsRegistrationOpen(data.isRegistrationOpen ?? true);
         setRegistrationDeadline(data.registrationDeadline || '2026-06-20T23:59');
         setIsGateOpen(data.isGateOpen ?? false);
+        setHideCandidatesSection(!!data.hideCandidatesSection);
         setVotingPromotions(Array.isArray(data.votingPromotions) ? data.votingPromotions : []);
       } catch {}
     }
@@ -1102,6 +1104,30 @@ export default function CandidatesAdminPage() {
       alert('Không thể lưu cài đặt bình chọn');
     } finally {
       setSettingsSaving(false);
+    }
+  };
+
+  const handleToggleHideCandidates = async () => {
+    const nextVal = !hideCandidatesSection;
+    setHideCandidatesSection(nextVal);
+    try {
+      let res = await fetch(apiUrl('/api/admin/settings'), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hideCandidatesSection: nextVal }),
+      });
+      if (!res.ok && (res.status === 405 || res.status === 403)) {
+        res = await fetch(apiUrl('/api/admin/settings'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hideCandidatesSection: nextVal }),
+        });
+      }
+      if (res.ok) {
+        alert(nextVal ? 'Đã tạm ẩn mục Danh sách thí sinh trên trang chủ!' : 'Đã hiển thị mục Danh sách thí sinh trên trang chủ!');
+      }
+    } catch {
+      alert('Không thể lưu cài đặt ẩn/hiện thí sinh');
     }
   };
 
@@ -1291,6 +1317,17 @@ export default function CandidatesAdminPage() {
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleToggleHideCandidates}
+              className={`admin-btn !h-8 text-xs font-bold gap-1.5 rounded-lg px-3 border transition ${
+                hideCandidatesSection
+                  ? 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
+                  : 'border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+              }`}
+              title={hideCandidatesSection ? 'Đang TẠM ẨN mục này trên trang chủ. Bấm để hiển thị lại.' : 'Đang HIỂN THỊ mục này trên trang chủ. Bấm để tạm ẩn.'}
+            >
+              <span>{hideCandidatesSection ? '👁️‍🗨️ Đang ẩn trang chủ' : '👁️ Đang hiện trang chủ'}</span>
+            </button>
             <button onClick={handleExportCandidates} className="admin-btn admin-btn-secondary !h-8 text-xs gap-1.5 rounded-lg px-3">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />

@@ -20,6 +20,7 @@ const DEFAULT_SETTINGS: SystemSettings = {
   headerIconicLogoUrl: "/images/image.webp",
   sponsorBannerUrl: "/uploads/nhataitro.png",
   hideSponsorBanner: false,
+  hideCandidatesSection: false,
   hidePublicVoteHistory: false,
   aboutTitle: "HUIT'S ICONIC 2026 - ĐẠI SỨ TRUYỀN THÔNG HUIT",
   aboutTitleEn: "HUIT'S ICONIC 2026 - HUIT MEDIA AMBASSADOR",
