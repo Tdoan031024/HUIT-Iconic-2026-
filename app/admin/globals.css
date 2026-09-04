@@ -453,3 +453,35 @@ select:focus,
 select:disabled,
 .admin-select:disabled { cursor: not-allowed; opacity: 0.62; }
 select option { background: #fff; color: #0f172a; }
+
+/* ── Laptop & Compact Screen Optimizations ── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (max-width: 1440px) {
+  :root {
+    --font-body-size: 13.5px;
+    --font-card-title-size: 15px;
+    --font-kpi-size: 26px;
+  }
+
+  .admin-card {
+    border-radius: 12px;
+  }
+
+  .dashboard-table thead th {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .dashboard-table tbody td {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+}
+

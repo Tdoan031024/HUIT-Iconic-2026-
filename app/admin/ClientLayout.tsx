@@ -687,6 +687,22 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [sidebarWidth, setSidebarWidth] = React.useState(238);
   const [isResizing, setIsResizing] = React.useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedCollapsed = localStorage.getItem('admin_sidebar_collapsed');
+      if (savedCollapsed !== null) {
+        setIsSidebarCollapsed(savedCollapsed === 'true');
+      } else if (window.innerWidth < 1280) {
+        setIsSidebarCollapsed(true);
+      }
+    }
+  }, []);
+
+  React.useEffect(() => {
+    setIsMobileSidebarOpen(false);
+  }, [safePathname]);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = React.useState(false);
   const [accountModal, setAccountModal] = React.useState<'profile' | 'password' | null>(null);
   const [passwordForm, setPasswordForm] = React.useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
@@ -930,58 +946,76 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className={`flex h-screen w-screen overflow-hidden bg-transparent ${isResizing ? 'select-none cursor-col-resize' : ''}`}>
+      {/* Mobile drawer backdrop */}
+      {isMobileSidebarOpen && (
+        <div
+          onClick={() => setIsMobileSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden transition-opacity"
+        />
+      )}
+
       <aside
-        style={{ width: isCollapsed ? '88px' : `${sidebarWidth}px` }}
-        className={`admin-shell-surface relative hidden h-screen shrink-0 overflow-hidden border-r border-white/70 lg:flex lg:flex-col ${isResizing ? '' : 'transition-[width] duration-300 ease-out'}`}
+        style={{ width: isCollapsed && !isMobileSidebarOpen ? '80px' : `${isMobileSidebarOpen ? 240 : sidebarWidth}px` }}
+        className={`admin-shell-surface z-50 shrink-0 overflow-hidden border-r border-slate-200/80 bg-white/95 backdrop-blur-xl ${
+          isMobileSidebarOpen
+            ? 'fixed inset-y-0 left-0 flex flex-col shadow-2xl transition-transform duration-300'
+            : 'relative hidden h-screen lg:flex lg:flex-col'
+        } ${isResizing ? '' : 'transition-[width] duration-300 ease-out'}`}
       >
-        <div className={`border-b border-slate-200/60 ${isCollapsed ? 'px-3 py-4' : 'px-4 py-4'}`}>
-          <div className={`flex items-center ${isCollapsed ? 'flex-col gap-3' : 'justify-between gap-3'}`}>
-            <Link href="/" className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] border border-slate-200 bg-white shadow-sm">
-                <img src="/images/site-logo.png" alt="HUIT's ICONIC" className="h-full w-full object-contain p-1.5" />
+        <div className={`border-b border-slate-200/60 ${isCollapsed && !isMobileSidebarOpen ? 'px-2 py-3.5' : 'px-3.5 py-3.5'}`}>
+          <div className={`flex items-center ${isCollapsed && !isMobileSidebarOpen ? 'flex-col gap-2.5' : 'justify-between gap-2.5'}`}>
+            <Link href="/" className={`flex items-center ${isCollapsed && !isMobileSidebarOpen ? 'justify-center' : 'gap-2.5'}`}>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-slate-200 bg-white shadow-sm">
+                <img src="/images/site-logo.png" alt="HUIT's ICONIC" className="h-full w-full object-contain p-1" />
               </div>
-              {!isCollapsed && (
+              {(!isCollapsed || isMobileSidebarOpen) && (
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-extrabold text-slate-900">HUIT's ICONIC</p>
-                  <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500">Dashboard quản trị</p>
+                  <p className="truncate text-[10.5px] font-medium text-slate-500">Dashboard quản trị</p>
                 </div>
               )}
             </Link>
 
             <button
-              onClick={toggleSidebar}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-[10px] border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
+              onClick={() => {
+                if (isMobileSidebarOpen) {
+                  setIsMobileSidebarOpen(false);
+                } else {
+                  toggleSidebar();
+                }
+              }}
+              className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
               title={isCollapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
               aria-label={isCollapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
             >
-              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                {isCollapsed ? <polyline points="9 18 15 12 9 6" /> : <polyline points="15 18 9 12 15 6" />}
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                {isCollapsed && !isMobileSidebarOpen ? <polyline points="9 18 15 12 9 6" /> : <polyline points="15 18 9 12 15 6" />}
               </svg>
             </button>
           </div>
         </div>
 
-        <nav className={`min-h-0 flex-1 space-y-4 overflow-y-auto px-2 pb-3 pt-3 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        <nav className={`min-h-0 flex-1 space-y-3 overflow-y-auto px-2 pb-2.5 pt-2 ${isCollapsed && !isMobileSidebarOpen ? 'px-1.5' : 'px-2.5'}`}>
           {navGroups.map((group) => (
-            <section key={group.title} className="space-y-2">
-              {!isCollapsed && <p className="px-3 text-[11px] font-black uppercase tracking-[0.14em] text-slate-400">{group.title}</p>}
-              <div className="space-y-1">
+            <section key={group.title} className="space-y-1">
+              {(!isCollapsed || isMobileSidebarOpen) && <p className="px-2.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">{group.title}</p>}
+              <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const active = isActive(item.href);
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      title={isCollapsed ? item.label : undefined}
-                      className={`group flex items-center rounded-[12px] border transition-all duration-200 ${isCollapsed ? 'justify-center px-2 py-2.5' : 'gap-3 px-3 py-2.5'} ${active
-                        ? 'border-blue-100 bg-blue-50 text-[var(--primary-strong)] shadow-[0_8px_20px_rgba(21,101,216,0.08)]'
+                      title={isCollapsed && !isMobileSidebarOpen ? item.label : undefined}
+                      className={`group flex items-center rounded-xl border transition-all duration-200 ${isCollapsed && !isMobileSidebarOpen ? 'justify-center px-2 py-2' : 'gap-2.5 px-2.5 py-1.5'} ${active
+                        ? 'border-blue-100 bg-blue-50 text-[var(--primary-strong)] shadow-sm'
                         : 'border-transparent text-slate-700 hover:border-slate-200 hover:bg-white hover:text-slate-900'
                       }`}
                     >
                       <span className={`flex shrink-0 items-center justify-center ${active ? 'text-[var(--primary)]' : 'text-slate-400 group-hover:text-slate-700'}`}>
                         {item.icon}
                       </span>
-                      {!isCollapsed && <span className="truncate text-[13px] font-semibold">{item.label}</span>}
+                      {(!isCollapsed || isMobileSidebarOpen) && <span className="truncate text-[12.5px] font-semibold">{item.label}</span>}
                     </Link>
                   );
                 })}
@@ -990,37 +1024,37 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           ))}
         </nav>
 
-        <div className={`${isCollapsed ? 'p-2' : 'p-4'} border-t border-slate-200/60`}>
-          <div ref={accountMenuRef} className={`relative rounded-[14px] border border-slate-200 bg-white/92 shadow-sm ${isCollapsed ? 'p-2' : 'p-3'}`}>
-            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between gap-3'}`}>
-              <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 min-w-0'}`}>
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-slate-200 bg-slate-50">
+        <div className={`${isCollapsed && !isMobileSidebarOpen ? 'p-1.5' : 'p-2.5'} border-t border-slate-200/60`}>
+          <div ref={accountMenuRef} className={`relative rounded-xl border border-slate-200 bg-white/92 shadow-sm ${isCollapsed && !isMobileSidebarOpen ? 'p-1.5' : 'p-2'}`}>
+            <div className={`flex items-center ${isCollapsed && !isMobileSidebarOpen ? 'justify-center' : 'justify-between gap-2'}`}>
+              <div className={`flex items-center ${isCollapsed && !isMobileSidebarOpen ? 'justify-center' : 'gap-2 min-w-0'}`}>
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
                   <img src="/images/image.webp" alt="HUIT's ICONIC 2026" className="h-full w-full object-contain p-1" />
                 </div>
-                {!isCollapsed && (
+                {(!isCollapsed || isMobileSidebarOpen) && (
                   <div className="min-w-0">
-                    <p className="truncate text-[13px] font-extrabold text-slate-900">Administrator</p>
-                    <p className="truncate text-[11px] font-medium text-slate-500">
-                      {language === 'en' ? 'System Administrator' : 'Quản trị viên hệ thống'}
+                    <p className="truncate text-[12px] font-extrabold text-slate-900">Administrator</p>
+                    <p className="truncate text-[10px] font-medium text-slate-500">
+                      {language === 'en' ? 'System Administrator' : 'Quản trị viên'}
                     </p>
                   </div>
                 )}
               </div>
-              {!isCollapsed && (
+              {(!isCollapsed || isMobileSidebarOpen) && (
                 <button
                   type="button"
                   onClick={() => setIsAccountMenuOpen((open) => !open)}
-                  className="grid h-8 w-8 place-items-center rounded-[10px] text-slate-500 transition hover:bg-slate-100"
+                  className="grid h-7 w-7 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100"
                   aria-label="Mở menu tài khoản"
                   aria-expanded={isAccountMenuOpen}
                 >
-                  <svg viewBox="0 0 24 24" className={`h-4 w-4 transition ${isAccountMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition ${isAccountMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </button>
               )}
             </div>
-            {!isCollapsed && isAccountMenuOpen && (
+            {(!isCollapsed || isMobileSidebarOpen) && isAccountMenuOpen && (
               <div className="absolute bottom-[calc(100%+8px)] left-0 right-0 z-[120] rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl">
                 <button
                   type="button"
@@ -1087,7 +1121,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
 
-        {!isCollapsed && (
+        {!isCollapsed && !isMobileSidebarOpen && (
           <div
             onMouseDown={startResizing}
             className={`absolute right-0 top-0 z-30 h-full w-1 cursor-col-resize transition-colors ${isResizing ? 'bg-[var(--primary)]/50' : 'hover:bg-slate-300/70'}`}
@@ -1096,21 +1130,44 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="sticky top-0 z-20 border-b border-white/70 bg-[rgba(248,251,255,0.92)] px-5 pt-3 pb-2 backdrop-blur-xl md:px-6">
-          <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-2">
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div className="min-w-0">
-                <h1 className="text-[17px] font-extrabold leading-tight text-slate-950">{currentMeta.title}</h1>
-                <p className="mt-0.5 text-[12px] font-medium text-slate-500">{currentMeta.description}</p>
+        <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-[rgba(248,251,255,0.95)] px-3 sm:px-5 py-2 md:py-2.5 backdrop-blur-xl">
+          <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-1.5">
+            <div className="flex items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2.5 min-w-0">
+                {/* Sidebar toggle button (accessible on all screen sizes) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.innerWidth < 1024) {
+                      setIsMobileSidebarOpen(!isMobileSidebarOpen);
+                    } else {
+                      toggleSidebar();
+                    }
+                  }}
+                  className="grid h-8 w-8 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-blue-600 hover:border-blue-300 shadow-sm transition shrink-0"
+                  title={isCollapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'}
+                  aria-label="Toggle navigation menu"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                </button>
+
+                <div className="min-w-0">
+                  <h1 className="text-[15px] sm:text-[17px] font-extrabold leading-tight text-slate-950 truncate">{currentMeta.title}</h1>
+                  <p className="hidden md:block truncate text-[11.5px] font-medium text-slate-500 max-w-[320px] lg:max-w-[500px]">{currentMeta.description}</p>
+                </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 shrink-0">
                 {/* Language Switcher */}
-                <div className="flex items-center rounded-xl border border-slate-200 bg-white p-0.5 shadow-sm">
+                <div className="flex items-center rounded-lg border border-slate-200 bg-white p-0.5 shadow-sm">
                   <button
                     type="button"
                     onClick={() => setLang('vi')}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                    className={`rounded-md px-2 py-0.5 text-xs font-bold transition ${
                       language === 'vi' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
@@ -1119,7 +1176,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   <button
                     type="button"
                     onClick={() => setLang('en')}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+                    className={`rounded-md px-2 py-0.5 text-xs font-bold transition ${
                       language === 'en' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
@@ -1127,9 +1184,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                   </button>
                 </div>
 
-                <Link href={SITE_URL} target="_blank" className="admin-btn admin-btn-secondary">
-                  {language === 'en' ? 'Visit Website' : 'Xem website'}
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <Link href={SITE_URL} target="_blank" className="admin-btn admin-btn-secondary !h-8 !min-h-0 text-xs px-2.5 gap-1.5 hidden sm:inline-flex">
+                  <span>{language === 'en' ? 'Website' : 'Xem web'}</span>
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M7 17 17 7" />
                     <path d="M8 7h9v9" />
                   </svg>
@@ -1140,32 +1197,32 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </div>
 
             {/* Modern Browser Multi-Tab Header Bar & Quick Switcher Button */}
-            <div className="relative flex flex-wrap items-center justify-between gap-2 pt-2 pb-0.5 border-t border-slate-200/60 mt-1.5">
-              <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+            <div className="relative flex items-center justify-between gap-2 pt-1.5 pb-0.5 border-t border-slate-200/60 mt-0.5">
+              <div className="flex items-center gap-1.5 min-w-0 overflow-x-auto no-scrollbar scroll-smooth flex-nowrap py-0.5">
                 {openTabs.map((tab) => {
                   const active = isActive(tab.href);
                   return (
                     <div
                       key={tab.href}
                       onClick={() => handleTabClick(tab.href)}
-                      className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs transition-all duration-200 cursor-pointer shrink-0 select-none ${
+                      className={`group relative flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition-all duration-200 cursor-pointer shrink-0 select-none whitespace-nowrap ${
                         active
                           ? 'bg-white text-blue-700 shadow-sm border border-slate-200/80 font-black'
                           : 'bg-slate-100/70 text-slate-600 hover:text-slate-900 hover:bg-white/90 font-bold border border-slate-200/50'
                       }`}
                     >
                       {active && (
-                        <span className="absolute top-0 left-3 right-3 h-[2px] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />
+                        <span className="absolute top-0 left-2 right-2 h-[2px] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full" />
                       )}
-                      <span className={`flex h-4 w-4 items-center justify-center transition ${active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-700'}`}>
+                      <span className={`flex h-3.5 w-3.5 items-center justify-center transition ${active ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-700'}`}>
                         {tab.icon}
                       </span>
-                      <span className="truncate max-w-[130px] text-[12px]">{tab.label}</span>
+                      <span className="truncate max-w-[130px] text-[11.5px]">{tab.label}</span>
                       {openTabs.length > 1 && (
                         <button
                           type="button"
                           onClick={(e) => closeTab(e, tab.href)}
-                          className="grid h-4 w-4 place-items-center rounded-full text-slate-400 hover:bg-rose-100 hover:text-rose-600 transition ml-0.5 text-[10px] font-bold"
+                          className="grid h-3.5 w-3.5 place-items-center rounded-full text-slate-400 hover:bg-rose-100 hover:text-rose-600 transition ml-0.5 text-[9px] font-bold"
                           title={language === 'en' ? 'Close tab' : 'Đóng tab'}
                         >
                           ✕
@@ -1181,15 +1238,15 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
                 type="button"
                 ref={tabButtonRef}
                 onClick={() => setIsTabModalOpen((open) => !open)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200/90 bg-white hover:bg-blue-50 text-[11px] font-black text-slate-700 hover:text-blue-700 shadow-sm transition shrink-0"
+                className="flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200/90 bg-white hover:bg-blue-50 text-[11px] font-bold text-slate-700 hover:text-blue-700 shadow-sm transition shrink-0 whitespace-nowrap"
               >
-                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" className="h-3 w-3 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="3" width="7" height="7" rx="1.5" />
                   <rect x="14" y="3" width="7" height="7" rx="1.5" />
                   <rect x="14" y="14" width="7" height="7" rx="1.5" />
                   <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
-                {language === 'en' ? 'Manage Tabs' : 'Quản lý Tabs'} <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[10px] font-black text-blue-700">{openTabs.length}</span>
+                {language === 'en' ? 'Tabs' : 'Tabs'} <span className="rounded-full bg-blue-100 px-1.5 py-0.2 text-[9.5px] font-black text-blue-700">{openTabs.length}</span>
               </button>
             </div>
           </div>
@@ -1270,8 +1327,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           </div>
         )}
 
-        <main className="min-h-0 flex-1 overflow-y-auto px-5 py-4 md:px-6 md:py-4">
-          <div className="mx-auto w-full max-w-[1320px] space-y-4">
+        <main className="min-h-0 flex-1 overflow-y-auto px-3 sm:px-5 lg:px-6 py-3 md:py-4">
+          <div className="mx-auto w-full max-w-[1600px] space-y-3.5">
             {children}
           </div>
         </main>

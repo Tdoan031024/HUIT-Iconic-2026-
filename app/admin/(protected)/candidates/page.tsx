@@ -1278,8 +1278,8 @@ export default function CandidatesAdminPage() {
         </div>
 
         {/* THỐNG KÊ NHANH */}
-        <div className="grid gap-2.5 p-4 sm:grid-cols-2 lg:grid-cols-6 border-b border-slate-100 bg-slate-50/50">
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+        <div className="grid gap-2.5 p-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 border-b border-slate-100 bg-slate-50/50">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
             <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Tổng thí sinh</p>
             <p className="mt-1 text-2xl font-extrabold text-slate-900">{candidates.length}</p>
             <div className="mt-1 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
@@ -1289,7 +1289,7 @@ export default function CandidatesAdminPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Cổng Đăng ký</p>
               <button
@@ -1305,13 +1305,13 @@ export default function CandidatesAdminPage() {
                 <span className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${isRegistrationOpen ? 'translate-x-4' : 'translate-x-1'}`} />
               </button>
             </div>
-            <p className="mt-1 text-base font-extrabold text-slate-900">
+            <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
               {isRegistrationOpen ? '🟢 Đang mở' : '🔴 Đã đóng'}
             </p>
-            <p className="text-[10px] text-slate-400 mt-1 truncate">Hạn: {registrationDeadline.replace('T', ' ')}</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 truncate">Hạn: {registrationDeadline.replace('T', ' ')}</p>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm">
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Cổng Bình chọn</p>
               <button
@@ -1327,36 +1327,36 @@ export default function CandidatesAdminPage() {
                 <span className={`absolute h-3.5 w-3.5 rounded-full bg-white shadow transition ${isGateOpen ? 'translate-x-4' : 'translate-x-1'}`} />
               </button>
             </div>
-            <p className="mt-1 text-base font-extrabold text-slate-900">
+            <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900">
               {isGateOpen ? '🟢 Nhận vote' : '🔴 Đóng vote'}
             </p>
-            <p className="text-[10px] text-slate-400 mt-1">Cập nhật theo thời gian thực</p>
+            <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm sm:col-span-2 lg:col-span-3 flex flex-col justify-between">
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm sm:col-span-2 md:col-span-3 xl:col-span-3 flex flex-col justify-between">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Khung giờ nhân điểm</p>
-                <p className="mt-1 text-base font-extrabold text-slate-900">
+                <p className="mt-1 text-sm sm:text-base font-extrabold text-slate-900 truncate">
                   {activePromotion ? `🔥 Đang x${activePromotion.multiplier} (${activePromotion.name})` : '⚪ Chưa kích hoạt'}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowPromotionManager(!showPromotionManager)}
-                className="rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-bold text-slate-700 hover:border-pink-500 hover:text-pink-600 transition"
+                className="rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-bold text-slate-700 hover:border-pink-500 hover:text-pink-600 transition shrink-0"
               >
-                {showPromotionManager ? 'Ẩn cài đặt' : 'Quản lý khung giờ'}
+                {showPromotionManager ? 'Ẩn cài đặt' : 'Quản lý giờ'}
               </button>
             </div>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              <button type="button" onClick={() => addQuickPromotion('NOW', 2)} className="rounded bg-pink-50 text-pink-700 px-2 py-1 text-[11px] font-bold hover:bg-pink-100 transition">
+              <button type="button" onClick={() => addQuickPromotion('NOW', 2)} className="rounded bg-pink-50 text-pink-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-pink-100 transition whitespace-nowrap">
                 + Ngay x2 (2h)
               </button>
-              <button type="button" onClick={() => addQuickPromotion('TONIGHT', 2)} className="rounded bg-indigo-50 text-indigo-700 px-2 py-1 text-[11px] font-bold hover:bg-indigo-100 transition">
+              <button type="button" onClick={() => addQuickPromotion('TONIGHT', 2)} className="rounded bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-indigo-100 transition whitespace-nowrap">
                 + Tối nay x2
               </button>
-              <button type="button" onClick={() => addQuickPromotion('TOMORROW', 3)} className="rounded bg-amber-50 text-amber-700 px-2 py-1 text-[11px] font-bold hover:bg-amber-100 transition">
+              <button type="button" onClick={() => addQuickPromotion('TOMORROW', 3)} className="rounded bg-amber-50 text-amber-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-amber-100 transition whitespace-nowrap">
                 + Ngày mai x3
               </button>
             </div>
@@ -1533,15 +1533,15 @@ export default function CandidatesAdminPage() {
 
       {/* DANH SÁCH THÍ SINH THEO VIEW MODE */}
       {viewMode === 'grid' ? (
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-3.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {filteredCandidates.map((c) => {
             const tableLabel = c.contestTableLabel || tableLabels[c.contestTable || ''] || 'Bảng thi';
             const isFemale = c.gender === 'Nữ' || c.contestTable === 'FEMALE';
 
             return (
-              <div key={c.id} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3 group">
+              <div key={c.id} className="bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-2.5 group">
                 <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-800 border border-slate-200">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-800 border border-slate-200">
                     {c.sbd}
                   </span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${isFemale ? 'bg-pink-50 text-pink-700 border border-pink-200' : 'bg-blue-50 text-blue-700 border border-blue-200'}`}>
@@ -1549,32 +1549,32 @@ export default function CandidatesAdminPage() {
                   </span>
                 </div>
 
-                <div className="flex flex-col items-center text-center space-y-2 py-1">
-                  <div className="w-24 h-32 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden shadow-inner relative">
+                <div className="flex flex-col items-center text-center space-y-1.5 py-1">
+                  <div className="w-22 h-28 sm:w-24 sm:h-32 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden shadow-inner relative">
                     <img src={formatAssetUrl(c.imageUrl)} className="h-full w-full object-cover" alt={c.name} />
                     <span className="absolute bottom-1 right-1 rounded bg-black/60 px-1 py-0.5 text-[9px] font-bold text-white backdrop-blur-sm">
                       {c.gender || 'Nữ'}
                     </span>
                   </div>
-                  <h3 className="font-extrabold text-slate-900 text-sm leading-snug line-clamp-1">{c.name}</h3>
-                  <p className="text-[11px] font-semibold text-slate-500 line-clamp-1">{c.faculty || 'Khoa HUIT'}</p>
+                  <h3 className="font-extrabold text-slate-900 text-[13px] leading-snug line-clamp-1">{c.name}</h3>
+                  <p className="text-[11px] font-semibold text-slate-500 line-clamp-1">{c.faculty || 'HUIT'}</p>
                   <p className="text-[10px] text-slate-400">
                     {c.heightCm ? `${c.heightCm}cm` : ''} {c.weightKg ? `• ${c.weightKg}kg` : ''}
                     {c.measurementBust && c.measurementWaist && c.measurementHip ? ` • ${c.measurementBust}-${c.measurementWaist}-${c.measurementHip}` : ''}
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-pink-50/60 p-2 text-center border border-pink-100">
-                  <span className="text-[10px] uppercase tracking-wider text-pink-500 font-black">Bình chọn</span>
-                  <p className="text-base font-black text-pink-700 tabular-nums">🗳️ {c.votes.toLocaleString()}</p>
+                <div className="rounded-xl bg-pink-50/60 p-1.5 text-center border border-pink-100">
+                  <span className="text-[9px] uppercase tracking-wider text-pink-500 font-black">Bình chọn</span>
+                  <p className="text-sm font-black text-pink-700 tabular-nums">🗳️ {c.votes.toLocaleString()}</p>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                  <a href={`/thi-sinh/${c.sbd}`} target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-pink-600 transition">
+                <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                  <a href={`/thi-sinh/${c.sbd}`} target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-pink-600 transition text-[11px]">
                     Xem web ↗
                   </a>
-                  <button onClick={() => openEditModal(c)} className="text-blue-600 hover:underline">Sửa</button>
-                  <button onClick={() => handleDelete(c.id)} className="text-rose-600 hover:underline">Xóa</button>
+                  <button onClick={() => openEditModal(c)} className="text-blue-600 hover:underline text-[11px]">Sửa</button>
+                  <button onClick={() => handleDelete(c.id)} className="text-rose-600 hover:underline text-[11px]">Xóa</button>
                 </div>
               </div>
             );
@@ -1583,14 +1583,14 @@ export default function CandidatesAdminPage() {
       ) : (
         <section className="admin-card overflow-hidden p-0 border border-slate-200/80 shadow-sm bg-white rounded-2xl">
           {selectedIds.length > 0 && (
-            <div className="flex items-center justify-between border-b border-rose-100 bg-rose-50/70 px-5 py-2.5">
+            <div className="flex items-center justify-between border-b border-rose-100 bg-rose-50/70 px-4 py-2">
               <span className="text-xs font-bold text-rose-700">
                 Đã chọn <b>{selectedIds.length}</b> thí sinh
               </span>
               <button
                 type="button"
                 onClick={handleBulkDelete}
-                className="flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 px-3 py-1 text-xs font-bold text-white shadow-sm transition"
+                className="flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 px-2.5 py-1 text-xs font-bold text-white shadow-sm transition"
               >
                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M3 6h18" />
@@ -1602,10 +1602,10 @@ export default function CandidatesAdminPage() {
           )}
 
           <div className="w-full overflow-x-auto">
-            <table className="dashboard-table min-w-[1060px] text-left">
+            <table className="dashboard-table min-w-[960px] text-left">
               <thead>
                 <tr className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 border-b border-slate-200/70 bg-slate-50/60">
-                  <th className="px-4 py-3.5 w-10">
+                  <th className="px-3 py-3 w-10">
                     <input
                       type="checkbox"
                       checked={filteredCandidates.length > 0 && selectedIds.length === filteredCandidates.length}
@@ -1619,13 +1619,13 @@ export default function CandidatesAdminPage() {
                       className="rounded border-slate-300 text-pink-600 focus:ring-pink-500 cursor-pointer"
                     />
                   </th>
-                  <th className="px-4 py-3.5">Thí sinh</th>
-                  <th className="px-4 py-3.5">Bảng thi & Vòng</th>
-                  <th className="px-4 py-3.5">Học tập HUIT</th>
-                  <th className="px-4 py-3.5">Hình thể (Cao/Nặng/3 vòng)</th>
-                  <th className="px-4 py-3.5">Trạng thái & Video</th>
-                  <th className="px-4 py-3.5 text-right">Lượt bình chọn</th>
-                  <th className="px-4 py-3.5 text-right">Thao tác</th>
+                  <th className="px-3 py-3">Thí sinh</th>
+                  <th className="px-3 py-3">Bảng thi & Vòng</th>
+                  <th className="px-3 py-3">Học tập HUIT</th>
+                  <th className="px-3 py-3">Hình thể (Cao/Nặng/3 vòng)</th>
+                  <th className="px-3 py-3">Trạng thái</th>
+                  <th className="px-3 py-3 text-right">Lượt vote</th>
+                  <th className="px-3 py-3 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="text-sm divide-y divide-slate-100">

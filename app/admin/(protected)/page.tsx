@@ -141,13 +141,13 @@ function KPIBlock({
   };
 
   return (
-    <div className="admin-card min-h-[126px] px-4 py-3.5">
-      <div className="flex items-start justify-between gap-3">
+    <div className="admin-card min-h-[100px] px-3.5 py-3">
+      <div className="flex items-start justify-between gap-2.5">
         <div className="min-w-0">
-          <p className="min-h-[40px] text-[13px] font-semibold leading-5 text-slate-500" title={label}>{label}</p>
-          {loading ? <Skeleton className="mt-4 h-8 w-24" /> : <p className="mt-4 whitespace-nowrap text-[28px] font-bold leading-none tracking-normal text-slate-950 2xl:text-[32px]">{value}</p>}
+          <p className="min-h-[24px] text-[12px] font-semibold leading-4 text-slate-500 truncate" title={label}>{label}</p>
+          {loading ? <Skeleton className="mt-2 h-7 w-20" /> : <p className="mt-2 whitespace-nowrap text-[22px] font-bold leading-none tracking-normal text-slate-950 2xl:text-[26px]">{value}</p>}
         </div>
-        <div className={cn('flex h-10 w-10 items-center justify-center rounded-xl border', toneClass[tone])}>{icon}</div>
+        <div className={cn('flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-lg border', toneClass[tone])}>{icon}</div>
       </div>
     </div>
   );
@@ -522,8 +522,8 @@ export default function OverviewPage() {
   const recentActivities: any[] = [];
 
   return (
-    <div className="space-y-4">
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-3.5">
+      <section className="grid gap-2.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
         <KPIBlock label="Thí sinh" value={isLoading ? '--' : <AnimatedMetric value={candidates.length} />} icon={<FolderIcon />} tone="blue" loading={isLoading} />
         <KPIBlock label="Tổng lượt bình chọn" value={isLoading ? '--' : <AnimatedMetric value={totalVotes} />} icon={<VoteIcon />} tone="violet" loading={isLoading} />
         <KPIBlock label="SBD dẫn đầu" value={leadingCandidate?.sbd || '001'} icon={<TrophyIcon />} tone="amber" loading={isLoading} />
@@ -532,12 +532,12 @@ export default function OverviewPage() {
         <KPIBlock label="Người đang xem" value={isLoading ? '--' : <AnimatedMetric value={analyticsData?.activeVisitors || 0} />} icon={<ActivityCreateIcon />} tone="violet" loading={isLoading} />
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
+      <section className="grid gap-3.5 lg:grid-cols-2 xl:grid-cols-[1.08fr_0.92fr]">
         <OverviewVoteChart data={chartData} totalVotes={totalVotes} loading={isLoading} />
         <TopCandidatesCard loading={isLoading} candidates={rankedCandidates} />
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
+      <section className="grid gap-3.5 lg:grid-cols-2 xl:grid-cols-[1.08fr_0.92fr]">
         <QuickStatsCard loading={isLoading} stats={quickStats} />
         <VoteHistoryCard loading={isVotesLoading} votes={recentVotes} />
       </section>

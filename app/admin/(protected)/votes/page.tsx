@@ -280,22 +280,22 @@ export default function VoteLogsAdminPage() {
       </section>
 
       {/* KPI block */}
-      <section className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <section className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
         {[
           ['Tổng số phiếu bầu', logs.length.toLocaleString()],
           ['Kết quả bộ lọc', filteredLogs.length.toLocaleString()],
-            ['Số thí sinh nhận vote', uniqueCandidates.length.toLocaleString()],
+          ['Số thí sinh nhận vote', uniqueCandidates.length.toLocaleString()],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#7a8b85]">{label}</p>
-            <p className="mt-1 text-2xl font-black text-[#123c34]">{value}</p>
+          <div key={label} className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">{label}</p>
+            <p className="mt-1 text-2xl font-black text-slate-900">{value}</p>
           </div>
         ))}
       </section>
 
       {/* Filter card */}
-      <section className="rounded-xl border border-[#dce5e1] bg-white shadow-sm">
-        <div className="grid gap-3 border-b border-[#edf2f0] p-4 xl:grid-cols-[minmax(0,1fr)_minmax(260px,360px)_260px]">
+      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="grid gap-2.5 border-b border-slate-100 p-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.2fr)_minmax(220px,320px)_220px]">
           <input
             value={search}
             onChange={(event) => {

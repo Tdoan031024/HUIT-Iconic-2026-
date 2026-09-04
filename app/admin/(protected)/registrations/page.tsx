@@ -125,45 +125,46 @@ export default function RegistrationsPage() {
     }
   }
 
-  return <main className="min-h-full bg-slate-50 p-5 sm:p-8"><div className="mx-auto max-w-[1500px]">
-    <div className="mb-7 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-      <div>
-        <p className="text-xs font-black uppercase tracking-[.16em] text-blue-600">Tuyển chọn HUIT&apos;s ICONIC 2026</p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-950">Thí sinh đăng ký qua Website</h1>
-        <p className="mt-2 text-sm text-slate-500">Danh sách thí sinh đăng ký dự thi trực tuyến qua website. Kiểm tra thông tin, duyệt hồ sơ và cấp SBD vào danh sách chính thức.</p>
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-[.16em] text-blue-600">Tuyển chọn HUIT&apos;s ICONIC 2026</p>
+          <h1 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-950">Thí sinh đăng ký qua Website</h1>
+          <p className="mt-0.5 text-xs text-slate-500">Danh sách thí sinh đăng ký dự thi trực tuyến qua website. Kiểm tra thông tin, duyệt hồ sơ và cấp SBD vào danh sách chính thức.</p>
+        </div>
+        <div className="flex flex-wrap gap-2 shrink-0">
+          <div className="rounded-xl border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">{items.filter((item) => item.status === 'PENDING').length} hồ sơ chờ xem xét</div>
+          <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">{items.filter((item) => Boolean(item.assignedSbd)).length} đã cấp SBD</div>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700">{items.filter((item) => item.status === 'PENDING').length} hồ sơ chờ xem xét</div>
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">{items.filter((item) => Boolean(item.assignedSbd)).length} đã cấp SBD</div>
+
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:flex-row">
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm theo họ tên, SBD, MSSV, khoa, email, điện thoại..." className="h-9 min-w-0 flex-1 rounded-xl border border-slate-200 px-3.5 text-xs outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="h-9 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 outline-none">
+          <option value="ALL">Tất cả trạng thái</option>
+          <option value="PENDING">Chờ xem xét</option>
+          <option value="REVIEWING">Đang xem xét</option>
+          <option value="APPROVED">Đã duyệt</option>
+          <option value="REJECTED">Từ chối</option>
+        </select>
       </div>
-    </div>
 
-    <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row">
-      <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Tìm theo họ tên, SBD, MSSV, khoa, email, điện thoại..." className="h-11 min-w-0 flex-1 rounded-xl border border-slate-200 px-4 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
-      <select value={filter} onChange={(e) => setFilter(e.target.value)} className="h-11 rounded-xl border border-slate-200 px-4 text-sm font-bold text-slate-700 outline-none">
-        <option value="ALL">Tất cả trạng thái</option>
-        <option value="PENDING">Chờ xem xét</option>
-        <option value="REVIEWING">Đang xem xét</option>
-        <option value="APPROVED">Đã duyệt</option>
-        <option value="REJECTED">Từ chối</option>
-      </select>
-    </div>
-
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="min-w-[1100px] w-full text-left">
-          <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-wide text-slate-500">
-            <tr>
-              <th className="px-5 py-4">Ứng viên</th>
-              <th className="px-5 py-4">Khoa & Lớp</th>
-              <th className="px-5 py-4">Liên hệ</th>
-              <th className="px-5 py-4">Hình thể</th>
-              <th className="px-5 py-4">Video sơ loại</th>
-              <th className="px-5 py-4">Trạng thái / SBD</th>
-              <th className="px-5 py-4">Ngày gửi</th>
-              <th className="px-5 py-4 text-right">Thao tác</th>
-            </tr>
-          </thead>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-[960px] w-full text-left">
+            <thead className="bg-slate-50 text-[10.5px] font-black uppercase tracking-wide text-slate-500">
+              <tr>
+                <th className="px-3.5 py-3">Ứng viên</th>
+                <th className="px-3.5 py-3">Khoa & Lớp</th>
+                <th className="px-3.5 py-3">Liên hệ</th>
+                <th className="px-3.5 py-3">Hình thể</th>
+                <th className="px-3.5 py-3">Video sơ loại</th>
+                <th className="px-3.5 py-3">Trạng thái / SBD</th>
+                <th className="px-3.5 py-3">Ngày gửi</th>
+                <th className="px-3.5 py-3 text-right">Thao tác</th>
+              </tr>
+            </thead>
           <tbody className="divide-y divide-slate-100">
             {loading ? (
               <tr><td colSpan={8} className="px-5 py-16 text-center text-sm font-semibold text-slate-500">Đang tải hồ sơ...</td></tr>
@@ -225,7 +226,6 @@ export default function RegistrationsPage() {
         </table>
       </div>
     </div>
-  </div>
 
   {/* Modal chi tiết hồ sơ */}
   {selected && (
@@ -412,5 +412,6 @@ export default function RegistrationsPage() {
       </div>
     </div>
   )}
-</main>;
+</div>
+);
 }
