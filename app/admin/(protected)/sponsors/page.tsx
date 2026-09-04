@@ -416,51 +416,60 @@ export default function SponsorsAdminPage() {
   return (
     <div className="flex flex-col space-y-4">
 
-      {/* Title Header */}
-      <div className="flex flex-col gap-3 rounded-xl border border-[#dce5e1] bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
-        <div>
+      {/* Title Header & Banner Toggle Combined on One Row */}
+      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3.5 rounded-xl border border-[#dce5e1] bg-white p-3.5 sm:p-4 shadow-sm">
+        {/* Left: Title & Subtitle */}
+        <div className="shrink-0">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0f766e]">Quản lý đối tác</p>
           <h1 className="text-lg font-black text-[#123c34]">Nhà tài trợ & Đối tác</h1>
           <p className="text-xs text-[#6b7773] mt-0.5">Danh sách nhà tài trợ và đối tác đồng hành cùng HUIT&apos;s ICONIC 2026.</p>
         </div>
-        <button
-          onClick={openAddModal}
-          className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 rounded-xl text-white font-extrabold text-xs shadow transition active:scale-[0.98]"
-        >
-          + Thêm nhà tài trợ mới
-        </button>
-      </div>
 
-      {/* Sponsor Banner Toggle Card */}
-      <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-amber-500/10 text-amber-600 font-bold text-lg">
-            {hideSponsorBanner ? '🙈' : '👁️'}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-extrabold text-slate-800">Hiển thị Banner & Logo Nhà tài trợ trên Trang chủ</h3>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${hideSponsorBanner ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                }`}>
+        {/* Right: Controls (Toggle Banner & Add Button) on one row */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Banner Toggle Pill */}
+          <div
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-slate-50 transition"
+            title="Kích hoạt nút này để Bật hoặc Ẩn toàn bộ phần banner và logo chạy ngang nhà tài trợ ngoài trang chủ công khai."
+          >
+            <span className="text-base shrink-0">{hideSponsorBanner ? '🙈' : '👁️'}</span>
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="font-extrabold text-slate-800 whitespace-nowrap">
+                Banner & Logo Trang chủ:
+              </span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${
+                hideSponsorBanner
+                  ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              }`}>
                 {hideSponsorBanner ? 'ĐANG ẨN' : 'ĐANG HIỂN THỊ'}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">Kích hoạt nút này để Bật hoặc Ẩn toàn bộ phần banner và logo chạy ngang nhà tài trợ ngoài trang chủ công khai.</p>
-          </div>
-        </div>
-        <button
-          type="button"
-          disabled={savingToggle}
-          onClick={handleToggleHideSponsorBanner}
-          className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${!hideSponsorBanner ? 'bg-emerald-600' : 'bg-slate-300'
-            }`}
-          title={hideSponsorBanner ? 'Hiện banner nhà tài trợ' : 'Ẩn banner nhà tài trợ'}
-        >
-          <span
-            className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${!hideSponsorBanner ? 'translate-x-5' : 'translate-x-0'
+            <button
+              type="button"
+              disabled={savingToggle}
+              onClick={handleToggleHideSponsorBanner}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${
+                !hideSponsorBanner ? 'bg-emerald-600' : 'bg-slate-300'
               }`}
-          />
-        </button>
+              title={hideSponsorBanner ? 'Hiện banner nhà tài trợ' : 'Ẩn banner nhà tài trợ'}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  !hideSponsorBanner ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Add Sponsor Button */}
+          <button
+            onClick={openAddModal}
+            className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 rounded-xl text-white font-extrabold text-xs shadow transition active:scale-[0.98] whitespace-nowrap shrink-0 flex items-center gap-1.5"
+          >
+            <span>+</span> Thêm nhà tài trợ mới
+          </button>
+        </div>
       </div>
 
       {/* Controls Bar: Search + Popover View Config Button */}
