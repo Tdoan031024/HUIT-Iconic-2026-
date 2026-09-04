@@ -1510,12 +1510,9 @@ export default function CandidatesAdminPage() {
             <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
           </div>
 
-          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm sm:col-span-2 md:col-span-3 xl:col-span-3 flex flex-col justify-between">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className={`flex h-2 w-2 rounded-full ${activePromotion ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
-                <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Khung giờ nhân điểm</p>
-              </div>
+          <div className="rounded-xl border border-slate-200/80 bg-white p-3 shadow-sm sm:col-span-2 md:col-span-3 xl:col-span-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Khung giờ nhân điểm</p>
               <button
                 type="button"
                 onClick={() => setShowPromotionManager(!showPromotionManager)}
@@ -1529,16 +1526,18 @@ export default function CandidatesAdminPage() {
               </button>
             </div>
 
-            <div className="my-1.5 flex items-center justify-between gap-2">
+            <div className="mt-1 flex items-center justify-between gap-2">
               <div>
                 <p className="text-sm sm:text-base font-extrabold text-slate-900 truncate">
                   {activePromotion ? `🔥 Đang x${activePromotion.multiplier} (${activePromotion.name})` : '⚪ Chưa kích hoạt'}
                 </p>
-                <p className="text-[10px] text-slate-400 mt-0.5">
-                  {activePromotion
-                    ? `Thời gian còn lại: ${formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}`
-                    : 'Bình chọn tính điểm chuẩn (x1)'}
-                </p>
+                {activePromotion ? (
+                  <p className="text-[10px] text-emerald-700 font-medium mt-0.5">
+                    Thời gian còn lại: {formatRemainingTime(parsePromotionTime(activePromotion.endAt), currentTime)}
+                  </p>
+                ) : (
+                  <p className="text-[10px] text-slate-400 mt-0.5">Thời gian thực</p>
+                )}
               </div>
 
               {activePromotion && (
@@ -1556,31 +1555,6 @@ export default function CandidatesAdminPage() {
                   ⛔ Dừng ngay
                 </button>
               )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-slate-100">
-              <span className="text-[10px] text-slate-400 font-bold">Tạo nhanh:</span>
-              <button
-                type="button"
-                onClick={() => addQuickPromotion('NOW', 2)}
-                className="rounded bg-pink-50 text-pink-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-pink-100 transition whitespace-nowrap"
-              >
-                + Ngay x2 (2h)
-              </button>
-              <button
-                type="button"
-                onClick={() => addQuickPromotion('TONIGHT', 2)}
-                className="rounded bg-indigo-50 text-indigo-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-indigo-100 transition whitespace-nowrap"
-              >
-                + Tối nay x2
-              </button>
-              <button
-                type="button"
-                onClick={() => addQuickPromotion('TOMORROW', 3)}
-                className="rounded bg-amber-50 text-amber-700 px-2 py-0.5 text-[10.5px] font-bold hover:bg-amber-100 transition whitespace-nowrap"
-              >
-                + Ngày mai x3
-              </button>
             </div>
           </div>
         </div>
