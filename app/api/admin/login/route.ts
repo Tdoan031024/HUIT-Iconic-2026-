@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { validateAdminCredentials, logAdminAction } from '@/lib/service';
 import { logApiError } from '@/lib/api-error';
 import { generateAdminSessionToken } from '@/lib/auth';
+import { verifyCaptcha } from '@/lib/captcha';
 
 // In-memory rate limiting for login attempts
 interface LoginAttempt {
@@ -16,9 +17,18 @@ const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 export async function POST(req: Request) {
   try {
-    const { username, password, rememberMe } = await req.json();
+    const { username, password, rememberMe, captchaToken, captchaCode } = await req.json();
     if (!username || !password) {
       return NextResponse.json({ message: 'Thiếu thông tin đăng nhập.' }, { status: 400 });
+    }
+
+    // Xác thực mã CAPTCHA
+    const captchaResult = verifyCaptcha(captchaToken, captchaCode);
+    if (!captchaResult.success) {
+      return NextResponse.json(
+        { message: captchaResult.message || 'Mã xác thực CAPTCHA không chính xác.' },
+        { status: 400 }
+      );
     }
 
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';

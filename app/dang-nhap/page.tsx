@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAlert } from '../AlertProvider';
 import { apiUrl } from '../api';
+import { CaptchaField, CaptchaFieldRef } from '@/components/CaptchaField';
 
 declare global {
   interface Window {
@@ -148,6 +149,12 @@ export default function LoginPage() {
   const [loginErrors, setLoginErrors] = useState<{ email?: string; password?: string }>({});
   const [regErrors, setRegErrors] = useState<{ fullName?: string; phone?: string; email?: string; password?: string }>({});
 
+  // Captcha state
+  const [captchaCode, setCaptchaCode] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaError, setCaptchaError] = useState<string | undefined>(undefined);
+  const captchaRef = useRef<CaptchaFieldRef>(null);
+
   // Forgot password modal state
   const [forgotOpen, setForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
@@ -215,18 +222,27 @@ export default function LoginPage() {
       setLoginErrors(errors);
       return;
     }
-    setLoginErrors({});
+    if (!captchaCode.trim()) {
+      setCaptchaError('Vui lòng nhập mã xác thực (CAPTCHA).');
+      return;
+    }
+    setCaptchaError(undefined);
 
     setLoading(true);
     try {
       const res = await fetch(apiUrl('/api/web/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, captchaToken, captchaCode }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setLoginErrors({ email: data?.message || 'Email hoặc mật khẩu không chính xác.' });
+        if (data?.message?.toLowerCase().includes('captcha')) {
+          setCaptchaError(data.message);
+        } else {
+          setLoginErrors({ email: data?.message || 'Email hoặc mật khẩu không chính xác.' });
+        }
+        captchaRef.current?.refresh();
         throw new Error(data?.message || 'Không thể đăng nhập.');
       }
       saveSession(data);
@@ -694,6 +710,21 @@ export default function LoginPage() {
                   Quên mật khẩu?
                 </button>
               </div>
+
+              {/* Captcha Security Check */}
+              <CaptchaField
+                ref={captchaRef}
+                value={captchaCode}
+                onChange={(val) => {
+                  setCaptchaCode(val);
+                  if (captchaError) setCaptchaError(undefined);
+                }}
+                token={captchaToken}
+                onTokenChange={setCaptchaToken}
+                error={captchaError}
+                variant="dark"
+                disabled={loading}
+              />
 
               {/* Submit button */}
               <button

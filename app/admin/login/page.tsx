@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAlert } from '../AlertProvider';
+import { CaptchaField, CaptchaFieldRef } from '@/components/CaptchaField';
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState('');
@@ -11,11 +12,20 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [captchaCode, setCaptchaCode] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaError, setCaptchaError] = useState<string | undefined>(undefined);
+  const captchaRef = useRef<CaptchaFieldRef>(null);
   const { showAlert } = useAlert();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!captchaCode.trim()) {
+      setCaptchaError('Vui lòng nhập mã xác thực (CAPTCHA).');
+      return;
+    }
+    setCaptchaError(undefined);
     setIsLoading(true);
 
     // Xác thực tài khoản admin mặc định
@@ -26,7 +36,7 @@ export default function AdminLoginPage() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ username, password, rememberMe }),
+        body: JSON.stringify({ username, password, rememberMe, captchaToken, captchaCode }),
       });
 
       const data = await response.json().catch(() => null);
@@ -41,12 +51,18 @@ export default function AdminLoginPage() {
         router.push('/429');
       } else {
         const message = data?.message || 'Tên đăng nhập hoặc mật khẩu không chính xác.';
-        showAlert(message, 'error');
+        if (message.toLowerCase().includes('captcha')) {
+          setCaptchaError(message);
+        } else {
+          showAlert(message, 'error');
+        }
+        captchaRef.current?.refresh();
         setIsLoading(false);
       }
     } catch (error) {
       console.error('Login error:', error);
       showAlert('Không thể kết nối máy chủ xác thực.', 'error');
+      captchaRef.current?.refresh();
       setIsLoading(false);
     }
   };
@@ -187,6 +203,21 @@ export default function AdminLoginPage() {
                   Quên mật khẩu?
                 </Link>
               </div>
+
+              {/* Captcha Security Check */}
+              <CaptchaField
+                ref={captchaRef}
+                value={captchaCode}
+                onChange={(val) => {
+                  setCaptchaCode(val);
+                  if (captchaError) setCaptchaError(undefined);
+                }}
+                token={captchaToken}
+                onTokenChange={setCaptchaToken}
+                error={captchaError}
+                variant="light"
+                disabled={isLoading}
+              />
 
               <button
                 type="submit"
