@@ -954,7 +954,7 @@ export async function registerWebUser(data: {
   const passwordHash = data.password ? await bcrypt.hash(data.password, 10) : null;
   const user = await prisma.webUser.create({
     data: {
-      fullName: data.fullName,
+      fullName: data.fullName || (data as any).name || 'Khán giả',
       email,
       phone: data.phone || null,
       passwordHash,

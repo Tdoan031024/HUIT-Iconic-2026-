@@ -605,7 +605,6 @@ export default function TimelinePage() {
           </section>
 
           {/* CTA Section with Countdown */}
-          {settings?.registrationDeadline && (
           <section className="timeline-enter countdown-container" style={{ animationDelay: '520ms' }}>
             <p className="countdown-eyebrow">
               Còn bao lâu nữa?
@@ -614,7 +613,7 @@ export default function TimelinePage() {
               Đừng bỏ lỡ mốc đăng ký!
             </h2>
 
-            <CountdownTimer targetDate={settings.registrationDeadline} />
+            <CountdownTimer targetDate={settings?.registrationDeadline || '2026-04-30T23:59:59.000Z'} />
 
             <p className="countdown-desc">
               Hãy chuẩn bị hồ sơ sớm để các bạn thí sinh có đủ thời gian hoàn thiện thông tin, ảnh dự thi và kế hoạch rèn luyện.
@@ -643,7 +642,6 @@ export default function TimelinePage() {
               </button>
             )}
           </section>
-          )}
         </div>
       </main>
     </>
