@@ -130,8 +130,8 @@ export default function RegistrationsPage() {
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <p className="text-[11px] font-black uppercase tracking-[.16em] text-blue-600">Tuyển chọn HUIT&apos;s ICONIC 2026</p>
-          <h1 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-950">Thí sinh đăng ký qua Website</h1>
-          <p className="mt-0.5 text-xs text-slate-500">Danh sách thí sinh đăng ký dự thi trực tuyến qua website. Kiểm tra thông tin, duyệt hồ sơ và cấp SBD vào danh sách chính thức.</p>
+          <h1 className="mt-1 text-xl sm:text-2xl font-black tracking-tight text-slate-950">Hồ sơ đăng ký</h1>
+          <p className="mt-0.5 text-xs text-slate-500">Danh sách hồ sơ đăng ký dự thi trực tuyến qua website. Kiểm tra thông tin, duyệt hồ sơ và cấp SBD.</p>
         </div>
         <div className="flex flex-wrap gap-2 shrink-0">
           <div className="rounded-xl border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">{items.filter((item) => item.status === 'PENDING').length} hồ sơ chờ xem xét</div>

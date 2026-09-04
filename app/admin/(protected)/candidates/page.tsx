@@ -1313,7 +1313,7 @@ export default function CandidatesAdminPage() {
           <div className="min-w-0">
             <p className="text-[11px] font-black uppercase tracking-[0.22em] text-pink-600">Quản trị Cuộc thi</p>
             <h1 className="mt-0.5 text-xl font-extrabold tracking-tight text-slate-950">
-              Danh sách Thí sinh Chính thức
+              Danh sách Thí sinh
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
