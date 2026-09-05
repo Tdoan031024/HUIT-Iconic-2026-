@@ -436,7 +436,49 @@ export default function RegistrationPage() {
     );
   };
 
-  if (submitted) return <main className="min-h-[70vh] bg-slate-50 px-4 py-16 sm:px-6"><div className="mx-auto max-w-2xl rounded-3xl border border-emerald-200 bg-white p-8 text-center shadow-sm sm:p-12"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-600">✓</div><h1 className="mt-6 text-3xl font-black text-slate-950">Đã tiếp nhận hồ sơ</h1><p className="mx-auto mt-4 max-w-lg leading-7 text-slate-600">Cảm ơn bạn đã đăng ký dự thi HUIT&apos;s ICONIC. Ban tổ chức sẽ kiểm tra hồ sơ và liên hệ qua email hoặc điện thoại.</p><a className="mt-8 inline-flex h-12 items-center rounded-xl bg-[#0A2FFF] px-6 font-bold text-white" href="/">Về trang chủ</a></div></main>;
+  if (submitted) {
+    return (
+      <main className="min-h-[75vh] bg-slate-50 px-4 py-16 sm:px-6 flex items-center justify-center">
+        <div className="mx-auto max-w-2xl w-full rounded-3xl border border-emerald-200 bg-white p-8 text-center shadow-lg sm:p-12">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-600">
+            ✓
+          </div>
+          <h1 className="mt-6 text-3xl font-black text-slate-950">Đã tiếp nhận hồ sơ thành công!</h1>
+          <p className="mx-auto mt-4 max-w-lg leading-7 text-slate-600">
+            Cảm ơn bạn đã đăng ký dự thi <b>HUIT&apos;s ICONIC 2026</b>. Ban Tổ Chức đã gửi email xác nhận đến hòm thư của bạn và sẽ liên hệ sớm nhất.
+          </p>
+
+          {/* Khung Zalo hỗ trợ */}
+          <div className="mt-6 rounded-2xl border border-cyan-200 bg-gradient-to-r from-blue-50 to-cyan-50 p-5 text-center">
+            <p className="text-sm font-bold text-cyan-950">
+              💬 Nhóm Zalo Hướng dẫn &amp; Hỗ trợ Thí sinh
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              Vui lòng tham gia nhóm Zalo để nhận thông báo lịch thi và các hỗ trợ trực tiếp từ Ban Tổ Chức:
+            </p>
+            <a
+              href="https://zalo.me/g/myzijputivfgc1toua9z"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-xl bg-[#0068FF] px-6 py-2.5 text-sm font-black text-white shadow-md hover:bg-[#0052cc] transition"
+            >
+              <span>Tham gia nhóm Zalo thí sinh</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              className="inline-flex h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-[#0A2FFF] px-8 font-bold text-white transition hover:bg-blue-700"
+              href="/"
+            >
+              Về trang chủ
+            </a>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return <main className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6 sm:py-16">
     <div className="mx-auto max-w-5xl">

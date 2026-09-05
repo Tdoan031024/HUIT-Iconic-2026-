@@ -96,6 +96,10 @@ Ban Tổ Chức đã tiếp nhận thông tin hồ sơ của bạn:
 - Email: ${data.email}
 - Thời gian nộp: ${submittedTime}
 - Trạng thái: Chờ xem xét (PENDING)
+- Nhóm Zalo hỗ trợ: https://zalo.me/g/myzijputivfgc1toua9z
+
+Lưu ý: Vui lòng tham gia nhóm Zalo hướng dẫn thí sinh để nhận thông báo khẩn và các hướng dẫn quan trọng từ Ban Tổ Chức:
+https://zalo.me/g/myzijputivfgc1toua9z
 
 Quy trình tiếp theo:
 1. Ban Tổ Chức sẽ kiểm tra hồ sơ, đối soát thông tin sinh viên HUIT và tiêu chuẩn ngoại hình.
@@ -131,7 +135,7 @@ Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
       </p>
 
       <!-- Registration Info Box -->
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; margin-bottom: 24px;">
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; margin-bottom: 20px;">
         <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
           <tr>
             <td style="padding: 6px 0; color: #64748b; width: 42%;">Mã hồ sơ:</td>
@@ -177,6 +181,22 @@ Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
         </table>
       </div>
 
+      <!-- Zalo Support Group Box -->
+      <div style="background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); border: 1px solid #7dd3fc; border-radius: 14px; padding: 20px 22px; margin-bottom: 24px; text-align: center;">
+        <p style="margin: 0 0 6px 0; font-size: 14px; font-weight: 800; color: #0369a1;">
+          💬 NHÓM ZALO HƯỚNG DẪN &amp; HỖ TRỢ THÍ SINH
+        </p>
+        <p style="margin: 0 0 14px 0; font-size: 13px; line-height: 1.5; color: #0c4a6e;">
+          Vui lòng bấm vào nút bên dưới để tham gia nhóm Zalo thí sinh và nhận các thông báo, lịch trình mới nhất từ Ban Tổ Chức:
+        </p>
+        <a href="https://zalo.me/g/myzijputivfgc1toua9z" target="_blank" style="display: inline-block; background: #0284c7; color: #ffffff; text-decoration: none; padding: 11px 26px; border-radius: 999px; font-size: 13px; font-weight: 800; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);">
+          Tham gia nhóm Zalo thí sinh &rarr;
+        </a>
+        <p style="margin: 10px 0 0 0; font-size: 11px; color: #64748b;">
+          Đường dẫn trực tiếp: <a href="https://zalo.me/g/myzijputivfgc1toua9z" style="color: #0284c7; font-weight: 600;">https://zalo.me/g/myzijputivfgc1toua9z</a>
+        </p>
+      </div>
+
       <!-- Next Steps Box -->
       <div style="background: #fdf2f8; border-left: 4px solid #db2777; border-radius: 8px; padding: 16px 18px; margin-bottom: 24px;">
         <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 800; text-transform: uppercase; color: #9d174d;">Quy trình xử lý tiếp theo:</p>
@@ -192,6 +212,7 @@ Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
         Nếu bạn cần kiểm tra, chỉnh sửa hoặc bổ sung tài liệu hồ sơ, vui lòng liên hệ Ban Tổ Chức:
       </p>
       <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: #0f172a; font-weight: 600;">
+        • Nhóm Zalo hỗ trợ: <a href="https://zalo.me/g/myzijputivfgc1toua9z" style="color: #0284c7; text-decoration: none;">zalo.me/g/myzijputivfgc1toua9z</a><br>
         • Email: <a href="mailto:dovantuyendoan14@gmail.com" style="color: #2563eb; text-decoration: none;">dovantuyendoan14@gmail.com</a><br>
         • Trường Đại học Công Thương TP.HCM (HUIT)<br>
         • Địa chỉ: 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM
