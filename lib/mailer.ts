@@ -27,8 +27,10 @@ export async function sendPasswordResetCode(email: string, code: string) {
     return false;
   }
 
+  const fromAddress = process.env.SMTP_FROM || `"HUIT's ICONIC 2026" <duongdx@huit.edu.vn>`;
   await transporter.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    from: fromAddress,
+    replyTo: 'duongdx@huit.edu.vn',
     to: email,
     subject: "Mã khôi phục mật khẩu HUIT's ICONIC 2026",
     text: `Mã khôi phục mật khẩu của bạn là: ${code}. Mã có hiệu lực trong 10 phút. Nếu bạn không yêu cầu, hãy bỏ qua email này.`,
@@ -105,6 +107,13 @@ Quy trình tiếp theo:
 1. Ban Tổ Chức sẽ kiểm tra hồ sơ, đối soát thông tin sinh viên HUIT và tiêu chuẩn ngoại hình.
 2. Sau khi phê duyệt, bạn sẽ được cấp Số Báo Danh (SBD) chính thức và đưa lên cổng bình chọn website.
 3. Kết quả sẽ được gửi qua email này và số điện thoại của bạn.
+
+Thông tin liên hệ Ban Tổ Chức:
+- Trưởng BTC: Thầy Đặng Xuân Dương
+- Hotline / Zalo: 0974 331 499
+- Email: duongdx@huit.edu.vn | media@huit.edu.vn (HUIT Media)
+- Địa chỉ: 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM
+- Nhóm Zalo hỗ trợ: https://zalo.me/g/myzijputivfgc1toua9z
 
 Trường Đại học Công Thương TP.HCM (HUIT)
 Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
@@ -207,16 +216,20 @@ Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
         </ol>
       </div>
 
-      <!-- Contact Info -->
+      <!-- Contact Info Box -->
       <p style="margin: 0 0 8px 0; font-size: 13px; line-height: 1.6; color: #475569;">
         Nếu bạn cần kiểm tra, chỉnh sửa hoặc bổ sung tài liệu hồ sơ, vui lòng liên hệ Ban Tổ Chức:
       </p>
-      <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: #0f172a; font-weight: 600;">
-        • Nhóm Zalo hỗ trợ: <a href="https://zalo.me/g/myzijputivfgc1toua9z" style="color: #0284c7; text-decoration: none;">zalo.me/g/myzijputivfgc1toua9z</a><br>
-        • Email: <a href="mailto:dovantuyendoan14@gmail.com" style="color: #2563eb; text-decoration: none;">dovantuyendoan14@gmail.com</a><br>
-        • Trường Đại học Công Thương TP.HCM (HUIT)<br>
-        • Địa chỉ: 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM
-      </p>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.7; color: #0f172a;">
+        <p style="margin: 0 0 6px 0; font-weight: 700; color: #0f172a; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+          Thông tin liên hệ
+        </p>
+        <div>• <strong>Trưởng BTC:</strong> Thầy Đặng Xuân Dương</div>
+        <div>• <strong>Hotline / Zalo:</strong> <a href="tel:0974331499" style="color: #0284c7; text-decoration: none; font-weight: 700;">0974 331 499</a></div>
+        <div>• <strong>Email:</strong> <a href="mailto:duongdx@huit.edu.vn" style="color: #2563eb; text-decoration: none; font-weight: 600;">duongdx@huit.edu.vn</a> &middot; <a href="mailto:media@huit.edu.vn" style="color: #2563eb; text-decoration: none; font-weight: 600;">media@huit.edu.vn (HUIT Media)</a></div>
+        <div>• <strong>Địa chỉ:</strong> 140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM</div>
+        <div>• <strong>Nhóm Zalo hỗ trợ:</strong> <a href="https://zalo.me/g/myzijputivfgc1toua9z" style="color: #0284c7; text-decoration: none; font-weight: 600;">zalo.me/g/myzijputivfgc1toua9z</a></div>
+      </div>
 
       <div style="border-top: 1px solid #e2e8f0; padding-top: 18px; text-align: center;">
         <p style="margin: 0; font-size: 12px; color: #94a3b8;">
@@ -236,8 +249,10 @@ Ban Tổ Chức Cuộc thi HUIT's ICONIC 2026
   `;
 
   try {
+    const fromAddress = process.env.SMTP_FROM || `"HUIT's ICONIC 2026" <duongdx@huit.edu.vn>`;
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      from: fromAddress,
+      replyTo: 'duongdx@huit.edu.vn',
       to: data.email,
       subject,
       text: textContent,
