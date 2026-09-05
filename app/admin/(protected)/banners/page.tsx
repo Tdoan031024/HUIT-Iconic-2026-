@@ -522,12 +522,12 @@ export default function BannersAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    const ok = await showConfirm('Bạn có chắc chắn muốn xóa banner này không?', 'Xác nhận xóa banner', 'error', 'Xóa ngay');
+    const ok = await showConfirm('Bạn có chắc chắn muốn chuyển banner này vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.', 'Chuyển vào Thùng rác', 'warning', 'Xóa vào thùng rác');
     if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/banners/${id}`), { method: 'DELETE' });
       if (res.ok) {
-        showAlert('Xóa banner thành công!', 'success');
+        showAlert('Đã chuyển banner vào Thùng rác thành công!', 'success');
         loadBanners();
       }
     } catch (err) {

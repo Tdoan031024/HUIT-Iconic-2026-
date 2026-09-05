@@ -294,7 +294,7 @@ export default function NewsAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    const ok = await showConfirm('Bạn có chắc chắn muốn xóa bài viết này không? Thao tác này không thể khôi phục.', 'Xác nhận xóa bài viết', 'error', 'Xóa ngay');
+    const ok = await showConfirm('Bạn có chắc chắn muốn chuyển bài viết này vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.', 'Chuyển vào Thùng rác', 'warning', 'Xóa vào thùng rác');
     if (!ok) return;
 
     try {
@@ -302,7 +302,7 @@ export default function NewsAdminPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        showAlert('Xóa bài viết thành công!', 'success');
+        showAlert('Đã chuyển bài viết vào Thùng rác thành công!', 'success');
         loadPosts();
         return;
       }

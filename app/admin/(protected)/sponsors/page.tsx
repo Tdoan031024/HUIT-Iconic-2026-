@@ -342,7 +342,7 @@ export default function SponsorsAdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    const ok = await showConfirm('Bạn có chắc chắn muốn xóa nhà tài trợ này không? Hành động này không thể hoàn tác.', 'Xác nhận xóa nhà tài trợ', 'error', 'Xóa ngay');
+    const ok = await showConfirm('Bạn có chắc chắn muốn chuyển nhà tài trợ này vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.', 'Chuyển vào Thùng rác', 'warning', 'Xóa vào thùng rác');
     if (!ok) return;
 
     try {
@@ -356,7 +356,7 @@ export default function SponsorsAdminPage() {
         });
       }
       if (res.ok) {
-        showAlert('Xóa nhà tài trợ thành công!', 'success');
+        showAlert('Đã chuyển nhà tài trợ vào Thùng rác thành công!', 'success');
         loadFromApi();
         return;
       } else {
@@ -373,7 +373,7 @@ export default function SponsorsAdminPage() {
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    const ok = await showConfirm(`Bạn có chắc chắn muốn xóa ${selectedIds.length} nhà tài trợ đã chọn? Hành động này không thể hoàn tác.`, 'Xác nhận xóa hàng loạt', 'error', `Xóa ${selectedIds.length} nhà tài trợ`);
+    const ok = await showConfirm(`Bạn có chắc chắn muốn chuyển ${selectedIds.length} nhà tài trợ đã chọn vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.`, 'Chuyển hàng loạt vào Thùng rác', 'warning', `Xóa ${selectedIds.length} nhà tài trợ`);
     if (!ok) return;
 
     let successCount = 0;
@@ -395,7 +395,7 @@ export default function SponsorsAdminPage() {
       })
     );
 
-    showAlert(`Đã xóa thành công ${successCount} nhà tài trợ.${failCount > 0 ? ` Thất bại ${failCount} nhà tài trợ.` : ''}`, failCount === 0 ? 'success' : 'warning');
+    showAlert(`Đã chuyển thành công ${successCount} nhà tài trợ vào Thùng rác.${failCount > 0 ? ` Thất bại ${failCount} nhà tài trợ.` : ''}`, failCount === 0 ? 'success' : 'warning');
     if (successCount > 0) {
       loadFromApi();
     }

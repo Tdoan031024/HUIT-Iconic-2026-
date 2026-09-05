@@ -326,16 +326,16 @@ export default function TimelineAdminPage() {
 
   const handleDelete = async (id: string) => {
     const ok = await showConfirm(
-      'Bạn có chắc chắn muốn xóa mốc thời gian này không?',
-      'Xác nhận xóa mốc thời gian',
-      'error',
-      'Xóa ngay'
+      'Bạn có chắc chắn muốn chuyển mốc thời gian này vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.',
+      'Chuyển vào Thùng rác',
+      'warning',
+      'Xóa vào thùng rác'
     );
     if (!ok) return;
     try {
       const res = await fetch(apiUrl(`/api/admin/timeline/${id}`), { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
-      showAlert('Xóa mốc thời gian thành công!', 'success');
+      showAlert('Đã chuyển mốc thời gian vào Thùng rác thành công!', 'success');
       await loadTimeline();
     } catch (err) {
       console.error(err);

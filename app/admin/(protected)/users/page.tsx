@@ -387,10 +387,10 @@ export default function UsersAdminPage() {
 
   const handleDelete = async (id: string) => {
     const ok = await showConfirm(
-      'Bạn có chắc chắn muốn xóa người dùng này không? Hành động này không thể hoàn tác.',
-      'Xác nhận xóa người dùng',
-      'error',
-      'Xóa ngay'
+      'Bạn có chắc chắn muốn chuyển người dùng này vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.',
+      'Chuyển vào Thùng rác',
+      'warning',
+      'Xóa vào thùng rác'
     );
     if (!ok) return;
     try {
@@ -398,7 +398,7 @@ export default function UsersAdminPage() {
         method: 'DELETE',
       });
       if (res.ok) {
-        showAlert('Xóa người dùng thành công!', 'success');
+        showAlert('Đã chuyển người dùng vào Thùng rác thành công!', 'success');
         loadUsers();
       } else {
         const errorData = await res.json();
@@ -413,9 +413,9 @@ export default function UsersAdminPage() {
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
     const ok = await showConfirm(
-      `Bạn có chắc chắn muốn xóa ${selectedIds.length} người dùng đã chọn? Hành động này không thể hoàn tác.`,
-      'Xác nhận xóa hàng loạt',
-      'error',
+      `Bạn có chắc chắn muốn chuyển ${selectedIds.length} người dùng đã chọn vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.`,
+      'Chuyển hàng loạt vào Thùng rác',
+      'warning',
       `Xóa ${selectedIds.length} người dùng`
     );
     if (!ok) return;
@@ -439,10 +439,7 @@ export default function UsersAdminPage() {
       })
     );
 
-    showAlert(
-      `Đã xóa thành công ${successCount} người dùng.${failCount > 0 ? ` Thất bại ${failCount} người dùng.` : ''}`,
-      failCount === 0 ? 'success' : 'warning'
-    );
+    showAlert(`Đã chuyển thành công ${successCount} người dùng vào Thùng rác.${failCount > 0 ? ` Thất bại ${failCount} người dùng.` : ''}`, failCount === 0 ? 'success' : 'warning');
     setSelectedIds([]);
     loadUsers();
   };
