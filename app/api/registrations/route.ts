@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     }
 
     const existing = await prisma.candidateRegistration.findFirst({
-      where: { email: text(body.email).toLowerCase(), status: { in: ['PENDING', 'APPROVED'] } },
+      where: { email: text(body.email).toLowerCase(), status: { in: ['PENDING', 'APPROVED'] }, isDeleted: false },
       select: { id: true },
     });
     if (existing) {

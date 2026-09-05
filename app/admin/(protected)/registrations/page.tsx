@@ -303,10 +303,10 @@ export default function RegistrationsPage() {
   // Delete single registration
   async function handleDeleteSingle(id: string, name: string) {
     const ok = await showConfirm(
-      `Bạn có chắc chắn muốn xóa hồ sơ đăng ký của "${name}" không? Thao tác này không thể hoàn tác.`,
-      'Xác nhận xóa hồ sơ',
-      'error',
-      'Xóa vĩnh viễn',
+      `Bạn có chắc chắn muốn chuyển hồ sơ đăng ký của "${name}" vào Thùng rác không? Bạn có thể khôi phục lại bất kỳ lúc nào trong vòng 30 ngày.`,
+      'Chuyển vào Thùng rác',
+      'warning',
+      'Xóa vào thùng rác',
       'Hủy'
     );
     if (!ok) return;
@@ -322,7 +322,7 @@ export default function RegistrationsPage() {
       setItems((prev) => prev.filter((item) => item.id !== id));
       setSelectedIds((prev) => prev.filter((i) => i !== id));
       if (selected?.id === id) setSelected(null);
-      showAlert(`Đã xóa hồ sơ của "${name}" thành công.`, 'success');
+      showAlert(`Đã chuyển hồ sơ của "${name}" vào Thùng rác.`, 'success');
     } catch (err: any) {
       showAlert(err.message || 'Lỗi khi xóa hồ sơ.', 'error');
     }
@@ -332,9 +332,9 @@ export default function RegistrationsPage() {
   async function handleBulkDelete() {
     if (selectedIds.length === 0) return;
     const ok = await showConfirm(
-      `Bạn có chắc chắn muốn xóa ${selectedIds.length} hồ sơ đăng ký đã chọn không? Thao tác này sẽ xóa vĩnh viễn dữ liệu.`,
-      'Xác nhận xóa hàng loạt',
-      'error',
+      `Bạn có chắc chắn muốn chuyển ${selectedIds.length} hồ sơ đăng ký đã chọn vào Thùng rác không? Bạn có thể khôi phục lại trong vòng 30 ngày.`,
+      'Chuyển hàng loạt vào Thùng rác',
+      'warning',
       `Xóa ${selectedIds.length} hồ sơ`,
       'Hủy'
     );
@@ -350,7 +350,7 @@ export default function RegistrationsPage() {
       if (!res.ok) throw new Error(data.message || 'Xóa hàng loạt thất bại.');
       setItems((prev) => prev.filter((item) => !selectedIds.includes(item.id)));
       if (selected && selectedIds.includes(selected.id)) setSelected(null);
-      showAlert(`Đã xóa thành công ${selectedIds.length} hồ sơ.`, 'success');
+      showAlert(`Đã chuyển ${selectedIds.length} hồ sơ vào Thùng rác thành công.`, 'success');
       setSelectedIds([]);
     } catch (err: any) {
       showAlert(err.message || 'Lỗi khi xóa hàng loạt.', 'error');

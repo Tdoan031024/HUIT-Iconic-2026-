@@ -10,7 +10,10 @@ async function authorize() {
 
 export async function GET() {
   if (!await authorize()) return NextResponse.json({ message: 'Chưa đăng nhập quản trị.' }, { status: 401 });
-  const registrations = await prisma.candidateRegistration.findMany({ orderBy: { createdAt: 'desc' } });
+  const registrations = await prisma.candidateRegistration.findMany({
+    where: { isDeleted: false },
+    orderBy: { createdAt: 'desc' },
+  });
   return NextResponse.json(registrations.map((item) => ({
     ...item,
     heightCm: item.heightCm ? Number(item.heightCm) : null,
@@ -189,24 +192,25 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ message: 'Không tìm thấy hồ sơ để xóa.' }, { status: 404 });
     }
 
-    await prisma.candidateRegistration.deleteMany({
+    await prisma.candidateRegistration.updateMany({
       where: { id: { in: ids } },
+      data: { isDeleted: true, deletedAt: new Date() },
     });
 
     for (const reg of regs) {
       await logAdminAction(
         admin.username || 'admin',
-        'DELETE',
-        'CANDIDATE_REGISTRATION',
+        'DELETE_TRASH',
+        'REGISTRATION',
         reg.id,
         reg.fullName,
-        `Xóa hồ sơ đăng ký của ứng viên ${reg.fullName} (ID: ${reg.id})`
+        `Chuyển hồ sơ đăng ký của ứng viên ${reg.fullName} vào thùng rác`
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: `Đã xóa thành công ${regs.length} hồ sơ đăng ký.`,
+      message: `Đã chuyển thành công ${regs.length} hồ sơ đăng ký vào Thùng rác.`,
       count: regs.length,
     });
   } catch (error: any) {

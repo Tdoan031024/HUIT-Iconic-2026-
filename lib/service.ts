@@ -1165,7 +1165,7 @@ export async function getPostBySlugOrId(slugOrId: string) {
 // --- TRASH SYSTEM (RECYCLE BIN) ---
 export interface TrashItem {
   id: string;
-  type: 'CANDIDATE' | 'SPONSOR' | 'BANNER' | 'TIMELINE' | 'POST' | 'USER';
+  type: 'CANDIDATE' | 'SPONSOR' | 'BANNER' | 'TIMELINE' | 'POST' | 'USER' | 'REGISTRATION';
   typeName: string;
   title: string;
   subtitle?: string;
@@ -1186,6 +1186,22 @@ export async function getTrashItems(typeFilter?: string): Promise<TrashItem[]> {
     const elapsedDays = Math.floor((now - new Date(deletedAt).getTime()) / (1000 * 60 * 60 * 24));
     return Math.max(0, 30 - elapsedDays);
   };
+
+  if (!typeFilter || typeFilter === 'ALL' || typeFilter === 'REGISTRATION') {
+    const registrations = await prisma.candidateRegistration.findMany({ where: { isDeleted: true }, orderBy: { deletedAt: 'desc' } });
+    registrations.forEach((r) => {
+      trashList.push({
+        id: r.id,
+        type: 'REGISTRATION',
+        typeName: 'Hồ sơ đăng ký',
+        title: r.fullName,
+        subtitle: `${r.studentId || ''} · ${r.faculty || r.major || ''}`.trim().replace(/^·\s*|·\s*$/g, ''),
+        imageUrl: r.portraitImageUrl,
+        deletedAt: r.deletedAt ? r.deletedAt.toISOString() : new Date().toISOString(),
+        daysRemaining: calcDaysRemaining(r.deletedAt),
+      });
+    });
+  }
 
   if (!typeFilter || typeFilter === 'ALL' || typeFilter === 'CANDIDATE') {
     const candidates = await prisma.candidate.findMany({ where: { isDeleted: true }, orderBy: { deletedAt: 'desc' } });
@@ -1286,6 +1302,12 @@ export async function getTrashItems(typeFilter?: string): Promise<TrashItem[]> {
 
 export async function restoreTrashItem(type: string, id: string, adminUser = 'admin') {
   switch (type.toUpperCase()) {
+    case 'REGISTRATION':
+    case 'CANDIDATE_REGISTRATION': {
+      const r = await prisma.candidateRegistration.update({ where: { id }, data: { isDeleted: false, deletedAt: null } });
+      await logAdminAction(adminUser, 'RESTORE', 'REGISTRATION', id, r.fullName, 'Khôi phục hồ sơ đăng ký từ thùng rác');
+      break;
+    }
     case 'CANDIDATE': {
       const c = await prisma.candidate.update({ where: { id }, data: { isDeleted: false, deletedAt: null } });
       await logAdminAction(adminUser, 'RESTORE', 'CANDIDATE', id, c.name, 'Khôi phục hồ sơ thí sinh từ thùng rác');
@@ -1324,6 +1346,11 @@ export async function restoreTrashItem(type: string, id: string, adminUser = 'ad
 
 export async function permanentDeleteTrashItem(type: string, id: string, adminUser = 'admin') {
   switch (type.toUpperCase()) {
+    case 'REGISTRATION':
+    case 'CANDIDATE_REGISTRATION':
+      await prisma.candidateRegistration.delete({ where: { id } });
+      await logAdminAction(adminUser, 'PERMANENT_DELETE', 'REGISTRATION', id, undefined, 'Xóa vĩnh viễn hồ sơ đăng ký khỏi hệ thống');
+      break;
     case 'CANDIDATE':
       await prisma.candidate.delete({ where: { id } });
       await logAdminAction(adminUser, 'PERMANENT_DELETE', 'CANDIDATE', id, undefined, 'Xóa vĩnh viễn thí sinh khỏi hệ thống');
@@ -1370,6 +1397,7 @@ export async function emptyTrash(typeFilter?: string, adminUser = 'admin') {
 export async function autoPurgeOldTrash(olderThanDays = 30) {
   try {
     const cutoffDate = new Date(Date.now() - olderThanDays * 24 * 60 * 60 * 1000);
+    await prisma.candidateRegistration.deleteMany({ where: { isDeleted: true, deletedAt: { lte: cutoffDate } } });
     await prisma.candidate.deleteMany({ where: { isDeleted: true, deletedAt: { lte: cutoffDate } } });
     await prisma.sponsor.deleteMany({ where: { isDeleted: true, deletedAt: { lte: cutoffDate } } });
     await prisma.banner.deleteMany({ where: { isDeleted: true, deletedAt: { lte: cutoffDate } } });

@@ -6,7 +6,7 @@ import { useAlert } from '../../AlertProvider';
 
 interface TrashItem {
   id: string;
-  type: 'CANDIDATE' | 'SPONSOR' | 'BANNER' | 'TIMELINE' | 'POST' | 'USER';
+  type: 'CANDIDATE' | 'SPONSOR' | 'BANNER' | 'TIMELINE' | 'POST' | 'USER' | 'REGISTRATION';
   typeName: string;
   title: string;
   subtitle?: string;
@@ -253,6 +253,8 @@ export default function AdminTrashPage() {
 
   const getTypeBadge = (type: string) => {
     switch (type) {
+      case 'REGISTRATION':
+        return 'bg-cyan-50 text-cyan-700 border-cyan-200';
       case 'CANDIDATE':
         return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'SPONSOR':
@@ -327,6 +329,7 @@ export default function AdminTrashPage() {
         <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-slate-100/80 border border-slate-200/80">
           {[
             { key: 'ALL', label: 'Tất cả' },
+            { key: 'REGISTRATION', label: 'Hồ sơ đăng ký' },
             { key: 'CANDIDATE', label: 'Thí sinh' },
             { key: 'SPONSOR', label: 'Nhà tài trợ' },
             { key: 'BANNER', label: 'Banner' },

@@ -122,10 +122,13 @@ model CandidateRegistration {
   assignedSbd           String?
   candidateId           String?
   consentAccepted       Boolean   @default(false)
+  isDeleted             Boolean   @default(false)
+  deletedAt             DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @default(now()) @updatedAt
 
   @@index([status, createdAt])
+  @@index([isDeleted, deletedAt])
   @@index([email])
   @@map("candidateregistration")
 }
