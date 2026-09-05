@@ -3,9 +3,14 @@ import nodemailer from 'nodemailer';
 function getTransporter() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT || 587);
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) return null;
+  const user = process.env.SMTP_USER?.trim();
+  const rawPass = process.env.SMTP_PASS?.trim();
+  if (!host || !user || !rawPass) return null;
+
+  // Tự động bỏ dấu ngoặc kép và khoảng cách nếu là mật khẩu ứng dụng Gmail (16 ký tự)
+  const pass = host.includes('gmail')
+    ? rawPass.replace(/["']/g, '').replace(/\s+/g, '')
+    : rawPass.replace(/["']/g, '');
 
   return nodemailer.createTransport({
     host,
