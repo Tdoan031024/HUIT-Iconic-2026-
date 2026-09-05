@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, ReactNode, useState } from 'react';
+import { FormEvent, ReactNode, useState, useEffect } from 'react';
 import { apiUrl } from '../api';
 import { useAlert } from '../AlertProvider';
 
@@ -13,6 +13,33 @@ type RegistrationForm = {
   measurementWaist: string; measurementHip: string; portraitImageUrl: string; fullBodyImageUrl: string;
   consentAccepted: boolean;
 };
+
+type PhotoSlot = {
+  file: File | null;
+  previewUrl: string | null;
+  serverUrl: string | null;
+  fileName: string;
+  fileSize: number;
+  isUploading: boolean;
+  error: string | null;
+};
+
+const initialPhotoSlot: PhotoSlot = {
+  file: null,
+  previewUrl: null,
+  serverUrl: null,
+  fileName: '',
+  fileSize: 0,
+  isUploading: false,
+  error: null,
+};
+
+function formatFileSize(bytes: number): string {
+  if (!bytes || bytes === 0) return '0 KB';
+  const mb = bytes / (1024 * 1024);
+  if (mb >= 1) return `${mb.toFixed(1)} MB`;
+  return `${Math.round(bytes / 1024)} KB`;
+}
 
 const HUIT_FACULTIES = [
   'Khoa Công nghệ Thông tin',
@@ -62,44 +89,352 @@ function Label({ children, required = false }: { children: ReactNode; required?:
 export default function RegistrationPage() {
   const { showAlert } = useAlert();
   const [form, setForm] = useState(initialForm);
-  const [portraitFile, setPortraitFile] = useState<File | null>(null);
-  const [fullBodyFile, setFullBodyFile] = useState<File | null>(null);
+  const [portrait, setPortrait] = useState<PhotoSlot>(initialPhotoSlot);
+  const [fullBody, setFullBody] = useState<PhotoSlot>(initialPhotoSlot);
+  const [lightbox, setLightbox] = useState<{ url: string; title: string; fileName: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const update = (key: keyof RegistrationForm, value: string | boolean) => setForm((prev) => ({ ...prev, [key]: value }));
 
-  async function upload(file: File) {
-    const data = new FormData();
-    data.append('file', file);
-    const response = await fetch(apiUrl('/api/admin/upload'), { method: 'POST', body: data });
-    const result = await response.json().catch(() => null);
-    if (!response.ok || !result?.url) throw new Error(result?.error || 'Không thể tải ảnh lên.');
-    return result.url as string;
-  }
+  // Listen for Escape key to close lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(null);
+    };
+    if (lightbox) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [lightbox]);
+
+  const handlePhotoSelect = async (
+    file: File | null,
+    slotKey: 'portrait' | 'fullBody',
+    slotLabel: string
+  ) => {
+    if (!file) return;
+
+    const setSlot = slotKey === 'portrait' ? setPortrait : setFullBody;
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    const validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+    // 1. Kiểm tra định dạng tệp ảnh
+    if (!validExtensions.includes(ext)) {
+      const errMsg = `Định dạng tệp "${ext ? `.${ext}` : 'không rõ'}" không được hỗ trợ. Vui lòng chỉ chọn ảnh có định dạng JPG, PNG hoặc WEBP.`;
+      setSlot((prev) => ({ ...prev, error: errMsg }));
+      showAlert(errMsg, 'error', 'Định dạng không hỗ trợ');
+      return;
+    }
+
+    // 2. Kiểm tra dung lượng tối đa 15MB
+    const MAX_SIZE = 15 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+      const errMsg = `Ảnh "${file.name}" có dung lượng ${sizeMb}MB, vượt quá giới hạn tối đa cho phép là 15MB. Vui lòng chọn hoặc nén ảnh nhỏ hơn.`;
+      setSlot((prev) => ({ ...prev, error: errMsg }));
+      showAlert(errMsg, 'error', 'Ảnh quá dung lượng 15MB');
+      return;
+    }
+
+    // 3. Hiển thị ảnh preview ngay lập tức
+    const localPreviewUrl = URL.createObjectURL(file);
+    setSlot({
+      file,
+      previewUrl: localPreviewUrl,
+      serverUrl: null,
+      fileName: file.name,
+      fileSize: file.size,
+      isUploading: true,
+      error: null,
+    });
+
+    // 4. Tiến hành tải ảnh lên máy chủ qua /api/upload
+    try {
+      const data = new FormData();
+      data.append('file', file);
+      const response = await fetch(apiUrl('/api/upload'), {
+        method: 'POST',
+        body: data,
+      });
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.url) {
+        const errMsg = result?.error || result?.message || 'Không thể tải ảnh lên máy chủ.';
+        setSlot((prev) => ({
+          ...prev,
+          isUploading: false,
+          error: errMsg,
+        }));
+        showAlert(`Tải ${slotLabel} không thành công: ${errMsg}`, 'error', 'Lỗi tải ảnh');
+        return;
+      }
+
+      // Tải lên thành công
+      setSlot((prev) => ({
+        ...prev,
+        serverUrl: result.url,
+        previewUrl: result.url,
+        isUploading: false,
+        error: null,
+      }));
+      showAlert(`Đã tải lên ${slotLabel} thành công!`, 'success', 'Tải ảnh thành công');
+    } catch (err: any) {
+      const errMsg = err?.message || 'Lỗi kết nối máy chủ khi gửi ảnh.';
+      setSlot((prev) => ({
+        ...prev,
+        isUploading: false,
+        error: errMsg,
+      }));
+      showAlert(`Tải ${slotLabel} thất bại: ${errMsg}`, 'error', 'Lỗi kết nối mạng');
+    }
+  };
+
+  const removePhoto = (slotKey: 'portrait' | 'fullBody') => {
+    const setSlot = slotKey === 'portrait' ? setPortrait : setFullBody;
+    setSlot(initialPhotoSlot);
+  };
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!portraitFile || !fullBodyFile) {
-      showAlert('Vui lòng tải đủ ảnh chân dung và ảnh toàn thân.', 'warning', 'Thiếu ảnh hồ sơ');
+
+    if (portrait.isUploading || fullBody.isUploading) {
+      showAlert('Ảnh hồ sơ đang trong quá trình tải lên. Vui lòng đợi trong giây lát.', 'info', 'Đang tải ảnh');
       return;
     }
+
+    if (!portrait.serverUrl && !fullBody.serverUrl) {
+      showAlert('Vui lòng tải lên cả ảnh chân dung và ảnh toàn thân nghệ thuật.', 'warning', 'Thiếu ảnh hồ sơ');
+      return;
+    }
+    if (!portrait.serverUrl) {
+      showAlert('Vui lòng tải lên ảnh chân dung hợp lệ.', 'warning', 'Thiếu ảnh chân dung');
+      return;
+    }
+    if (!fullBody.serverUrl) {
+      showAlert('Vui lòng tải lên ảnh toàn thân nghệ thuật hợp lệ.', 'warning', 'Thiếu ảnh toàn thân');
+      return;
+    }
+
     setLoading(true);
     try {
-      const [portraitImageUrl, fullBodyImageUrl] = await Promise.all([upload(portraitFile), upload(fullBodyFile)]);
       const response = await fetch(apiUrl('/api/registrations'), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, portraitImageUrl, fullBodyImageUrl }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          portraitImageUrl: portrait.serverUrl,
+          fullBodyImageUrl: fullBody.serverUrl,
+        }),
       });
       const result = await response.json().catch(() => null);
       if (!response.ok) throw new Error(result?.message || 'Không thể gửi hồ sơ.');
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      showAlert(result.message, 'success', 'Gửi hồ sơ thành công');
+      showAlert(result.message || 'Đã tiếp nhận hồ sơ đăng ký thành công!', 'success', 'Gửi hồ sơ thành công');
     } catch (error: any) {
       showAlert(error.message || 'Không thể gửi hồ sơ lúc này.', 'error', 'Lỗi đăng ký');
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   }
+
+  const renderPhotoSlot = (
+    slotKey: 'portrait' | 'fullBody',
+    label: string,
+    subtitle: string
+  ) => {
+    const slot = slotKey === 'portrait' ? portrait : fullBody;
+
+    return (
+      <div className="flex flex-col">
+        <div className="mb-2 flex items-center justify-between">
+          <Label required>{label}</Label>
+          <span className="text-[11px] font-semibold text-slate-400">JPG, PNG, WEBP &le; 15MB</span>
+        </div>
+
+        {slot.previewUrl ? (
+          <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm transition hover:shadow-md">
+            {/* Khung ảnh preview */}
+            <div
+              className="group relative flex h-64 sm:h-72 w-full items-center justify-center overflow-hidden rounded-xl bg-slate-950 cursor-pointer"
+              onClick={() => setLightbox({ url: slot.previewUrl!, title: label, fileName: slot.fileName })}
+            >
+              <img
+                src={slot.previewUrl}
+                alt={label}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+
+              {/* Huy hiệu trạng thái góc trên bên trái */}
+              <div className="absolute top-2.5 left-2.5 z-10">
+                {slot.isUploading ? (
+                  <span className="flex items-center gap-1.5 rounded-full bg-blue-600/95 px-3 py-1 text-xs font-bold text-white shadow backdrop-blur-sm animate-pulse">
+                    <svg className="h-3.5 w-3.5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Đang tải lên...
+                  </span>
+                ) : slot.serverUrl ? (
+                  <span className="flex items-center gap-1 rounded-full bg-emerald-600/95 px-3 py-1 text-xs font-bold text-white shadow backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Đã tải lên
+                  </span>
+                ) : slot.error ? (
+                  <span className="flex items-center gap-1 rounded-full bg-red-600/95 px-3 py-1 text-xs font-bold text-white shadow backdrop-blur-sm">
+                    ✕ Tải thất bại
+                  </span>
+                ) : null}
+              </div>
+
+              {/* Nút hành động nhanh góc trên bên phải */}
+              <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightbox({ url: slot.previewUrl!, title: label, fileName: slot.fileName });
+                  }}
+                  className="grid h-8 w-8 place-items-center rounded-lg bg-black/60 text-white backdrop-blur-sm hover:bg-black/85 transition shadow"
+                  title="Bấm để xem to ảnh"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    <line x1="11" y1="8" x2="11" y2="14" />
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removePhoto(slotKey);
+                  }}
+                  className="grid h-8 w-8 place-items-center rounded-lg bg-red-600/80 text-white backdrop-blur-sm hover:bg-red-600 transition shadow"
+                  title="Xóa ảnh"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Lớp phủ khi rê chuột */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 text-white">
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-white/20 backdrop-blur-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    <line x1="11" y1="8" x2="11" y2="14" />
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  </svg>
+                </div>
+                <span className="text-xs font-bold tracking-wide">Bấm vào ảnh để xem to</span>
+              </div>
+            </div>
+
+            {/* Thông tin tên file và nút đổi ảnh */}
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold text-slate-700" title={slot.fileName}>
+                  {slot.fileName}
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Dung lượng: {formatFileSize(slot.fileSize)}
+                </p>
+              </div>
+              <label className="cursor-pointer shrink-0 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-[#0A2FFF] transition hover:bg-blue-100">
+                Đổi ảnh khác
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] || null;
+                    if (f) handlePhotoSelect(f, slotKey, label);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+            </div>
+
+            {/* Khung báo lỗi nếu có */}
+            {slot.error && (
+              <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-2.5 text-xs text-red-600">
+                <svg className="mt-0.5 h-4 w-4 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <div>
+                  <p className="font-bold">Lỗi tải ảnh lên:</p>
+                  <p className="mt-0.5">{slot.error}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <label
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const f = e.dataTransfer.files?.[0] || null;
+              if (f) handlePhotoSelect(f, slotKey, label);
+            }}
+            className="group relative flex min-h-[240px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/70 p-6 text-center cursor-pointer transition hover:border-[#0A2FFF] hover:bg-blue-50/30"
+          >
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0] || null;
+                if (f) handlePhotoSelect(f, slotKey, label);
+                e.target.value = '';
+              }}
+            />
+            <div className="grid h-14 w-14 place-items-center rounded-2xl bg-blue-100/70 text-[#0A2FFF] transition duration-200 group-hover:scale-110 group-hover:bg-[#0A2FFF] group-hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+            </div>
+            <p className="mt-3 text-sm font-bold text-slate-800 transition group-hover:text-[#0A2FFF]">
+              Kéo thả ảnh hoặc <span className="underline">bấm để chọn tệp</span>
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {subtitle}
+            </p>
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-200/70 px-3 py-1 text-[11px] font-semibold text-slate-600">
+              <span>JPG, PNG, WEBP</span>
+              <span>•</span>
+              <span>Tối đa 15MB</span>
+            </div>
+
+            {slot.error && (
+              <div className="mt-3 w-full rounded-xl border border-red-200 bg-red-50 p-2.5 text-left text-xs text-red-600">
+                <p className="font-bold">Lỗi: {slot.error}</p>
+              </div>
+            )}
+          </label>
+        )}
+      </div>
+    );
+  };
 
   if (submitted) return <main className="min-h-[70vh] bg-slate-50 px-4 py-16 sm:px-6"><div className="mx-auto max-w-2xl rounded-3xl border border-emerald-200 bg-white p-8 text-center shadow-sm sm:p-12"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-100 text-3xl text-emerald-600">✓</div><h1 className="mt-6 text-3xl font-black text-slate-950">Đã tiếp nhận hồ sơ</h1><p className="mx-auto mt-4 max-w-lg leading-7 text-slate-600">Cảm ơn bạn đã đăng ký dự thi HUIT&apos;s ICONIC. Ban tổ chức sẽ kiểm tra hồ sơ và liên hệ qua email hoặc điện thoại.</p><a className="mt-8 inline-flex h-12 items-center rounded-xl bg-[#0A2FFF] px-6 font-bold text-white" href="/">Về trang chủ</a></div></main>;
 
@@ -160,7 +495,10 @@ export default function RegistrationPage() {
         </Section>
 
         <Section number="03" title="Ảnh hồ sơ" description="Ảnh chính diện, rõ mặt, trang phục lịch sự. Mỗi ảnh tối đa 15MB, định dạng JPG, PNG hoặc WEBP.">
-          <div className="grid gap-5 sm:grid-cols-2"><label className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-5"><Label required>Ảnh chân dung</Label><input required type="file" accept="image/jpeg,image/png,image/webp" className="mt-4 block w-full text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-bold file:text-blue-700" onChange={(e) => setPortraitFile(e.target.files?.[0] || null)} />{portraitFile && <p className="mt-3 truncate text-xs text-emerald-600">Đã chọn: {portraitFile.name}</p>}</label><label className="rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-5"><Label required>Ảnh toàn thân nghệ thuật</Label><input required type="file" accept="image/jpeg,image/png,image/webp" className="mt-4 block w-full text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:font-bold file:text-blue-700" onChange={(e) => setFullBodyFile(e.target.files?.[0] || null)} />{fullBodyFile && <p className="mt-3 truncate text-xs text-emerald-600">Đã chọn: {fullBodyFile.name}</p>}</label></div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {renderPhotoSlot('portrait', 'Ảnh chân dung', 'Ảnh chính diện, rõ mặt, trang phục lịch sự')}
+            {renderPhotoSlot('fullBody', 'Ảnh toàn thân nghệ thuật', 'Ảnh toàn thân dáng đứng hoặc phong cách nghệ thuật')}
+          </div>
         </Section>
 
         <Section number="04" title="Chỉ số hình thể" description="Nhập theo đơn vị centimet và kilogram.">
@@ -168,7 +506,7 @@ export default function RegistrationPage() {
             <label>
               <div className="flex items-center justify-between">
                 <Label required>Chiều cao (cm)</Label>
-                <span className="text-[11px] font-semibold text-blue-600">Nữ ≥ 160, Nam ≥ 170</span>
+                <span className="text-[11px] font-semibold text-blue-600">Nữ &ge; 160, Nam &ge; 170</span>
               </div>
               <input required type="number" min="100" max="250" step="0.1" placeholder="Ví dụ: 168" className={inputClass} value={form.heightCm} onChange={(e) => update('heightCm', e.target.value)} />
             </label>
@@ -181,5 +519,68 @@ export default function RegistrationPage() {
         <div className="flex flex-col items-start justify-between gap-5 rounded-3xl bg-slate-950 p-5 text-white sm:flex-row sm:items-center sm:p-7"><div><p className="font-black">Sau khi gửi hồ sơ</p><p className="mt-1 text-sm leading-6 text-slate-300">Tham gia nhóm Zalo hướng dẫn: <a className="font-bold text-cyan-300 underline" href="https://zalo.me/g/myzijputivfgc1toua9z" target="_blank" rel="noreferrer">zalo.me/g/myzijputivfgc1toua9z</a></p></div><button disabled={loading} className="h-12 w-full rounded-xl bg-[#79BCC2] px-7 font-black text-slate-950 transition hover:bg-white disabled:cursor-wait disabled:opacity-60 sm:w-auto">{loading ? 'Đang gửi hồ sơ...' : 'Gửi hồ sơ đăng ký'}</button></div>
       </form>
     </div>
+
+    {/* Lightbox xem ảnh to */}
+    {lightbox && (
+      <div
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-200"
+        onClick={() => setLightbox(null)}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div
+          className="relative flex flex-col max-h-[92vh] max-w-4xl w-full rounded-2xl bg-slate-900 border border-white/10 shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Lightbox Header */}
+          <div className="flex items-center justify-between border-b border-white/10 bg-slate-950/80 px-5 py-3.5">
+            <div className="min-w-0 pr-4">
+              <h3 className="text-sm sm:text-base font-black text-white flex items-center gap-2 truncate">
+                <span className="text-cyan-400">🖼️</span>
+                <span>{lightbox.title}</span>
+              </h3>
+              {lightbox.fileName && (
+                <p className="text-[11px] text-slate-400 truncate max-w-xs sm:max-w-md font-mono mt-0.5">
+                  Tệp: {lightbox.fileName}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white transition"
+              aria-label="Đóng xem ảnh"
+              title="Đóng (Esc)"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Lightbox Image Preview Body */}
+          <div className="relative flex-1 flex items-center justify-center p-4 bg-black/50 overflow-auto min-h-[320px] max-h-[76vh]">
+            <img
+              src={lightbox.url}
+              alt={lightbox.title}
+              className="max-h-[72vh] max-w-full object-contain rounded-xl shadow-2xl"
+            />
+          </div>
+
+          {/* Lightbox Footer */}
+          <div className="flex items-center justify-between border-t border-white/10 bg-slate-950/80 px-5 py-2.5 text-xs text-slate-400">
+            <span>Bấm phím Esc hoặc bấm ra ngoài để đóng</span>
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              className="rounded-lg bg-white/15 hover:bg-white/25 px-4 py-1.5 text-xs font-bold text-white transition"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   </main>;
 }
